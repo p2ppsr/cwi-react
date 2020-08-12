@@ -1,0 +1,32 @@
+{
+  "name": "@p2ppsr/react-cwi",
+  "version": "0.0.1",
+  "description": "Components for using CWI in React applications",
+  "main": "index.js",
+  "repository": "git+https://github.com/p2ppsr/react-cwi",
+  "author": "Peer-to-Peer Privacy Systems Research LLC",
+  "license": "PROPRIETARY",
+  "scripts": {
+    "test": "jest",
+    "build": "rollup -c --environment BUILD:production",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.10.1",
+    "@p2ppsr/cwi-auth": "^0.1.4"
+  },
+  "peerDependencies": {
+    "react-router-dom": "^5.2.0",
+    "react": "^16.13.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "@babel/preset-react": "^7.10.1",
+    "babel-jest": "^26.0.1",
+    "jest": "^26.0.1",
+    "rollup": "^2.15.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-copy": "^3.3.0"
+  }
+}
