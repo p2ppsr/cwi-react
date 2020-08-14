@@ -1,42 +1,39 @@
-import { useEffect } from 'react'
-import { withRouter } from 'react-router'
+import React, { useEffect } from 'react'
 import { initialize, bindCallback } from '@p2ppsr/cwi-auth'
-import listenForMessages from 'utils/listenForMessages'
-import listenForProfileUpdates from 'utils/listenForProfileUpdates'
-import { toast } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
+import Theme from './Theme.jsx'
+import CodeHandler from './CodeHandler.jsx'
+import PasswordHandler from './PasswordHandler.jsx'
+import PaymentHandler from './PaymentHandler.jsx'
+import RecoveryKeyHandler from './RecoveryKeyHandler.jsx'
 
-const Initializer = ({ history }) => {
-  // Initialize the authentication library
+const CWIComponents = ({
+  planariaToken = process.env.REACT_APP_PLANARIA_TOKEN,
+  secretServerURL = process.env.REACT_APP_SECRET_SERVER_URL
+}) => {
   useEffect(() => {
     (async () => {
-      const result = await initialize({
-        // Use the Planaria token
-        planariaToken: process.env.REACT_APP_PLANARIA_TOKEN,
-
-        // Use the secret server from environment
-        secretServerURL: process.env.REACT_APP_SECRET_SERVER_URL,
-
-        // Restore the logged in user if a snapshot was saved
+      await initialize({
+        planariaToken,
+        secretServerURL,
         stateSnapshot: localStorage.CWIAuthStateSnapshot
       })
-      if (
-        result === true &&
-        localStorage.CWIAuthStateSnapshot !== undefined &&
-        window.location.pathname === '/'
-      ) {
-        history.push('/convos')
-      }
-
-      // Show error messages when they exist
       bindCallback('onAuthenticationError', toast.error)
-
-      // Connect to the sockets to listen for new messages and profiles
-      listenForMessages()
-      listenForProfileUpdates()
     })()
-  }, [history])
+  }, [])
 
-  return null
+  return (
+    <Theme>
+      <CodeHandler />
+      <PasswordHandler />
+      <PaymentHandler />
+      <RecoveryKeyHandler />
+      <ToastContainer
+        position='top-center'
+        hideProgressBar
+      />
+    </Theme>
+  )
 }
 
-export default withRouter(Initializer)
+export default CWIComponents

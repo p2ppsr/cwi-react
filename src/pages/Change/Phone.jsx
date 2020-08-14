@@ -14,7 +14,9 @@ import {
   Button,
   TextField
 } from '@material-ui/core'
-import PhoneIcon from '@material-ui/icons/SettingsPhone'
+import {
+  SettingsPhone as PhoneIcon
+} from '@material-ui/icons'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'

@@ -17,11 +17,13 @@ import {
   Button,
   TextField
 } from '@material-ui/core'
-import PhoneIcon from '@material-ui/icons/SettingsPhone'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle'
-import SMSIcon from '@material-ui/icons/PermPhoneMsg'
-import LockIcon from '@material-ui/icons/Lock'
-import QuestionAnswer from '@material-ui/icons/QuestionAnswer'
+import {
+  SettingsPhone as PhoneIcon,
+  CheckCircle as CheckCircleIcon,
+  PermPhoneMsg as SMSIcon,
+  Lock as LockIcon,
+  QuestionAnswer
+} from '@material-ui/icons'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
 

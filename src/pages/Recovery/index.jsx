@@ -2,8 +2,10 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import style from './style'
 import { makeStyles } from '@material-ui/styles'
-import LockIcon from '@material-ui/icons/Lock'
-import PhoneIcon from '@material-ui/icons/SettingsPhone'
+import {
+  Lock as LockIcon,
+  SettingsPhone as PhoneIcon
+} from '@material-ui/icons'
 import {
   List, ListItem, ListItemIcon, ListItemText, Button
 } from '@material-ui/core'

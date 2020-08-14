@@ -17,10 +17,12 @@ import {
   Button,
   TextField
 } from '@material-ui/core'
-import KeyIcon from '@material-ui/icons/VpnKey'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle'
-import LockIcon from '@material-ui/icons/Lock'
-import PhoneIcon from '@material-ui/icons/SettingsPhone'
+import {
+  SettingsPhone as PhoneIcon,
+  CheckCircle as CheckCircleIcon,
+  Lock as LockIcon,
+  VpnKey as KeyIcon
+} from '@material-ui/icons'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
 

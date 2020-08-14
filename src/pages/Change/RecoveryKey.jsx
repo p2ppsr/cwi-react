@@ -10,7 +10,7 @@ import {
   createSnapshot
 } from '@p2ppsr/cwi-auth'
 import { Link } from 'react-router-dom'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
 import style from './style'
 import { toast } from 'react-toastify'
 

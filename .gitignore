@@ -25,6 +25,3 @@ yarn-error.log*
 .env
 
 tmp
-
-/index.js
-/auth.js

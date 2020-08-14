@@ -1,27 +1,19 @@
 import babel from 'rollup-plugin-babel'
-import copy from 'rollup-plugin-copy'
+import autoExternal from 'rollup-plugin-auto-external'
 
 export default {
   input: 'src/index.js',
   output: {
-    file: 'index.js',
+    file: 'build/index.js',
     format: 'umd',
     name: 'ReactCWI'
   },
   plugins: [
+    autoExternal(),
     babel({
       babelrc: false,
       presets: [
         '@babel/preset-react'
-      ]
-    }),
-    copy({
-      targets: [
-        {
-          src: 'node_modules/@p2ppsr/cwi-auth/build/index.js',
-          dest: '.',
-          rename: 'auth.js'
-        }
       ]
     })
   ]
