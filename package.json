@@ -12,6 +12,9 @@
     "dev": "rollup -c -w",
     "prepublishOnly": "npm run build"
   },
+  "publishConfig": {
+    "registry": "https://npm-registry.babbage.systems/"
+  },
   "dependencies": {
     "@material-ui/core": "^4.10.1",
     "@material-ui/icons": "^4.9.1",
