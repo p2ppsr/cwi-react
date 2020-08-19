@@ -1,6 +1,6 @@
 {
   "name": "@p2ppsr/react-cwi",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Components for using CWI in React applications",
   "main": "build/index.js",
   "repository": "git+https://github.com/p2ppsr/react-cwi",
@@ -20,8 +20,8 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/styles": "^4.10.0",
     "@p2ppsr/cwi-auth": "^0.1.4",
-    "@p2ppsr/password-modal": "0.0.8",
-    "@p2ppsr/payment-modal": "0.0.7",
+    "@p2ppsr/password-modal": "^0.0.8",
+    "@p2ppsr/payment-modal": "^0.0.7",
     "react-redux": "^7.2.1",
     "react-toastify": "^6.0.8",
     "redux": "^4.0.5"
