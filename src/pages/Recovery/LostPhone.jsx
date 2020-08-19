@@ -25,16 +25,16 @@ import {
 } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-const useStyles = makeStyles(style, { name: 'LostPhoneNumber' })
+const useStyles = makeStyles(style, { name: 'RecoveryLostPhoneNumber' })
 
-const LostPhone = ({ history }) => {
+const RecoveryLostPhone = ({ history, routes, mainPage }) => {
   const classes = useStyles()
   const [accordianView, setAccordianView] = useState('recovery-key')
   const [recoveryKey, setRecoveryKey] = useState('')
   const [password, setPassword] = useState('')
   const [newPhone, setNewPhone] = useState('')
-  const [error, setError] = useState('')
 
   useEffect(() => {
     // Ensure the correct authentication mode
@@ -42,7 +42,6 @@ const LostPhone = ({ history }) => {
 
     // Navigate to a dashboard when the user logs in
     bindCallback('onAuthenticationSuccess', async () => {
-      setError('')
       // Optionally, you can also save a state snapshot before redirecting
       localStorage.CWIAuthStateSnapshot = await createSnapshot()
       setAccordianView('new-phone')
@@ -53,7 +52,6 @@ const LostPhone = ({ history }) => {
     e.preventDefault()
     const success = await submitRecoveryKey(recoveryKey)
     if (success === true) {
-      setError('')
       setAccordianView('password')
     }
   }
@@ -67,7 +65,7 @@ const LostPhone = ({ history }) => {
     e.preventDefault()
     const result = await changePhoneNumber(newPhone)
     if (result === true) {
-      history.push(sessionStorage.redirect || '/convos')
+      history.push(sessionStorage.redirect || mainPage)
     }
   }
 
@@ -97,8 +95,6 @@ const LostPhone = ({ history }) => {
               onChange={e => setRecoveryKey(e.target.value)}
               label='Recovery Key'
               fullWidth
-              error={!!error}
-              helperText={error}
             />
           </AccordionDetails>
           <AccordionActions>
@@ -134,8 +130,6 @@ const LostPhone = ({ history }) => {
               label='Password'
               fullWidth
               type='password'
-              error={!!error}
-              helperText={error}
             />
           </AccordionDetails>
           <AccordionActions>
@@ -170,8 +164,6 @@ const LostPhone = ({ history }) => {
               onChange={e => setNewPhone(e.target.value)}
               label='New Phone'
               fullWidth
-              error={!!error}
-              helperText={error}
             />
           </AccordionDetails>
           <AccordionActions>
@@ -185,7 +177,7 @@ const LostPhone = ({ history }) => {
           </AccordionActions>
         </form>
       </Accordion>
-      <Link to='/recovery'>
+      <Link to={routes.Recovery}>
         <Button
           color='secondary'
           className={classes.back_button}
@@ -197,4 +189,9 @@ const LostPhone = ({ history }) => {
   )
 }
 
-export default LostPhone
+const stateToProps = state => ({
+  mainPage: state.mainPage,
+  routes: state.routes
+})
+
+export default connect(stateToProps)(RecoveryLostPhone)

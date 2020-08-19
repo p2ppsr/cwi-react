@@ -13,18 +13,19 @@ import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/styles'
 import style from './style'
 import { toast } from 'react-toastify'
+import { connect } from 'react-redux'
 
 const useStyles = makeStyles(style, {
   name: 'Change'
 })
 
-export default ({ history }) => {
+const ChangeRecoveryKey = ({ history, routes, mainPage }) => {
   const classes = useStyles()
   const [recoveryKey, setRecoveryKey] = useState('')
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      history.push('/')
+      history.push(routes.Greeter)
     }
   }, [history])
 
@@ -40,7 +41,7 @@ export default ({ history }) => {
     if (success === true) {
       localStorage.CWIAuthStateSnapshot = await createSnapshot()
       toast.success('Recovery key changed successfully!')
-      history.push('/convos')
+      history.push(mainPage)
     }
   }
 
@@ -63,7 +64,7 @@ export default ({ history }) => {
       >
         Change Recovery Key
       </Button>
-      <Link to='/convos'>
+      <Link to={mainPage}>
         <Button
           color='secondary'
           className={classes.back_button}
@@ -74,3 +75,10 @@ export default ({ history }) => {
     </div>
   )
 }
+
+const stateToProps = state => ({
+  mainPage: state.mainPage,
+  routes: state.routes
+})
+
+export default connect(stateToProps)(ChangeRecoveryKey)

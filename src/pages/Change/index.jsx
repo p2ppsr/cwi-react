@@ -11,24 +11,25 @@ import {
   List, ListItem, ListItemIcon, ListItemText, Button
 } from '@material-ui/core'
 import { isAuthenticated } from '@p2ppsr/cwi-auth'
+import { connect } from 'react-redux'
 
 const useStyles = makeStyles(style, {
   name: 'Change'
 })
 
-export default ({ history }) => {
+const Change = ({ history, routes, mainPage }) => {
   const classes = useStyles()
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      history.push('/')
+      history.push(routes.Greeter)
     }
   }, [history])
 
   return (
     <div className={classes.content_wrap}>
       <List>
-        <Link to='/change/phone'>
+        <Link to={routes.ChangePhone}>
           <ListItem button>
             <ListItemIcon>
               <PhoneIcon />
@@ -38,7 +39,7 @@ export default ({ history }) => {
             </ListItemText>
           </ListItem>
         </Link>
-        <Link to='/change/password'>
+        <Link to={routes.ChangePassword}>
           <ListItem button>
             <ListItemIcon>
               <LockIcon />
@@ -48,7 +49,7 @@ export default ({ history }) => {
             </ListItemText>
           </ListItem>
         </Link>
-        <Link to='/change/recovery-key'>
+        <Link to={routes.ChangeRecoveryKey}>
           <ListItem button>
             <ListItemIcon>
               <KeyIcon />
@@ -59,9 +60,16 @@ export default ({ history }) => {
           </ListItem>
         </Link>
       </List>
-      <Link to='/convos'>
+      <Link to={mainPage}>
         <Button className={classes.back_button}>Go Back</Button>
       </Link>
     </div>
   )
 }
+
+const stateToProps = state => ({
+  routes: state.routes,
+  mainPage: state.mainPage
+})
+
+export default connect(stateToProps)(Change)

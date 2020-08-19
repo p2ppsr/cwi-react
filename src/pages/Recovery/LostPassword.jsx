@@ -27,10 +27,11 @@ import {
 } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 const useStyles = makeStyles(style, { name: 'Home' })
 
-const Login = ({ history }) => {
+const RecoveryLostPassword = ({ history, mainPage, routes }) => {
   const classes = useStyles()
   const [accordianView, setAccordianView] = useState('phone')
   const [phone, setPhone] = useState('')
@@ -38,7 +39,6 @@ const Login = ({ history }) => {
   const [recoveryKey, setRecoveryKey] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState('')
 
   useEffect(() => {
     // Ensure the correct authentication mode
@@ -46,7 +46,6 @@ const Login = ({ history }) => {
 
     // Navigate to a dashboard when the user logs in
     bindCallback('onAuthenticationSuccess', async () => {
-      setError('')
       // Optionally, you can also save a state snapshot before redirecting
       localStorage.CWIAuthStateSnapshot = await createSnapshot()
       setAccordianView('new-password')
@@ -57,7 +56,6 @@ const Login = ({ history }) => {
     e.preventDefault()
     const success = await submitPhoneNumber(phone)
     if (success === true) {
-      setError('')
       setAccordianView('code')
     }
   }
@@ -66,7 +64,6 @@ const Login = ({ history }) => {
     e.preventDefault()
     const success = await submitCode(code)
     if (success === true) {
-      setError('')
       setAccordianView('recovery-key')
     }
   }
@@ -80,7 +77,7 @@ const Login = ({ history }) => {
     e.preventDefault()
     const result = await changePassword(password, confirmPassword)
     if (result === true) {
-      history.push(sessionStorage.redirect || '/convos')
+      history.push(sessionStorage.redirect || mainPage)
     }
   }
 
@@ -110,8 +107,6 @@ const Login = ({ history }) => {
               onChange={e => setPhone(e.target.value)}
               label='Phone'
               fullWidth
-              error={!!error}
-              helperText={error}
             />
           </AccordionDetails>
           <AccordionActions>
@@ -149,8 +144,6 @@ const Login = ({ history }) => {
               onChange={e => setCode(e.target.value)}
               label='Code'
               fullWidth
-              error={!!error}
-              helperText={error}
             />
           </AccordionDetails>
           <AccordionActions>
@@ -188,8 +181,6 @@ const Login = ({ history }) => {
               onChange={e => setRecoveryKey(e.target.value)}
               label='Recovery Key'
               fullWidth
-              error={!!error}
-              helperText={error}
             />
           </AccordionDetails>
           <AccordionActions>
@@ -225,8 +216,6 @@ const Login = ({ history }) => {
               label='Password'
               fullWidth
               type='password'
-              error={!!error}
-              helperText={error}
             />
             <TextField
               onChange={e => setConfirmPassword(e.target.value)}
@@ -246,7 +235,7 @@ const Login = ({ history }) => {
           </AccordionActions>
         </form>
       </Accordion>
-      <Link to='/recovery'>
+      <Link to={routes.Recovery}>
         <Button
           color='secondary'
           className={classes.back_button}
@@ -258,4 +247,9 @@ const Login = ({ history }) => {
   )
 }
 
-export default Login
+const stateToProps = state => ({
+  mainPage: state.mainPage,
+  routes: state.routes
+})
+
+export default connect(stateToProps)(RecoveryLostPassword)

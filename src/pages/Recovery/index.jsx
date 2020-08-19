@@ -9,17 +9,18 @@ import {
 import {
   List, ListItem, ListItemIcon, ListItemText, Button
 } from '@material-ui/core'
+import { connect } from 'react-redux'
 
 const useStyles = makeStyles(style, {
   name: 'Recovery'
 })
 
-export default () => {
+const Recovery = ({ routes }) => {
   const classes = useStyles()
   return (
     <div className={classes.content_wrap}>
       <List>
-        <Link to='/recovery/lost-phone'>
+        <Link to={routes.RecoveryLostPhone}>
           <ListItem button>
             <ListItemIcon>
               <PhoneIcon />
@@ -29,7 +30,7 @@ export default () => {
             </ListItemText>
           </ListItem>
         </Link>
-        <Link to='/recovery/lost-password'>
+        <Link to={routes.RecoveryLostPassword}>
           <ListItem button>
             <ListItemIcon>
               <LockIcon />
@@ -40,9 +41,16 @@ export default () => {
           </ListItem>
         </Link>
       </List>
-      <Link to='/'>
+      <Link to={routes.Greeter}>
         <Button className={classes.back_button}>Go Back</Button>
       </Link>
     </div>
   )
 }
+
+const stateToProps = state => ({
+  mainPage: state.mainPage,
+  routes: state.routes
+})
+
+export default connect(stateToProps)(Recovery)

@@ -20,10 +20,11 @@ import {
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { connect } from 'react-redux'
 
 const useStyles = makeStyles(style, { name: 'Home' })
 
-const Login = ({ history }) => {
+const ChangePassword = ({ history, mainPage, routes }) => {
   const classes = useStyles()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -31,7 +32,7 @@ const Login = ({ history }) => {
   useEffect(() => {
     // If we are not authenticated we cannot use this page
     if (!isAuthenticated()) {
-      history.push('/')
+      history.push(routes.Greeter)
     }
   }, [history])
 
@@ -41,7 +42,7 @@ const Login = ({ history }) => {
     if (result === true) {
       localStorage.CWIAuthStateSnapshot = await createSnapshot()
       toast.success('Password changed successfully!')
-      history.push('/convos')
+      history.push(mainPage)
     }
   }
 
@@ -86,7 +87,7 @@ const Login = ({ history }) => {
           </AccordionActions>
         </form>
       </Accordion>
-      <Link to='/convos'>
+      <Link to={mainPage}>
         <Button
           color='secondary'
           className={classes.back_button}
@@ -98,4 +99,9 @@ const Login = ({ history }) => {
   )
 }
 
-export default Login
+const stateToProps = state => ({
+  mainPage: state.mainPage,
+  routes: state.routes
+})
+
+export default connect(stateToProps)(ChangePassword)

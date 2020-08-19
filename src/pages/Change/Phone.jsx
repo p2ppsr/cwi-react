@@ -20,16 +20,17 @@ import {
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { connect } from 'react-redux'
 
 const useStyles = makeStyles(style, { name: 'PhoneNumber' })
 
-const Phone = ({ history }) => {
+const Phone = ({ history, mainPage, routes }) => {
   const classes = useStyles()
   const [newPhone, setNewPhone] = useState('')
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      history.push('/')
+      history.push(routes.Greeter)
     }
   }, [history])
 
@@ -39,7 +40,7 @@ const Phone = ({ history }) => {
     if (result === true) {
       localStorage.CWIAuthStateSnapshot = await createSnapshot()
       toast.success('Phone number changed successfully!')
-      history.push('/convos')
+      history.push(mainPage)
     }
   }
 
@@ -79,7 +80,7 @@ const Phone = ({ history }) => {
           </AccordionActions>
         </form>
       </Accordion>
-      <Link to='/convos'>
+      <Link to={mainPage}>
         <Button
           color='secondary'
           className={classes.back_button}
@@ -91,4 +92,9 @@ const Phone = ({ history }) => {
   )
 }
 
-export default Phone
+const stateToProps = state => ({
+  mainPage: state.mainPage,
+  routes: state.routes
+})
+
+export default connect(stateToProps)(Phone)
