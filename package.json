@@ -1,6 +1,6 @@
 {
   "name": "@p2ppsr/react-cwi",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Components for using CWI in React applications",
   "main": "build/index.js",
   "repository": "git+https://github.com/p2ppsr/react-cwi",
@@ -21,7 +21,7 @@
     "@material-ui/styles": "^4.10.0",
     "@p2ppsr/cwi-auth": "^0.1.4",
     "@p2ppsr/password-modal": "^0.0.8",
-    "@p2ppsr/payment-modal": "^0.0.7",
+    "@p2ppsr/payment-modal": "^0.1.0",
     "react-redux": "^7.2.1",
     "react-toastify": "^6.0.8",
     "redux": "^4.0.5"
@@ -29,7 +29,7 @@
   "peerDependencies": {
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react": "^16.13.1"
+    "react": "^16.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
@@ -37,6 +37,10 @@
     "@babel/preset-react": "^7.10.4",
     "babel-jest": "^26.0.1",
     "jest": "^26.0.1",
+    "npm-link-shared": "^0.5.6",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "^3.4.3",
     "rollup": "^2.15.0",
     "rollup-plugin-auto-external": "^2.0.0",
     "rollup-plugin-babel": "^4.4.0",

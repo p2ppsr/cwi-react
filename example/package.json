@@ -1,0 +1,26 @@
+{
+  "name": "@p2ppsr/react-cwi-example",
+  "homepage": ".",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "SKIP_PREFLIGHT_CHECK=true node ../node_modules/react-scripts/bin/react-scripts.js start",
+    "build": "node ../node_modules/react-scripts/bin/react-scripts.js build",
+    "test": "node ../node_modules/react-scripts/bin/react-scripts.js test"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@p2ppsr/react-cwi": "file:..",
+    "react": "file:../node_modules/react",
+    "react-dom": "file:../node_modules/react-dom",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "file:../node_modules/react-scripts"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

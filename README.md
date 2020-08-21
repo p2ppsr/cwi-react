@@ -84,6 +84,24 @@ There is no need to install a separate version of the authentication library whe
 
 Convo is a decentralized, secure messaging application built with `react-cwi`. Check out the [website](https://convo.babbage.systems) or ask for a copy of the code!
 
+## Development
+
+To set up for development, pull down the repo and do the following:
+
+```bash
+npm install
+cd example
+npm install
+```
+
+Then, each time you want to spin up the environment, open two terminal tabs.
+
+In the first one, just run `npm run dev`.
+
+In the second one, run `cd example && npm run start` to spin up the development server.
+
+Hot reloading should be supported by this setup.
+
 ## Confidentiality
 
 This is proprietary software developed and owned by Peer-to-peer Privacy Systems Research, LLC. 

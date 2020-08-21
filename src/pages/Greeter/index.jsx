@@ -215,20 +215,22 @@ const Greeter = ({ history, mainPage, routes }) => {
           </AccordionActions>
         </form>
       </Accordion>
-      <Link to={routes.Recovery}>
-        <Button
-          color='secondary'
-          className={classes.recovery_link}
-        >
-          Need Help?
-        </Button>
-      </Link>
+      {routes.Recovery && (
+        <Link to={routes.Recovery}>
+          <Button
+            color='secondary'
+            className={classes.recovery_link}
+          >
+            Need Help?
+          </Button>
+        </Link>
+      )}
       <Typography
         align='center'
         color='textSecondary'
         className={classes.copyright_text}
       >
-        Copyright &copy; 2020 Peer-to-peer Privacy Systems Research, LLC. All rights reserved.
+        Computing with Integrity is Copyright &copy; 2020 Peer-to-peer Privacy Systems Research, LLC. All rights reserved.
       </Typography>
     </div>
   )
