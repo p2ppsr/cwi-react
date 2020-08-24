@@ -1,8 +1,7 @@
 import { UPDATE } from './types'
 
 export const initialState = {
-  routes: {},
-  mainPage: '/dashboard'
+  routes: {}
 }
 
 const reducer = (state = initialState, action) => {

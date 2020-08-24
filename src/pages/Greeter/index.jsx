@@ -21,16 +21,16 @@ import {
   SettingsPhone as PhoneIcon,
   CheckCircle as CheckCircleIcon,
   PermPhoneMsg as SMSIcon,
-  Lock as LockIcon,
-  QuestionAnswer
+  Lock as LockIcon
 } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import CWILogo from '../../images/CWI'
 
 const useStyles = makeStyles(style, { name: 'Home' })
 
-const Greeter = ({ history, mainPage, routes }) => {
+const Greeter = ({ history, mainPage, logoURL, routes }) => {
   const classes = useStyles()
   const [accordianView, setAccordianView] = useState('phone')
   const [phone, setPhone] = useState('')
@@ -48,7 +48,7 @@ const Greeter = ({ history, mainPage, routes }) => {
     bindCallback('onAuthenticationSuccess', async () => {
       // Optionally, you can also save a state snapshot before redirecting
       localStorage.CWIAuthStateSnapshot = await createSnapshot()
-      history.push(sessionStorage.redirect || mainPage)
+      history.push(sessionStorage.CWIRedirectPath || mainPage)
     })
 
     // Populate the account status when it is discovered
@@ -90,7 +90,19 @@ const Greeter = ({ history, mainPage, routes }) => {
 
   return (
     <div className={classes.content_wrap}>
-      <QuestionAnswer className={classes.logo} />
+      <center>
+        {logoURL ? (
+          <img
+            className={classes.logo}
+            src={logoURL}
+            alt='Logo'
+          />
+        ) : (
+          <CWILogo
+            className={classes.logo}
+          />
+        )}
+      </center>
       <Accordion
         expanded={accordianView === 'phone'}
       >
@@ -238,6 +250,7 @@ const Greeter = ({ history, mainPage, routes }) => {
 
 const stateToProps = state => ({
   mainPage: state.mainPage,
+  logoURL: state.logoURL,
   routes: state.routes
 })
 

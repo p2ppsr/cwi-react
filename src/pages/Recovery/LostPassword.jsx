@@ -77,7 +77,7 @@ const RecoveryLostPassword = ({ history, mainPage, routes }) => {
     e.preventDefault()
     const result = await changePassword(password, confirmPassword)
     if (result === true) {
-      history.push(sessionStorage.redirect || mainPage)
+      history.push(sessionStorage.CWIRedirectPath || mainPage)
     }
   }
 

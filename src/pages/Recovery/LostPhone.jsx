@@ -65,7 +65,7 @@ const RecoveryLostPhone = ({ history, routes, mainPage }) => {
     e.preventDefault()
     const result = await changePhoneNumber(newPhone)
     if (result === true) {
-      history.push(sessionStorage.redirect || mainPage)
+      history.push(sessionStorage.CWIRedirectPath || mainPage)
     }
   }
 

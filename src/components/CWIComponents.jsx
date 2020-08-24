@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { initialize, bindCallback } from '@p2ppsr/cwi-auth'
+import { initialize, bindCallback, isAuthenticated } from '@p2ppsr/cwi-auth'
 import { toast, ToastContainer } from 'react-toastify'
 import Theme from './Theme.jsx'
 import CodeHandler from './CodeHandler.jsx'
@@ -9,32 +9,45 @@ import RecoveryKeyHandler from './RecoveryKeyHandler.jsx'
 import store from '../redux/store'
 import { UPDATE } from '../redux/types'
 import { Provider } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 
 const CWIComponents = ({
+  history,
   planariaToken = process.env.REACT_APP_PLANARIA_TOKEN,
   secretServerURL = process.env.REACT_APP_SECRET_SERVER_URL,
   commissions = [],
-  mainPage = '/dashboard'
+  mainPage = '/dashboard',
+  logoURL,
+  routes
 } = {}) => {
   useEffect(() => {
-    bindCallback('onAuthenticationError', toast.error)
-    initialize({
-      planariaToken,
-      secretServerURL,
-      commissions,
-      stateSnapshot: localStorage.CWIAuthStateSnapshot
-    })
+    (async () => {
+      bindCallback('onAuthenticationError', toast.error)
+      await initialize({
+        planariaToken,
+        secretServerURL,
+        commissions,
+        stateSnapshot: localStorage.CWIAuthStateSnapshot
+      })
+      if (
+        isAuthenticated() &&
+        window.location.pathname === store.getState().routes.Greeter
+      ) {
+        history.push(mainPage)
+      }
+    })()
   }, [])
 
   useEffect(() => {
     store.dispatch({
       type: UPDATE,
       payload: {
-        mainPage
+        mainPage,
+        logoURL
       }
     })
-  }, [mainPage])
+  }, [mainPage, logoURL])
 
   return (
     <Provider store={store}>
@@ -52,4 +65,4 @@ const CWIComponents = ({
   )
 }
 
-export default CWIComponents
+export default withRouter(CWIComponents)

@@ -49,7 +49,6 @@ const Recovery = ({ routes }) => {
 }
 
 const stateToProps = state => ({
-  mainPage: state.mainPage,
   routes: state.routes
 })
 

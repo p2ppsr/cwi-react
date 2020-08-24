@@ -42,10 +42,11 @@ This component is the main entry point for the library. It should be rendered ou
 
 Name            | Description
 ----------------|---------------------
-mainPage        | Specify the page where users should be sent after they log in with CWI
-planariaToken   | Specify the Planaria token that will be used to interact with the blockchain. Obtain a token from [token.planaria.network](https://token.planaria.network)
-secretServerURL | Specify the CWI secret server to use. You should ignore this unless you have specific permission and instructions from us to do otherwise.
-commissions     | Specify an array of commissions for your application
+mainPage        | The page where users should be sent after they log in with CWI
+planariaToken   | The Planaria token that will be used to interact with the blockchain. Obtain a token from [token.planaria.network](https://token.planaria.network)
+secretServerURL | The CWI secret server to use. You should ignore this unless you have specific permission and instructions from us to do otherwise.
+commissions     | An array of commissions for your application
+logoURL         | The URL to your app's logo image. We recommend making it a square.
 
 ### CWIRoutes
 
@@ -79,6 +80,19 @@ import { getPrimaryKey } from '@p2ppsr/react-cwi/auth'
 ```
 
 There is no need to install a separate version of the authentication library when you use this package.
+
+## Changing the Redirect URL
+
+To dynamically change where the user is redirected after authenticating with CWI, set a relative path in `sessionStorage.redirect`. Instead of being taken to `mainPage`, the user will be taken to this path.
+
+## Logging Out
+
+We persist the user's session with local storage. To log the user out:
+
+- Call the `logout` function from `@p2ppsr/react-cwi/auth`
+- Run `delete localStorage.CWIAuthStateSnapshot`
+- Reset your app to its initial state
+- Go to the Greeter route (default: `/`)
 
 ## Demo Project
 
