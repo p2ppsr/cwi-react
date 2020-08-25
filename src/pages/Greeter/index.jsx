@@ -55,7 +55,7 @@ const Greeter = ({ history, mainPage, logoURL, routes }) => {
     bindCallback('onAccountStatusDiscovered', status => {
       setAccountStatus(status)
     })
-  }, [history])
+  }, [history, mainPage])
 
   const handleSubmitPhone = async e => {
     e.preventDefault()
