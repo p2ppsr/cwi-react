@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-// import KeyIcon from '@material-ui/icons/VpnKey'
 import {
   Button, Typography
 } from '@material-ui/core'
@@ -16,17 +15,19 @@ import { toast } from 'react-toastify'
 import { connect } from 'react-redux'
 
 const useStyles = makeStyles(style, {
-  name: 'Change'
+  name: 'RecoveryKeySettings'
 })
 
-const ChangeRecoveryKey = ({ history, routes, mainPage }) => {
+const RecoveryKeySettings = ({ history, routes, mainPage }) => {
   const classes = useStyles()
   const [recoveryKey, setRecoveryKey] = useState('')
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      history.push(routes.Greeter)
-    }
+    setTimeout(() => {
+      if (!isAuthenticated()) {
+        history.push(routes.Greeter)
+      }
+    }, 1000)
   }, [history])
 
   const handleViewKey = async () => {
@@ -64,14 +65,16 @@ const ChangeRecoveryKey = ({ history, routes, mainPage }) => {
       >
         Change Recovery Key
       </Button>
-      <Link to={mainPage}>
-        <Button
-          color='secondary'
-          className={classes.back_button}
-        >
-          Go Back
-        </Button>
-      </Link>
+      {mainPage && (
+        <Link to={mainPage}>
+          <Button
+            color='secondary'
+            className={classes.back_button}
+          >
+            Go Back
+          </Button>
+        </Link>
+      )}
     </div>
   )
 }
@@ -81,4 +84,4 @@ const stateToProps = state => ({
   routes: state.routes
 })
 
-export default connect(stateToProps)(ChangeRecoveryKey)
+export default connect(stateToProps)(RecoveryKeySettings)

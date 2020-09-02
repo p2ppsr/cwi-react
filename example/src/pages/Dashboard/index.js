@@ -5,11 +5,13 @@ export default ({ history }) => {
   const [userID, setUserID] = useState('')
 
   useEffect(() => {
-    if (isAuthenticated()) {
-      setUserID(getUserID())
-    } else {
-      history.push('/')
-    }
+    setTimeout(() => {
+      if (isAuthenticated()) {
+        setUserID(getUserID())
+      } else {
+        history.push('/')
+      }
+    }, 1000)
   }, [history])
 
   return (

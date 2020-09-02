@@ -4,10 +4,10 @@ import Greeter from '../pages/Greeter/index.jsx'
 import Recovery from '../pages/Recovery/index.jsx'
 import RecoveryLostPassword from '../pages/Recovery/LostPassword.jsx'
 import RecoveryLostPhone from '../pages/Recovery/LostPhone.jsx'
-import Change from '../pages/Change/index.jsx'
-import ChangePhone from '../pages/Change/Phone.jsx'
-import ChangePassword from '../pages/Change/Password.jsx'
-import ChangeRecoveryKey from '../pages/Change/RecoveryKey.jsx'
+import Settings from '../pages/Settings/index.jsx'
+import PhoneSettings from '../pages/Settings/Phone.jsx'
+import PasswordSettings from '../pages/Settings/Password.jsx'
+import RecoveryKeySettings from '../pages/Settings/RecoveryKey.jsx'
 import Theme from './Theme.jsx'
 import { Provider } from 'react-redux'
 import store from '../redux/store'
@@ -29,10 +29,10 @@ const CWIRoutes = ({
     Recovery: '/recovery',
     RecoveryLostPassword: '/recovery/lost-password',
     RecoveryLostPhone: '/recovery/lost-phone',
-    Change: '/change',
-    ChangePhone: '/change/phone',
-    ChangePassword: '/change/password',
-    ChangeRecoveryKey: '/change/recovery-key',
+    Settings: '/cwi-settings',
+    PhoneSettings: '/cwi-settings/phone',
+    PasswordSettings: '/cwi-settings/password',
+    RecoveryKeySettings: '/cwi-settings/recovery-key',
     ...routes
   }
 
@@ -69,23 +69,23 @@ const CWIRoutes = ({
       />
       <Route
         exact
-        path={combinedRoutes.Change}
-        component={withWrappers(Change)}
+        path={combinedRoutes.Settings}
+        component={withWrappers(Settings)}
       />
       <Route
         exact
-        path={combinedRoutes.ChangePhone}
-        component={withWrappers(ChangePhone)}
+        path={combinedRoutes.PhoneSettings}
+        component={withWrappers(PhoneSettings)}
       />
       <Route
         exact
-        path={combinedRoutes.ChangePassword}
-        component={withWrappers(ChangePassword)}
+        path={combinedRoutes.PasswordSettings}
+        component={withWrappers(PasswordSettings)}
       />
       <Route
         exact
-        path={combinedRoutes.ChangeRecoveryKey}
-        component={withWrappers(ChangeRecoveryKey)}
+        path={combinedRoutes.RecoveryKeySettings}
+        component={withWrappers(RecoveryKeySettings)}
       />
     </>
   )

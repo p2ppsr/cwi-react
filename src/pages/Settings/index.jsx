@@ -14,42 +14,44 @@ import { isAuthenticated } from '@p2ppsr/cwi-auth'
 import { connect } from 'react-redux'
 
 const useStyles = makeStyles(style, {
-  name: 'Change'
+  name: 'Settings'
 })
 
-const Change = ({ history, routes, mainPage }) => {
+const Settings = ({ history, routes, mainPage }) => {
   const classes = useStyles()
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      history.push(routes.Greeter)
-    }
+    setTimeout(() => {
+      if (!isAuthenticated()) {
+        history.push(routes.Greeter)
+      }
+    }, 1000)
   }, [history])
 
   return (
     <div className={classes.content_wrap}>
       <List>
-        <Link to={routes.ChangePhone}>
+        <Link to={routes.SettingsPhone}>
           <ListItem button>
             <ListItemIcon>
               <PhoneIcon />
             </ListItemIcon>
             <ListItemText>
-              Change Phone Number
+              Settings Phone Number
             </ListItemText>
           </ListItem>
         </Link>
-        <Link to={routes.ChangePassword}>
+        <Link to={routes.SettingsPassword}>
           <ListItem button>
             <ListItemIcon>
               <LockIcon />
             </ListItemIcon>
             <ListItemText>
-              Change Password
+              Settings Password
             </ListItemText>
           </ListItem>
         </Link>
-        <Link to={routes.ChangeRecoveryKey}>
+        <Link to={routes.SettingsRecoveryKey}>
           <ListItem button>
             <ListItemIcon>
               <KeyIcon />
@@ -60,9 +62,11 @@ const Change = ({ history, routes, mainPage }) => {
           </ListItem>
         </Link>
       </List>
-      <Link to={mainPage}>
-        <Button className={classes.back_button}>Go Back</Button>
-      </Link>
+      {mainPage && (
+        <Link to={mainPage}>
+          <Button className={classes.back_button}>Go Back</Button>
+        </Link>
+      )}
     </div>
   )
 }
@@ -72,4 +76,4 @@ const stateToProps = state => ({
   mainPage: state.mainPage
 })
 
-export default connect(stateToProps)(Change)
+export default connect(stateToProps)(Settings)
