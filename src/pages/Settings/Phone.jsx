@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import {
   changePhoneNumber,
-  isAuthenticated,
   createSnapshot
-} from '@p2ppsr/cwi-auth'
+} from '@cwi/core'
 import style from './style'
 import {
   Accordion,
@@ -21,6 +20,7 @@ import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { connect } from 'react-redux'
+import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 
 const useStyles = makeStyles(style, { name: 'PhoneSettings' })
 
@@ -29,11 +29,7 @@ const PhoneSettings = ({ history, mainPage, routes }) => {
   const [newPhone, setNewPhone] = useState('')
 
   useEffect(() => {
-    setTimeout(() => {
-      if (!isAuthenticated()) {
-        history.push(routes.Greeter)
-      }
-    }, 1000)
+    redirectIfLoggedOut(history, routes)
   }, [history])
 
   const handleSubmitNewPhone = async e => {

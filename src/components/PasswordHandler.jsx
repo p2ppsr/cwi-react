@@ -1,18 +1,20 @@
 import React, { useEffect } from 'react'
 import {
   bindCallback,
-  submitPassword
-} from '@p2ppsr/cwi-auth'
+  unbindCallback,
+  submitPassword,
+  abortPassword
+} from '@cwi/core'
 import {
   PasswordModal,
   requestPassword,
   closeModal,
   clearPassword
-} from '@p2ppsr/password-modal'
+} from '@cwi/password-modal'
 
 const PasswordHandler = () => {
   useEffect(() => {
-    bindCallback('onPasswordRequired', reason => {
+    const callbackID = bindCallback('onPasswordRequired', reason => {
       requestPassword({
         reason,
         onAttempt: async passwordAttempt => {
@@ -22,9 +24,15 @@ const PasswordHandler = () => {
           } else {
             clearPassword()
           }
+        },
+        onAbort: () => {
+          abortPassword()
+          clearPassword()
+          closeModal()
         }
       })
     })
+    return () => unbindCallback('onPasswordRequired', callbackID)
   }, [])
 
   return (

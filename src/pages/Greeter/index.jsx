@@ -5,8 +5,9 @@ import {
   submitPassword,
   createSnapshot,
   bindCallback,
+  unbindCallback,
   setAuthenticationMode
-} from '@p2ppsr/cwi-auth'
+} from '@cwi/core'
 import style from './style'
 import {
   Accordion,
@@ -27,8 +28,9 @@ import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import CWILogo from '../../images/CWI'
+import { toast } from 'react-toastify'
 
-const useStyles = makeStyles(style, { name: 'Home' })
+const useStyles = makeStyles(style, { name: 'Greeter' })
 
 const Greeter = ({ history, mainPage, logoURL, routes }) => {
   const classes = useStyles()
@@ -40,21 +42,27 @@ const Greeter = ({ history, mainPage, logoURL, routes }) => {
   const [accountStatus, setAccountStatus] = useState(undefined)
   const [loading, setLoading] = useState(false)
 
+  // Ensure the correct authentication mode
   useEffect(() => {
-    // Ensure the correct authentication mode
     setAuthenticationMode('phone-number-and-password')
+  }, [])
 
-    // Navigate to a dashboard when the user logs in
-    bindCallback('onAuthenticationSuccess', async () => {
-      // Optionally, you can also save a state snapshot before redirecting
+  // Populate the account status when it is discovered
+  useEffect(() => {
+    const callbackID = bindCallback(
+      'onAccountStatusDiscovered',
+      setAccountStatus
+    )
+    return () => unbindCallback('onAccountStatusDiscovered', callbackID)
+  }, [])
+
+  // Navigate to the dashboard when the user logs in
+  useEffect(() => {
+    const callbackID = bindCallback('onAuthenticationSuccess', async () => {
       localStorage.CWIAuthStateSnapshot = await createSnapshot()
       history.push(sessionStorage.CWIRedirectPath || mainPage)
     })
-
-    // Populate the account status when it is discovered
-    bindCallback('onAccountStatusDiscovered', status => {
-      setAccountStatus(status)
-    })
+    return () => unbindCallback('onAuthenticationSuccess', callbackID)
   }, [history, mainPage])
 
   const handleSubmitPhone = async e => {
@@ -81,7 +89,11 @@ const Greeter = ({ history, mainPage, logoURL, routes }) => {
     e.preventDefault()
     setLoading(true)
     if (accountStatus === 'new-user') {
-      await submitPassword(password, confirmPassword)
+      try {
+        await submitPassword(password, confirmPassword)
+      } catch (e) {
+        toast.error('You closed the recovery key dialog!')
+      }
     } else if (accountStatus === 'existing-user') {
       await submitPassword(password)
     }

@@ -1,9 +1,9 @@
 {
-  "name": "@p2ppsr/react-cwi",
-  "version": "0.0.5",
+  "name": "@cwi/react",
+  "version": "0.1.0",
   "description": "Components for using CWI in React applications",
   "main": "build/index.js",
-  "repository": "git+https://github.com/p2ppsr/react-cwi",
+  "repository": "git+https://github.com/p2ppsr/cwi-react",
   "author": "Peer-to-Peer Privacy Systems Research LLC",
   "license": "PROPRIETARY",
   "scripts": {
@@ -19,14 +19,14 @@
     "@material-ui/core": "^4.10.1",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/styles": "^4.10.0",
-    "@p2ppsr/cwi-auth": "^0.1.7",
-    "@p2ppsr/password-modal": "^0.0.8",
-    "@p2ppsr/payment-modal": "^0.1.0",
+    "@cwi/password-modal": "^0.1.0",
+    "@cwi/payment-modal": "^0.1.0",
     "react-redux": "^7.2.1",
     "react-toastify": "^6.0.8",
     "redux": "^4.0.5"
   },
   "peerDependencies": {
+    "@cwi/core": "^0.1.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react": "^16.0.0"

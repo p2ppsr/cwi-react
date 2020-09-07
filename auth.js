@@ -1,1 +1,0 @@
-module.exports = require('@p2ppsr/cwi-auth')

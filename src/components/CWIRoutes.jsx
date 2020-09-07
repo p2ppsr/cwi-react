@@ -24,15 +24,9 @@ const withWrappers = Component => props => (
 const CWIRoutes = ({
   routes = {}
 } = {}) => {
+  const reduxRoutes = store.getState().routes
   const combinedRoutes = {
-    Greeter: '/',
-    Recovery: '/recovery',
-    RecoveryLostPassword: '/recovery/lost-password',
-    RecoveryLostPhone: '/recovery/lost-phone',
-    Settings: '/cwi-settings',
-    PhoneSettings: '/cwi-settings/phone',
-    PasswordSettings: '/cwi-settings/password',
-    RecoveryKeySettings: '/cwi-settings/recovery-key',
+    ...reduxRoutes,
     ...routes
   }
 
@@ -40,10 +34,13 @@ const CWIRoutes = ({
     store.dispatch({
       type: UPDATE,
       payload: {
-        routes: combinedRoutes
+        routes: {
+          ...store.getState().routes,
+          routes
+        }
       }
     })
-  }, [combinedRoutes])
+  }, [routes])
 
   return (
     <>

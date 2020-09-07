@@ -1,5 +1,10 @@
 import React, { useEffect } from 'react'
-import { initialize, bindCallback, isAuthenticated } from '@p2ppsr/cwi-auth'
+import {
+  initialize,
+  bindCallback,
+  unbindCallback,
+  isAuthenticated
+} from '@cwi/core'
 import { toast, ToastContainer } from 'react-toastify'
 import Theme from './Theme.jsx'
 import CodeHandler from './CodeHandler.jsx'
@@ -17,13 +22,12 @@ const CWIComponents = ({
   planariaToken = process.env.REACT_APP_PLANARIA_TOKEN,
   secretServerURL = process.env.REACT_APP_SECRET_SERVER_URL,
   commissions = [],
-  mainPage = '/dashboard',
+  mainPage,
   logoURL,
   routes
 } = {}) => {
   useEffect(() => {
     (async () => {
-      bindCallback('onAuthenticationError', toast.error)
       await initialize({
         planariaToken,
         secretServerURL,
@@ -40,14 +44,31 @@ const CWIComponents = ({
   }, [])
 
   useEffect(() => {
-    store.dispatch({
-      type: UPDATE,
-      payload: {
-        mainPage,
-        logoURL
-      }
-    })
-  }, [mainPage, logoURL])
+    const callbackID = bindCallback('onAuthenticationError', toast.error)
+    return () => unbindCallback('onAuthenticationError', callbackID)
+  })
+
+  useEffect(() => {
+    if (mainPage) {
+      store.dispatch({
+        type: UPDATE,
+        payload: {
+          mainPage
+        }
+      })
+    }
+  }, [mainPage])
+
+  useEffect(() => {
+    if (logoURL) {
+      store.dispatch({
+        type: UPDATE,
+        payload: {
+          logoURL
+        }
+      })
+    }
+  }, [logoURL])
 
   return (
     <Provider store={store}>

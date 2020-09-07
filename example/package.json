@@ -1,5 +1,5 @@
 {
-  "name": "@p2ppsr/react-cwi-example",
+  "name": "@cwi/react-example",
   "homepage": ".",
   "version": "0.0.0",
   "private": true,
@@ -9,8 +9,8 @@
     "test": "node ../node_modules/react-scripts/bin/react-scripts.js test"
   },
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@p2ppsr/react-cwi": "file:..",
+    "@cwi/react": "file:..",
+    "@cwi/core": "^0.1.0",
     "react": "file:../node_modules/react",
     "react-dom": "file:../node_modules/react-dom",
     "react-router": "^5.2.0",

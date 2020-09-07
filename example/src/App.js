@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
-import { CWIComponents, CWIRoutes } from '@p2ppsr/react-cwi'
+import { CWIComponents, CWIRoutes } from '@cwi/react'
 
 export default () => (
   <Router>

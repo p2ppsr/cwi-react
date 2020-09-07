@@ -1,28 +1,37 @@
 import React, { useEffect } from 'react'
 import {
   bindCallback,
-  submitPayment
-} from '@p2ppsr/cwi-auth'
+  unbindCallback,
+  submitPayment,
+  abortPayment
+} from '@cwi/core'
 import {
   PaymentModal,
-  requestPayment
-} from '@p2ppsr/payment-modal'
-
-window.submitPayment = submitPayment
+  requestPayment,
+  resetModal
+} from '@cwi/payment-modal'
 
 const PaymentHandler = () => {
   useEffect(() => {
-    bindCallback('onPaymentRequired', ({ amount, address, reason }) => {
-      requestPayment({
-        amount,
-        address,
-        reason,
-        token: process.env.REACT_APP_PLANARIA_TOKEN,
-        onPaymentComplete: transactions => {
-          submitPayment(transactions)
-        }
-      })
-    })
+    const callbackID = bindCallback(
+      'onPaymentRequired',
+      ({ amount, address, reason }) => {
+        requestPayment({
+          amount,
+          address,
+          reason,
+          token: process.env.REACT_APP_PLANARIA_TOKEN,
+          onPaymentComplete: transactions => {
+            submitPayment(transactions)
+          },
+          onAbort: () => {
+            resetModal()
+            abortPayment()
+          }
+        })
+      }
+    )
+    return () => unbindCallback('onPaymentRequired', callbackID)
   }, [])
 
   return (

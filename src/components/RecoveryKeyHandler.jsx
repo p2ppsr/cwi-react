@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import {
   bindCallback,
-  saveRecoveryKey
-} from '@p2ppsr/cwi-auth'
+  unbindCallback,
+  saveRecoveryKey,
+  abortRecoveryKey
+} from '@cwi/core'
 import { Dialog, Button, Typography } from '@material-ui/core'
 
 const RecoveryKeyHandler = () => {
@@ -10,10 +12,11 @@ const RecoveryKeyHandler = () => {
   const [recoveryKey, setRecoveryKey] = useState('')
 
   useEffect(() => {
-    bindCallback('onRecoveryKeyNeedsSaving', keyToSave => {
+    const callbackID = bindCallback('onRecoveryKeyNeedsSaving', keyToSave => {
       setRecoveryKey(keyToSave)
       setOpen(true)
     })
+    return () => unbindCallback('onRecoveryKeyNeedsSaving', callbackID)
   }, [])
 
   const onKeySaved = async () => {
@@ -24,6 +27,11 @@ const RecoveryKeyHandler = () => {
   return (
     <Dialog
       open={open}
+      onClose={() => {
+        abortRecoveryKey()
+        setRecoveryKey('')
+        setOpen(false)
+      }}
     >
       <Typography variant='h3' paragraph>
         Save this key

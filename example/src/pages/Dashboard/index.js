@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import { getUserID, isAuthenticated } from '@p2ppsr/react-cwi/auth'
+import {
+  getUserID,
+  waitForInitialization,
+  isAuthenticated
+} from '@cwi/core'
 
 export default ({ history }) => {
   const [userID, setUserID] = useState('')
 
   useEffect(() => {
-    setTimeout(() => {
+    (async () => {
+      await waitForInitialization()
       if (isAuthenticated()) {
         setUserID(getUserID())
       } else {
         history.push('/')
       }
-    }, 1000)
+    })()
   }, [history])
 
   return (

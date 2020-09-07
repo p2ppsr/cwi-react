@@ -10,8 +10,8 @@ import {
 import {
   List, ListItem, ListItemIcon, ListItemText, Button
 } from '@material-ui/core'
-import { isAuthenticated } from '@p2ppsr/cwi-auth'
 import { connect } from 'react-redux'
+import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 
 const useStyles = makeStyles(style, {
   name: 'Settings'
@@ -21,17 +21,13 @@ const Settings = ({ history, routes, mainPage }) => {
   const classes = useStyles()
 
   useEffect(() => {
-    setTimeout(() => {
-      if (!isAuthenticated()) {
-        history.push(routes.Greeter)
-      }
-    }, 1000)
+    redirectIfLoggedOut(history, routes)
   }, [history])
 
   return (
     <div className={classes.content_wrap}>
       <List>
-        <Link to={routes.SettingsPhone}>
+        <Link to={routes.PhoneSettings}>
           <ListItem button>
             <ListItemIcon>
               <PhoneIcon />
@@ -41,7 +37,7 @@ const Settings = ({ history, routes, mainPage }) => {
             </ListItemText>
           </ListItem>
         </Link>
-        <Link to={routes.SettingsPassword}>
+        <Link to={routes.PasswordSettings}>
           <ListItem button>
             <ListItemIcon>
               <LockIcon />
@@ -51,7 +47,7 @@ const Settings = ({ history, routes, mainPage }) => {
             </ListItemText>
           </ListItem>
         </Link>
-        <Link to={routes.SettingsRecoveryKey}>
+        <Link to={routes.RecoveryKeySettings}>
           <ListItem button>
             <ListItemIcon>
               <KeyIcon />
@@ -62,11 +58,9 @@ const Settings = ({ history, routes, mainPage }) => {
           </ListItem>
         </Link>
       </List>
-      {mainPage && (
-        <Link to={mainPage}>
-          <Button className={classes.back_button}>Go Back</Button>
-        </Link>
-      )}
+      <Link to={mainPage}>
+        <Button className={classes.back_button}>Go Back</Button>
+      </Link>
     </div>
   )
 }

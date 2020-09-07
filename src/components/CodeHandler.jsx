@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import {
   bindCallback,
-  submitCode
-} from '@p2ppsr/cwi-auth'
+  unbindCallback,
+  submitCode,
+  abortCode
+} from '@cwi/core'
 import { Dialog, Button, Typography, TextField } from '@material-ui/core'
 
 const RecoveryKeyHandler = () => {
@@ -12,11 +14,12 @@ const RecoveryKeyHandler = () => {
   const [code, setCode] = useState('')
 
   useEffect(() => {
-    bindCallback('onCodeRequired', ({ phone, reason }) => {
+    const callbackID = bindCallback('onCodeRequired', ({ phone, reason }) => {
       setPhone(phone)
       setReason(reason)
       setOpen(true)
     })
+    return () => unbindCallback('onCodeRequired', callbackID)
   }, [])
 
   const handleSubmit = async () => {
@@ -29,6 +32,10 @@ const RecoveryKeyHandler = () => {
   return (
     <Dialog
       open={open}
+      onClose={() => {
+        abortCode()
+        setOpen(false)
+      }}
     >
       <Typography variant='h3' paragraph>
         Code Sent to {phone}

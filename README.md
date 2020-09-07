@@ -1,6 +1,14 @@
-# React CWI
+# @cwi/react
 
 Components for using CWI in React applications
+
+## Setup
+
+This component has a few peer dependencies that you need to add alongside it to your project:
+
+- **React**: This is a React library. You need to install `react` in order to use it.
+- **React Router**: We'll define a few routes in your app. In order to do this, you'll need to install `react-router` and `react-router-dom`, and use it for routing.
+- **CWI Core**: You won't interact with CWI very much through this package. Install at least the `@cwi/core` module. You'll also probably want the `@cwi/users` package if you're building a multi-user app.
 
 ### Basic Usage
 
@@ -8,7 +16,7 @@ Components for using CWI in React applications
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
-import { CWIRoutes, CWIComponents } from '@p2ppsr/react-cwi'
+import { CWIRoutes, CWIComponents } from '@cwi/react'
 
 export default () => (
   <Router>
@@ -22,10 +30,6 @@ export default () => (
   </Router>
 )
 ```
-
-## Requirements
-
-Currently, we require that you use `react-router` and `react-router-dom` in your project. We define several routes in your application, discussed below.
 
 ## Components
 
@@ -60,10 +64,10 @@ CWI is responsible for the following routes (page names for use in the `routes` 
 - **Recovery** (default /recovery), where users can get back into their CWI accounts
 - **RecoveryLostPassword** (default /recovery/lost-password), where users can reset their passwords
 - **RecoveryLostPhone** (default /recovery/lost-phone), where users can reset their phone numbers
-- **Change** (default /change) where users can change and manage their login details
-- **ChangePassword** (default /change/password), where users can change their passwords
-- **ChangePhone** (default /change/phone), where users can change their phone numbers
-- **ChangeRecoveryKey** (default /change/recovery-key), where users can view or change their recovery recovery keys
+- **Settings** (default /cwi-settings) where users can change and manage their login details
+- **PasswordSettings** (default /cwi-settings/password), where users can change their passwords
+- **PhoneSettings** (default /cwi-settings/phone), where users can change their phone numbers
+- **RecoveryKeySettings** (default /cwi-settings/recovery-key), where users can view or change their recovery recovery keys
 
 #### Props
 
@@ -71,15 +75,9 @@ Name   | Description
 -------|----------------------
 routes | An object mapping page names to paths
 
-## Accessing the Authentication Library
+## About CWI Core
 
-You can import and use the [authentication library](https://npm-registry.babbage.systems/-/web/detail/@p2ppsr/cwi-auth) as follows:
-
-```js
-import { getPrimaryKey } from '@p2ppsr/react-cwi/auth'
-```
-
-There is no need to install a separate version of the authentication library when you use this package.
+You should familiarize yourself with the `@cwi/core` package, since it's the primary interface to CWI. This package is concerned with the UI components, while `@cwi/core` deals with the actual meat and potatoes.
 
 ## Changing the Redirect URL
 
@@ -89,16 +87,18 @@ To dynamically change where the user is redirected after authenticating with CWI
 
 We persist the user's session with local storage. To log the user out:
 
-- Call the `logout` function from `@p2ppsr/react-cwi/auth`
+- Call the `logout` function from `@cwi/react/auth`
 - Run `delete localStorage.CWIAuthStateSnapshot`
 - Reset your app to its initial state
 - Go to the Greeter route (default: `/`)
 
 ## Demo Project
 
-Convo is a decentralized, secure messaging application built with `react-cwi`. Check out the [website](https://convo.babbage.systems) or ask for a copy of the code!
+Convo is a decentralized, secure messaging application built with `@cwi/core` and `@cwi/react`. Check out the [website](https://convo.babbage.systems) or ask for a copy of the code!
 
 ## Development
+
+> Use these instructions if you've been given access to source code in order to contribute to @cwi/react.
 
 To set up for development, pull down the repo and do the following:
 
@@ -119,5 +119,5 @@ Hot reloading should be supported by this setup.
 ## Confidentiality
 
 This is proprietary software developed and owned by Peer-to-peer Privacy Systems Research, LLC. 
-Except as provided for in your partnership agreement with us, you may not use this software and 
+Except as provided for in your CWI Partner Agreement with us, you may not use this software and 
 must keep it confidential.

@@ -3,16 +3,16 @@ import {
   Button, Typography
 } from '@material-ui/core'
 import {
-  isAuthenticated,
   changeRecoveryKey,
   getRecoveryKey,
   createSnapshot
-} from '@p2ppsr/cwi-auth'
+} from '@cwi/core'
 import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/styles'
 import style from './style'
 import { toast } from 'react-toastify'
 import { connect } from 'react-redux'
+import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 
 const useStyles = makeStyles(style, {
   name: 'RecoveryKeySettings'
@@ -23,11 +23,7 @@ const RecoveryKeySettings = ({ history, routes, mainPage }) => {
   const [recoveryKey, setRecoveryKey] = useState('')
 
   useEffect(() => {
-    setTimeout(() => {
-      if (!isAuthenticated()) {
-        history.push(routes.Greeter)
-      }
-    }, 1000)
+    redirectIfLoggedOut(history, routes)
   }, [history])
 
   const handleViewKey = async () => {

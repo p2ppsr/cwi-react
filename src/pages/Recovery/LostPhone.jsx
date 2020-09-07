@@ -4,9 +4,10 @@ import {
   submitPassword,
   createSnapshot,
   bindCallback,
+  unbindCallback,
   setAuthenticationMode,
   changePhoneNumber
-} from '@p2ppsr/cwi-auth'
+} from '@cwi/core'
 import style from './style'
 import {
   Accordion,
@@ -36,17 +37,18 @@ const RecoveryLostPhone = ({ history, routes, mainPage }) => {
   const [password, setPassword] = useState('')
   const [newPhone, setNewPhone] = useState('')
 
+  // Ensure the correct authentication mode
   useEffect(() => {
-    // Ensure the correct authentication mode
     setAuthenticationMode('recovery-key-and-password')
+  }, [])
 
-    // Navigate to a dashboard when the user logs in
-    bindCallback('onAuthenticationSuccess', async () => {
-      // Optionally, you can also save a state snapshot before redirecting
+  useEffect(() => {
+    const callbackID = bindCallback('onAuthenticationSuccess', async () => {
       localStorage.CWIAuthStateSnapshot = await createSnapshot()
       setAccordianView('new-phone')
     })
-  }, [history])
+    return () => unbindCallback('onAuthenticationSuccess', callbackID)
+  }, [])
 
   const handleSubmitRecoveryKey = async e => {
     e.preventDefault()
