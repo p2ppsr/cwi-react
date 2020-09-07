@@ -3,3 +3,4 @@ __tests
 babel.config.js
 rollup.config.js
 example
+jsconfig.json
