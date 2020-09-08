@@ -38,7 +38,7 @@ const CWIComponents = ({
         isAuthenticated() &&
         window.location.pathname === store.getState().routes.Greeter
       ) {
-        history.push(mainPage)
+        history.push(mainPage || store.getState().mainPage)
       }
     })()
   }, [])
