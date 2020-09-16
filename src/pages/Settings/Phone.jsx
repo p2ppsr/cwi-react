@@ -43,52 +43,39 @@ const PhoneSettings = ({ history, mainPage, routes }) => {
   }
 
   return (
-    <div className={classes.content_wrap}>
-      <Accordion
-        expanded
+    <Accordion
+      expanded
+    >
+      <AccordionSummary
+        className={classes.panel_header}
       >
-        <AccordionSummary
-          className={classes.panel_header}
+        <PhoneIcon className={classes.expansion_icon} />
+        <Typography
+          className={classes.panel_heading}
         >
-          <PhoneIcon className={classes.expansion_icon} />
-          <Typography
-            className={classes.panel_heading}
-          >
             New Phone
-          </Typography>
-        </AccordionSummary>
-        <form onSubmit={handleSubmitNewPhone}>
-          <AccordionDetails
-            className={classes.expansion_body}
-          >
-            <TextField
-              onChange={e => setNewPhone(e.target.value)}
-              label='New Phone'
-              fullWidth
-            />
-          </AccordionDetails>
-          <AccordionActions>
-            <Button
-              variant='contained'
-              color='primary'
-              type='submit'
-            >
-                Finish
-            </Button>
-          </AccordionActions>
-        </form>
-      </Accordion>
-      {mainPage && (
-        <Link to={mainPage}>
+        </Typography>
+      </AccordionSummary>
+      <form onSubmit={handleSubmitNewPhone}>
+        <AccordionDetails
+          className={classes.expansion_body}
+        >
+          <TextField
+            onChange={e => setNewPhone(e.target.value)}
+            label='New Phone'
+            fullWidth
+          />
+        </AccordionDetails>
+        <AccordionActions>
           <Button
-            color='secondary'
-            className={classes.back_button}
+            color='primary'
+            type='submit'
           >
-            Go Back
+                Next
           </Button>
-        </Link>
-      )}
-    </div>
+        </AccordionActions>
+      </form>
+    </Accordion>
   )
 }
 

@@ -51,6 +51,7 @@ planariaToken   | The Planaria token that will be used to interact with the bloc
 secretServerURL | The CWI secret server to use. You should ignore this unless you have specific permission and instructions from us to do otherwise.
 commissions     | An array of commissions for your application
 logoURL         | The URL to your app's logo image. We recommend making it a square.
+appName         | The name of your application.
 
 ### CWIRoutes
 

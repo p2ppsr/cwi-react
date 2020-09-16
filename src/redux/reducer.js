@@ -4,14 +4,10 @@ export const initialState = {
   routes: {
     Greeter: '/',
     Recovery: '/recovery',
-    RecoveryLostPassword: '/recovery/lost-password',
-    RecoveryLostPhone: '/recovery/lost-phone',
-    Settings: '/cwi-settings',
-    PhoneSettings: '/cwi-settings/phone',
-    PasswordSettings: '/cwi-settings/password',
-    RecoveryKeySettings: '/cwi-settings/recovery-key'
+    CWISettings: '/cwi-settings'
   },
   mainPage: '/dashboard',
+  appName: 'Example App',
   logoURL: undefined
 }
 

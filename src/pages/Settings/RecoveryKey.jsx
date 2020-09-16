@@ -27,9 +27,11 @@ const RecoveryKeySettings = ({ history, routes, mainPage }) => {
   }, [history])
 
   const handleViewKey = async () => {
-    setRecoveryKey(
-      await getRecoveryKey()
-    )
+    try {
+      setRecoveryKey(
+        await getRecoveryKey()
+      )
+    } catch (e) {}
   }
 
   const handleChangeKey = async () => {
@@ -43,7 +45,7 @@ const RecoveryKeySettings = ({ history, routes, mainPage }) => {
   }
 
   return (
-    <div className={classes.content_wrap}>
+    <div>
       {recoveryKey ? (
         <Typography align='center'>{recoveryKey}</Typography>
       )
@@ -61,16 +63,6 @@ const RecoveryKeySettings = ({ history, routes, mainPage }) => {
       >
         Change Recovery Key
       </Button>
-      {mainPage && (
-        <Link to={mainPage}>
-          <Button
-            color='secondary'
-            className={classes.back_button}
-          >
-            Go Back
-          </Button>
-        </Link>
-      )}
     </div>
   )
 }

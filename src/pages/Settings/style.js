@@ -1,8 +1,20 @@
 export default theme => ({
-  content_wrap: theme.templates.page_wrap,
+  content_wrap: {
+    ...theme.templates.page_wrap,
+    display: 'grid',
+    gridTemplateColumns: '1fr 3fr',
+    gridColumnGap: theme.spacing(3)
+  },
+  tool_grid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr auto'
+  },
   back_button: {
     display: 'block',
     margin: `${theme.spacing(1)}px auto`
+  },
+  title: {
+    color: theme.palette.common.white
   },
   panel_header: {
     position: 'relative'

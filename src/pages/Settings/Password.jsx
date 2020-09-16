@@ -44,57 +44,44 @@ const PasswordSettings = ({ history, mainPage, routes }) => {
   }
 
   return (
-    <div className={classes.content_wrap}>
-      <Accordion expanded>
-        <AccordionSummary
-          className={classes.panel_header}
+    <Accordion expanded>
+      <AccordionSummary
+        className={classes.panel_header}
+      >
+        <LockIcon className={classes.expansion_icon} />
+        <Typography
+          className={classes.panel_heading}
         >
-          <LockIcon className={classes.expansion_icon} />
-          <Typography
-            className={classes.panel_heading}
-          >
-            New Password
-          </Typography>
-        </AccordionSummary>
-        <form onSubmit={handleSubmitPassword}>
-          <AccordionDetails
-            className={classes.expansion_body}
-          >
-            <TextField
-              onChange={e => setPassword(e.target.value)}
-              label='Password'
-              fullWidth
-              type='password'
-            />
-            <TextField
-              onChange={e => setConfirmPassword(e.target.value)}
-              label='Confirm Password'
-              fullWidth
-              type='password'
-            />
-          </AccordionDetails>
-          <AccordionActions>
-            <Button
-              variant='contained'
-              color='primary'
-              type='submit'
-            >
-                Finish
-            </Button>
-          </AccordionActions>
-        </form>
-      </Accordion>
-      {mainPage && (
-        <Link to={mainPage}>
+          New Password
+        </Typography>
+      </AccordionSummary>
+      <form onSubmit={handleSubmitPassword}>
+        <AccordionDetails
+          className={classes.expansion_body}
+        >
+          <TextField
+            onChange={e => setPassword(e.target.value)}
+            label='Password'
+            fullWidth
+            type='password'
+          />
+          <TextField
+            onChange={e => setConfirmPassword(e.target.value)}
+            label='Confirm Password'
+            fullWidth
+            type='password'
+          />
+        </AccordionDetails>
+        <AccordionActions>
           <Button
-            color='secondary'
-            className={classes.back_button}
+            color='primary'
+            type='submit'
           >
-            Go Back
+            Next
           </Button>
-        </Link>
-      )}
-    </div>
+        </AccordionActions>
+      </form>
+    </Accordion>
   )
 }
 

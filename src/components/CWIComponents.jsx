@@ -6,7 +6,7 @@ import {
   isAuthenticated
 } from '@cwi/core'
 import { toast, ToastContainer } from 'react-toastify'
-import Theme from './Theme.jsx'
+import { Theme } from '@cwi/mui-theme'
 import CodeHandler from './CodeHandler.jsx'
 import PasswordHandler from './PasswordHandler.jsx'
 import PaymentHandler from './PaymentHandler.jsx'
@@ -24,7 +24,8 @@ const CWIComponents = ({
   commissions = [],
   mainPage,
   logoURL,
-  routes
+  routes,
+  appName
 } = {}) => {
   useEffect(() => {
     (async () => {
@@ -69,6 +70,17 @@ const CWIComponents = ({
       })
     }
   }, [logoURL])
+
+  useEffect(() => {
+    if (appName) {
+      store.dispatch({
+        type: UPDATE,
+        payload: {
+          appName
+        }
+      })
+    }
+  }, [appName])
 
   return (
     <Provider store={store}>
