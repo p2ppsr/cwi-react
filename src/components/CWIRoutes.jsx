@@ -31,7 +31,7 @@ const CWIRoutes = ({
       payload: {
         routes: {
           ...store.getState().routes,
-          routes
+          ...routes
         }
       }
     })

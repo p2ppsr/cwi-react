@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, useHistory } from 'react-router-dom'
 import style from './style'
 import { makeStyles } from '@material-ui/styles'
 import {
@@ -30,6 +30,8 @@ import { connect } from 'react-redux'
 import PasswordSettings from './Password.jsx'
 import PhoneSettings from './Phone.jsx'
 import RecoveryKeySettings from './RecoveryKey.jsx'
+import Fund from './Fund/index.jsx'
+import Feedback from './Feedback/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Logo from '@cwi/logo-react'
 
@@ -37,8 +39,9 @@ const useStyles = makeStyles(style, {
   name: 'Settings'
 })
 
-const Settings = ({ history, routes, mainPage, appName }) => {
+const Settings = ({ routes, mainPage, appName }) => {
   const classes = useStyles()
+  const history = useHistory()
 
   useEffect(() => {
     redirectIfLoggedOut(history, routes)
@@ -62,55 +65,70 @@ const Settings = ({ history, routes, mainPage, appName }) => {
                 <ArrowBackIcon />
               </ListItemIcon>
               <ListItemText>
-              Back to {appName}
+                Back to {appName}
               </ListItemText>
             </ListItem>
           </List>
           <Divider />
           <List subheader={<ListSubheader>Your Account</ListSubheader>}>
             <ListItem
+              disabled
               button
               onClick={() => history.push(`${routes.CWISettings}/browse-apps`)}
               selected={
-                window.location.pathname === `${routes.CWISettings}/browse-apps`
-                  ? 'primary'
-                  : undefined
+                history.location.pathname === `${routes.CWISettings}/browse-apps`
               }
             >
               <ListItemIcon>
-                <BrowseIcon />
+                <BrowseIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/browse-apps`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
               </ListItemIcon>
               <ListItemText>
                 Browse CWI Apps
               </ListItemText>
             </ListItem>
             <ListItem
+              disabled
               button
               onClick={() => history.push(`${routes.CWISettings}/installed-apps`)}
               selected={
-                window.location.pathname === `${routes.CWISettings}/installed-apps`
-                  ? 'primary'
-                  : undefined
+                history.location.pathname === `${routes.CWISettings}/installed-apps`
               }
             >
               <ListItemIcon>
-                <InstalledIcon />
+                <InstalledIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/installed-apps`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
               </ListItemIcon>
               <ListItemText>
                 Installed CWI Apps
               </ListItemText>
             </ListItem>
             <ListItem
+              disabled
               button
               onClick={() => history.push(`${routes.CWISettings}/app-usage`)}
               selected={
-                window.location.pathname === `${routes.CWISettings}/app-usage`
-                  ? 'primary'
-                  : undefined
+                history.location.pathname === `${routes.CWISettings}/app-usage`
               }
             >
               <ListItemIcon>
-                <UsageIcon />
+                <UsageIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/app-usage`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
               </ListItemIcon>
               <ListItemText>
                 CWI App Usage
@@ -120,13 +138,17 @@ const Settings = ({ history, routes, mainPage, appName }) => {
               button
               onClick={() => history.push(`${routes.CWISettings}/fund`)}
               selected={
-                window.location.pathname === `${routes.CWISettings}/fund`
-                  ? 'primary'
-                  : undefined
+                history.location.pathname === `${routes.CWISettings}/fund`
               }
             >
               <ListItemIcon>
-                <FundIcon />
+                <FundIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/fund`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
               </ListItemIcon>
               <ListItemText>
               Fund Account
@@ -139,13 +161,17 @@ const Settings = ({ history, routes, mainPage, appName }) => {
               button
               onClick={() => history.push(`${routes.CWISettings}/phone`)}
               selected={
-                window.location.pathname === `${routes.CWISettings}/phone`
-                  ? 'primary'
-                  : undefined
+                history.location.pathname === `${routes.CWISettings}/phone`
               }
             >
               <ListItemIcon>
-                <PhoneIcon />
+                <PhoneIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/phone`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
               </ListItemIcon>
               <ListItemText>
               Phone Number
@@ -155,13 +181,17 @@ const Settings = ({ history, routes, mainPage, appName }) => {
               button
               onClick={() => history.push(`${routes.CWISettings}/password`)}
               selected={
-                window.location.pathname === `${routes.CWISettings}/password`
-                  ? 'primary'
-                  : undefined
+                history.location.pathname === `${routes.CWISettings}/password`
               }
             >
               <ListItemIcon>
-                <LockIcon />
+                <LockIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/password`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
               </ListItemIcon>
               <ListItemText>
               Password
@@ -171,13 +201,17 @@ const Settings = ({ history, routes, mainPage, appName }) => {
               button
               onClick={() => history.push(`${routes.CWISettings}/recovery-key`)}
               selected={
-                window.location.pathname === `${routes.CWISettings}/recovery-key`
-                  ? 'primary'
-                  : undefined
+                history.location.pathname === `${routes.CWISettings}/recovery-key`
               }
             >
               <ListItemIcon>
-                <KeyIcon />
+                <KeyIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/recovery-key`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
               </ListItemIcon>
               <ListItemText>
               Recovery Key
@@ -187,32 +221,42 @@ const Settings = ({ history, routes, mainPage, appName }) => {
           <Divider />
           <List subheader={<ListSubheader>Help & Support</ListSubheader>}>
             <ListItem
+              disabled
               button
               onClick={() => history.push(`${routes.CWISettings}/support`)}
               selected={
-                window.location.pathname === `${routes.CWISettings}/support`
-                  ? 'primary'
-                  : undefined
+                history.location.pathname === `${routes.CWISettings}/support`
               }
             >
               <ListItemIcon>
-                <SupportIcon />
+                <SupportIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/support`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
               </ListItemIcon>
               <ListItemText>
-              Ask a Question
+                Ask a Question
               </ListItemText>
             </ListItem>
             <ListItem
+              disabled
               button
               onClick={() => history.push(`${routes.CWISettings}/about`)}
               selected={
-                window.location.pathname === `${routes.CWISettings}/about`
-                  ? 'primary'
-                  : undefined
+                history.location.pathname === `${routes.CWISettings}/about`
               }
             >
               <ListItemIcon>
-                <AboutIcon />
+                <AboutIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/about`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
               </ListItemIcon>
               <ListItemText>
               About CWI
@@ -222,16 +266,20 @@ const Settings = ({ history, routes, mainPage, appName }) => {
               button
               onClick={() => history.push(`${routes.CWISettings}/feedback`)}
               selected={
-                window.location.pathname === `${routes.CWISettings}/feedback`
-                  ? 'primary'
-                  : undefined
+                history.location.pathname === `${routes.CWISettings}/feedback`
               }
             >
               <ListItemIcon>
-                <FeedbackIcon />
+                <FeedbackIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/feedback`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
               </ListItemIcon>
               <ListItemText>
-              Leave Feedback
+                Leave Feedback
               </ListItemText>
             </ListItem>
           </List>
@@ -250,6 +298,16 @@ const Settings = ({ history, routes, mainPage, appName }) => {
           <Route
             path={`${routes.CWISettings}/recovery-key`}
             component={RecoveryKeySettings}
+            exact
+          />
+          <Route
+            path={`${routes.CWISettings}/fund`}
+            component={Fund}
+            exact
+          />
+          <Route
+            path={`${routes.CWISettings}/feedback`}
+            component={Feedback}
             exact
           />
         </Switch>

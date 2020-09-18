@@ -9,8 +9,11 @@
     "test": "node ../node_modules/react-scripts/bin/react-scripts.js test"
   },
   "dependencies": {
-    "@cwi/react": "file:..",
     "@cwi/core": "^0.1.0",
+    "@cwi/react": "file:..",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/styles": "^4.10.0",
     "react": "file:../node_modules/react",
     "react-dom": "file:../node_modules/react-dom",
     "react-router": "^5.2.0",
