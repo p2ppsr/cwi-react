@@ -310,6 +310,22 @@ const Settings = ({ routes, mainPage, appName }) => {
             component={Feedback}
             exact
           />
+          <Route
+            default
+            component={() => (
+              <center>
+                <Logo rotate size={96} />
+                <Typography variant='h5'>
+                  Select a Category
+                </Typography>
+                <Typography
+                  color='textSecondary'
+                >
+                  Use the menu on the left to select a category.
+                </Typography>
+              </center>
+            )}
+          />
         </Switch>
       </div>
     </>

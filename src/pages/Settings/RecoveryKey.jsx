@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import {
-  Button, Typography
+  Button, Typography, List, ListItem, ListItemText
 } from '@material-ui/core'
 import {
   changeRecoveryKey,
   getRecoveryKey,
   createSnapshot
 } from '@cwi/core'
-import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/styles'
 import style from './style'
 import { toast } from 'react-toastify'
@@ -45,25 +44,31 @@ const RecoveryKeySettings = ({ history, routes, mainPage }) => {
   }
 
   return (
-    <div>
-      {recoveryKey ? (
-        <Typography align='center'>{recoveryKey}</Typography>
-      )
-        : (
-          <Button
-            onClick={handleViewKey}
-            className={classes.back_button}
-          >
-            Show Current Recovery Key
-          </Button>
-        )}
-      <Button
+    <List>
+      {recoveryKey && (
+        <Typography>
+          Your Recovery Key:{'\n'}<b>{recoveryKey}</b>
+        </Typography>
+      )}
+      {!recoveryKey && (
+        <ListItem
+          button
+          onClick={handleViewKey}
+        >
+          <ListItemText>
+            Show Recovery Key
+          </ListItemText>
+        </ListItem>
+      )}
+      <ListItem
+        button
         onClick={handleChangeKey}
-        className={classes.back_button}
       >
-        Change Recovery Key
-      </Button>
-    </div>
+        <ListItemText>
+          Change Recovery Key
+        </ListItemText>
+      </ListItem>
+    </List>
   )
 }
 

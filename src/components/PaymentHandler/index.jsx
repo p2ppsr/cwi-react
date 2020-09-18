@@ -19,7 +19,7 @@ const useStyles = makeStyles(style, {
   name: 'PaymentHandler'
 })
 
-const PaymentHandler = ({ routes }) => {
+const PaymentHandler = ({ routes, appName }) => {
   const classes = useStyles()
   const history = useHistory()
   const [paymentReason, setPaymentReason] = useState('')
@@ -39,6 +39,7 @@ const PaymentHandler = ({ routes }) => {
             }
           }
         })
+        setPaymentReason(reason)
         setOpen(true)
       }
     )
@@ -47,6 +48,7 @@ const PaymentHandler = ({ routes }) => {
 
   const cancelPayment = () => {
     setOpen(false)
+    setPaymentReason('')
     abortPayment()
   }
 
@@ -57,16 +59,30 @@ const PaymentHandler = ({ routes }) => {
 
   return (
     <>
-      <Dialog open={open}>
+      <Dialog
+        open={open}
+        maxWidth='sm'
+        fullWidth
+        scroll='body'
+      >
         <DialogTitle className={classes.title_bg} disableTypography>
-          <Typography className={classes.title}>
-            Fund Your Account
+          <Typography className={classes.title} variant='h4'>
+            Account Balance Too Low
           </Typography>
-          <Logo rotate color='white' />
+          <Logo rotate color='white' size='2em' />
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {paymentReason}
+            The following action requires Bitcoin SV (BSV) tokens, which you can use in {appName} and throughout the entire CWI ecosystem:
+          </DialogContentText>
+          <DialogContentText>
+            <b>{paymentReason}</b>
+          </DialogContentText>
+          <DialogContentText>
+            When you first created your account, we gave you a few of these tokens for free to help you get started. To continue enjoying {appName}, buy more tokens to fund your account.
+          </DialogContentText>
+          <DialogContentText>
+            You will see this dialog whenever you are running low on BSV tokens in your account.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -84,7 +100,8 @@ const PaymentHandler = ({ routes }) => {
 }
 
 const stateToProps = state => ({
-  routes: state.routes
+  routes: state.routes,
+  appName: state.appName
 })
 
 export default connect(stateToProps)(PaymentHandler)

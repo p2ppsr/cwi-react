@@ -1,5 +1,10 @@
 import React, { useState } from 'react'
-import { TextField, Button, Typography } from '@material-ui/core'
+import {
+  TextField,
+  Button,
+  Typography,
+  CircularProgress
+} from '@material-ui/core'
 import { sendDataTransaction } from '@cwi/core'
 import { makeStyles } from '@material-ui/styles'
 import style from './style'
@@ -12,6 +17,7 @@ const Feedback = () => {
   const classes = useStyles()
   const [feedback, setFeedback] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const resetForm = () => {
     setFeedback('')
@@ -20,36 +26,52 @@ const Feedback = () => {
 
   const submitFeedback = async e => {
     e.preventDefault()
-    await sendDataTransaction({
-      reason: 'Submit feedback to CWI',
-      data: [
-        '1UUFPLWjtyoyTPYAjt8SqeGZZ1GGFBfNH',
-        '1KcqKANgwbqFLYvgwGieKtuRmkpUvEYLSf',
-        feedback
-      ]
-    })
-    setSubmitted(true)
+    setLoading(true)
+    try {
+      await sendDataTransaction({
+        reason: 'Submit feedback to CWI',
+        data: [
+          '1UUFPLWjtyoyTPYAjt8SqeGZZ1GGFBfNH',
+          '1KcqKANgwbqFLYvgwGieKtuRmkpUvEYLSf',
+          feedback
+        ]
+      })
+      setSubmitted(true)
+      setLoading(false)
+    } catch (e) {
+      setLoading(false)
+    }
   }
 
   if (!submitted) {
     return (
       <form className={classes.content_wrap} onSubmit={submitFeedback}>
-        <Typography variant='h1'>Leave Feedback</Typography>
+        <Typography variant='h1' paragraph>
+          Leave Feedback
+        </Typography>
         <Typography paragraph>
-          We want to hear what you think! Post your thoughts here to improve the CWI ecosystem of apps! Your submission will be public.
+          We want to hear what you think! Post your ideas here to improve the CWI ecosystem of apps. Your honest feedback is valued and your submission will be public.
         </Typography>
         <TextField
           multiline
-          value={feedback}
+          rows={8}
+          fullWidth
+          defaultValue={feedback}
+          disabled={loading}
           onChange={e => setFeedback(e.target.value)}
-          placeholder='Give feedback about CWI...'
+          placeholder='Tell us your thoughts...'
         />
+        <br />
+        <br />
         <Button
           type='submit'
           variant='contained'
           color='primary'
+          disabled={loading}
         >
-          Submit Feedback
+          {!loading ? 'Submit Feedback' : (
+            <CircularProgress />
+          )}
         </Button>
       </form>
     )
