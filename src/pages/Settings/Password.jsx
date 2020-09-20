@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {
   changePassword,
   createSnapshot
-} from '@cwi/core'
+} from 'pages/Settings/About/node_modules/@cwi/core'
 import style from './style'
 import {
   Accordion,

@@ -32,6 +32,7 @@ import PhoneSettings from './Phone.jsx'
 import RecoveryKeySettings from './RecoveryKey.jsx'
 import Fund from './Fund/index.jsx'
 import Feedback from './Feedback/index.jsx'
+import About from './About/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Logo from '@cwi/logo-react'
 
@@ -242,7 +243,6 @@ const Settings = ({ routes, mainPage, appName }) => {
               </ListItemText>
             </ListItem>
             <ListItem
-              disabled
               button
               onClick={() => history.push(`${routes.CWISettings}/about`)}
               selected={
@@ -259,7 +259,7 @@ const Settings = ({ routes, mainPage, appName }) => {
                 />
               </ListItemIcon>
               <ListItemText>
-              About CWI
+                About CWI
               </ListItemText>
             </ListItem>
             <ListItem
@@ -308,6 +308,11 @@ const Settings = ({ routes, mainPage, appName }) => {
           <Route
             path={`${routes.CWISettings}/feedback`}
             component={Feedback}
+            exact
+          />
+          <Route
+            path={`${routes.CWISettings}/about`}
+            component={About}
             exact
           />
           <Route

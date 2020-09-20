@@ -16,6 +16,7 @@
     "registry": "https://npm-registry.babbage.systems/"
   },
   "dependencies": {
+    "@cwi/boomerang": "^0.1.0",
     "@cwi/logo-react": "^0.1.1",
     "@cwi/mui-theme": "^0.1.0",
     "@cwi/password-modal": "^0.1.3",

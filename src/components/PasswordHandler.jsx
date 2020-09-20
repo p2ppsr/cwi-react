@@ -4,7 +4,7 @@ import {
   unbindCallback,
   submitPassword,
   abortPassword
-} from '@cwi/core'
+} from 'pages/Settings/About/node_modules/@cwi/core'
 import {
   PasswordModal,
   requestPassword,

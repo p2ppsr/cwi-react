@@ -4,7 +4,7 @@ import {
   unbindCallback,
   submitCode,
   abortCode
-} from '@cwi/core'
+} from 'pages/Settings/About/node_modules/@cwi/core'
 import { Dialog, Button, Typography, TextField } from '@material-ui/core'
 
 const RecoveryKeyHandler = () => {

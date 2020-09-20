@@ -3,7 +3,7 @@ import {
   getUserID,
   waitForInitialization,
   isAuthenticated
-} from '@cwi/core'
+} from 'pages/Settings/About/node_modules/@cwi/core'
 
 export default ({ history }) => {
   const [userID, setUserID] = useState('')

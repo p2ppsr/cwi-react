@@ -4,7 +4,7 @@ import {
   unbindCallback,
   submitPayment,
   abortPayment
-} from '@cwi/core'
+} from 'pages/Settings/About/node_modules/@cwi/core'
 import { PaymentModal } from '@cwi/payment-modal'
 import store from '../../redux/store'
 import { UPDATE } from '../../redux/types'

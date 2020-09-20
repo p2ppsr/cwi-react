@@ -6,7 +6,7 @@ import {
   changeRecoveryKey,
   getRecoveryKey,
   createSnapshot
-} from '@cwi/core'
+} from 'pages/Settings/About/node_modules/@cwi/core'
 import { makeStyles } from '@material-ui/styles'
 import style from './style'
 import { toast } from 'react-toastify'

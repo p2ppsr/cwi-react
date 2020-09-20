@@ -8,7 +8,7 @@ import {
   bindCallback,
   unbindCallback,
   setAuthenticationMode
-} from '@cwi/core'
+} from 'pages/Settings/About/node_modules/@cwi/core'
 import style from './style'
 import {
   Accordion,

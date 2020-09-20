@@ -5,9 +5,10 @@ import {
   Typography,
   CircularProgress
 } from '@material-ui/core'
-import { sendDataTransaction } from '@cwi/core'
+import { sendDataTransaction } from 'pages/Settings/About/node_modules/@cwi/core'
 import { makeStyles } from '@material-ui/styles'
 import style from './style'
+import { toast } from 'react-toastify'
 
 const useStyles = makeStyles(style, {
   name: 'Feedback'
@@ -36,6 +37,7 @@ const Feedback = () => {
           feedback
         ]
       })
+      toast.success('Your feedback has been sent!')
       setSubmitted(true)
       setLoading(false)
     } catch (e) {
@@ -56,6 +58,7 @@ const Feedback = () => {
           multiline
           rows={8}
           fullWidth
+          autoFocus
           defaultValue={feedback}
           disabled={loading}
           onChange={e => setFeedback(e.target.value)}
