@@ -5,7 +5,6 @@ import {
   Typography,
   Divider,
   Slider,
-  TextField,
   Button,
   IconButton,
   CircularProgress,
@@ -36,9 +35,10 @@ const Fund = ({ pendingPayment = {} } = {}) => {
   const [accountBalance, setAccountBalance] = useState(null)
   const [balanceLoading, setBalanceLoading] = useState(false)
   const [otherAmount, setOtherAmount] = useState(false)
-  // TODO: const [modalWaiting, setModalWaiting] = useState(false)
+  const [modalWaiting, setModalWaiting] = useState(false)
 
   const handleFund = fundingAmount => {
+    setModalWaiting(true)
     requestPayment({
       amount: parseInt(fundingAmount),
       address: pendingPayment.address || getUserID(),
@@ -49,21 +49,20 @@ const Fund = ({ pendingPayment = {} } = {}) => {
           : 'Fund your CWI Account',
       token: process.env.REACT_APP_PLANARIA_TOKEN,
       onPaymentComplete: transactions => {
-        if (pendingPayment.address) {
+        setModalWaiting(false)
+        if (pendingPayment.address && fundingAmount >= pendingPayment.amount) {
           submitPayment(transactions)
           clearPendingPayment()
         } else {
           setBalanceLoading(true)
           setTimeout(() => {
             refreshBalance()
-          }, 1000)
+          }, 7500)
         }
       },
       onAbort: () => {
+        setModalWaiting(false)
         resetModal()
-        if (pendingPayment.address) {
-          abortPayment()
-        }
       }
     })
   }
@@ -76,6 +75,7 @@ const Fund = ({ pendingPayment = {} } = {}) => {
       }
     })
     setAmount(DEFAULT_AMOUNT)
+    abortPayment()
   }
 
   const refreshBalance = async () => {
@@ -145,11 +145,11 @@ const Fund = ({ pendingPayment = {} } = {}) => {
       <center>
         <Typography variant='h1'>
           {otherAmount
-            ? amount / 100000000
+            ? amount
             : `${amount / 1000000} Million`}
         </Typography>
         <Typography color='textSecondary' paragraph>
-          <b>{otherAmount ? 'BITCOIN SV' : 'BITCOIN SV TOKENS'}</b>
+          <b>BITCOIN SV TOKENS</b>
         </Typography>
         <Slider
           value={amount}
@@ -165,8 +165,14 @@ const Fund = ({ pendingPayment = {} } = {}) => {
           variant='contained'
           color='primary'
           size='large'
+          disabled={
+            isNaN(Number(amount)) ||
+            amount < 546 ||
+            modalWaiting ||
+            !Number.isInteger(Number(amount))
+          }
         >
-          Complete Payment
+          {!modalWaiting ? 'Complete Payment' : <CircularProgress />}
         </Button>
         <br />
         <br />
@@ -185,7 +191,6 @@ const Fund = ({ pendingPayment = {} } = {}) => {
         ) : (
           <Button
             onClick={() => setOtherAmount(true)}
-            color='secondary'
           >
             Advanced
           </Button>
