@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { requestPayment, resetModal } from '@cwi/payment-modal'
-import { getUserID, submitPayment, abortPayment, waitForInitialization } from 'pages/Settings/About/node_modules/@cwi/core'
+import { getUserID, submitPayment, abortPayment, waitForInitialization } from '@cwi/core'
 import {
   Typography,
   Divider,

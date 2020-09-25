@@ -4,7 +4,7 @@ import {
   bindCallback,
   unbindCallback,
   isAuthenticated
-} from 'pages/Settings/About/node_modules/@cwi/core'
+} from '@cwi/core'
 import { toast, ToastContainer } from 'react-toastify'
 import { Theme } from '@cwi/mui-theme'
 import CodeHandler from './CodeHandler.jsx'

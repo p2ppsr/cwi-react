@@ -3,7 +3,9 @@ import {
   getUserID,
   waitForInitialization,
   isAuthenticated
-} from 'pages/Settings/About/node_modules/@cwi/core'
+} from '@cwi/core'
+import { Button } from '@material-ui/core'
+import { Link } from 'react-router-dom'
 
 export default ({ history }) => {
   const [userID, setUserID] = useState('')
@@ -23,6 +25,11 @@ export default ({ history }) => {
     <div>
       <h3>Hello, {userID}!</h3>
       <p>Welcome to your dashboard</p>
+      <Link to='/cwi-settings'>
+        <Button color='primary' variant='contained'>
+          CWI Settings
+        </Button>
+      </Link>
     </div>
   )
 }

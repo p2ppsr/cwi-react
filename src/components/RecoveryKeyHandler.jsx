@@ -4,7 +4,7 @@ import {
   unbindCallback,
   saveRecoveryKey,
   abortRecoveryKey
-} from 'pages/Settings/About/node_modules/@cwi/core'
+} from '@cwi/core'
 import { Dialog, Button, Typography } from '@material-ui/core'
 
 const RecoveryKeyHandler = () => {

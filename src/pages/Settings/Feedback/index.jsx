@@ -5,7 +5,7 @@ import {
   Typography,
   CircularProgress
 } from '@material-ui/core'
-import { sendDataTransaction } from 'pages/Settings/About/node_modules/@cwi/core'
+import { sendDataTransaction } from '@cwi/core'
 import { makeStyles } from '@material-ui/styles'
 import style from './style'
 import { toast } from 'react-toastify'

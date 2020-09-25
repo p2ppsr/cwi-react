@@ -1,4 +1,4 @@
-import { waitForInitialization, isAuthenticated } from 'pages/Settings/About/node_modules/@cwi/core'
+import { waitForInitialization, isAuthenticated } from '@cwi/core'
 
 export default async (h, r) => {
   await waitForInitialization()
