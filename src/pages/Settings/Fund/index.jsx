@@ -8,7 +8,9 @@ import {
   TextField,
   Button,
   IconButton,
-  CircularProgress
+  CircularProgress,
+  InputAdornment,
+  Input
 } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/styles'
@@ -33,15 +35,18 @@ const Fund = ({ pendingPayment = {} } = {}) => {
   )
   const [accountBalance, setAccountBalance] = useState(null)
   const [balanceLoading, setBalanceLoading] = useState(false)
+  const [otherAmount, setOtherAmount] = useState(false)
   // TODO: const [modalWaiting, setModalWaiting] = useState(false)
 
-  const handleFund = () => {
+  const handleFund = fundingAmount => {
     requestPayment({
-      amount: parseInt(amount),
+      amount: parseInt(fundingAmount),
       address: pendingPayment.address || getUserID(),
-      reason: pendingPayment.reason
-        ? `Fund your CWI Account, then ${pendingPayment.reason}`
-        : 'Fund your CWI Account',
+      reason: fundingAmount === pendingPayment.amount
+        ? pendingPayment.reason
+        : pendingPayment.reason
+          ? `Fund your CWI Account, then ${pendingPayment.reason}`
+          : 'Fund your CWI Account',
       token: process.env.REACT_APP_PLANARIA_TOKEN,
       onPaymentComplete: transactions => {
         if (pendingPayment.address) {
@@ -94,13 +99,37 @@ const Fund = ({ pendingPayment = {} } = {}) => {
 
   return (
     <div>
+      {pendingPayment.reason && (
+        <div className={classes.pending_payment}>
+          <div className={classes.pending_grid}>
+            <Typography variant='h5' paragraph>
+              <b>Pending Action</b>
+            </Typography>
+            <Typography paragraph>
+              {pendingPayment.amount} tokens
+            </Typography>
+          </div>
+          <Divider />
+          <div className={classes.pending_grid}>
+            <Typography>{pendingPayment.reason}</Typography>
+            <Button onClick={clearPendingPayment} color='secondary'>
+              Cancel this Action
+            </Button>
+            <Button
+              onClick={() => handleFund(pendingPayment.amount)}
+              color='primary'
+            >
+              Pay this Amount
+            </Button>
+          </div>
+        </div>
+      )}
       <div className={classes.pending_payment}>
         <Typography variant='h5' paragraph>
           <b>Your Balance</b>
         </Typography>
         <Divider />
-        <br />
-        <div className={classes.pending_grid}>
+        <div className={classes.balance_grid}>
           <Typography>
             Your current account balance is <b>{accountBalance}</b> Bitcoin SV tokens
           </Typography>
@@ -113,28 +142,14 @@ const Fund = ({ pendingPayment = {} } = {}) => {
           </IconButton>
         </div>
       </div>
-      {pendingPayment.reason && (
-        <div className={classes.pending_payment}>
-          <Typography variant='h5' paragraph><b>Pending Actions</b></Typography>
-          <Divider />
-          <br />
-          <Typography paragraph>
-            Buy at least <b>{pendingPayment.amount}</b> Bitcoin SV tokens to complete this action:
-          </Typography>
-          <div className={classes.pending_grid}>
-            <Typography><b>{pendingPayment.reason}</b></Typography>
-            <Button onClick={clearPendingPayment} color='secondary'>
-              Cancel Action
-            </Button>
-          </div>
-        </div>
-      )}
       <center>
         <Typography variant='h1'>
-          {amount / 1000000} Million
+          {otherAmount
+            ? amount / 100000000
+            : `${amount / 1000000} Million`}
         </Typography>
         <Typography color='textSecondary' paragraph>
-          <b>BITCOIN SV TOKENS</b>
+          <b>{otherAmount ? 'BITCOIN SV' : 'BITCOIN SV TOKENS'}</b>
         </Typography>
         <Slider
           value={amount}
@@ -143,29 +158,38 @@ const Fund = ({ pendingPayment = {} } = {}) => {
           step={1000000}
           max={50000000}
         />
-        <TextField
-          value={amount / 1000000}
-          onChange={e => {
-            if (e.target.value) {
-              setAmount(parseInt(e.target.value) * 1000000)
-            }
-          }}
-          type='number'
-          inputProps={{
-            min: 1,
-            step: 1
-          }}
-        />
         <br />
         <br />
         <Button
-          onClick={handleFund}
+          onClick={() => handleFund(amount)}
           variant='contained'
           color='primary'
           size='large'
         >
           Complete Payment
         </Button>
+        <br />
+        <br />
+        {otherAmount ? (
+          <Input
+            type='number'
+            autoFocus
+            value={amount}
+            onChange={e => setAmount(e.target.value)}
+            endAdornment={
+              <InputAdornment position='end'>
+                sats
+              </InputAdornment>
+            }
+          />
+        ) : (
+          <Button
+            onClick={() => setOtherAmount(true)}
+            color='secondary'
+          >
+            Advanced
+          </Button>
+        )}
       </center>
     </div>
   )

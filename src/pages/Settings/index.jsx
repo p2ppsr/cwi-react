@@ -27,12 +27,16 @@ import {
   Divider
 } from '@material-ui/core'
 import { connect } from 'react-redux'
-import PasswordSettings from './Password.jsx'
-import PhoneSettings from './Phone.jsx'
-import RecoveryKeySettings from './RecoveryKey.jsx'
+import PasswordSettings from './Password/index.jsx'
+import PhoneSettings from './Phone/index.jsx'
+import RecoveryKeySettings from './RecoveryKey/index.jsx'
 import Fund from './Fund/index.jsx'
 import Feedback from './Feedback/index.jsx'
 import About from './About/index.jsx'
+import Browse from './Browse/index.jsx'
+import Installed from './Installed/index.jsx'
+import Usage from './Usage/index.jsx'
+import Support from './Support/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Logo from '@cwi/logo-react'
 
@@ -73,7 +77,6 @@ const Settings = ({ routes, mainPage, appName }) => {
           <Divider />
           <List subheader={<ListSubheader>Your Account</ListSubheader>}>
             <ListItem
-              disabled
               button
               onClick={() => history.push(`${routes.CWISettings}/browse-apps`)}
               selected={
@@ -94,7 +97,6 @@ const Settings = ({ routes, mainPage, appName }) => {
               </ListItemText>
             </ListItem>
             <ListItem
-              disabled
               button
               onClick={() => history.push(`${routes.CWISettings}/installed-apps`)}
               selected={
@@ -115,7 +117,6 @@ const Settings = ({ routes, mainPage, appName }) => {
               </ListItemText>
             </ListItem>
             <ListItem
-              disabled
               button
               onClick={() => history.push(`${routes.CWISettings}/app-usage`)}
               selected={
@@ -215,33 +216,12 @@ const Settings = ({ routes, mainPage, appName }) => {
                 />
               </ListItemIcon>
               <ListItemText>
-              Recovery Key
+                Recovery Key
               </ListItemText>
             </ListItem>
           </List>
           <Divider />
           <List subheader={<ListSubheader>Help & Support</ListSubheader>}>
-            <ListItem
-              disabled
-              button
-              onClick={() => history.push(`${routes.CWISettings}/support`)}
-              selected={
-                history.location.pathname === `${routes.CWISettings}/support`
-              }
-            >
-              <ListItemIcon>
-                <SupportIcon
-                  color={
-                    history.location.pathname === `${routes.CWISettings}/support`
-                      ? 'primary'
-                      : undefined
-                  }
-                />
-              </ListItemIcon>
-              <ListItemText>
-                Ask a Question
-              </ListItemText>
-            </ListItem>
             <ListItem
               button
               onClick={() => history.push(`${routes.CWISettings}/about`)}
@@ -260,6 +240,26 @@ const Settings = ({ routes, mainPage, appName }) => {
               </ListItemIcon>
               <ListItemText>
                 About CWI
+              </ListItemText>
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => history.push(`${routes.CWISettings}/support`)}
+              selected={
+                history.location.pathname === `${routes.CWISettings}/support`
+              }
+            >
+              <ListItemIcon>
+                <SupportIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/support`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
+              </ListItemIcon>
+              <ListItemText>
+                Ask a Question
               </ListItemText>
             </ListItem>
             <ListItem
@@ -313,6 +313,26 @@ const Settings = ({ routes, mainPage, appName }) => {
           <Route
             path={`${routes.CWISettings}/about`}
             component={About}
+            exact
+          />
+          <Route
+            path={`${routes.CWISettings}/support`}
+            component={Support}
+            exact
+          />
+          <Route
+            path={`${routes.CWISettings}/browse-apps`}
+            component={Browse}
+            exact
+          />
+          <Route
+            path={`${routes.CWISettings}/installed-apps`}
+            component={Installed}
+            exact
+          />
+          <Route
+            path={`${routes.CWISettings}/app-usage`}
+            component={Usage}
             exact
           />
           <Route

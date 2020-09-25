@@ -3,7 +3,8 @@ import {
   getUserID,
   waitForInitialization,
   isAuthenticated,
-  logout
+  logout,
+  sendDataTransaction
 } from '@cwi/core'
 import { Button, Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
@@ -31,7 +32,7 @@ export default ({ history }) => {
     <center>
       <br />
       <br />
-      <Typography variant='h3'>Hello, {userID}!</Typography>
+      <Typography variant='h4' paragraph>Hello, {userID}!</Typography>
       <Typography paragraph>Welcome to your dashboard</Typography>
       <Link to='/cwi-settings'>
         <Button color='primary' variant='contained'>
@@ -42,6 +43,19 @@ export default ({ history }) => {
       <br />
       <Button
         color='primary'
+        onClick={() => {
+          sendDataTransaction({
+            reason: 'Create an enormous 5MB Bitcoin SV transaction',
+            data: [new Uint8Array(5000000)]
+          })
+        }}
+      >
+        Seng Enormous Transaction
+      </Button>
+      <br />
+      <br />
+      <Button
+        color='secondary'
         onClick={handleLogout}
       >
         Log out

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
-  Button, Typography, List, ListItem, ListItemText
+  Typography, List, ListItem, ListItemText
 } from '@material-ui/core'
 import {
   changeRecoveryKey,
@@ -8,10 +8,10 @@ import {
   createSnapshot
 } from '@cwi/core'
 import { makeStyles } from '@material-ui/styles'
-import style from './style'
+import style from '../style'
 import { toast } from 'react-toastify'
 import { connect } from 'react-redux'
-import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
+import redirectIfLoggedOut from '../../../utils/redirectIfLoggedOut'
 
 const useStyles = makeStyles(style, {
   name: 'RecoveryKeySettings'

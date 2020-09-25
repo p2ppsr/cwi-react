@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import {
-  changePhoneNumber,
+  changePassword,
   createSnapshot
 } from '@cwi/core'
-import style from './style'
+import style from '../style'
 import {
   Accordion,
   AccordionSummary,
@@ -14,56 +14,62 @@ import {
   TextField
 } from '@material-ui/core'
 import {
-  SettingsPhone as PhoneIcon
+  Lock as LockIcon
 } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { connect } from 'react-redux'
-import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
+import redirectIfLoggedOut from '../../../utils/redirectIfLoggedOut'
 
-const useStyles = makeStyles(style, { name: 'PhoneSettings' })
+const useStyles = makeStyles(style, { name: 'PasswordSettings' })
 
-const PhoneSettings = ({ history, mainPage, routes }) => {
+const PasswordSettings = ({ history, mainPage, routes }) => {
   const classes = useStyles()
-  const [newPhone, setNewPhone] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
   useEffect(() => {
     redirectIfLoggedOut(history, routes)
   }, [history])
 
-  const handleSubmitNewPhone = async e => {
+  const handleSubmitPassword = async e => {
     e.preventDefault()
-    const result = await changePhoneNumber(newPhone)
+    const result = await changePassword(password, confirmPassword)
     if (result === true) {
       localStorage.CWIAuthStateSnapshot = await createSnapshot()
-      toast.success('Phone number changed successfully!')
+      toast.success('Password changed successfully!')
       history.push(mainPage)
     }
   }
 
   return (
-    <Accordion
-      expanded
-    >
+    <Accordion expanded>
       <AccordionSummary
         className={classes.panel_header}
       >
-        <PhoneIcon className={classes.expansion_icon} />
+        <LockIcon className={classes.expansion_icon} />
         <Typography
           className={classes.panel_heading}
         >
-            New Phone
+          New Password
         </Typography>
       </AccordionSummary>
-      <form onSubmit={handleSubmitNewPhone}>
+      <form onSubmit={handleSubmitPassword}>
         <AccordionDetails
           className={classes.expansion_body}
         >
           <TextField
-            onChange={e => setNewPhone(e.target.value)}
-            label='New Phone'
+            onChange={e => setPassword(e.target.value)}
+            label='Password'
             fullWidth
+            type='password'
+          />
+          <TextField
+            onChange={e => setConfirmPassword(e.target.value)}
+            label='Confirm Password'
+            fullWidth
+            type='password'
           />
         </AccordionDetails>
         <AccordionActions>
@@ -71,7 +77,7 @@ const PhoneSettings = ({ history, mainPage, routes }) => {
             color='primary'
             type='submit'
           >
-                Next
+            Next
           </Button>
         </AccordionActions>
       </form>
@@ -84,4 +90,4 @@ const stateToProps = state => ({
   routes: state.routes
 })
 
-export default connect(stateToProps)(PhoneSettings)
+export default connect(stateToProps)(PasswordSettings)

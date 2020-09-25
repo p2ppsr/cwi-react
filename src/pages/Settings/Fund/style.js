@@ -8,8 +8,18 @@ export default theme => ({
   },
   pending_grid: {
     display: 'grid',
+    gridTemplateColumns: '1fr auto auto',
+    gridColumnGap: theme.spacing(2),
+    alignItems: 'center',
+    marginTop: theme.spacing(1) 
+  },
+  balance_grid: {
+    display: 'grid',
     gridTemplateColumns: '1fr auto',
     gridColumnGap: theme.spacing(2),
-    alignItems: 'center'
+    alignItems: 'center' 
+  },
+  input_field: {
+    minWidth: '6em'
   }
 })
