@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import {
   getUserID,
   waitForInitialization,
-  isAuthenticated
+  isAuthenticated,
+  logout
 } from '@cwi/core'
-import { Button } from '@material-ui/core'
+import { Button, Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 
 export default ({ history }) => {
@@ -21,15 +22,30 @@ export default ({ history }) => {
     })()
   }, [history])
 
+  const handleLogout = async () => {
+    await logout()
+    history.push('/')
+  }
+
   return (
-    <div>
-      <h3>Hello, {userID}!</h3>
-      <p>Welcome to your dashboard</p>
+    <center>
+      <br />
+      <br />
+      <Typography variant='h3'>Hello, {userID}!</Typography>
+      <Typography paragraph>Welcome to your dashboard</Typography>
       <Link to='/cwi-settings'>
         <Button color='primary' variant='contained'>
           CWI Settings
         </Button>
       </Link>
-    </div>
+      <br />
+      <br />
+      <Button
+        color='primary'
+        onClick={handleLogout}
+      >
+        Log out
+      </Button>
+    </center>
   )
 }
