@@ -20,6 +20,7 @@ import {
   Toolbar,
   Typography,
   List,
+  IconButton,
   ListSubheader,
   ListItem,
   ListItemIcon,
@@ -45,7 +46,9 @@ const useStyles = makeStyles(style, {
 })
 
 const Settings = ({ routes, mainPage, appName }) => {
-  const classes = useStyles()
+  const classes = useStyles({
+    settingsMainPage: window.location.pathname === routes.CWISettings
+  })
   const history = useHistory()
 
   useEffect(() => {
@@ -54,8 +57,15 @@ const Settings = ({ routes, mainPage, appName }) => {
 
   return (
     <>
-      <AppBar color='primary'>
+      <AppBar color='primary' position='sticky'>
         <Toolbar className={classes.tool_grid}>
+          {window.location.pathname !== routes.CWISettings && (
+            <IconButton
+              onClick={() => history.push(routes.CWISettings)}
+            >
+              <ArrowBackIcon className={classes.back_tool_icon} />
+            </IconButton>
+          )}
           <Typography variant='h3' className={classes.title}>
             CWI Settings
           </Typography>

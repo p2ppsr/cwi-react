@@ -2,25 +2,17 @@ import React, { useState, useEffect } from 'react'
 import {
   bindCallback,
   unbindCallback,
-  submitPayment,
   abortPayment
 } from '@cwi/core'
 import { PaymentModal } from '@cwi/payment-modal'
-import store from '../../redux/store'
-import { UPDATE } from '../../redux/types'
-import { Dialog, DialogTitle, Typography, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core'
-import Logo from '@cwi/logo-react'
-import { makeStyles } from '@material-ui/styles'
-import style from './style'
+import store from '../redux/store'
+import { UPDATE } from '../redux/types'
+import CustomDialog from './CustomDialog/index.jsx'
+import { DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-const useStyles = makeStyles(style, {
-  name: 'PaymentHandler'
-})
-
 const PaymentHandler = ({ routes, appName }) => {
-  const classes = useStyles()
   const history = useHistory()
   const [paymentReason, setPaymentReason] = useState('')
   const [open, setOpen] = useState(false)
@@ -59,24 +51,16 @@ const PaymentHandler = ({ routes, appName }) => {
 
   return (
     <>
-      <Dialog
+      <CustomDialog
         open={open}
-        maxWidth='sm'
-        fullWidth
-        scroll='body'
+        title='Account Balance Too Low'
       >
-        <DialogTitle className={classes.title_bg} disableTypography>
-          <Typography className={classes.title} variant='h4'>
-            Account Balance Too Low
-          </Typography>
-          <Logo rotate color='white' size='2em' />
-        </DialogTitle>
         <DialogContent>
           <DialogContentText>
             The following action requires Bitcoin SV (BSV) tokens, which you can use in {appName} and throughout the entire CWI ecosystem:
           </DialogContentText>
           <DialogContentText>
-            <b>{paymentReason}</b>
+            <b style={{ wordWrap: 'break-word' }}>{paymentReason}</b>
           </DialogContentText>
           <DialogContentText>
             When you first created your account, we gave you a few of these tokens for free to help you get started. To continue enjoying {appName}, buy more tokens to fund your account.
@@ -90,10 +74,10 @@ const PaymentHandler = ({ routes, appName }) => {
             Canel This Action
           </Button>
           <Button color='primary' onClick={fundAccount}>
-            Func Account
+            Fund Account
           </Button>
         </DialogActions>
-      </Dialog>
+      </CustomDialog>
       <PaymentModal />
     </>
   )

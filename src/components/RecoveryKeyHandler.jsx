@@ -5,7 +5,10 @@ import {
   saveRecoveryKey,
   abortRecoveryKey
 } from '@cwi/core'
-import { Dialog, Button, Typography } from '@material-ui/core'
+import {
+  DialogContent, DialogContentText, DialogActions, Button
+} from '@material-ui/core'
+import CustomDialog from './CustomDialog/index.jsx'
 
 const RecoveryKeyHandler = () => {
   const [open, setOpen] = useState(false)
@@ -25,26 +28,32 @@ const RecoveryKeyHandler = () => {
   }
 
   return (
-    <Dialog
+    <CustomDialog
       open={open}
       onClose={() => {
         abortRecoveryKey()
         setRecoveryKey('')
         setOpen(false)
       }}
+      title='Save This Key'
     >
-      <Typography variant='h3' paragraph>
-        Save this key
-      </Typography>
-      <Typography paragraph>
-        {recoveryKey}
-      </Typography>
-      <Button
-        onClick={onKeySaved}
-      >
-        I saved the key
-      </Button>
-    </Dialog>
+      <DialogContent>
+        <DialogContentText>
+          You'll need this key if you ever forget your password or lose your phone.
+        </DialogContentText>
+        <DialogContentText>
+          <b style={{ wordWrap: 'break-word' }}>{recoveryKey}</b>
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          onClick={onKeySaved}
+          color='primary'
+        >
+          Saved
+        </Button>
+      </DialogActions>
+    </CustomDialog>
   )
 }
 

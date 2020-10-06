@@ -4,6 +4,7 @@ import {
   waitForInitialization,
   isAuthenticated,
   logout,
+  encrypt,
   sendDataTransaction
 } from '@cwi/core'
 import { Button, Typography } from '@material-ui/core'
@@ -25,11 +26,12 @@ export default ({ history }) => {
 
   const handleLogout = async () => {
     await logout()
+    delete localStorage.CWIAuthStateSnapshot
     history.push('/')
   }
 
   return (
-    <center>
+    <center style={{ wordWrap: 'break-word' }}>
       <br />
       <br />
       <Typography variant='h4' paragraph>Hello, {userID}!</Typography>
@@ -50,7 +52,18 @@ export default ({ history }) => {
           })
         }}
       >
-        Seng Enormous Transaction
+        Send Enormous Transaction
+      </Button>
+      <br />
+      <br />
+      <Button
+        color='primary'
+        onClick={() => encrypt({
+          key: 'privilegedKey',
+          data: 'hello'
+        })}
+      >
+        Encrypt with privileged key
       </Button>
       <br />
       <br />

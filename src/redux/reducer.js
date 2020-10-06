@@ -8,7 +8,7 @@ export const initialState = {
   },
   mainPage: '/dashboard',
   appName: 'Example App',
-  logoURL: undefined
+  appLogo: undefined
 }
 
 const reducer = (state = initialState, action) => {

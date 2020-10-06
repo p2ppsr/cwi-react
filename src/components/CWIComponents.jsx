@@ -9,7 +9,7 @@ import { toast, ToastContainer } from 'react-toastify'
 import { Theme } from '@cwi/mui-theme'
 import CodeHandler from './CodeHandler.jsx'
 import PasswordHandler from './PasswordHandler.jsx'
-import PaymentHandler from './PaymentHandler/index.jsx'
+import PaymentHandler from './PaymentHandler.jsx'
 import RecoveryKeyHandler from './RecoveryKeyHandler.jsx'
 import store from '../redux/store'
 import { UPDATE } from '../redux/types'
@@ -23,7 +23,7 @@ const CWIComponents = ({
   secretServerURL = process.env.REACT_APP_SECRET_SERVER_URL,
   commissions = [],
   mainPage,
-  logoURL,
+  appLogo,
   routes,
   appName
 } = {}) => {
@@ -61,15 +61,15 @@ const CWIComponents = ({
   }, [mainPage])
 
   useEffect(() => {
-    if (logoURL) {
+    if (appLogo) {
       store.dispatch({
         type: UPDATE,
         payload: {
-          logoURL
+          appLogo
         }
       })
     }
-  }, [logoURL])
+  }, [appLogo])
 
   useEffect(() => {
     if (appName) {

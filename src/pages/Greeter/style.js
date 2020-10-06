@@ -3,12 +3,12 @@ export default theme => ({
   logo: {
     margin: 'auto',
     display: 'block',
-    width: '8em',
-    height: '8em',
+    width: '12em !important',
+    height: '12em !important',
     color: theme.palette.primary.main,
     [theme.breakpoints.down('sm')]: {
-      width: '5em',
-      height: '5em'
+      width: '8em !important',
+      height: '8em !important'
     }
   },
   panel_header: {
@@ -24,7 +24,10 @@ export default theme => ({
     position: 'absolute',
     right: '24px',
     color: 'green',
-    transition: 'all 0.25s'
+    transition: 'all 0.25s',
+    [theme.breakpoints.down('sm')]: {
+      right: '8px'
+    }
   },
   panel_heading: {
     fontWeight: 'blod'
@@ -35,5 +38,15 @@ export default theme => ({
   },
   copyright_text: {
     fontSize: '0.66em'
+  },
+  password_grid: {
+    display: 'grid',
+    gridGap: theme.spacing(1),
+    width: '100%',
+    gridTemplateColumns: '1fr 1fr',
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: '1fr',
+      gridTemplateRows: '1fr 1fr'
+    }
   }
 })

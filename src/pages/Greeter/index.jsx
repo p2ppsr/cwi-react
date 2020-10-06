@@ -16,7 +16,8 @@ import {
   AccordionActions,
   Typography,
   Button,
-  TextField
+  TextField,
+  Divider
 } from '@material-ui/core'
 import {
   SettingsPhone as PhoneIcon,
@@ -27,12 +28,12 @@ import {
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import CWILogo from '../../images/CWI'
+import CWILogo from '@cwi/logo-react'
 import { toast } from 'react-toastify'
 
 const useStyles = makeStyles(style, { name: 'Greeter' })
 
-const Greeter = ({ history, mainPage, logoURL, routes }) => {
+const Greeter = ({ history, mainPage, appLogo, appName, routes }) => {
   const classes = useStyles()
   const [accordianView, setAccordianView] = useState('phone')
   const [phone, setPhone] = useState('')
@@ -103,17 +104,23 @@ const Greeter = ({ history, mainPage, logoURL, routes }) => {
   return (
     <div className={classes.content_wrap}>
       <center>
-        {logoURL ? (
+        {typeof appLogo === 'string' && (
           <img
             className={classes.logo}
-            src={logoURL}
+            src={appLogo}
             alt='Logo'
           />
-        ) : (
+        )}
+        {typeof appLogo === 'object' && appLogo}
+        {typeof appLogo === 'undefined' && (
           <CWILogo
             className={classes.logo}
           />
         )}
+        <Typography variant='h2' paragraph>
+          {appName}
+        </Typography>
+        <Divider />
       </center>
       <Accordion
         expanded={accordianView === 'phone'}
@@ -143,7 +150,6 @@ const Greeter = ({ history, mainPage, logoURL, routes }) => {
           </AccordionDetails>
           <AccordionActions>
             <Button
-              variant='contained'
               color='primary'
               type='submit'
               disabled={loading}
@@ -181,7 +187,6 @@ const Greeter = ({ history, mainPage, logoURL, routes }) => {
           </AccordionDetails>
           <AccordionActions>
             <Button
-              variant='contained'
               color='primary'
               type='submit'
               disabled={loading}
@@ -208,24 +213,28 @@ const Greeter = ({ history, mainPage, logoURL, routes }) => {
           <AccordionDetails
             className={classes.expansion_body}
           >
-            <TextField
-              onChange={e => setPassword(e.target.value)}
-              label='Password'
-              fullWidth
-              type='password'
-            />
-            {accountStatus === 'new-user' && (
-              <>
-                <br />
-                <br />
+            <div
+              className={
+                accountStatus === 'new-user'
+                  ? classes.password_grid
+                  : undefined
+              }
+            >
+              <TextField
+                onChange={e => setPassword(e.target.value)}
+                label='Password'
+                fullWidth
+                type='password'
+              />
+              {accountStatus === 'new-user' && (
                 <TextField
                   onChange={e => setConfirmPassword(e.target.value)}
-                  label='Confirm'
+                  label='Retype Password'
                   fullWidth
                   type='password'
                 />
-              </>
-            )}
+              )}
+            </div>
           </AccordionDetails>
           <AccordionActions>
             <Button
@@ -234,7 +243,7 @@ const Greeter = ({ history, mainPage, logoURL, routes }) => {
               type='submit'
               disabled={loading}
             >
-              Continue
+              {accountStatus === 'new-user' ? 'Create Account' : 'Log In'}
             </Button>
           </AccordionActions>
         </form>
@@ -262,7 +271,8 @@ const Greeter = ({ history, mainPage, logoURL, routes }) => {
 
 const stateToProps = state => ({
   mainPage: state.mainPage,
-  logoURL: state.logoURL,
+  appLogo: state.appLogo,
+  appName: state.appName,
   routes: state.routes
 })
 
