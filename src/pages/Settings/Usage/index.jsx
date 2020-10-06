@@ -13,10 +13,10 @@ const About = () => {
   return (
     <div className={classes.content_wrap}>
       <Typography variant='h1' paragraph>
-        Who We Are
+        App Usage
       </Typography>
       <Typography paragraph>
-        We enable you to use decentralized apps and keep control of your data.
+        Here you'll be able to track how you spend money and time across all your apps. This page isn't yet complete.
       </Typography>
     </div>
   )

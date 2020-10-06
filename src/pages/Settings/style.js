@@ -2,19 +2,20 @@ export default theme => ({
   content_wrap: ({ settingsMainPage }) => ({
     ...theme.templates.page_wrap,
     display: 'grid',
-    gridTemplateColumns: '1fr 3fr',
-    gridColumnGap: theme.spacing(3),
+    gridTemplateColumns: '3fr 7fr',
+    gridColumnGap: theme.spacing(5),
     alignItems: 'center',
+    padding: '0px !important',
     [theme.breakpoints.down('lg')]: {
       gridTemplateColumns: '1fr 2fr'
     },
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: '1fr',
-      '&:first-child': {
+      '& > :first-child': {
         display: settingsMainPage ? undefined : 'none'
       },
-      '&:last-child': {
-        // display: settingsMainPage ? 'none' : undefined
+      '& > :last-child': {
+        display: settingsMainPage ? 'none' : undefined
       }
     }
   }),
@@ -22,10 +23,19 @@ export default theme => ({
     display: 'grid',
     gridTemplateColumns: '1fr auto',
     gridColumnGap: theme.spacing(2),
+    '& > :first-child': {
+      display: 'none'
+    },
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: settingsMainPage
-        ? '1fr auto'
-        : 'auto 1fr auto'
+        ? '1fr'
+        : 'auto 1fr',
+      '& > :last-child': {
+        display: 'none'
+      },
+      '& > :first-child': {
+        display: settingsMainPage ? 'none' : 'unset !important'
+      }
     }
   }),
   title: {

@@ -3,7 +3,7 @@ import {
   changePassword,
   createSnapshot
 } from '@cwi/core'
-import style from '../style'
+import style from './style'
 import {
   Accordion,
   AccordionSummary,
@@ -17,7 +17,6 @@ import {
   Lock as LockIcon
 } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/styles'
-import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { connect } from 'react-redux'
 import redirectIfLoggedOut from '../../../utils/redirectIfLoggedOut'
@@ -45,32 +44,28 @@ const PasswordSettings = ({ history, mainPage, routes }) => {
 
   return (
     <Accordion expanded>
-      <AccordionSummary
-        className={classes.panel_header}
-      >
-        <LockIcon className={classes.expansion_icon} />
-        <Typography
-          className={classes.panel_heading}
-        >
+      <AccordionSummary>
+        <LockIcon />
+        <Typography>
           New Password
         </Typography>
       </AccordionSummary>
       <form onSubmit={handleSubmitPassword}>
-        <AccordionDetails
-          className={classes.expansion_body}
-        >
-          <TextField
-            onChange={e => setPassword(e.target.value)}
-            label='Password'
-            fullWidth
-            type='password'
-          />
-          <TextField
-            onChange={e => setConfirmPassword(e.target.value)}
-            label='Confirm Password'
-            fullWidth
-            type='password'
-          />
+        <AccordionDetails>
+          <div className={classes.password_grid}>
+            <TextField
+              onChange={e => setPassword(e.target.value)}
+              label='Password'
+              fullWidth
+              type='password'
+            />
+            <TextField
+              onChange={e => setConfirmPassword(e.target.value)}
+              label='Retype Password'
+              fullWidth
+              type='password'
+            />
+          </div>
         </AccordionDetails>
         <AccordionActions>
           <Button

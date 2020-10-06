@@ -5,7 +5,8 @@ import {
   submitCode,
   abortCode
 } from '@cwi/core'
-import { Dialog, Button, Typography, TextField } from '@material-ui/core'
+import { DialogActions, DialogContent, Button, DialogContentText, TextField } from '@material-ui/core'
+import CustomDialog from './CustomDialog/index.jsx'
 
 const RecoveryKeyHandler = () => {
   const [open, setOpen] = useState(false)
@@ -30,29 +31,35 @@ const RecoveryKeyHandler = () => {
   }
 
   return (
-    <Dialog
+    <CustomDialog
       open={open}
       onClose={() => {
         abortCode()
         setOpen(false)
       }}
+      title='Code Sent'
     >
-      <Typography variant='h3' paragraph>
-        Code Sent to {phone}
-      </Typography>
-      <Typography paragraph>
-        {reason}
-      </Typography>
-      <TextField
-        label='Enter Code'
-        onChange={e => setCode(e.target.value)}
-      />
-      <Button
-        onClick={handleSubmit}
-      >
-        submit
-      </Button>
-    </Dialog>
+      <DialogContent>
+        <DialogContentText>
+          We just sent a 6-digit code to {phone} as a text message.
+        </DialogContentText>
+        <DialogContentText>
+          {reason}.
+        </DialogContentText>
+        <TextField
+          label='Enter Code'
+          onChange={e => setCode(e.target.value)}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button
+          color='primary'
+          onClick={handleSubmit}
+        >
+          submit
+        </Button>
+      </DialogActions>
+    </CustomDialog>
   )
 }
 

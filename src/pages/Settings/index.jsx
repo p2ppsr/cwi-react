@@ -59,13 +59,11 @@ const Settings = ({ routes, mainPage, appName }) => {
     <>
       <AppBar color='primary' position='sticky'>
         <Toolbar className={classes.tool_grid}>
-          {window.location.pathname !== routes.CWISettings && (
-            <IconButton
-              onClick={() => history.push(routes.CWISettings)}
-            >
-              <ArrowBackIcon className={classes.back_tool_icon} />
-            </IconButton>
-          )}
+          <IconButton
+            onClick={() => history.push(routes.CWISettings)}
+          >
+            <ArrowBackIcon className={classes.back_tool_icon} />
+          </IconButton>
           <Typography variant='h3' className={classes.title}>
             CWI Settings
           </Typography>
