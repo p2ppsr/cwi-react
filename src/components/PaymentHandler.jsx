@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react'
 import {
   bindCallback,
   unbindCallback,
-  abortPayment
+  submitPayment,
+  abortPayment,
+  isAuthenticated
 } from '@cwi/core'
-import { PaymentModal } from '@cwi/payment-modal'
+import { PaymentModal, requestPayment, resetModal } from '@cwi/payment-modal'
 import store from '../redux/store'
 import { UPDATE } from '../redux/types'
 import CustomDialog from './CustomDialog/index.jsx'
@@ -21,18 +23,34 @@ const PaymentHandler = ({ routes, appName }) => {
     const callbackID = bindCallback(
       'onPaymentRequired',
       ({ amount, address, reason }) => {
-        store.dispatch({
-          type: UPDATE,
-          payload: {
-            pendingPayment: {
-              amount,
-              address,
-              reason
+        if (isAuthenticated()) {
+          store.dispatch({
+            type: UPDATE,
+            payload: {
+              pendingPayment: {
+                amount,
+                address,
+                reason
+              }
             }
-          }
-        })
-        setPaymentReason(reason)
-        setOpen(true)
+          })
+          setPaymentReason(reason)
+          setOpen(true)
+        } else {
+          requestPayment({
+            amount,
+            address,
+            reason,
+            token: process.env.REACT_APP_PLANARIA_TOKEN,
+            onPaymentComplete: transactions => {
+              submitPayment(transactions)
+            },
+            onAbort: () => {
+              resetModal()
+              abortPayment()
+            }
+          })
+        }
       }
     )
     return () => unbindCallback('onPaymentRequired', callbackID)
