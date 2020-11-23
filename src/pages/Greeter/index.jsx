@@ -93,7 +93,8 @@ const Greeter = ({ history, mainPage, appLogo, appName, routes }) => {
       try {
         await submitPassword(password, confirmPassword)
       } catch (e) {
-        toast.error('You closed the recovery key dialog!')
+        console.error(e)
+        toast.error(e.message)
       }
     } else if (accountStatus === 'existing-user') {
       await submitPassword(password)

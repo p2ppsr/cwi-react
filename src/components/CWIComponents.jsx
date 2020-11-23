@@ -21,6 +21,7 @@ const CWIComponents = ({
   history,
   planariaToken = process.env.REACT_APP_PLANARIA_TOKEN,
   secretServerURL = process.env.REACT_APP_SECRET_SERVER_URL,
+  dojoURL = process.env.REACT_APP_DOJO_URL,
   commissions = [],
   mainPage,
   appLogo,
@@ -32,6 +33,7 @@ const CWIComponents = ({
       await initialize({
         planariaToken,
         secretServerURL,
+        dojoURL,
         commissions,
         stateSnapshot: localStorage.CWIAuthStateSnapshot
       })

@@ -47,12 +47,12 @@ export default ({ history }) => {
         color='primary'
         onClick={() => {
           sendDataTransaction({
-            reason: 'Create an enormous 5MB Bitcoin SV transaction',
-            data: [new Uint8Array(5000000)]
+            reason: 'Create an example Bitcoin SV data transaction',
+            data: [new Uint8Array(50)]
           })
         }}
       >
-        Send Enormous Transaction
+        Send Data Transaction
       </Button>
       <br />
       <br />
