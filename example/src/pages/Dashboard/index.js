@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
-  getUserID,
+  ninjaWrapper,
   waitForInitialization,
   isAuthenticated,
   logout,
@@ -17,7 +17,10 @@ export default ({ history }) => {
     (async () => {
       await waitForInitialization()
       if (isAuthenticated()) {
-        setUserID(getUserID())
+        setUserID(await ninjaWrapper({
+          func: 'getPaymail',
+          params: {}
+        }))
       } else {
         history.push('/')
       }
@@ -60,6 +63,7 @@ export default ({ history }) => {
         color='primary'
         onClick={() => encrypt({
           key: 'privilegedKey',
+          path: 'm/3301/1',
           data: 'hello'
         })}
       >

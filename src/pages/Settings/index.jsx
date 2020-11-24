@@ -37,7 +37,9 @@ import About from './About/index.jsx'
 import Browse from './Browse/index.jsx'
 import Installed from './Installed/index.jsx'
 import Usage from './Usage/index.jsx'
+import Profile from './Profile/index.jsx'
 import Support from './Support/index.jsx'
+import Transactions from './Transactions/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Logo from '@cwi/logo-react'
 
@@ -161,7 +163,47 @@ const Settings = ({ routes, mainPage, appName }) => {
                 />
               </ListItemIcon>
               <ListItemText>
-              Fund Account
+                Fund Account
+              </ListItemText>
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => history.push(`${routes.CWISettings}/transactions`)}
+              selected={
+                history.location.pathname === `${routes.CWISettings}/transactions`
+              }
+            >
+              <ListItemIcon>
+                <SupportIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/transactions`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
+              </ListItemIcon>
+              <ListItemText>
+                Transactions
+              </ListItemText>
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => history.push(`${routes.CWISettings}/profile`)}
+              selected={
+                history.location.pathname === `${routes.CWISettings}/profile`
+              }
+            >
+              <ListItemIcon>
+                <SupportIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/profile`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
+              </ListItemIcon>
+              <ListItemText>
+                Profile
               </ListItemText>
             </ListItem>
           </List>
@@ -341,6 +383,16 @@ const Settings = ({ routes, mainPage, appName }) => {
           <Route
             path={`${routes.CWISettings}/app-usage`}
             component={Usage}
+            exact
+          />
+          <Route
+            path={`${routes.CWISettings}/transactions`}
+            component={Transactions}
+            exact
+          />
+          <Route
+            path={`${routes.CWISettings}/profile`}
+            component={Profile}
             exact
           />
           <Route
