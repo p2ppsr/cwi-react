@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { requestPayment, resetModal } from '@cwi/payment-modal'
-import { getUserID, submitPayment, abortPayment, waitForInitialization } from '@cwi/core'
+import { ninja, submitPayment, abortPayment, waitForInitialization } from '@cwi/core'
 import {
   Typography,
   Divider,
@@ -82,11 +82,8 @@ const Fund = ({ pendingPayment = {} } = {}) => {
     setBalanceLoading(true)
     await waitForInitialization()
     try {
-      const result = await boomerang(
-        'GET',
-        `https://api.whatsonchain.com/v1/bsv/main/address/${getUserID()}/balance`
-      )
-      setAccountBalance(result.confirmed + result.unconfirmed)
+      const result = await ninja.getTotalValue()
+      setAccountBalance(result.total)
       setBalanceLoading(false)
     } catch (e) {
       setBalanceLoading(false)

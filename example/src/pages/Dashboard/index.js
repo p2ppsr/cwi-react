@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
-  ninjaWrapper,
+  ninja,
   waitForInitialization,
   isAuthenticated,
   logout,
@@ -12,15 +12,14 @@ import { Link } from 'react-router-dom'
 
 export default ({ history }) => {
   const [userID, setUserID] = useState('')
+  const [balance, setBalance] = useState(0)
 
   useEffect(() => {
     (async () => {
       await waitForInitialization()
       if (isAuthenticated()) {
-        setUserID(await ninjaWrapper({
-          func: 'getPaymail',
-          params: {}
-        }))
+        setUserID(await ninja.getPaymail())
+        refreshBalance()
       } else {
         history.push('/')
       }
@@ -33,11 +32,19 @@ export default ({ history }) => {
     history.push('/')
   }
 
+  const refreshBalance = async () => {
+    const result = await ninja.getTotalValue()
+    setBalance(result.total)
+  }
+
   return (
     <center style={{ wordWrap: 'break-word' }}>
       <br />
       <br />
-      <Typography variant='h4' paragraph>Hello, {userID}!</Typography>
+      <Typography variant='h4'>Hello, {userID}!</Typography>
+      <Typography variant='h5' paragraph>
+        Balance: {balance} satoshis
+      </Typography>
       <Typography paragraph>Welcome to your dashboard</Typography>
       <Link to='/cwi-settings'>
         <Button color='primary' variant='contained'>
@@ -48,11 +55,12 @@ export default ({ history }) => {
       <br />
       <Button
         color='primary'
-        onClick={() => {
-          sendDataTransaction({
+        onClick={async () => {
+          await sendDataTransaction({
             reason: 'Create an example Bitcoin SV data transaction',
             data: [new Uint8Array(50)]
           })
+          await refreshBalance()
         }}
       >
         Send Data Transaction
