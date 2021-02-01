@@ -5,10 +5,17 @@ import {
   isAuthenticated,
   logout,
   encrypt,
+  decrypt,
   sendDataTransaction
 } from '@cwi/core'
 import { Button, Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
+
+// For debugging while on this page
+window.ninja = ninja
+window.encrypt = encrypt
+window.decrypt = decrypt
+window.sendDataTransaction = sendDataTransaction
 
 export default ({ history }) => {
   const [userID, setUserID] = useState('')

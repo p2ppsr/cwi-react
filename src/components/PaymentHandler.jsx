@@ -22,16 +22,20 @@ const PaymentHandler = ({ routes, appName }) => {
   useEffect(() => {
     const callbackID = bindCallback(
       'onPaymentRequired',
-      ({ amount, address, reason }) => {
+      ({ address, amount, reason, paymentID }) => {
+        // Address is only used when not authenticated for initial funding
         if (isAuthenticated()) {
           store.dispatch({
             type: UPDATE,
             payload: {
-              pendingPayment: {
-                amount,
-                address,
-                reason
-              }
+              pendingActions: [
+                ...store.getState().pendingActions,
+                {
+                  amount,
+                  reason,
+                  paymentID
+                }
+              ]
             }
           })
           setPaymentReason(reason)
@@ -64,7 +68,7 @@ const PaymentHandler = ({ routes, appName }) => {
 
   const fundAccount = () => {
     setOpen(false)
-    history.push(`${routes.CWISettings}/fund`)
+    history.push(`${routes.CWISettings}/actions`)
   }
 
   return (

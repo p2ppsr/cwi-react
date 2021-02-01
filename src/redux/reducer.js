@@ -8,7 +8,8 @@ export const initialState = {
   },
   mainPage: '/dashboard',
   appName: 'Example App',
-  appLogo: undefined
+  appLogo: undefined,
+  pendingActions: []
 }
 
 const reducer = (state = initialState, action) => {

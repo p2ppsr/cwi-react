@@ -10,7 +10,8 @@ import {
   Feedback as FeedbackIcon,
   Info as AboutIcon,
   Help as SupportIcon,
-  AccountBalance as FundIcon,
+  AllInclusive as ActionsIcon,
+  AccountBox as ProfileIcon,
   Apps as BrowseIcon,
   GetApp as InstalledIcon,
   Timeline as UsageIcon
@@ -31,7 +32,6 @@ import { connect } from 'react-redux'
 import PasswordSettings from './Password/index.jsx'
 import PhoneSettings from './Phone/index.jsx'
 import RecoveryKeySettings from './RecoveryKey/index.jsx'
-import Fund from './Fund/index.jsx'
 import Feedback from './Feedback/index.jsx'
 import About from './About/index.jsx'
 import Browse from './Browse/index.jsx'
@@ -39,7 +39,7 @@ import Installed from './Installed/index.jsx'
 import Usage from './Usage/index.jsx'
 import Profile from './Profile/index.jsx'
 import Support from './Support/index.jsx'
-import Transactions from './Transactions/index.jsx'
+import Transactions from './Actions/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Logo from '@cwi/logo-react'
 
@@ -148,53 +148,13 @@ const Settings = ({ routes, mainPage, appName }) => {
             </ListItem>
             <ListItem
               button
-              onClick={() => history.push(`${routes.CWISettings}/fund`)}
-              selected={
-                history.location.pathname === `${routes.CWISettings}/fund`
-              }
-            >
-              <ListItemIcon>
-                <FundIcon
-                  color={
-                    history.location.pathname === `${routes.CWISettings}/fund`
-                      ? 'primary'
-                      : undefined
-                  }
-                />
-              </ListItemIcon>
-              <ListItemText>
-                Fund Account
-              </ListItemText>
-            </ListItem>
-            <ListItem
-              button
-              onClick={() => history.push(`${routes.CWISettings}/transactions`)}
-              selected={
-                history.location.pathname === `${routes.CWISettings}/transactions`
-              }
-            >
-              <ListItemIcon>
-                <SupportIcon
-                  color={
-                    history.location.pathname === `${routes.CWISettings}/transactions`
-                      ? 'primary'
-                      : undefined
-                  }
-                />
-              </ListItemIcon>
-              <ListItemText>
-                Transactions
-              </ListItemText>
-            </ListItem>
-            <ListItem
-              button
               onClick={() => history.push(`${routes.CWISettings}/profile`)}
               selected={
                 history.location.pathname === `${routes.CWISettings}/profile`
               }
             >
               <ListItemIcon>
-                <SupportIcon
+                <ProfileIcon
                   color={
                     history.location.pathname === `${routes.CWISettings}/profile`
                       ? 'primary'
@@ -204,6 +164,26 @@ const Settings = ({ routes, mainPage, appName }) => {
               </ListItemIcon>
               <ListItemText>
                 Profile
+              </ListItemText>
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => history.push(`${routes.CWISettings}/actions`)}
+              selected={
+                history.location.pathname === `${routes.CWISettings}/actions`
+              }
+            >
+              <ListItemIcon>
+                <ActionsIcon
+                  color={
+                    history.location.pathname === `${routes.CWISettings}/actions`
+                      ? 'primary'
+                      : undefined
+                  }
+                />
+              </ListItemIcon>
+              <ListItemText>
+                Actions
               </ListItemText>
             </ListItem>
           </List>
@@ -351,11 +331,6 @@ const Settings = ({ routes, mainPage, appName }) => {
             exact
           />
           <Route
-            path={`${routes.CWISettings}/fund`}
-            component={Fund}
-            exact
-          />
-          <Route
             path={`${routes.CWISettings}/feedback`}
             component={Feedback}
             exact
@@ -386,7 +361,7 @@ const Settings = ({ routes, mainPage, appName }) => {
             exact
           />
           <Route
-            path={`${routes.CWISettings}/transactions`}
+            path={`${routes.CWISettings}/actions`}
             component={Transactions}
             exact
           />

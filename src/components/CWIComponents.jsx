@@ -22,6 +22,7 @@ const CWIComponents = ({
   planariaToken = process.env.REACT_APP_PLANARIA_TOKEN,
   secretServerURL = process.env.REACT_APP_SECRET_SERVER_URL,
   dojoURL = process.env.REACT_APP_DOJO_URL,
+  approxTransactionOverhead = process.env.REACT_APP_APPROX_TRANSACTION_OVERHEAD,
   commissions = [],
   mainPage,
   appLogo,
@@ -34,6 +35,7 @@ const CWIComponents = ({
         planariaToken,
         secretServerURL,
         dojoURL,
+        approxTransactionOverhead,
         commissions,
         stateSnapshot: localStorage.CWIAuthStateSnapshot
       })

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Typography, TextField, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import style from './style'
-import { waitForAuthentication, ninjaWrapper } from '@cwi/core'
+import { waitForAuthentication, ninja } from '@cwi/core'
 
 const useStyles = makeStyles(style, {
   name: 'Profile'
@@ -19,41 +19,19 @@ const Profile = () => {
   useEffect(() => {
     (async () => {
       await waitForAuthentication()
-      try {
-        setProfile(await ninjaWrapper({
-          func: 'getAvatar',
-          params: {}
-        }))
-      } catch (e) { }
-      try {
-        setPaymail(await ninjaWrapper({
-          func: 'getPaymail',
-          params: {}
-        }))
-      } catch (e) {}
+      setProfile(await ninja.getAvatar())
+      setPaymail(await ninja.getPaymail())
     })()
   }, [])
 
   const updatePaymail = async newPaymail => {
-    await ninjaWrapper({
-      func: 'setPaymail',
-      params: { paymail: newPaymail }
-    })
-    setPaymail(await ninjaWrapper({
-      func: 'getPaymail',
-      params: {}
-    }))
+    await ninja.setPaymail({ paymail: newPaymail })
+    setPaymail(await ninja.getPaymail())
   }
 
   const updateProfile = async ({ name, photoURL }) => {
-    await ninjaWrapper({
-      func: 'setAvatar',
-      params: { name, photoURL }
-    })
-    setProfile(await ninjaWrapper({
-      func: 'getAvatar',
-      params: {}
-    }))
+    await ninja.setAvatar({ name, photoURL })
+    setProfile(await ninja.getAvatar())
   }
 
   const handleUpdateProfileSubmit = async e => {
@@ -85,33 +63,60 @@ const Profile = () => {
           {paymail}
         </Typography>
       </center>
-      <div>
-        <Typography variant='h2'>
+      <div className={classes.profile_paymail_grid}>
+        <div>
+          <Typography variant='h2'>
           Update Profile
-        </Typography>
-        <form onSubmit={handleUpdateProfileSubmit}>
-          <TextField
-            label='Name'
-            onChange={e => setNewName(e.target.value)}
-          />
-          <TextField
-            label='PhotoURL'
-            onChange={e => setNewPhotoURL(e.target.value)}
-          />
-          <Button type='submit'>Submit</Button>
-        </form>
-      </div>
-      <div>
-        <Typography variant='h2'>
+          </Typography>
+          <form onSubmit={handleUpdateProfileSubmit}>
+            <TextField
+              label='Name'
+              onChange={e => setNewName(e.target.value)}
+              fullWidth
+            />
+            <br />
+            <br />
+            <TextField
+              label='Photo URL (UHRP or HTTPS)'
+              onChange={e => setNewPhotoURL(e.target.value)}
+              fullWidth
+            />
+            <br />
+            <br />
+            <Button
+              type='submit'
+              variant='contained'
+              color='primary'
+              fullWidth
+            >
+            Update Profile
+            </Button>
+            <br />
+            <br />
+          </form>
+        </div>
+        <div>
+          <Typography variant='h2'>
           Update Paymail
-        </Typography>
-        <form onSubmit={handleUpdatePaymailSubmit}>
-          <TextField
-            label='Name'
-            onChange={e => setNewPaymail(e.target.value)}
-          />
-          <Button type='submit'>Submit</Button>
-        </form>
+          </Typography>
+          <form onSubmit={handleUpdatePaymailSubmit}>
+            <TextField
+              label='Name'
+              onChange={e => setNewPaymail(e.target.value)}
+              fullWidth
+            />
+            <br />
+            <br />
+            <Button
+              type='submit'
+              variant='contained'
+              color='primary'
+              fullWidth
+            >
+            Update Paymail
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   )
