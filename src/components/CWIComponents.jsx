@@ -19,9 +19,9 @@ import 'react-toastify/dist/ReactToastify.css'
 
 const CWIComponents = ({
   history,
-  planariaToken = process.env.REACT_APP_PLANARIA_TOKEN,
   secretServerURL = process.env.REACT_APP_SECRET_SERVER_URL,
   dojoURL = process.env.REACT_APP_DOJO_URL,
+  bridgeportResolvers = process.env.REACT_APP_BRIDGEPORT_RESOLVERS,
   approxTransactionOverhead = process.env.REACT_APP_APPROX_TRANSACTION_OVERHEAD,
   commissions = [],
   mainPage,
@@ -32,11 +32,11 @@ const CWIComponents = ({
   useEffect(() => {
     (async () => {
       await initialize({
-        planariaToken,
         secretServerURL,
         dojoURL,
         approxTransactionOverhead,
         commissions,
+        bridgeportResolvers,
         stateSnapshot: localStorage.CWIAuthStateSnapshot
       })
       if (
