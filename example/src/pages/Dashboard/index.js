@@ -6,16 +6,19 @@ import {
   logout,
   encrypt,
   decrypt,
-  sendDataTransaction
+  createAction,
+  isInitialized
 } from '@cwi/core'
+import * as CWI from '@cwi/core'
 import { Button, Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 
 // For debugging while on this page
+window.CWI = CWI
 window.ninja = ninja
 window.encrypt = encrypt
 window.decrypt = decrypt
-window.sendDataTransaction = sendDataTransaction
+window.createAction = createAction
 
 export default ({ history }) => {
   const [userID, setUserID] = useState('')
@@ -63,8 +66,8 @@ export default ({ history }) => {
       <Button
         color='primary'
         onClick={async () => {
-          await sendDataTransaction({
-            reason: 'Create an example Bitcoin SV data transaction',
+          await createAction({
+            description: 'Create an example Bitcoin SV data transaction',
             data: [new Uint8Array(50)]
           })
           await refreshBalance()
@@ -77,9 +80,10 @@ export default ({ history }) => {
       <Button
         color='primary'
         onClick={() => encrypt({
-          key: 'privilegedKey',
-          path: 'm/3301/1',
-          data: 'hello'
+          protocolID: 'example',
+          keyID: 'test',
+          data: 'hello',
+          originator: 'domain.com'
         })}
       >
         Encrypt with privileged key
