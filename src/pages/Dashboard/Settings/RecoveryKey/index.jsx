@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import {
   Typography, Button, CircularProgress
 } from '@mui/material'
 import { toast } from 'react-toastify'
 import { makeStyles } from '@mui/styles'
+import UIContext from '../../../../UIContext'
 
 const useStyles = makeStyles(theme => ({
   key: {
@@ -18,6 +19,7 @@ const useStyles = makeStyles(theme => ({
 }), { name: 'RecoveryKey' })
 
 const RecoveryKeySettings = ({ history }) => {
+  const { saveLocalSnapshot } = useContext(UIContext)
   const [recoveryKey, setRecoveryKey] = useState('')
   const [showLoading, setShowLoading] = useState(false)
   const [changeLoading, setChangeLoading] = useState(false)
@@ -44,7 +46,7 @@ const RecoveryKeySettings = ({ history }) => {
       const success = await window.CWI.changeRecoveryKey()
       if (success === true) {
         setRecoveryKey('')
-        await window.CWI.saveLocalSnapshot()
+        await saveLocalSnapshot()
         toast.dark('Recovery key changed!')
       }
     } catch (e) {

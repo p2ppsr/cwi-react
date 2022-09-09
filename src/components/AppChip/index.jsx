@@ -39,7 +39,7 @@ const AppChip = ({ label, history }) => {
       )}
       onClick={() => {
         history.push(
-          `/dashboard/apps/${encodeURIComponent(label.substring(12))}`
+          `/dashboard/app/${encodeURIComponent(label.substring(12))}`
         )
       }}
     />

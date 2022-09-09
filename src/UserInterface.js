@@ -5,30 +5,41 @@ import Recovery from './pages/Recovery/index.jsx'
 import LostPhone from './pages/Recovery/LostPhone.jsx'
 import LostPassword from './pages/Recovery/LostPassword.jsx'
 import Dashboard from './pages/Dashboard/index.jsx'
-import Password from './pages/Password/index.jsx'
-import ProtocolPermission from './pages/ProtocolPermission/index.jsx'
-import SpendingAuthorization from './pages/SpendingAuthorization/index.jsx'
-import Payment from './pages/Payment/index.jsx'
 import Welcome from './pages/Welcome/index.jsx'
 import Theme from 'components/Theme'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import CodeHandler from 'components/CodeHandler.jsx'
+import AuthenticationErrorHandler from 'components/AuthenticationErrorHandler.jsx'
+import PaymentHandler from 'components/PaymentHandler.jsx'
+import PasswordHandler from 'components/PasswordHandler.jsx'
 import RecoveryKeyHandler from 'components/RecoveryKeyHandler.jsx'
+import ProtocolPermissionHandler from 'components/ProtocolPermissionHandler/index.jsx'
+import SpendingAuthorizationHandler from 'components/SpendingAuthorizationHandler/index.jsx'
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
+import UIContext from './UIContext'
 
 let ErrorBoundary = ({ children }) => children
 
-export default () => {
+export default ({
+  onFocusRequested = () => { },
+  onFocusRelinquished = () => { },
+  isFocused = () => false,
+  saveLocalSnapshot = () => { },
+  removeLocalSnapshot = () => { },
+  appVersion = '1.0.0',
+  appName = 'Generic Babbage Wrapper',
+  env = 'prod',
+  isPackaged = true
+} = {}) => {
   useEffect(() => {
     (async () => {
-      const env = window.ENV
       if (env !== 'dev') {
         Bugsnag.start({
           apiKey: 'ffe7920be5e154faf6124e012c533b39',
           plugins: [new BugsnagPluginReact()],
-          appVersion: await window.CWI.getElectronAppVersion()
+          appVersion
         })
         ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React)
         window.Bugsnag = Bugsnag
@@ -37,13 +48,29 @@ export default () => {
   }, [])
 
   return (
+    <UIContext.Provider value={{
+  onFocusRequested,
+  onFocusRelinquished,
+  isFocused,
+  saveLocalSnapshot,
+  removeLocalSnapshot,
+  appVersion,
+  appName,
+  env,
+  isPackaged
+  }}>
     <ErrorBoundary>
       <Theme>
         <Router
           hashType='noslash'
         >
           <CodeHandler />
+          <AuthenticationErrorHandler />
+          <PasswordHandler />
           <RecoveryKeyHandler />
+          <ProtocolPermissionHandler />
+          <SpendingAuthorizationHandler />
+          <PaymentHandler />
           <ToastContainer
             position='top-center'
           />
@@ -73,28 +100,13 @@ export default () => {
               component={Dashboard}
             />
             <Route
-              path='/password'
-              component={Password}
-            />
-            <Route
-              path='/protocolpermission'
-              component={ProtocolPermission}
-            />
-            <Route
-              path='/spendingauthorization'
-              component={SpendingAuthorization}
-            />
-            <Route
-              path='/payment'
-              component={Payment}
-            />
-            <Route
               path='/welcome'
               component={Welcome}
             />
           </Switch>
         </Router>
       </Theme>
-    </ErrorBoundary>
+      </ErrorBoundary>
+      </UIContext.Provider>
   )
 }

@@ -17,13 +17,6 @@ export default theme => ({
     margin: `${theme.spacing(7)} auto`,
     placeItems: 'center'
   },
-  button_bar: {
-    marginTop: 'max(0px, calc(100vh - 44rem))',
-    marginBottom: theme.spacing(1),
-    [theme.breakpoints.up('sm')]: {
-      marginTop: 'max(0px, calc(100vh - 42rem))'
-    }
-  },
   slider: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(5)

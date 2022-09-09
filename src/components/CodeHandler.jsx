@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { DialogActions, DialogContent, Button, DialogContentText, TextField } from '@mui/material'
 import CustomDialog from './CustomDialog/index.jsx'
 
-const RecoveryKeyHandler = () => {
+const CodeHandler = () => {
   const [open, setOpen] = useState(false)
   const [phone, setPhone] = useState('')
   const [reason, setReason] = useState('')
@@ -64,4 +64,4 @@ const RecoveryKeyHandler = () => {
   )
 }
 
-export default RecoveryKeyHandler
+export default CodeHandler

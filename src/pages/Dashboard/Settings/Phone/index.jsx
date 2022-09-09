@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import {
   Typography,
   Button,
@@ -8,6 +8,7 @@ import { makeStyles } from '@mui/styles'
 import { toast } from 'react-toastify'
 import PhoneEntry from '../../../../components/PhoneEntry.jsx'
 import { formatPhoneNumber } from 'react-phone-number-input'
+import UIContext from '../../../../UIContext'
 
 const useStyles = makeStyles(theme => ({
   button_grid: {
@@ -18,6 +19,7 @@ const useStyles = makeStyles(theme => ({
 }), { name: 'PhoneSettings' })
 
 const PhoneSettings = ({ history }) => {
+  const { saveLocalSnapshot } = useContext(UIContext)
   const classes = useStyles()
   const [newPhone, setNewPhone] = useState('')
   const [currentNumber, setCurrentNumber] = useState('')
@@ -44,7 +46,7 @@ const PhoneSettings = ({ history }) => {
       setChangeLoading(true)
       const result = await window.CWI.changePhoneNumber(newPhone)
       if (result === true) {
-        await window.CWI.saveLocalSnapshot()
+        await saveLocalSnapshot()
         toast.dark('Phone number changed!')
       }
     } catch (e) {

@@ -10,12 +10,5 @@ export default theme => ({
   },
   title: {
     marginTop: theme.spacing(3)
-  },
-  button_bar: {
-    marginTop: 'max(0px, calc(100vh - 27rem))',
-    marginBottom: theme.spacing(1),
-    [theme.breakpoints.up('sm')]: {
-      marginTop: 'max(0px, calc(100vh - 26rem))'
-    }
   }
 })

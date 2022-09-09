@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -19,6 +19,7 @@ import { toast } from 'react-toastify'
 import { invoice, pay, upload } from 'nanostore-publisher'
 import { Img } from 'uhrp-react'
 import bridgeportResolvers from '../../utils/bridgeportResolvers'
+import UIContext from '../../UIContext'
 
 const useStyles = makeStyles(style, {
   name: 'ProfileEditor'
@@ -32,6 +33,7 @@ const ProfileEditor = ({
   onSave = () => { },
   onClose = () => { }
 } = {}) => {
+  const { env, isPackaged } = useContext(UIContext)
   const classes = useStyles()
   const [editableName, setEditableName] = useState(name)
   const [editablePhotoURL, setEditablePhotoURL] = useState(photoURL)
@@ -74,10 +76,8 @@ const ProfileEditor = ({
           [imageBlob],
           'profile.png'
         )
-
-        const env = window.ENV
         const serverURL = env === 'dev'
-          ? window.isPackaged
+          ? isPackaged
             ? 'https://staging-nanostore.babbage.systems'
             : 'http://localhost:3104'
           : env === 'staging'

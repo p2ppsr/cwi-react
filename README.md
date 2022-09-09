@@ -9,33 +9,31 @@ This component has a few peer dependencies that you need to add alongside it to 
 - **React**: This is a React library. You need to install `react` in order to use it.
 - **CWI Core**: You won't interact with CWI very much through this package. Install at least the `@cwi/core` module. You'll also probably want the `@cwi/users` package if you're building a multi-user app.
 
-### Basic Usage
+## Basic Usage
+
+Before @cwi/react will load, a few things need to have happened:
+- You must first call `CWI.initialize()` and "boot" the CWI kernel with its snapshot MBR
+- You must somehow enstantiate `window.CWI` with the initialized CWI kernel instance
+- You must be able to provide the various callbacks and other props required by the UI
+
+### Electron
+
+This example is taken from an Electron application using this library.
 
 ```js
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { UserInterface } from '@cwi/react'
-import CWI from '@cwi/core'
-
-/*
-Before @cwi/react will load, a few things need to have happened:
-- You must call `CWI.initialize()` and "boot" the CWI kernel
-- You must somehow enstantiate `window.CWI` with a CWI kernel instance
-- You must be able to provide the various callback props required by the UI
-
-This example is taken from an Electron application using this library.
-*/
-
 const { ipcRenderer } = window.require('electron')
 
 const getID = () => Buffer.from(
   require('crypto').randomBytes(8)
 ).toString('base64')
-const ids = {}
+const callbackIDs = {}
 
 ipcRenderer.on('message', (e, data) => {
-  if (data.type !== 'CWI' || typeof ids[data.id] !== 'function') return
-  ids[data.id](data)
+  if (data.type !== 'CWI' || typeof callbackIDs[data.id] !== 'function') return
+  callbackIDs[data.id](data)
 })
 
 const runCommand = (call, ...params) => {
@@ -46,8 +44,8 @@ const runCommand = (call, ...params) => {
       id,
       call
     }, ...params)
-    ids[id] = data => {
-      delete ids[id]
+    callbackIDs[id] = data => {
+      delete callbackIDs[id]
       if (data.status === 'error') {
         if (data.err instanceof Error) {
           reject(data.err)
@@ -75,7 +73,7 @@ const runCommand = (call, ...params) => {
   })
   funcs.bindCallback = (name, cb) => {
     const id = getID()
-    ids[id] = x => cb(x.result)
+    callbackIDs[id] = x => cb(x.result)
     ipcRenderer.invoke('message', {
       type: 'CWI',
       id,
@@ -87,14 +85,14 @@ const runCommand = (call, ...params) => {
     let id
     try {
       // If unbindCallback referenced a function pointer instead of an ID, the ID needs to be rediscovered by finding the right function.
-      id = typeof cb === 'string' ? cb : Object.entries(ids).filter(x => x[1] === cb)[0][0]
+      id = typeof cb === 'string' ? cb : Object.entries(callbackIDs).filter(x => x[1] === cb)[0][0]
       if (typeof id === 'undefined') {
         throw new Error('No id')
       }
     } catch (e) {
       throw new Error('Invalid callback ID or callback function.')
     }
-    delete ids[id]
+    delete callbackIDs[id]
     ipcRenderer.invoke('message', {
       type: 'CWI',
       id,
@@ -102,16 +100,49 @@ const runCommand = (call, ...params) => {
     }, name)
     return true
   }
-  funcs.saveLocalSnapshot = () => runCommand('saveLocalSnapshot')
-  funcs.removeLocalSnapshot = () => runCommand('removeLocalSnapshot')
   window.CWI = funcs
-  window.CWI.defaults = await runCommand('getDefaults')
-  window.ENV = await window.CWI.getEnv()
-  window.isPackaged = await window.CWI.isElectronAppPackaged()
+  const env = await runCommand('getEnv')
+  const isPackaged = await runCommand('isElectronAppPackaged')
+  const appVersion = await runCommand('getElectronAppVersion')
 
   // Renders the app
   ReactDOM.render(
-    <UserInterface />,
+    <UserInterface
+      onFocusRequested={() => runCommand('requestFocus')}
+      onFocusRelinquished={() => runCommand('relinquishFocus')}
+      isFocused={() => runCommand('isFocused')}
+      saveLocalSnapshot={() => runCommand('saveLocalSnapshot')}
+      removeLocalSnapshot={() => runCommand('removeLocalSnapshot')}
+      env={env}
+      isPackaged={isPackaged}
+      appName='Babbage Desktop'
+      appVersion={appVersion}
+    />,
+    document.getElementById('root')
+  )
+})()
+```
+
+### Browser
+
+Here's how you might go about running this in a browser app:
+
+```js
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { UserInterface } from '@cwi/react'
+import CWI from '@cwi/core'
+
+// [TODO] This is not yet complete.
+
+(async () => {
+  window.CWI = CWI
+  await CWI.initialize()
+  ReactDOM.render(
+    <UserInterface
+      appName='Prosperity Desktop'
+      appVersion='0.1.0'
+    />,
     document.getElementById('root')
   )
 })()
@@ -119,7 +150,11 @@ const runCommand = (call, ...params) => {
 
 ## The UserInterface Component
 
-You render the UserInterface component to the root of your webpage. It allows a user to interact with the various CWI processes. You respond to `onFocusRequested` and `onFocusRemoved` by showing or hiding the CWI user interface.
+You render the UserInterface component to the root of your webpage. It allows a user to interact with the various CWI processes.
+
+You respond to `onFocusRequested` and `onFocusRelinquished` by showing or hiding the CWI user interface.
+
+You provide the various props shown in the example.
 
 ## About CWI Core
 

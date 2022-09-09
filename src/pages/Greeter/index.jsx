@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef } from 'react'
+import React, { useContext, useState, useEffect, forwardRef } from 'react'
 import style from './style'
 import {
   Accordion,
@@ -22,10 +22,12 @@ import { makeStyles } from '@mui/styles'
 import { Link } from 'react-router-dom'
 import CWILogo from '@cwi/logo-react'
 import { toast } from 'react-toastify'
+import UIContext from '../../UIContext'
 
 const useStyles = makeStyles(style, { name: 'Greeter' })
 
 const Greeter = ({ history }) => {
+  const { appVersion, appName, saveLocalSnapshot } = useContext(UIContext)
   const classes = useStyles()
   const [accordionView, setAccordionView] = useState('phone')
   const [phone, setPhone] = useState('')
@@ -44,15 +46,6 @@ const Greeter = ({ history }) => {
       }
     })()
   }, [history])
-
-  // Get the version
-  useEffect(() => {
-    (async () => {
-      setElectronVersion(
-        await window.CWI.getElectronAppVersion()
-      )
-    })()
-  }, [])
 
   // Ensure the correct authentication mode
   useEffect(() => {
@@ -117,7 +110,7 @@ const Greeter = ({ history }) => {
           confirmPassword
         )
         if (result === true) {
-          await window.CWI.saveLocalSnapshot()
+          await saveLocalSnapshot()
           history.push('/welcome')
         }
       } catch (e) {
@@ -128,7 +121,7 @@ const Greeter = ({ history }) => {
       try {
         const result = await window.CWI.submitPassword(password)
         if (result === true) {
-          await window.CWI.saveLocalSnapshot()
+          await saveLocalSnapshot()
           history.push('/dashboard')
         }
       } catch (e) {
@@ -314,7 +307,7 @@ const Greeter = ({ history }) => {
         color='textSecondary'
         className={classes.copyright_text}
       >
-        <b>Babbage Desktop version {electronVersion}</b>
+        <b>{appName} version {appVersion}</b>
       </Typography>
       <Typography
         align='center'

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
   DialogContent,
   Typography,
@@ -13,67 +13,119 @@ import {
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles';
 import style from './style'
-import Satoshis from '../../components/Satoshis.jsx'
+import Satoshis from '../Satoshis.jsx'
 import { Send, Cancel } from '@mui/icons-material'
 import boomerang from 'boomerang-http'
 import formatDistance from 'date-fns/formatDistance'
+import CustomDialog from '../CustomDialog/index.jsx'
+import UIContext from '../../UIContext'
 
 const useStyles = makeStyles(style, {
-  name: 'SpendingAuthorization'
+  name: 'SpendingAuthorizationHandler'
 })
-const { ipcRenderer } = window.require('electron')
 
-const SpendingAuthorization = ({ location }) => {
+const SpendingAuthorizationHandler = () => {
+  const {
+    onFocusRequested,
+    onFocusRelinquished,
+    isFocused
+  } = useContext(UIContext)
+  const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false) 
   const classes = useStyles()
-  const params = new URLSearchParams(location.search)
-  const id = params.get('id')
-  const description = params.get('description')
-  const originator = params.get('originator')
-  const transactionAmount = Number(params.get('transactionAmount'))
-  const authorizationAmount = Number(params.get('authorizationAmount'))
-  const expirationTime = Number(params.get('expirationTime'))
-  const renewal = params.get('renewal')
-  const [now] = useState(parseInt(Date.now() / 1000))
+  const now = parseInt(Date.now() / 1000)
+  const [description, setDescription] = useState('')
+  const [originator, setOriginator] = useState('')
   const [appName, setAppName] = useState(null)
+  const [renewal, setRenewal] = useState(false)
+  const [requestID, setRequestID] = useState(null)
+  const [open, setOpen] = useState(false)
+  const [transactionAmount, setTransactionAmount] = useState(0)
+  const [authorizationAmount, setAuthorizationAmount] = useState(0)
+  const [expirationTime, setExpirationTime] = useState(0)
   const [showAuthorizeApp, setShowAuthorizeApp] = useState(false)
   const [amount, setAmount] = useState(authorizationAmount)
   const [expiry, setExpiry] = useState(expirationTime)
   const [sliderValue, setSliderValue] = useState(authorizationAmount)
 
-  const handleCancel = () => {
-    ipcRenderer.invoke(id, { type: 'abort' })
+  const handleCancel = async () => {
+    window.CWI.denySpendingAuthorization({ requestID })
+     setOpen(false)
+     if (!wasOriginallyFocused) {
+      await onFocusRelinquished()
+    }
   }
 
-  const handleGrant = ({ singular = true }) => {
-    const payload = {
-      type: 'grant',
+  const handleGrant = async ({ singular = true }) => {
+    window.CWI.grantSpendingAuthorization({
+      requestID,
       singular,
       expiry,
       amount
+    })
+    setOpen(false)
+    if (!wasOriginallyFocused) {
+      await onFocusRelinquished()
     }
-    ipcRenderer.invoke(id, payload)
   }
 
   useEffect(() => {
+    let id
     (async () => {
-      try {
-        const result = await boomerang(
-          'GET',
-          `${originator.startsWith('localhost:') ? 'http' : 'https'}://${originator}/manifest.json`
-        )
-        if (typeof result === 'object') {
-          if (result.name && result.name.length < 64) {
-            setAppName(result.name)
-          } else if (result.short_name && result.short_name.length < 64) {
-            setAppName(result.short_name)
+      id = await window.CWI.bindCallback(
+        'onSpendingAuthorizationRequested',
+        async ({
+          requestID,
+          originator,
+          description,
+          transactionAmount,
+          authorizationAmount,
+          expirationTime,
+          renewal
+        }) => {
+          try {
+            const result = await boomerang(
+              'GET',
+              `${originator.startsWith('localhost:') ? 'http' : 'https'}://${originator}/manifest.json`
+            )
+            if (typeof result === 'object') {
+              if (result.name && result.name.length < 64) {
+                setAppName(result.name)
+              } else if (result.short_name && result.short_name.length < 64) {
+                setAppName(result.short_name)
+              }
+            }
+          } catch (e) {
+            setAppName(originator)
+          }
+          const wasOriginallyFocused = await isFocused()
+          setWasOriginallyFocused(wasOriginallyFocused)
+          setRequestID(requestID)
+          setOriginator(originator)
+          setDescription(description)
+          setRenewal(renewal)
+          setTransactionAmount(transactionAmount)
+          setAuthorizationAmount(authorizationAmount)
+          setExpirationTime(expirationTime)
+          setOpen(true)
+          if (!wasOriginallyFocused) {
+            await onFocusRequested()
           }
         }
-      } catch (e) { /* ignore */ }
+      )
     })()
-  }, [originator])
+    return () => {
+      if (id) {
+        window.CWI.unbindCallback('onSpendingAuthorizationRequested', id)
+      }
+    }
+  }, [])
 
   return (
-    <>
+    <CustomDialog
+      open={open}
+      onClose={handleCancel}
+      title='App Spending Request'
+    >
       <DialogContent>
         <center>
           <img
@@ -212,8 +264,8 @@ const SpendingAuthorization = ({ location }) => {
           </Button>
         </DialogActions>
       )}
-    </>
+    </CustomDialog>
   )
 }
 
-export default SpendingAuthorization
+export default SpendingAuthorizationHandler

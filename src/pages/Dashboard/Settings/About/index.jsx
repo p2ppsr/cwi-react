@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Typography, Divider } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style'
+import UIContext from '../../../../UIContext'
 
 const useStyles = makeStyles(style, {
   name: 'About'
 })
 
 const About = () => {
+  const { appVersion } = useContext(UIContext)
   const classes = useStyles()
-  const [appVersion, setAppVersion] = useState('---')
   const [cwiVersion, setCwiVersion] = useState('---')
 
   useEffect(() => {
     (async () => {
       setCwiVersion(await window.CWI.getVersion())
-      setAppVersion(await window.CWI.getElectronAppVersion())
     })()
   }, [])
 

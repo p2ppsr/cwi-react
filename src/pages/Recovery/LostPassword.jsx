@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import style from './style'
 import {
   Accordion,
@@ -19,10 +19,12 @@ import {
 } from '@mui/icons-material'
 import { makeStyles } from '@mui/styles'
 import { toast } from 'react-toastify'
+import UIContext from '../../UIContext'
 
 const useStyles = makeStyles(style, { name: 'Home' })
 
 const RecoveryLostPassword = ({ history }) => {
+  const { saveLocalSnapshot } = useContext(UIContext)
   const classes = useStyles()
   const [accordianView, setAccordianView] = useState('phone')
   const [phone, setPhone] = useState('')
@@ -42,7 +44,7 @@ const RecoveryLostPassword = ({ history }) => {
     (async () => {
       id = await window.CWI.bindCallback('onAuthenticationSuccess', () => {
         setAccordianView('new-password')
-        window.CWI.saveLocalSnapshot()
+        saveLocalSnapshot()
       })
     })()
     return () => {

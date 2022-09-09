@@ -18,7 +18,7 @@ import {
 import Feedback from './Feedback/index.jsx'
 import Browse from './Browse/index.jsx'
 import Actions from './Actions/index.jsx'
-import Apps from './Apps/Index.jsx'
+import App from './App/Index.jsx'
 import Settings from './Settings/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Profile from '../../components/Profile.jsx'
@@ -144,8 +144,8 @@ const Dashboard = () => {
           exact
         />
         <Route
-          path='/dashboard/apps/:app'
-          component={Apps}
+          path='/dashboard/app/:app'
+          component={App}
         />
         <Route
           path='/dashboard/settings'

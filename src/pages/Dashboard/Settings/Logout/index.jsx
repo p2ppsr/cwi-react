@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Button } from '@mui/material'
+import UIContext from '../../../../UIContext'
 
 const Logout = ({ history }) => {
+  const { removeLocalSnapshot } = useContext(UIContext)
   const [loading, setLoading] = useState(false)
 
   const signout = async () => {
@@ -17,7 +19,7 @@ const Logout = ({ history }) => {
         return
       }
       await window.CWI.logout()
-      await window.CWI.removeLocalSnapshot()
+      await removeLocalSnapshot()
       history.push('/')
     } finally {
       setLoading(false)

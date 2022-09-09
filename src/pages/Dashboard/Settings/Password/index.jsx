@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import style from './style'
 import {
   Typography,
@@ -8,10 +8,12 @@ import {
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { toast } from 'react-toastify'
+import UIContext from '../../../../UIContext'
 
 const useStyles = makeStyles(style, { name: 'PasswordSettings' })
 
 const PasswordSettings = ({ history }) => {
+  const { saveLocalSnapshot } = useContext(UIContext)
   const classes = useStyles()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -23,7 +25,7 @@ const PasswordSettings = ({ history }) => {
       setLoading(true)
       const result = await window.CWI.changePassword(password, confirmPassword)
       if (result === true) {
-        await window.CWI.saveLocalSnapshot()
+        await saveLocalSnapshot()
         toast.dark('Password changed!')
         setPassword('')
         setConfirmPassword('')
