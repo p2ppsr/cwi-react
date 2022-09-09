@@ -1,8 +1,7 @@
-import { waitForInitialization, isAuthenticated } from '@cwi/core'
-
-export default async (h, r) => {
-  await waitForInitialization()
-  if (!isAuthenticated()) {
-    h.push(r.Greeter)
+export default async history => {
+  await window.CWI.waitForInitialization()
+  const isAuth = await window.CWI.isAuthenticated()
+  if (!isAuth) {
+    history.push('/')
   }
 }

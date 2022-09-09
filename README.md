@@ -7,95 +7,125 @@ Components for using CWI in React applications
 This component has a few peer dependencies that you need to add alongside it to your project:
 
 - **React**: This is a React library. You need to install `react` in order to use it.
-- **React Router**: We'll define a few routes in your app. In order to do this, you'll need to install `react-router` and `react-router-dom`, and use it for routing.
 - **CWI Core**: You won't interact with CWI very much through this package. Install at least the `@cwi/core` module. You'll also probably want the `@cwi/users` package if you're building a multi-user app.
 
 ### Basic Usage
 
 ```js
 import React from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import Dashboard from './pages/Dashboard'
-import { CWIRoutes, CWIComponents } from '@cwi/react'
+import ReactDOM from 'react-dom'
+import { UserInterface } from '@cwi/react'
+import CWI from '@cwi/core'
 
-export default () => (
-  <Router>
-    <CWIComponents
-      mainPage='/dashboard'
-    />
-    <Switch>
-      <Route path='/dashboard' component={Dashboard} />
-      <CWIRoutes />
-    </Switch>
-  </Router>
-)
+/*
+Before @cwi/react will load, a few things need to have happened:
+- You must call `CWI.initialize()` and "boot" the CWI kernel
+- You must somehow enstantiate `window.CWI` with a CWI kernel instance
+- You must be able to provide the various callback props required by the UI
+
+This example is taken from an Electron application using this library.
+*/
+
+const { ipcRenderer } = window.require('electron')
+
+const getID = () => Buffer.from(
+  require('crypto').randomBytes(8)
+).toString('base64')
+const ids = {}
+
+ipcRenderer.on('message', (e, data) => {
+  if (data.type !== 'CWI' || typeof ids[data.id] !== 'function') return
+  ids[data.id](data)
+})
+
+const runCommand = (call, ...params) => {
+  return new Promise((resolve, reject) => {
+    const id = getID()
+    ipcRenderer.invoke('message', {
+      type: 'CWI',
+      id,
+      call
+    }, ...params)
+    ids[id] = data => {
+      delete ids[id]
+      if (data.status === 'error') {
+        if (data.err instanceof Error) {
+          reject(data.err)
+        } else {
+          reject(new Error(data.err.message))
+        }
+      } else {
+        resolve(data.result)
+      }
+    }
+  })
+}
+
+(async () => {
+  const names = await runCommand('listFunctions')
+  const funcs = {}
+  names.forEach(x => {
+    if (x.indexOf('.') === -1) {
+      funcs[x] = (...params) => runCommand(x, ...params)
+    } else {
+      const [obj, func] = x.split('.')
+      if (typeof funcs[obj] === 'undefined') funcs[obj] = {}
+      funcs[obj][func] = (...params) => runCommand(x, ...params)
+    }
+  })
+  funcs.bindCallback = (name, cb) => {
+    const id = getID()
+    ids[id] = x => cb(x.result)
+    ipcRenderer.invoke('message', {
+      type: 'CWI',
+      id,
+      call: 'bindCallback'
+    }, name)
+    return id
+  }
+  funcs.unbindCallback = (name, cb) => {
+    let id
+    try {
+      // If unbindCallback referenced a function pointer instead of an ID, the ID needs to be rediscovered by finding the right function.
+      id = typeof cb === 'string' ? cb : Object.entries(ids).filter(x => x[1] === cb)[0][0]
+      if (typeof id === 'undefined') {
+        throw new Error('No id')
+      }
+    } catch (e) {
+      throw new Error('Invalid callback ID or callback function.')
+    }
+    delete ids[id]
+    ipcRenderer.invoke('message', {
+      type: 'CWI',
+      id,
+      call: 'unbindCallback'
+    }, name)
+    return true
+  }
+  funcs.saveLocalSnapshot = () => runCommand('saveLocalSnapshot')
+  funcs.removeLocalSnapshot = () => runCommand('removeLocalSnapshot')
+  window.CWI = funcs
+  window.CWI.defaults = await runCommand('getDefaults')
+  window.ENV = await window.CWI.getEnv()
+  window.isPackaged = await window.CWI.isElectronAppPackaged()
+
+  // Renders the app
+  ReactDOM.render(
+    <UserInterface />,
+    document.getElementById('root')
+  )
+})()
 ```
 
-## Components
+## The UserInterface Component
 
-Name                 | Description
----------------------|---------------------------
-CWIComponents        | Bundles together the CWI components. Calls the initialize function with the provided config.
-CWIRoutes            | Exports the various CWI routes and pages.
-
-### CWIComponents
-
-This component is the main entry point for the library. It should be rendered outside your `Router` to avoid unmounting.
-
-#### Props
-
-Name            | Description
-----------------|---------------------
-mainPage        | The page where users should be sent after they log in with CWI
-planariaToken   | The Planaria token that will be used to interact with the blockchain. Obtain a token from [token.planaria.network](https://token.planaria.network)
-secretServerURL | The CWI secret server to use. You should ignore this unless you have specific permission and instructions from us to do otherwise.
-commissions     | An array of commissions for your application
-logoURL         | The URL to your app's logo image. We recommend making it a square.
-appName         | The name of your application.
-
-### CWIRoutes
-
-Put this at the bottom of your React Router `Switch`, right before your default ("404") route.
-
-It will install the various `<Route />` components that are used by the CWI pages.
-
-CWI is responsible for the following routes (page names for use in the `routes` prop are in bold on the left):
-
-- **Greeter** (default /), where your App Logo will be shown and where users can log in or sign up with CWI
-- **Recovery** (default /recovery), where users can get back into their CWI accounts
-- **RecoveryLostPassword** (default /recovery/lost-password), where users can reset their passwords
-- **RecoveryLostPhone** (default /recovery/lost-phone), where users can reset their phone numbers
-- **Settings** (default /cwi-settings) where users can change and manage their login details
-- **PasswordSettings** (default /cwi-settings/password), where users can change their passwords
-- **PhoneSettings** (default /cwi-settings/phone), where users can change their phone numbers
-- **RecoveryKeySettings** (default /cwi-settings/recovery-key), where users can view or change their recovery recovery keys
-
-#### Props
-
-Name   | Description
--------|----------------------
-routes | An object mapping page names to paths
+You render the UserInterface component to the root of your webpage. It allows a user to interact with the various CWI processes. You respond to `onFocusRequested` and `onFocusRemoved` by showing or hiding the CWI user interface.
 
 ## About CWI Core
 
 You should familiarize yourself with the `@cwi/core` package, since it's the primary interface to CWI. This package is concerned with the UI components, while `@cwi/core` deals with the actual meat and potatoes.
 
-## Changing the Redirect URL
-
-To dynamically change where the user is redirected after authenticating with CWI, set a relative path in `sessionStorage.redirect`. Instead of being taken to `mainPage`, the user will be taken to this path.
-
-## Logging Out
-
-We persist the user's session with local storage. To log the user out:
-
-- Call the `logout` function from `@cwi/react/auth`
-- Run `delete localStorage.CWIAuthStateSnapshot`
-- Reset your app to its initial state
-- Go to the Greeter route (default: `/`)
-
-## Demo Project
-
-Convo is a decentralized, secure messaging application built with `@cwi/core` and `@cwi/react`. Check out the [website](https://convo.babbage.systems) or ask for a copy of the code!
+If you are an outside app developer or service provider workin to create things with Babbage, then you want to check out the [Babbage SDK](https://projectbabbage.com/sdk) instead.
 
 ## Development
 
@@ -105,17 +135,9 @@ To set up for development, pull down the repo and do the following:
 
 ```bash
 npm install
-cd example
-npm install
 ```
 
-Then, each time you want to spin up the environment, open two terminal tabs.
-
-In the first one, just run `npm run dev`.
-
-In the second one, run `cd example && npm run start` to spin up the development server.
-
-Hot reloading should be supported by this setup.
+Then, each time you want to spin up the environment, `npm link` this project, move to the place where you are implementing `@cwi/react`, then run `npm link @cwi/react`, and spin up your development environment.
 
 ## Confidentiality
 

@@ -1,9 +1,9 @@
 import React from 'react'
 import {
   Dialog, DialogTitle, Typography, useMediaQuery
-} from '@material-ui/core'
+} from '@mui/material'
 import Logo from '@cwi/logo-react'
-import { useTheme, makeStyles } from '@material-ui/styles'
+import { useTheme, makeStyles } from '@mui/styles'
 import style from './style'
 
 const useStyles = makeStyles(style, {
@@ -13,7 +13,7 @@ const useStyles = makeStyles(style, {
 const CustomDialog = ({ title, children, ...props }) => {
   const classes = useStyles()
   const theme = useTheme()
-  const isFullscreen = useMediaQuery(theme.breakpoints.down('xs'))
+  const isFullscreen = useMediaQuery(theme.breakpoints.down('md'))
 
   return (
     <Dialog
@@ -22,7 +22,7 @@ const CustomDialog = ({ title, children, ...props }) => {
       fullScreen={isFullscreen}
       {...props}
     >
-      <DialogTitle className={classes.title_bg} disableTypography>
+      <DialogTitle className={classes.title_bg}>
         <Typography className={classes.title} variant='h4'>
           {title}
         </Typography>
@@ -30,7 +30,7 @@ const CustomDialog = ({ title, children, ...props }) => {
       </DialogTitle>
       {children}
     </Dialog>
-  )
+  );
 }
 
 export default CustomDialog

@@ -2,7 +2,7 @@ export default theme => ({
   content_wrap: theme.templates.page_wrap,
   back_button: {
     display: 'block',
-    margin: `${theme.spacing(1)}px auto`
+    margin: `${theme.spacing(1)} auto`
   },
   panel_header: {
     position: 'relative'

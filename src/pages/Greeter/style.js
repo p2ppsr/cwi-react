@@ -6,7 +6,7 @@ export default theme => ({
     width: '12em !important',
     height: '12em !important',
     color: theme.palette.primary.main,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('lg')]: {
       width: '8em !important',
       height: '8em !important'
     }
@@ -25,7 +25,7 @@ export default theme => ({
     right: '24px',
     color: 'green',
     transition: 'all 0.25s',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('lg')]: {
       right: '8px'
     }
   },
@@ -34,7 +34,7 @@ export default theme => ({
   },
   recovery_link: {
     display: 'block',
-    margin: `${theme.spacing(1)}px auto`
+    margin: `${theme.spacing(1)} auto`
   },
   copyright_text: {
     fontSize: '0.66em'
@@ -43,8 +43,14 @@ export default theme => ({
     display: 'grid',
     gridGap: theme.spacing(1),
     width: '100%',
+    gridTemplateColumns: '1fr'
+  },
+  new_password_grid: {
+    display: 'grid',
+    gridGap: theme.spacing(1),
+    width: '100%',
     gridTemplateColumns: '1fr 1fr',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('lg')]: {
       gridTemplateColumns: '1fr',
       gridTemplateRows: '1fr 1fr'
     }

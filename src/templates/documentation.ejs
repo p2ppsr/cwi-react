@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Babbage Desktop API</title>
+    <style>
+      body {
+        font-family: Arial;
+        padding: 1em;
+      }
+      li {
+        margin: 0.5em 0;
+      }
+      .main {
+        max-width: min(1440px, 100vw);
+        margin: auto;
+        word-wrap: break-word;
+      }
+      .method {
+        background-color: lime;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='main'>
+      <h1>Babbage Desktop API</h1>
+      <p>This API provides a client-side authentication solution that will let your application access a few cryptographic keys that belong to your users. You can use these for client-side encryption/decryption, authentication, signing, or even creating Bitcoin transactions.</p>
+      <p>All requests must provide a valid origin header.</p>
+      <p>Be sure to specify a responseType of arraybuffer in your request to prevent invalid UTF-8 byte conversions.</p>
+      <b>Example</b>
+    <pre>
+    await axios.get('http://localhost:3301/v1/version', {
+      headers: {
+        Origin: 'http://localhost'
+      }
+    })
+    </pre> 
+    <p>Note: Requests with returnType query parameter of Uint8Array/Buffer will return a buffer instead of a JSON object.</p>
+      <% for (let i in controllers) { %>
+        <% for (let j in controllers[i]) { %>
+          <h3>
+            <b class='method'><%= controllers[i][j].type  %></b> <%= '/v1' %><%= controllers[i][j].path %>
+          </h3>
+          <p>
+            <%= controllers[i][j].summary  %>
+          </p>
+          <% if (typeof controllers[i][j].parameters === 'object') { %>
+            <h4>Query Parameters</h4>
+            <ul>
+              <% Object.entries(controllers[i][j].parameters).forEach(([k, v]) => { %>
+                <li><b><%= k %></b>: <%= v %></li>
+              <% }) %>
+            </ul>
+          <% } %>
+          <% if (typeof controllers[i][j].body === 'object') { %>
+            <h4>Request Body</h4>
+            <p>Request body should be sent as a JSON object with the following keys:</p>
+            <% if (controllers[i][j].body.primaryParameter) { %>
+              <p>Request body should be a buffer of the <%= controllers[i][j].body.primaryParameter %></p>
+            <% } else { %>
+              <% Object.entries(controllers[i][j].body).forEach(([k, v]) => { %>
+                <li><b><%= k %></b>: <%= v %></li>
+              <% }) %>
+            <% } %>
+          <% } %>
+          <h4>Example Response</h4>
+          <pre><%= JSON.stringify(controllers[i][j].exampleResponse, null, 2) %></pre>
+          <% } %>
+      <% } %>
+    </div>
+  </body>
+</html>

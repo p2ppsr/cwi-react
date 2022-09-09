@@ -1,13 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import {
-  submitPhoneNumber,
-  submitCode,
-  submitPassword,
-  createSnapshot,
-  bindCallback,
-  unbindCallback,
-  setAuthenticationMode
-} from '@cwi/core'
+import React, { useState, useEffect, forwardRef } from 'react'
 import style from './style'
 import {
   Accordion,
@@ -17,72 +8,102 @@ import {
   Typography,
   Button,
   TextField,
+  CircularProgress,
   Divider
-} from '@material-ui/core'
+} from '@mui/material'
 import {
   SettingsPhone as PhoneIcon,
   CheckCircle as CheckCircleIcon,
   PermPhoneMsg as SMSIcon,
   Lock as LockIcon
-} from '@material-ui/icons'
-import { makeStyles } from '@material-ui/styles'
+} from '@mui/icons-material'
+import PhoneEntry from '../../components/PhoneEntry.jsx'
+import { makeStyles } from '@mui/styles'
 import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
 import CWILogo from '@cwi/logo-react'
 import { toast } from 'react-toastify'
 
 const useStyles = makeStyles(style, { name: 'Greeter' })
 
-const Greeter = ({ history, mainPage, appLogo, appName, routes }) => {
+const Greeter = ({ history }) => {
   const classes = useStyles()
-  const [accordianView, setAccordianView] = useState('phone')
+  const [accordionView, setAccordionView] = useState('phone')
   const [phone, setPhone] = useState('')
   const [code, setCode] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [accountStatus, setAccountStatus] = useState(undefined)
   const [loading, setLoading] = useState(false)
+  const [electronVersion, setElectronVersion] = useState('0.0.0')
+
+  // Navigate to the dashboard if the user is already authenticated
+  useEffect(() => {
+    (async () => {
+      if (await window.CWI.isAuthenticated()) {
+        history.push('/dashboard')
+      }
+    })()
+  }, [history])
+
+  // Get the version
+  useEffect(() => {
+    (async () => {
+      setElectronVersion(
+        await window.CWI.getElectronAppVersion()
+      )
+    })()
+  }, [])
 
   // Ensure the correct authentication mode
   useEffect(() => {
-    setAuthenticationMode('phone-number-and-password')
+    window.CWI.setAuthenticationMode('phone-number-and-password')
   }, [])
 
   // Populate the account status when it is discovered
   useEffect(() => {
-    const callbackID = bindCallback(
-      'onAccountStatusDiscovered',
-      setAccountStatus
-    )
-    return () => unbindCallback('onAccountStatusDiscovered', callbackID)
+    let id
+    (async () => {
+      id = await window.CWI.bindCallback(
+        'onAccountStatusDiscovered',
+        setAccountStatus
+      )
+    })()
+    return () => {
+      if (id) {
+        window.CWI.unbindCallback('onAccountStatusDiscovered', id)
+      }
+    }
   }, [])
-
-  // Navigate to the dashboard when the user logs in
-  useEffect(() => {
-    const callbackID = bindCallback('onAuthenticationSuccess', async () => {
-      localStorage.CWIAuthStateSnapshot = await createSnapshot()
-      history.push(sessionStorage.CWIRedirectPath || mainPage)
-    })
-    return () => unbindCallback('onAuthenticationSuccess', callbackID)
-  }, [history, mainPage])
 
   const handleSubmitPhone = async e => {
     e.preventDefault()
-    setLoading(true)
-    const success = await submitPhoneNumber(phone)
-    setLoading(false)
-    if (success === true) {
-      setAccordianView('code')
+    try {
+      setLoading(true)
+      const success = await window.CWI.submitPhoneNumber(phone)
+      if (success === true) {
+        setAccordionView('code')
+      }
+    } catch (e) {
+      console.error(e)
+      toast.error(e.message)
+    } finally {
+      setLoading(false)
     }
   }
 
   const handleSubmitCode = async e => {
     e.preventDefault()
-    setLoading(true)
-    const success = await submitCode(code)
-    setLoading(false)
-    if (success === true) {
-      setAccordianView('password')
+    try {
+      setLoading(true)
+      const success = await window.CWI.submitCode(code)
+      if (success === true) {
+        setAccordionView('password')
+      }
+    } catch (e) {
+      console.error(e)
+      toast.error(e.message)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -91,13 +112,33 @@ const Greeter = ({ history, mainPage, appLogo, appName, routes }) => {
     setLoading(true)
     if (accountStatus === 'new-user') {
       try {
-        await submitPassword(password, confirmPassword)
+        const result = await window.CWI.submitPassword(
+          password,
+          confirmPassword
+        )
+        if (result === true) {
+          await window.CWI.saveLocalSnapshot()
+          history.push('/welcome')
+        }
       } catch (e) {
         console.error(e)
         toast.error(e.message)
       }
     } else if (accountStatus === 'existing-user') {
-      await submitPassword(password)
+      try {
+        const result = await window.CWI.submitPassword(password)
+        if (result === true) {
+          await window.CWI.saveLocalSnapshot()
+          history.push('/dashboard')
+        }
+      } catch (e) {
+        console.error(e)
+        toast.error(e.message)
+      }
+    } else {
+      throw new Error(
+        `Unknown account status when submitting a password: ${accountStatus}`
+      )
     }
     setLoading(false)
   }
@@ -105,26 +146,17 @@ const Greeter = ({ history, mainPage, appLogo, appName, routes }) => {
   return (
     <div className={classes.content_wrap}>
       <center>
-        {typeof appLogo === 'string' && (
-          <img
-            className={classes.logo}
-            src={appLogo}
-            alt='Logo'
-          />
-        )}
-        {typeof appLogo === 'object' && appLogo}
-        {typeof appLogo === 'undefined' && (
-          <CWILogo
-            className={classes.logo}
-          />
-        )}
+        <CWILogo
+          className={classes.logo}
+          rotate
+        />
         <Typography variant='h2' paragraph>
-          {appName}
+          Babbage Desktop
         </Typography>
         <Divider />
       </center>
       <Accordion
-        expanded={accordianView === 'phone'}
+        expanded={accordionView === 'phone'}
       >
         <AccordionSummary
           className={classes.panel_header}
@@ -133,9 +165,9 @@ const Greeter = ({ history, mainPage, appLogo, appName, routes }) => {
           <Typography
             className={classes.panel_heading}
           >
-              Phone Number
+            Phone Number
           </Typography>
-          {(accordianView === 'code' || accordianView === 'password') && (
+          {(accordionView === 'code' || accordionView === 'password') && (
             <CheckCircleIcon className={classes.complete_icon} />
           )}
         </AccordionSummary>
@@ -143,10 +175,10 @@ const Greeter = ({ history, mainPage, appLogo, appName, routes }) => {
           <AccordionDetails
             className={classes.expansion_body}
           >
-            <TextField
-              onChange={e => setPhone(e.target.value)}
-              label='Phone'
-              fullWidth
+            <PhoneEntry
+              value={phone}
+              onChange={setPhone}
+              placeholder='Enter phone number'
             />
           </AccordionDetails>
           <AccordionActions>
@@ -155,13 +187,13 @@ const Greeter = ({ history, mainPage, appLogo, appName, routes }) => {
               type='submit'
               disabled={loading}
             >
-                Send Code
+              {!loading ? 'Send Code' : <CircularProgress />}
             </Button>
           </AccordionActions>
         </form>
       </Accordion>
       <Accordion
-        expanded={accordianView === 'code'}
+        expanded={accordionView === 'code'}
       >
         <AccordionSummary
           className={classes.panel_header}
@@ -172,7 +204,7 @@ const Greeter = ({ history, mainPage, appLogo, appName, routes }) => {
           >
             Get a Code
           </Typography>
-          {accordianView === 'password' && (
+          {accordionView === 'password' && (
             <CheckCircleIcon className={classes.complete_icon} />
           )}
         </AccordionSummary>
@@ -189,16 +221,23 @@ const Greeter = ({ history, mainPage, appLogo, appName, routes }) => {
           <AccordionActions>
             <Button
               color='primary'
+              onClick={() => setAccordionView('phone')}
+              disabled={loading}
+            >
+              Back
+            </Button>
+            <Button
+              color='primary'
               type='submit'
               disabled={loading}
             >
-              Next
+              {!loading ? 'Next' : <CircularProgress />}
             </Button>
           </AccordionActions>
         </form>
       </Accordion>
       <Accordion
-        expanded={accordianView === 'password'}
+        expanded={accordionView === 'password'}
       >
         <AccordionSummary
           className={classes.panel_header}
@@ -217,8 +256,8 @@ const Greeter = ({ history, mainPage, appLogo, appName, routes }) => {
             <div
               className={
                 accountStatus === 'new-user'
-                  ? classes.password_grid
-                  : undefined
+                  ? classes.new_password_grid
+                  : classes.password_grid
               }
             >
               <TextField
@@ -239,42 +278,54 @@ const Greeter = ({ history, mainPage, appLogo, appName, routes }) => {
           </AccordionDetails>
           <AccordionActions>
             <Button
+              color='primary'
+              onClick={() => setAccordionView('phone')}
+              disabled={loading}
+            >
+              Back
+            </Button>
+            <Button
               variant='contained'
               color='primary'
               type='submit'
               disabled={loading}
             >
-              {accountStatus === 'new-user' ? 'Create Account' : 'Log In'}
+              {!loading
+                ? (
+                    accountStatus === 'new-user'
+                      ? 'Create Account'
+                      : 'Log In'
+                  )
+                : <CircularProgress />}
             </Button>
           </AccordionActions>
         </form>
       </Accordion>
-      {routes.Recovery && (
-        <Link to={routes.Recovery}>
-          <Button
-            color='secondary'
-            className={classes.recovery_link}
-          >
-            Need Help?
-          </Button>
-        </Link>
-      )}
+      <Link to='/recovery'>
+        <Button
+          color='secondary'
+          className={classes.recovery_link}
+        >
+          Need Help?
+        </Button>
+      </Link>
       <Typography
         align='center'
         color='textSecondary'
         className={classes.copyright_text}
       >
-        Computing with Integrity is Copyright &copy; 2020 Peer-to-peer Privacy Systems Research, LLC. All rights reserved.
+        <b>Babbage Desktop version {electronVersion}</b>
+      </Typography>
+      <Typography
+        align='center'
+        color='textSecondary'
+        className={classes.copyright_text}
+      >
+        Copyright &copy; 2020-2021 Peer-to-peer Privacy Systems Research, LLC. All rights reserved. Redistribution of this software is strictly prohibited. Use of this software is subject to the{' '}
+        <a href='https://projectbabbage.com/desktop/license' target='_blank' rel='noopener noreferrer'>Babbage Desktop License Agreement</a>.
       </Typography>
     </div>
   )
 }
 
-const stateToProps = state => ({
-  mainPage: state.mainPage,
-  appLogo: state.appLogo,
-  appName: state.appName,
-  routes: state.routes
-})
-
-export default connect(stateToProps)(Greeter)
+export default Greeter

@@ -1,2 +1,1 @@
-export { default as CWIRoutes } from './components/CWIRoutes.jsx'
-export { default as CWIComponents } from './components/CWIComponents.jsx'
+export { default as UserInterface } from './UserInterface.js'

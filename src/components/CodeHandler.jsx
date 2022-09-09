@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {
-  bindCallback,
-  unbindCallback,
-  submitCode,
-  abortCode
-} from '@cwi/core'
-import { DialogActions, DialogContent, Button, DialogContentText, TextField } from '@material-ui/core'
+import { DialogActions, DialogContent, Button, DialogContentText, TextField } from '@mui/material'
 import CustomDialog from './CustomDialog/index.jsx'
 
 const RecoveryKeyHandler = () => {
@@ -15,16 +9,23 @@ const RecoveryKeyHandler = () => {
   const [code, setCode] = useState('')
 
   useEffect(() => {
-    const callbackID = bindCallback('onCodeRequired', ({ phone, reason }) => {
-      setPhone(phone)
-      setReason(reason)
-      setOpen(true)
-    })
-    return () => unbindCallback('onCodeRequired', callbackID)
+    let id
+    (async () => {
+      id = await window.CWI.bindCallback('onCodeRequired', ({ phone, reason }) => {
+        setPhone(phone)
+        setReason(reason)
+        setOpen(true)
+      })
+    })()
+    return () => {
+      if (id) {
+        window.CWI.unbindCallback('onCodeRequired', id)
+      }
+    }
   }, [])
 
   const handleSubmit = async () => {
-    const success = await submitCode(code)
+    const success = await window.CWI.submitCode(code)
     if (success) {
       setOpen(false)
     }
@@ -34,7 +35,7 @@ const RecoveryKeyHandler = () => {
     <CustomDialog
       open={open}
       onClose={() => {
-        abortCode()
+        window.CWI.abortCode()
         setOpen(false)
       }}
       title='Code Sent'

@@ -1,13 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import {
-  submitRecoveryKey,
-  submitPassword,
-  createSnapshot,
-  bindCallback,
-  unbindCallback,
-  setAuthenticationMode,
-  changePhoneNumber
-} from '@cwi/core'
 import style from './style'
 import {
   Accordion,
@@ -16,58 +7,93 @@ import {
   AccordionActions,
   Typography,
   Button,
-  TextField
-} from '@material-ui/core'
+  TextField,
+  CircularProgress
+} from '@mui/material'
 import {
   SettingsPhone as PhoneIcon,
   CheckCircle as CheckCircleIcon,
   Lock as LockIcon,
   VpnKey as KeyIcon
-} from '@material-ui/icons'
-import { makeStyles } from '@material-ui/styles'
-import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
+} from '@mui/icons-material'
+import { makeStyles } from '@mui/styles'
+import { toast } from 'react-toastify'
 
 const useStyles = makeStyles(style, { name: 'RecoveryLostPhoneNumber' })
 
-const RecoveryLostPhone = ({ history, routes, mainPage }) => {
+const RecoveryLostPhone = ({ history }) => {
   const classes = useStyles()
   const [accordianView, setAccordianView] = useState('recovery-key')
   const [recoveryKey, setRecoveryKey] = useState('')
   const [password, setPassword] = useState('')
   const [newPhone, setNewPhone] = useState('')
+  const [loading, setLoading] = useState(true)
 
   // Ensure the correct authentication mode
   useEffect(() => {
-    setAuthenticationMode('recovery-key-and-password')
+    window.CWI.setAuthenticationMode('recovery-key-and-password')
   }, [])
 
   useEffect(() => {
-    const callbackID = bindCallback('onAuthenticationSuccess', async () => {
-      localStorage.CWIAuthStateSnapshot = await createSnapshot()
-      setAccordianView('new-phone')
-    })
-    return () => unbindCallback('onAuthenticationSuccess', callbackID)
+    let id
+    (async () => {
+      id = await window.CWI.bindCallback(
+        'onAuthenticationSuccess',
+        () => {
+          setAccordianView('new-phone')
+          window.CWI.saveLocalSnapshot()
+        }
+      )
+    })()
+    return () => {
+      if (id) {
+        window.CWI.unbindCallback('onAuthenticationSuccess', id)
+      }
+    }
   }, [])
 
   const handleSubmitRecoveryKey = async e => {
     e.preventDefault()
-    const success = await submitRecoveryKey(recoveryKey)
-    if (success === true) {
-      setAccordianView('password')
+    try {
+      setLoading(true)
+      const success = await window.CWI.submitRecoveryKey(recoveryKey)
+      if (success === true) {
+        setAccordianView('password')
+      }
+    } catch (e) {
+      console.error(e)
+      toast.error(e.message)
+    } finally {
+      setLoading(false)
     }
   }
 
-  const handleSubmitPassword = e => {
+  const handleSubmitPassword = async e => {
     e.preventDefault()
-    submitPassword(password)
+    try {
+      setLoading(true)
+      await window.CWI.submitPassword(password)
+    } catch (e) {
+      console.error(e)
+      toast.error(e.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleSubmitNewPhone = async e => {
     e.preventDefault()
-    const result = await changePhoneNumber(newPhone)
-    if (result === true) {
-      history.push(sessionStorage.CWIRedirectPath || mainPage)
+    try {
+      setLoading(true)
+      const result = await window.CWI.changePhoneNumber(newPhone)
+      if (result === true) {
+        history.push('/dashboard')
+      }
+    } catch (e) {
+      console.error(e)
+      toast.error(e.message)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -83,7 +109,7 @@ const RecoveryLostPhone = ({ history, routes, mainPage }) => {
           <Typography
             className={classes.panel_heading}
           >
-              Recovery Key
+            Recovery Key
           </Typography>
           {(accordianView === 'password') && (
             <CheckCircleIcon className={classes.complete_icon} />
@@ -100,13 +126,17 @@ const RecoveryLostPhone = ({ history, routes, mainPage }) => {
             />
           </AccordionDetails>
           <AccordionActions>
-            <Button
-              variant='contained'
-              color='primary'
-              type='submit'
-            >
-              Next
-            </Button>
+            {loading
+              ? <CircularProgress />
+              : (
+                <Button
+                  variant='contained'
+                  color='primary'
+                  type='submit'
+                >
+                  Next
+                </Button>
+                )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -135,13 +165,17 @@ const RecoveryLostPhone = ({ history, routes, mainPage }) => {
             />
           </AccordionDetails>
           <AccordionActions>
-            <Button
-              variant='contained'
-              color='primary'
-              type='submit'
-            >
-                Continue
-            </Button>
+            {loading
+              ? <CircularProgress />
+              : (
+                <Button
+                  variant='contained'
+                  color='primary'
+                  type='submit'
+                >
+                  Continue
+                </Button>
+                )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -169,31 +203,28 @@ const RecoveryLostPhone = ({ history, routes, mainPage }) => {
             />
           </AccordionDetails>
           <AccordionActions>
-            <Button
-              variant='contained'
-              color='primary'
-              type='submit'
-            >
-                Finish
-            </Button>
+            {loading
+              ? <CircularProgress />
+              : (
+                <Button
+                  variant='contained'
+                  color='primary'
+                  type='submit'
+                >
+                  Finish
+                </Button>
+                )}
           </AccordionActions>
         </form>
       </Accordion>
-      <Link to={routes.Recovery}>
-        <Button
-          color='secondary'
-          className={classes.back_button}
-        >
-          Go Back
-        </Button>
-      </Link>
+      <Button
+        onClick={() => history.go(-1)}
+        className={classes.back_button}
+      >
+        Go Back
+      </Button>
     </div>
   )
 }
 
-const stateToProps = state => ({
-  mainPage: state.mainPage,
-  routes: state.routes
-})
-
-export default connect(stateToProps)(RecoveryLostPhone)
+export default RecoveryLostPhone

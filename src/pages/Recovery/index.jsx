@@ -1,55 +1,55 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import style from './style'
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import {
   Lock as LockIcon,
   SettingsPhone as PhoneIcon
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import {
   List, ListItem, ListItemIcon, ListItemText, Button
-} from '@material-ui/core'
-import { connect } from 'react-redux'
+} from '@mui/material'
 
 const useStyles = makeStyles(style, {
   name: 'Recovery'
 })
 
-const Recovery = ({ routes }) => {
+const Recovery = ({ history }) => {
   const classes = useStyles()
   return (
     <div className={classes.content_wrap}>
       <List>
-        <Link to={routes.RecoveryLostPhone}>
-          <ListItem button>
-            <ListItemIcon>
-              <PhoneIcon />
-            </ListItemIcon>
-            <ListItemText>
-              Lost Phone
-            </ListItemText>
-          </ListItem>
-        </Link>
-        <Link to={routes.RecoveryLostPassword}>
-          <ListItem button>
-            <ListItemIcon>
-              <LockIcon />
-            </ListItemIcon>
-            <ListItemText>
-              Lost Password
-            </ListItemText>
-          </ListItem>
-        </Link>
+        <ListItem
+          button
+          onClick={() => history.push('/recovery/lost-phone')}
+        >
+          <ListItemIcon>
+            <PhoneIcon />
+          </ListItemIcon>
+          <ListItemText>
+            Lost Phone
+          </ListItemText>
+        </ListItem>
+        <ListItem
+          button
+          onClick={() => history.push('/recovery/lost-password')}
+        >
+          <ListItemIcon>
+            <LockIcon />
+          </ListItemIcon>
+          <ListItemText>
+            Lost Password
+          </ListItemText>
+        </ListItem>
       </List>
-      <Link to={routes.Greeter}>
-        <Button className={classes.back_button}>Go Back</Button>
-      </Link>
+      <Button
+        className={classes.back_button}
+        onClick={() => history.go(-1)}
+      >
+        Go Back
+      </Button>
     </div>
   )
 }
 
-const stateToProps = state => ({
-  routes: state.routes
-})
-
-export default connect(stateToProps)(Recovery)
+export default Recovery

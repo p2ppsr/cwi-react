@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {
-  bindCallback,
-  unbindCallback,
-  saveRecoveryKey,
-  abortRecoveryKey
-} from '@cwi/core'
-import {
   DialogContent, DialogContentText, DialogActions, Button
-} from '@material-ui/core'
+} from '@mui/material'
 import CustomDialog from './CustomDialog/index.jsx'
 
 const RecoveryKeyHandler = () => {
@@ -15,26 +9,31 @@ const RecoveryKeyHandler = () => {
   const [recoveryKey, setRecoveryKey] = useState('')
 
   useEffect(() => {
-    const callbackID = bindCallback('onRecoveryKeyNeedsSaving', keyToSave => {
-      setRecoveryKey(keyToSave)
-      setOpen(true)
-    })
-    return () => unbindCallback('onRecoveryKeyNeedsSaving', callbackID)
+    let id
+    (async () => {
+      id = await window.CWI.bindCallback(
+        'onRecoveryKeyNeedsSaving',
+        keyToSave => {
+          setRecoveryKey(keyToSave)
+          setOpen(true)
+        }
+      )
+    })()
+    return () => {
+      if (id) {
+        window.CWI.unbindCallback('onRecoveryKeyNeedsSaving', id)
+      }
+    }
   }, [])
 
   const onKeySaved = async () => {
-    await saveRecoveryKey()
+    await window.CWI.saveRecoveryKey()
     setOpen(false)
   }
 
   return (
     <CustomDialog
       open={open}
-      onClose={() => {
-        abortRecoveryKey()
-        setRecoveryKey('')
-        setOpen(false)
-      }}
       title='Save This Key'
     >
       <DialogContent>
@@ -47,10 +46,20 @@ const RecoveryKeyHandler = () => {
       </DialogContent>
       <DialogActions>
         <Button
+          onClick={() => {
+            window.CWI.abortRecoveryKey()
+            setRecoveryKey('')
+            setOpen(false)
+          }}
+          color='secondary'
+        >
+          Abort & Cancel
+        </Button>
+        <Button
           onClick={onKeySaved}
           color='primary'
         >
-          Saved
+          Continue
         </Button>
       </DialogActions>
     </CustomDialog>
