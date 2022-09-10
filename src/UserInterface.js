@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
-import { HashRouter as Router, Switch, Route } from 'react-router-dom'
+import ReactDOM from 'react-dom'
+import { MemoryRouter as Router, Switch, Route } from 'react-router-dom'
 import Greeter from './pages/Greeter/index.jsx'
 import Recovery from './pages/Recovery/index.jsx'
 import LostPhone from './pages/Recovery/LostPhone.jsx'
@@ -31,7 +32,9 @@ export default ({
   appVersion = '1.0.0',
   appName = 'Generic Babbage Wrapper',
   env = 'prod',
-  isPackaged = true
+  isPackaged = true,
+  usePortal = false,
+  portalDestination = document.body
 } = {}) => {
   useEffect(() => {
     (async () => {
@@ -47,23 +50,21 @@ export default ({
     })()
   }, [])
 
-  return (
+  let returnValue = (
     <UIContext.Provider value={{
-  onFocusRequested,
-  onFocusRelinquished,
-  isFocused,
-  saveLocalSnapshot,
-  removeLocalSnapshot,
-  appVersion,
-  appName,
-  env,
-  isPackaged
-  }}>
+      onFocusRequested,
+      onFocusRelinquished,
+      isFocused,
+      saveLocalSnapshot,
+      removeLocalSnapshot,
+      appVersion,
+      appName,
+      env,
+      isPackaged
+    }}>
     <ErrorBoundary>
       <Theme>
-        <Router
-          hashType='noslash'
-        >
+        <Router>
           <CodeHandler />
           <AuthenticationErrorHandler />
           <PasswordHandler />
@@ -107,6 +108,11 @@ export default ({
         </Router>
       </Theme>
       </ErrorBoundary>
-      </UIContext.Provider>
+    </UIContext.Provider>
   )
+  if (usePortal) {
+    return ReactDOM.createPortal(returnValue, portalDestination)
+  } else {
+    return returnValue
+  }
 }
