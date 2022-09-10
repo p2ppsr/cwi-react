@@ -42,6 +42,9 @@ const Greeter = ({ history }) => {
   useEffect(() => {
     (async () => {
       if (await window.CWI.isAuthenticated()) {
+        if (typeof window.CWI.getNinja === 'function') {
+          window.CWI.ninja = window.CWI.getNinja()
+        }
         history.push('/dashboard')
       }
     })()
@@ -111,6 +114,9 @@ const Greeter = ({ history }) => {
         )
         if (result === true) {
           await saveLocalSnapshot()
+          if (typeof window.CWI.getNinja === 'function') {
+            window.CWI.ninja = window.CWI.getNinja()
+          }
           history.push('/welcome')
         }
       } catch (e) {
@@ -122,6 +128,9 @@ const Greeter = ({ history }) => {
         const result = await window.CWI.submitPassword(password)
         if (result === true) {
           await saveLocalSnapshot()
+          if (typeof window.CWI.getNinja === 'function') {
+            window.CWI.ninja = window.CWI.getNinja()
+          }
           history.push('/dashboard')
         }
       } catch (e) {

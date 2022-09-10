@@ -20,6 +20,9 @@ const Logout = ({ history }) => {
       }
       await window.CWI.logout()
       await removeLocalSnapshot()
+      if (typeof window.CWI.getNinja === 'function') {
+        delete window.CWI.ninja
+      }
       history.push('/')
     } finally {
       setLoading(false)

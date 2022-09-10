@@ -9,7 +9,7 @@ const useStyles = makeStyles(style, {
 })
 
 const About = () => {
-  const { appVersion } = useContext(UIContext)
+  const { appName, appVersion } = useContext(UIContext)
   const classes = useStyles()
   const [cwiVersion, setCwiVersion] = useState('---')
 
@@ -25,7 +25,7 @@ const About = () => {
         Software Versions
       </Typography>
       <Typography paragraph>
-        Babbage Desktop Version: {appVersion}
+        {appName} Version: {appVersion}
       </Typography>
       <Typography paragraph>
         Computing with Integrity Kernel Version: {cwiVersion}

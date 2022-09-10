@@ -44,6 +44,9 @@ const RecoveryLostPhone = ({ history }) => {
         () => {
           setAccordianView('new-phone')
           saveLocalSnapshot()
+          if (typeof window.CWI.getNinja === 'function') {
+            window.CWI.ninja = window.CWI.getNinja()
+          }
         }
       )
     })()

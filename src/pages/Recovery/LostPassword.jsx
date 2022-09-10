@@ -45,6 +45,9 @@ const RecoveryLostPassword = ({ history }) => {
       id = await window.CWI.bindCallback('onAuthenticationSuccess', () => {
         setAccordianView('new-password')
         saveLocalSnapshot()
+        if (typeof window.CWI.getNinja === 'function') {
+          window.CWI.ninja = window.CWI.getNinja()
+        }
       })
     })()
     return () => {
