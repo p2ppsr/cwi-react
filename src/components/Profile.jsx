@@ -24,24 +24,24 @@ const useStyles = makeStyles(theme => ({
     minHeight: '10em',
     maxWidth: '10em',
     maxHeight: '10em',
-    [theme.breakpoints.up('xl')]: {
-      minWidth: '16em',
-      minHeight: '16em',
-      maxWidth: '16em',
-      maxHeight: '16em'
-    }
+    // [theme.breakpoints.up('xl')]: {
+    //   minWidth: '16em',
+    //   minHeight: '16em',
+    //   maxWidth: '16em',
+    //   maxHeight: '16em'
+    // }
   },
   profile_loading: {
     minWidth: '10em',
     minHeight: '10em',
     maxWidth: '10em',
     maxHeight: '10em',
-    [theme.breakpoints.up('xl')]: {
-      minWidth: '16em',
-      minHeight: '16em',
-      maxWidth: '16em',
-      maxHeight: '16em'
-    }
+    // [theme.breakpoints.up('xl')]: {
+    //   minWidth: '16em',
+    //   minHeight: '16em',
+    //   maxWidth: '16em',
+    //   maxHeight: '16em'
+    // }
   },
   image_edit: {
     marginTop: theme.spacing(7),

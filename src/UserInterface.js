@@ -62,6 +62,9 @@ export default ({
       env,
       isPackaged
     }}>
+      <div style={{
+        width: '100%'
+      }}>
     <ErrorBoundary>
       <Theme>
         <Router>
@@ -106,8 +109,9 @@ export default ({
             />
           </Switch>
         </Router>
-      </Theme>
-      </ErrorBoundary>
+          </Theme>
+        </ErrorBoundary>
+        </div>
     </UIContext.Provider>
   )
   if (usePortal) {

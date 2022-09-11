@@ -1,12 +1,12 @@
 export default theme => ({
   content_wrap: {
     ...theme.templates.page_wrap,
-    maxWidth: '100vw',
+    maxWidth: '100%',
     overflow: 'hidden',
     display: 'grid',
     gridTemplateColumns: 'auto 1fr',
     padding: '0px !important',
-    maxHeight: '100vh',
+    maxHeight: '800px',
     '& > :last-child': {
       maxHeight: 'inherit',
       overflow: 'scroll',
@@ -20,14 +20,8 @@ export default theme => ({
   list_wrap: {
     overflowY: 'scroll',
     minWidth: '16em',
-    height: '100vh',
-    backgroundColor: theme.palette.grey[200],
-    [theme.breakpoints.up('lg')]: {
-      minWidth: '22em'
-    },
-    [theme.breakpoints.up('xl')]: {
-      minWidth: '28em'
-    }
+    height: '100%',
+    backgroundColor: theme.palette.grey[200]
   },
   sig_wrap: {
     marginTop: 'max(0px, calc(100vh - 39.5em))',
