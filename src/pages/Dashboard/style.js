@@ -6,7 +6,7 @@ export default theme => ({
     display: 'grid',
     gridTemplateColumns: 'auto 1fr',
     padding: '0px !important',
-    maxHeight: '800px',
+    maxHeight: 'min(100vh, 800px)',
     '& > :last-child': {
       maxHeight: 'inherit',
       overflow: 'scroll',
