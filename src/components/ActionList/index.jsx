@@ -6,7 +6,7 @@ import {
   LinearProgress,
   Button
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from '@mui/styles/makeStyles'
 import AppChip from '../AppChip/index.jsx'
 import style from './style'
 import VisibilitySensor from 'react-visibility-sensor'

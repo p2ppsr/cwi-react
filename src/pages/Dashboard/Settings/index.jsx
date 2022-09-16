@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Tabs, Tab } from '@material-ui/core'
 import { Typography, Divider } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style'
@@ -14,25 +15,45 @@ const useStyles = makeStyles(style, {
 
 const Settings = ({ history }) => {
   const classes = useStyles()
+  const [tabValue, setTabValue] = useState(1)
 
   return (
     <div>
       <div className={classes.fixed_nav}>
+        <Tabs
+          value={tabValue}
+          onChange={(e, v) => setTabValue(v)}
+          indicatorColor='primary'
+          textColor='primary'
+          variant='fullWidth'
+        >
+          <Tab label='Actions' />
+          <Tab label='Settings' />
+          <Tab label='App explorer' />
+          <Tab label='Help feedback' />
+        </Tabs>
         <Typography variant='h1'>Settings</Typography>
       </div>
-      <PasswordSettings history={history} />
-      <Divider />
-      <br />
-      <PhoneSettings />
-      <Divider />
-      <br />
-      <RecoveryKeySettings />
-      <Divider />
-      <br />
-      <About />
-      <Divider />
-      <br />
-      <Logout history={history} />
+      {tabValue === 1 && (
+        <div>
+          <PasswordSettings history={history} />
+          <Divider />
+          <br />
+          <PhoneSettings />
+          <Divider />
+          <br />
+          <RecoveryKeySettings />
+          <Divider />
+          <br />
+          <About />
+          <Divider />
+          <br />
+          <Logout history={history} />
+        </div>
+      )}
+      {tabValue === 0 && (
+        history.push('/dashboard/actions')
+      )}
     </div>
   )
 }

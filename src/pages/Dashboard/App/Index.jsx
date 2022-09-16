@@ -35,7 +35,7 @@ const Apps = ({ match, history }) => {
             setAppName(manifest.short_name)
           }
         }
-      } catch (e) {/* do nothing */}
+      } catch (e) {/* do nothing */ }
     })()
   }, [appDomain])
 

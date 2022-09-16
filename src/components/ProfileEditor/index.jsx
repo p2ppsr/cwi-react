@@ -129,7 +129,7 @@ const ProfileEditor = ({
       onClose()
 
       if (welcome) {
-        toast.dark('Welcome! Your new profile is active!')
+        toast.dark('Welcome Your new profile is active!')
       } else {
         toast.dark('Profile updated!')
       }
@@ -240,7 +240,7 @@ const ProfileEditor = ({
                   </Button>
                 </div>
               </div>
-              )
+            )
             : (
               <>
                 <div className={classes.image_frame}>
@@ -283,7 +283,7 @@ const ProfileEditor = ({
                   fullWidth
                 />
               </>
-              )}
+            )}
         </DialogContent>
         <DialogActions>
           {(welcome && !loading) && (
@@ -296,7 +296,7 @@ const ProfileEditor = ({
           {loading
             ? (
               <CircularProgress />
-              )
+            )
             : (
               <Button
                 type='submit'
@@ -304,7 +304,7 @@ const ProfileEditor = ({
               >
                 Save
               </Button>
-              )}
+            )}
         </DialogActions>
       </form>
     </Dialog>
