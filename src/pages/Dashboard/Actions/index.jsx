@@ -33,7 +33,7 @@ const Actions = ({ history }) => {
         <ActionList />
       </div>
       {tabValue === 0 && (
-        history.location.pathname = '/dashboard/actions'
+        history.push('/dashboard/actions')
       )}
       {tabValue === 1 && (
         history.push('/dashboard/browse-apps')

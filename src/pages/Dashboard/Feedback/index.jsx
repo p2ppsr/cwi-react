@@ -104,7 +104,7 @@ const Feedback = ({ history }) => {
         </Typography>
       </form>
       {tabValue === 2 && (
-        history.location.pathname = '/dashboard/feedback'
+        history.push('/dashboard/feedback')
       )}
       {tabValue === 0 && (
         history.push('/dashboard/actions')

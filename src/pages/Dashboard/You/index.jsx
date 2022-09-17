@@ -5,8 +5,8 @@ import Satoshis from '../../../components/Satoshis.jsx'
 import { Img } from 'uhrp-react'
 import bridgeportResolvers from '../../../utils/bridgeportResolvers'
 import { makeStyles } from '@mui/styles'
-import { Typography, Fab, Divider, CircularProgress } from '@mui/material'
-import { Edit } from '@mui/icons-material'
+import { Button, Tooltip, Typography, Fab, Divider, CircularProgress } from '@mui/material'
+import { Send, Edit } from '@mui/icons-material'
 import About from '../Settings/About/index.jsx'
 import Logout from '../Settings/Logout/index.jsx'
 
@@ -124,6 +124,20 @@ const You = ({ history }) => {
           >
             <Edit color='primary' />
           </Fab>
+          <Tooltip title='Show your settings'>
+            <Fab
+              align='center'
+              color='textSecondary'
+              onClick={() => history.push('/dashboard/settings')}
+              variant='extended'
+            >
+              <Button className={classes.button_text}>
+                <center>
+                  Settings
+                </center>
+              </Button>
+            </Fab>
+          </Tooltip>
         </div>
         <Typography variant='h3'>
           {avatar.name || 'Welcome Bob!'}
@@ -145,7 +159,7 @@ const You = ({ history }) => {
       <br />      <Logout history={history} />
 
       {tabValue === 3 && (
-        history.location.pathname = '/dashboard/you'
+        history.push('/dashboard/you')
       )}
       {tabValue === 0 && (
         history.push('/dashboard/actions')

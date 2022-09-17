@@ -23,11 +23,13 @@ const Apps = ({ match, history }) => {
 
   useEffect(() => {
     (async () => {
+      console.log('icon url:', `https://${appDomain}/favicon.ico`)
       setAppIcon(`https://${appDomain}/favicon.ico`)
       try {
         const manifest = await boomerang(
           'GET', `${appDomain.startsWith('localhost:') ? 'http' : 'https'}://${appDomain}/manifest.json`
         )
+        console.log('manifest:', manifest)
         if (typeof manifest === 'object') {
           if (manifest.name && manifest.name.length < 64) {
             setAppName(manifest.name)

@@ -48,7 +48,7 @@ const About = ({ history }) => {
         </Button>
       </center>
       {tabValue === 1 && (
-        history.location.pathname = '/dashboard/browse-apps'
+        history.push('/dashboard/browse-apps')
       )}
       {tabValue === 0 && (
         history.push('/dashboard/actions')
