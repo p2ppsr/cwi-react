@@ -14,6 +14,7 @@ const useStyles = makeStyles(style, {
 })
 
 const Settings = ({ history }) => {
+  console.log('history:', history)
   const classes = useStyles()
   const [tabValue, setTabValue] = useState(1)
 
@@ -34,25 +35,30 @@ const Settings = ({ history }) => {
         </Tabs>
         <Typography variant='h1'>Settings</Typography>
       </div>
+      <PasswordSettings history={history} />
+      <Divider />
+      <br />
+      <PhoneSettings />
+      <Divider />
+      <br />
+      <RecoveryKeySettings />
+      <Divider />
+      <br />
+      <About />
+      <Divider />
+      <br />
+      <Logout history={history} />
       {tabValue === 1 && (
-        <div>
-          <PasswordSettings history={history} />
-          <Divider />
-          <br />
-          <PhoneSettings />
-          <Divider />
-          <br />
-          <RecoveryKeySettings />
-          <Divider />
-          <br />
-          <About />
-          <Divider />
-          <br />
-          <Logout history={history} />
-        </div>
+        history.location.pathname = '/dashboard/settings'
       )}
       {tabValue === 0 && (
         history.push('/dashboard/actions')
+      )}
+      {tabValue === 2 && (
+        history.push('/dashboard/browse-apps')
+      )}
+      {tabValue === 3 && (
+        history.push('/dashboard/feedback')
       )}
     </div>
   )

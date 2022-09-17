@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Tabs, Tab } from '@material-ui/core'
 import {
   TextField,
   Button,
@@ -13,10 +14,12 @@ const useStyles = makeStyles(style, {
   name: 'Feedback'
 })
 
-const Feedback = () => {
+const Feedback = ({ history }) => {
+  console.log('history:', history)
   const classes = useStyles()
   const [feedback, setFeedback] = useState('')
   const [loading, setLoading] = useState(false)
+  const [tabValue, setTabValue] = useState(2)
 
   const submitFeedback = async e => {
     e.preventDefault()
@@ -48,43 +51,71 @@ const Feedback = () => {
   }
 
   return (
-    <form className={classes.content_wrap} onSubmit={submitFeedback}>
-      <Typography variant='h1' paragraph>
-        Leave Feedback
-      </Typography>
-      <Typography paragraph>
-        We want to hear what you think! Post your ideas here to help improve Project Babbage and our ecosystem of apps. Note that your submission will be public.
-      </Typography>
-      <TextField
-        multiline
-        rows={8}
-        fullWidth
-        autoFocus
-        value={feedback}
-        disabled={loading}
-        onChange={e => setFeedback(e.target.value)}
-        placeholder='Tell us your thoughts...'
-      />
-      <br />
-      <br />
-      {loading
-        ? <LinearProgress />
-        : (
-          <Button
-            type='submit'
-            variant='contained'
-            color='primary'
-            disabled={feedback.length < 10}
-          >
-            Submit Feedback
-          </Button>
+    <div>
+      <div className={classes.fixed_nav}>
+        <Tabs
+          value={tabValue}
+          onChange={(e, v) => setTabValue(v)}
+          indicatorColor='primary'
+          textColor='primary'
+          variant='fullWidth'
+        >
+          <Tab label='Actions' />
+          <Tab label='Apps' />
+          <Tab label='Feedback' />
+          <Tab label='You' />
+        </Tabs>
+      </div>
+      <form className={classes.content_wrap} onSubmit={submitFeedback}>
+        <Typography variant='h1' paragraph>
+          Leave Feedback
+        </Typography>
+        <Typography paragraph>
+          We want to hear what you think! Post your ideas here to help improve Project Babbage and our ecosystem of apps. Note that your submission will be public.
+        </Typography>
+        <TextField
+          multiline
+          rows={8}
+          fullWidth
+          autoFocus
+          value={feedback}
+          disabled={loading}
+          onChange={e => setFeedback(e.target.value)}
+          placeholder='Tell us your thoughts...'
+        />
+        <br />
+        <br />
+        {loading
+          ? <LinearProgress />
+          : (
+            <Button
+              type='submit'
+              variant='contained'
+              color='primary'
+              disabled={feedback.length < 10}
+            >
+              Submit Feedback
+            </Button>
           )}
-      <br />
-      <br />
-      <Typography>
-        You can also <a href='mailto:hello@projectbabbage.com'>email us</a> with any questions or concerns. We're always happy to discuss new projects and ways we can improve.
-      </Typography>
-    </form>
+        <br />
+        <br />
+        <Typography>
+          You can also <a href='mailto:hello@projectbabbage.com'>email us</a> with any questions or concerns. We're always happy to discuss new projects and ways we can improve.
+        </Typography>
+      </form>
+      {tabValue === 2 && (
+        history.location.pathname = '/dashboard/feedback'
+      )}
+      {tabValue === 0 && (
+        history.push('/dashboard/actions')
+      )}
+      {tabValue === 1 && (
+        history.push('/dashboard/browse-apps')
+      )}
+      {tabValue === 3 && (
+        history.push('/dashboard/you')
+      )}
+    </div>
   )
 }
 

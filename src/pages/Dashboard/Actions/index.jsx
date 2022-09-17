@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import { Tabs, Tab } from '@material-ui/core'
 import { Typography } from '@mui/material'
 import { makeStyles } from '@mui/styles'
@@ -10,13 +9,13 @@ const useStyles = makeStyles(style, {
   name: 'Actions'
 })
 
-const Actions = () => {
-  const history = useHistory()
+const Actions = ({ history }) => {
+  console.log('history:', history)
   const classes = useStyles()
   const [tabValue, setTabValue] = useState(0)
 
   return (
-    <div>
+    <>
       <div className={classes.fixed_nav}>
         <Tabs
           value={tabValue}
@@ -26,19 +25,26 @@ const Actions = () => {
           variant='fullWidth'
         >
           <Tab label='Actions' />
-          <Tab label='Settings' />
-          <Tab label='App explorer' />
-          <Tab label='Help feedback' />
+          <Tab label='Apps' />
+          <Tab label='Feedback' />
+          <Tab label='You' />
         </Tabs>
         <Typography variant='h1'>Your Actions</Typography>
+        <ActionList />
       </div>
       {tabValue === 0 && (
-        <ActionList />
+        history.location.pathname = '/dashboard/actions'
       )}
       {tabValue === 1 && (
-        history.push('/dashboard/settings')
+        history.push('/dashboard/browse-apps')
       )}
-    </div>
+      {tabValue === 2 && (
+        history.push('/dashboard/feedback')
+      )}
+      {tabValue === 3 && (
+        history.push('/dashboard/you')
+      )}
+    </>
   )
 }
 

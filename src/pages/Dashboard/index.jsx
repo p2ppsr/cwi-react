@@ -22,6 +22,7 @@ import App from './App/Index.jsx'
 import Settings from './Settings/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Profile from '../../components/Profile.jsx'
+import You from './You/index.jsx'
 
 const useStyles = makeStyles(style, {
   name: 'Dashboard'
@@ -44,16 +45,16 @@ const Dashboard = () => {
             button
             onClick={() => history.push('/dashboard')}
             selected={
-                history.location.pathname === '/dashboard'
-              }
+              history.location.pathname === '/dashboard'
+            }
           >
             <ListItemIcon>
               <ActionsIcon
                 color={
-                    history.location.pathname === '/dashboard'
-                      ? 'primary'
-                      : undefined
-                  }
+                  history.location.pathname === '/dashboard'
+                    ? 'primary'
+                    : undefined
+                }
               />
             </ListItemIcon>
             <ListItemText>
@@ -64,16 +65,16 @@ const Dashboard = () => {
             button
             onClick={() => history.push('/dashboard/settings')}
             selected={
-                history.location.pathname === '/dashboard/settings'
-              }
+              history.location.pathname === '/dashboard/settings'
+            }
           >
             <ListItemIcon>
               <SettingsIcon
                 color={
-                    history.location.pathname === '/dashboard/settings'
-                      ? 'primary'
-                      : undefined
-                  }
+                  history.location.pathname === '/dashboard/settings'
+                    ? 'primary'
+                    : undefined
+                }
               />
             </ListItemIcon>
             <ListItemText>
@@ -84,16 +85,16 @@ const Dashboard = () => {
             button
             onClick={() => history.push('/dashboard/browse-apps')}
             selected={
-                history.location.pathname === '/dashboard/browse-apps'
-              }
+              history.location.pathname === '/dashboard/browse-apps'
+            }
           >
             <ListItemIcon>
               <BrowseIcon
                 color={
-                    history.location.pathname === '/dashboard/browse-apps'
-                      ? 'primary'
-                      : undefined
-                  }
+                  history.location.pathname === '/dashboard/browse-apps'
+                    ? 'primary'
+                    : undefined
+                }
               />
             </ListItemIcon>
             <ListItemText>
@@ -104,16 +105,16 @@ const Dashboard = () => {
             button
             onClick={() => history.push('/dashboard/feedback')}
             selected={
-                history.location.pathname === '/dashboard/feedback'
-              }
+              history.location.pathname === '/dashboard/feedback'
+            }
           >
             <ListItemIcon>
               <FeedbackIcon
                 color={
-                    history.location.pathname === '/dashboard/feedback'
-                      ? 'primary'
-                      : undefined
-                  }
+                  history.location.pathname === '/dashboard/feedback'
+                    ? 'primary'
+                    : undefined
+                }
               />
             </ListItemIcon>
             <ListItemText>
@@ -150,6 +151,10 @@ const Dashboard = () => {
         <Route
           path='/dashboard/settings'
           component={Settings}
+        />
+        <Route
+          path='/dashboard/you'
+          component={You}
         />
         <Route
           default
