@@ -32,9 +32,6 @@ const Actions = ({ history }) => {
         <Typography variant='h1'>Your Actions</Typography>
         <ActionList />
       </div>
-      {tabValue === 0 && (
-        history.push('/dashboard/actions')
-      )}
       {tabValue === 1 && (
         history.push('/dashboard/browse-apps')
       )}

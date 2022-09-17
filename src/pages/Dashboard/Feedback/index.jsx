@@ -103,9 +103,6 @@ const Feedback = ({ history }) => {
           You can also <a href='mailto:hello@projectbabbage.com'>email us</a> with any questions or concerns. We're always happy to discuss new projects and ways we can improve.
         </Typography>
       </form>
-      {tabValue === 2 && (
-        history.push('/dashboard/feedback')
-      )}
       {tabValue === 0 && (
         history.push('/dashboard/actions')
       )}

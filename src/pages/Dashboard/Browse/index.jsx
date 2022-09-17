@@ -47,9 +47,6 @@ const About = ({ history }) => {
           App Catalogue
         </Button>
       </center>
-      {tabValue === 1 && (
-        history.push('/dashboard/browse-apps')
-      )}
       {tabValue === 0 && (
         history.push('/dashboard/actions')
       )}

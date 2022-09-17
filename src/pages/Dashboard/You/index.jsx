@@ -156,11 +156,8 @@ const You = ({ history }) => {
       />
       <About />
       <Divider />
-      <br />      <Logout history={history} />
-
-      {tabValue === 3 && (
-        history.push('/dashboard/you')
-      )}
+      <br />
+      <Logout history={history} />
       {tabValue === 0 && (
         history.push('/dashboard/actions')
       )}
