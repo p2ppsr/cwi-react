@@ -63,6 +63,7 @@ const Feedback = ({ history }) => {
           </Tooltip>
         </Stack>
         <Tabs
+          className={classes.tabs}
           value={tabValue}
           onChange={(e, v) => setTabValue(v)}
           indicatorColor='primary'

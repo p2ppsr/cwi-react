@@ -13,6 +13,9 @@ import Logout from '../Settings/Logout/index.jsx'
 import UIContext from '../../../UIContext'
 
 const useStyles = makeStyles(theme => ({
+  tabs: {
+    marginBottom: '2em'
+  },
   content_wrap: {
     position: 'sticky',
     top: '0px',
@@ -64,7 +67,6 @@ const You = ({ history }) => {
   const [avatar, setAvatar] = useState({})
   const [editorOpen, setEditorOpen] = useState(false)
   const [accountBalance, setAccountBalance] = useState(null)
-  const classes = useStyles()
 
   const refreshProfile = async () => {
     setAvatar(await window.CWI.ninja.getAvatar())
@@ -94,6 +96,8 @@ const You = ({ history }) => {
     return () => clearInterval(interval)
   }, [])
 
+  const classes = useStyles()
+
   const handleOnClose = async () => {
     const { onFocusRelinquished } = useContext(UIContext)
     await onFocusRelinquished()
@@ -110,6 +114,7 @@ const You = ({ history }) => {
           </Tooltip>
         </Stack>
         <Tabs
+          className={classes.tabs}
           value={tabValue}
           onChange={(e, v) => setTabValue(v)}
           indicatorColor='primary'

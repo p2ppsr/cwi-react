@@ -1,4 +1,7 @@
 export default theme => ({
+  tabs: {
+    marginBottom: '2em'
+  },
   fixed_nav: {
     backgroundColor: theme.palette.common.white,
     position: 'sticky',

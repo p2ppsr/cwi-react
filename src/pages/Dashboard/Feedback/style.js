@@ -1,1 +1,5 @@
-export default theme => {}
+export default theme => ({
+  tabs: {
+    marginBottom: '2em'
+  }
+})
