@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { Tabs, Tab } from '@material-ui/core'
-import { Typography, Button } from '@mui/material'
+import { Tabs, Tab, Typography, Button } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style'
 

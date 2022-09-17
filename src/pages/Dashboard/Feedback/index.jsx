@@ -1,11 +1,5 @@
 import React, { useState } from 'react'
-import { Tabs, Tab } from '@material-ui/core'
-import {
-  TextField,
-  Button,
-  Typography,
-  LinearProgress
-} from '@mui/material'
+import { Tabs, Tab, TextField, Button, Typography, LinearProgress } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style'
 import { toast } from 'react-toastify'

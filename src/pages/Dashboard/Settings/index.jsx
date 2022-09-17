@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-// import { Tabs, Tab } from '@material-ui/core'
+import React from 'react'
 import { Typography, Divider } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style'
