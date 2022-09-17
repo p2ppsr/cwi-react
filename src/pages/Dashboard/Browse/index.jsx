@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
-import { Tabs, Tab, Typography, Button } from '@mui/material'
+import React, { useState, useContext } from 'react'
+import IconButton from '@mui/material/IconButton'
+import CloseIcon from '@mui/icons-material/Close'
+import { Tooltip, Stack, Tabs, Tab, Typography, Button } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style'
+import UIContext from '../../../UIContext'
 
 const useStyles = makeStyles(style, {
   name: 'About'
@@ -12,9 +15,21 @@ const About = ({ history }) => {
   const classes = useStyles()
   const [tabValue, setTabValue] = useState(1)
 
+  const handleOnClose = async () => {
+    const { onFocusRelinquished } = useContext(UIContext)
+    await onFocusRelinquished()
+  }
+
   return (
     <div>
       <div className={classes.fixed_nav}>
+        <Stack direction='row' justifyContent='end'>
+          <Tooltip placement='left' title='Close'>
+            <IconButton onClick={handleOnClose}>
+              <CloseIcon />
+            </IconButton>
+          </Tooltip>
+        </Stack>
         <Tabs
           value={tabValue}
           onChange={(e, v) => setTabValue(v)}

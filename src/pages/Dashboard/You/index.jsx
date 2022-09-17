@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import IconButton from '@mui/material/IconButton'
+import CloseIcon from '@mui/icons-material/Close'
 import ProfileEditor from '../../../components/ProfileEditor/index.jsx'
 import Satoshis from '../../../components/Satoshis.jsx'
 import { Img } from 'uhrp-react'
 import bridgeportResolvers from '../../../utils/bridgeportResolvers'
 import { makeStyles } from '@mui/styles'
-import { Tabs, Tab, Button, Tooltip, Typography, Fab, Divider, CircularProgress } from '@mui/material'
+import { Stack, Tabs, Tab, Button, Tooltip, Typography, Fab, Divider, CircularProgress } from '@mui/material'
 import { Edit } from '@mui/icons-material'
 import About from '../Settings/About/index.jsx'
 import Logout from '../Settings/Logout/index.jsx'
+import UIContext from '../../../UIContext'
 
 const useStyles = makeStyles(theme => ({
   content_wrap: {
@@ -91,9 +94,21 @@ const You = ({ history }) => {
     return () => clearInterval(interval)
   }, [])
 
+  const handleOnClose = async () => {
+    const { onFocusRelinquished } = useContext(UIContext)
+    await onFocusRelinquished()
+  }
+
   return (
     <div>
       <div className={classes.fixed_nav}>
+        <Stack direction='row' justifyContent='end'>
+          <Tooltip placement='left' title='Close'>
+            <IconButton onClick={handleOnClose}>
+              <CloseIcon />
+            </IconButton>
+          </Tooltip>
+        </Stack>
         <Tabs
           value={tabValue}
           onChange={(e, v) => setTabValue(v)}
