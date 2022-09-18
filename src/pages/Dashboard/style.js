@@ -1,5 +1,5 @@
 export default theme => ({
-  content_wrap: {
+  content_wrap_show: {
     ...theme.templates.page_wrap,
     maxWidth: '100%',
     overflow: 'hidden',
@@ -17,7 +17,34 @@ export default theme => ({
       margin: '0px auto'
     }
   },
-  list_wrap: {
+  content_wrap_hide: {
+    ...theme.templates.page_wrap,
+    maxWidth: '100%',
+    overflow: 'hidden',
+    display: 'grid',
+    gridTemplateColumns: 'auto',
+    padding: '0px !important',
+    maxHeight: 'min(100vh, 800px)',
+    '& > :last-child': {
+      maxHeight: 'inherit',
+      overflow: 'scroll',
+      boxSizing: 'border-box',
+      padding: theme.spacing(3),
+      maxWidth: `calc(1280px + ${theme.spacing(6)})`,
+      width: '100%',
+      margin: '0px auto'
+    }
+  },
+  list_wrap_show: {
+    display: 'block',
+    overflowY: 'scroll',
+    minWidth: '16em',
+    height: '100%',
+    backgroundColor: theme.palette.grey[200]
+  },
+  list_wrap_hide: {
+    width: '100%',
+    display: 'none',
     overflowY: 'scroll',
     minWidth: '16em',
     height: '100%',

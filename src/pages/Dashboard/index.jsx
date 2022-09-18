@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { Switch, Route, useHistory } from 'react-router-dom'
 import style from './style'
 import { makeStyles } from '@mui/styles'
@@ -23,6 +23,7 @@ import Settings from './Settings/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Profile from '../../components/Profile.jsx'
 import You from './You/index.jsx'
+import UIContext from '../../UIContext'
 
 const useStyles = makeStyles(style, {
   name: 'Dashboard'
@@ -36,9 +37,17 @@ const Dashboard = () => {
     redirectIfLoggedOut(history)
   }, [history])
 
+  const { useBreakpoint } = useContext(UIContext)
+
+  const breakpoints = useBreakpoint()
+  console.log('dashboard:breakpoints:', breakpoints)
+  const contentWrapDisplay = breakpoints.sm || breakpoints.xs ? 'content_wrap_hide' : 'content_wrap_show'
+  const listWrapDisplay = breakpoints.sm || breakpoints.xs ? 'list_wrap_hide' : 'list_wrap_show'
+  console.log('dashboard:listWrapDisplay:', listWrapDisplay)
+
   return (
-    <div className={classes.content_wrap}>
-      <div className={classes.list_wrap}>
+    <div className={classes[contentWrapDisplay]}>
+      <div className={classes[listWrapDisplay]}>
         <Profile />
         <List>
           <ListItem
@@ -133,34 +142,37 @@ const Dashboard = () => {
           </Typography>
         </center>
       </div>
-      <Switch>
-        <Route
-          path='/dashboard/feedback'
-          component={Feedback}
-          exact
-        />
-        <Route
-          path='/dashboard/browse-apps'
-          component={Browse}
-          exact
-        />
-        <Route
-          path='/dashboard/app/:app'
-          component={App}
-        />
-        <Route
-          path='/dashboard/settings'
-          component={Settings}
-        />
-        <Route
-          path='/dashboard/you'
-          component={You}
-        />
-        <Route
-          default
-          component={Actions}
-        />
-      </Switch>
+      <div>
+        <Switch>
+          <Route
+            path='/dashboard/feedback'
+            component={Feedback}
+            exact
+          />
+          <Route
+            path='/dashboard/browse-apps'
+            component={Browse}
+            exact
+          />
+          <Route
+            path='/dashboard/app/:app'
+            component={App}
+          />
+          <Route
+            path='/dashboard/settings'
+            component={Settings}
+          />
+          <Route
+            path='/dashboard/you'
+            component={You}
+          />
+          <Route
+            className={classes.full_width}
+            default
+            component={Actions}
+          />
+        </Switch>
+      </div>
     </div>
   )
 }

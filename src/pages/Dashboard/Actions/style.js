@@ -1,6 +1,6 @@
 export default theme => ({
   show_div: {
-    display: 'block'
+    display: 'grid'
   },
   hide_div: {
     display: 'none'
