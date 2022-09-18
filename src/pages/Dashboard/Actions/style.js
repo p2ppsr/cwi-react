@@ -1,8 +1,14 @@
 export default theme => ({
+  show_div: {
+    display: 'block'
+  },
+  hide_div: {
+    display: 'none'
+  },
   tabs: {
     marginBottom: '2em'
   },
-  fixed_nav: {
+  fixed_nav_show: {
     backgroundColor: theme.palette.common.white,
     position: 'sticky',
     top: theme.spacing(-3),

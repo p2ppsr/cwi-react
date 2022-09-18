@@ -102,10 +102,14 @@ const You = ({ history }) => {
     const { onFocusRelinquished } = useContext(UIContext)
     await onFocusRelinquished()
   }
+  const { useBreakpoint } = useContext(UIContext)
+  const breakpoints = useBreakpoint()
+  const displayClassName = breakpoints.sm || breakpoints.xs ? 'show_div' : 'hide_div'
+  // console.log('actions:displayClassName:', displayClassName)
 
   return (
-    <div>
-      <div className={classes.fixed_nav}>
+    <div className={classes.fixed_nav}>
+      <div className={classes[displayClassName]}>
         <Stack direction='row' justifyContent='end'>
           <Tooltip placement='left' title='Close'>
             <IconButton onClick={handleOnClose}>

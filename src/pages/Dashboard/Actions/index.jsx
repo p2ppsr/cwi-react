@@ -10,9 +10,8 @@ import UIContext from '../../../UIContext'
 const useStyles = makeStyles(style, {
   name: 'Actions'
 })
-
 const Actions = ({ history }) => {
-  console.log('history:', history)
+  // console.log('history:', history)
   const classes = useStyles()
   const [tabValue, setTabValue] = useState(0)
 
@@ -20,30 +19,36 @@ const Actions = ({ history }) => {
     const { onFocusRelinquished } = useContext(UIContext)
     await onFocusRelinquished()
   }
+  const { useBreakpoint } = useContext(UIContext)
+  const breakpoints = useBreakpoint()
+  const displayClassName = breakpoints.sm || breakpoints.xs ? 'show_div' : 'hide_div'
+  // console.log('actions:displayClassName:', displayClassName)
 
   return (
     <>
       <div className={classes.fixed_nav}>
-        <Stack direction='row' justifyContent='end'>
-          <Tooltip placement='left' title='Close'>
-            <IconButton onClick={handleOnClose}>
-              <CloseIcon />
-            </IconButton>
-          </Tooltip>
-        </Stack>
-        <Tabs
-          className={classes.tabs}
-          value={tabValue}
-          onChange={(e, v) => setTabValue(v)}
-          indicatorColor='primary'
-          textColor='primary'
-          variant='fullWidth'
-        >
-          <Tab label='Actions' />
-          <Tab label='Apps' />
-          <Tab label='Feedback' />
-          <Tab label='You' />
-        </Tabs>
+        <div className={classes[displayClassName]}>
+          <Stack direction='row' justifyContent='end'>
+            <Tooltip placement='left' title='Close'>
+              <IconButton onClick={handleOnClose}>
+                <CloseIcon />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+          <Tabs
+            className={classes.tabs}
+            value={tabValue}
+            onChange={(e, v) => setTabValue(v)}
+            indicatorColor='primary'
+            textColor='primary'
+            variant='fullWidth'
+          >
+            <Tab label='Actions' />
+            <Tab label='Apps' />
+            <Tab label='Feedback' />
+            <Tab label='You' />
+          </Tabs>
+        </div>
         <Typography variant='h1'>Your Actions</Typography>
         <ActionList />
       </div>

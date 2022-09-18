@@ -1,5 +1,5 @@
 import React from 'react'
-import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
+import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles'
 import { withStyles } from '@mui/styles'
 
 const baseTheme = createTheme(adaptV4Theme({
