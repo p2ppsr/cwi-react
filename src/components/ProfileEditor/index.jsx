@@ -129,7 +129,7 @@ const ProfileEditor = ({
       onClose()
 
       if (welcome) {
-        toast.dark('Welcome Your new profile is active!')
+        toast.dark('Welcome! Your new profile is active!')
       } else {
         toast.dark('Profile updated!')
       }
