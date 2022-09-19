@@ -21,7 +21,6 @@ const Apps = ({ match, history }) => {
 
   useEffect(() => {
     (async () => {
-      console.log('icon url:', `https://${appDomain}/favicon.ico`)
       setAppIcon(`https://${appDomain}/favicon.ico`)
       try {
         const manifest = await boomerang(
