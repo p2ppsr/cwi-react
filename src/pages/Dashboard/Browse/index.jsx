@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import { useBreakpoint } from '../../../utils/useBreakpoints.js'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
 import { Tooltip, Stack, Tabs, Tab, Typography, Button } from '@mui/material'
@@ -18,10 +19,9 @@ const About = ({ history }) => {
     const { onFocusRelinquished } = useContext(UIContext)
     await onFocusRelinquished()
   }
-  const { useBreakpoint } = useContext(UIContext)
+
   const breakpoints = useBreakpoint()
   const displayClassName = breakpoints.sm || breakpoints.xs ? 'show_div' : 'hide_div'
-  // console.log('actions:displayClassName:', displayClassName)
 
   return (
     <div className={classes.fixed_nav}>

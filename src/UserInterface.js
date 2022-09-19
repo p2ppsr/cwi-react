@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
+import { BreakpointProvider } from './utils/useBreakpoints.js'
 import { MemoryRouter as Router, Switch, Route } from 'react-router-dom'
 import Greeter from './pages/Greeter/index.jsx'
 import Recovery from './pages/Recovery/index.jsx'
@@ -21,6 +22,13 @@ import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
 import UIContext from './UIContext'
 
+const queries = {
+  xs: '(max-width: 500px)',
+  sm: '(max-width: 720px)',
+  md: '(max-width: 1024px)',
+  or: '(orientation: portrait)'
+}
+
 let ErrorBoundary = ({ children }) => children
 
 export default ({
@@ -34,8 +42,7 @@ export default ({
   env = 'prod',
   isPackaged = true,
   usePortal = false,
-  portalDestination = document.body,
-  useBreakpoint = () => { }
+  portalDestination = document.body
 } = {}) => {
   useEffect(() => {
     (async () => {
@@ -52,71 +59,72 @@ export default ({
   }, [])
 
   const returnValue = (
-    <UIContext.Provider value={{
-      useBreakpoint,
-      onFocusRequested,
-      onFocusRelinquished,
-      isFocused,
-      saveLocalSnapshot,
-      removeLocalSnapshot,
-      appVersion,
-      appName,
-      env,
-      isPackaged
-    }}
-    >
-      <div style={{
-        width: '100%'
+    <BreakpointProvider queries={queries}>
+      <UIContext.Provider value={{
+        onFocusRequested,
+        onFocusRelinquished,
+        isFocused,
+        saveLocalSnapshot,
+        removeLocalSnapshot,
+        appVersion,
+        appName,
+        env,
+        isPackaged
       }}
       >
-        <ErrorBoundary>
-          <Theme>
-            <Router>
-              <CodeHandler />
-              <AuthenticationErrorHandler />
-              <PasswordHandler />
-              <RecoveryKeyHandler />
-              <ProtocolPermissionHandler />
-              <SpendingAuthorizationHandler />
-              <PaymentHandler />
-              <ToastContainer
-                position='top-center'
-              />
-              <Switch>
-                <Route
-                  exact
-                  path='/'
-                  component={Greeter}
+        <div style={{
+          width: '100%'
+        }}
+        >
+          <ErrorBoundary>
+            <Theme>
+              <Router>
+                <CodeHandler />
+                <AuthenticationErrorHandler />
+                <PasswordHandler />
+                <RecoveryKeyHandler />
+                <ProtocolPermissionHandler />
+                <SpendingAuthorizationHandler />
+                <PaymentHandler />
+                <ToastContainer
+                  position='top-center'
                 />
-                <Route
-                  exact
-                  path='/recovery/lost-phone'
-                  component={LostPhone}
-                />
-                <Route
-                  exact
-                  path='/recovery/lost-password'
-                  component={LostPassword}
-                />
-                <Route
-                  exact
-                  path='/recovery'
-                  component={Recovery}
-                />
-                <Route
-                  path='/dashboard'
-                  component={Dashboard}
-                />
-                <Route
-                  path='/welcome'
-                  component={Welcome}
-                />
-              </Switch>
-            </Router>
-          </Theme>
-        </ErrorBoundary>
-      </div>
-    </UIContext.Provider>
+                <Switch>
+                  <Route
+                    exact
+                    path='/'
+                    component={Greeter}
+                  />
+                  <Route
+                    exact
+                    path='/recovery/lost-phone'
+                    component={LostPhone}
+                  />
+                  <Route
+                    exact
+                    path='/recovery/lost-password'
+                    component={LostPassword}
+                  />
+                  <Route
+                    exact
+                    path='/recovery'
+                    component={Recovery}
+                  />
+                  <Route
+                    path='/dashboard'
+                    component={Dashboard}
+                  />
+                  <Route
+                    path='/welcome'
+                    component={Welcome}
+                  />
+                </Switch>
+              </Router>
+            </Theme>
+          </ErrorBoundary>
+        </div>
+      </UIContext.Provider>
+    </BreakpointProvider>
   )
   if (usePortal) {
     return ReactDOM.createPortal(returnValue, portalDestination)

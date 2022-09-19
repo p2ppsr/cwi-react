@@ -49,7 +49,7 @@ export default theme => ({
     backgroundColor: theme.palette.grey[200]
   },
   sig_wrap: {
-    marginTop: 'max(0px, calc(100vh - 39.5em))',
+    bottom: '1em',
     marginBottom: theme.spacing(2),
     [theme.breakpoints.up('xl')]: {
       marginTop: 'max(0px, calc(100vh - 44.5em))'

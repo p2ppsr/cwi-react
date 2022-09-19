@@ -1,4 +1,5 @@
-import React, { useContext } from 'react'
+import React from 'react'
+import { useBreakpoint } from '../../../utils/useBreakpoints.js'
 import CloseIcon from '@mui/icons-material/Close'
 import { IconButton, Tooltip, Stack, Typography, Divider } from '@mui/material'
 import { makeStyles } from '@mui/styles'
@@ -8,7 +9,6 @@ import PhoneSettings from './Phone/index.jsx'
 import RecoveryKeySettings from './RecoveryKey/index.jsx'
 import About from './About/index.jsx'
 import Logout from './Logout/index.jsx'
-import UIContext from '../../../UIContext'
 
 const useStyles = makeStyles(style, {
   name: 'Settings'
@@ -22,7 +22,7 @@ const Settings = ({ history }) => {
   const handleOnClose = async () => {
     history.push('/dashboard/you')
   }
-  const { useBreakpoint } = useContext(UIContext)
+
   const breakpoints = useBreakpoint()
   const displayClassName = breakpoints.sm || breakpoints.xs ? 'show_div' : 'hide_div'
 

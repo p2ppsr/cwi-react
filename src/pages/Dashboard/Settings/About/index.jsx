@@ -37,7 +37,7 @@ const About = () => {
         Legal
       </Typography>
       <Typography paragraph>
-        Project Babbage enables you to use new kinds of apps while keeping control over your digital identity. This software is copyright &copy; 2020-2021 Peer-to-peer Privacy Systems Research, LLC. By using this software, or any software that relies upon it it to function, you agree to be bound by the latest version of the{' '}
+        Project Babbage enables you to use new kinds of apps while keeping control over your digital identity. This software is copyright &copy; 2020-2022 Peer-to-peer Privacy Systems Research, LLC. By using this software, or any software that relies upon it it to function, you agree to be bound by the latest version of the{' '}
         Babbage Desktop License Agreement, which can be accessed by navigating to the below website URL:
       </Typography>
       <Typography paragraph>

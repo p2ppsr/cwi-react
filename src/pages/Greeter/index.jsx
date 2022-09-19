@@ -294,10 +294,9 @@ const Greeter = ({ history }) => {
                 disabled={loading}
               >
                 {!loading
-                  ? (
-                    accountStatus === 'new-user'
-                      ? 'Create Account'
-                      : 'Log In'
+                  ? (accountStatus === 'new-user'
+                    ? 'Create Account'
+                    : 'Log In'
                   )
                   : <CircularProgress />}
               </Button>
@@ -324,7 +323,7 @@ const Greeter = ({ history }) => {
           color='textSecondary'
           className={classes.copyright_text}
         >
-          Copyright &copy; 2020-2021 Peer-to-peer Privacy Systems Research, LLC. All rights reserved. Redistribution of this software is strictly prohibited. Use of this software is subject to the{' '}
+          Copyright &copy; 2020-2022 Peer-to-peer Privacy Systems Research, LLC. All rights reserved. Redistribution of this software is strictly prohibited. Use of this software is subject to the{' '}
           <a href='https://projectbabbage.com/desktop/license' target='_blank' rel='noopener noreferrer'>Babbage Desktop License Agreement</a>.
         </Typography>
       </div>

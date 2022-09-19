@@ -1,4 +1,5 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect } from 'react'
+import { useBreakpoint } from '../../utils/useBreakpoints.js'
 import { Switch, Route, useHistory } from 'react-router-dom'
 import style from './style'
 import { makeStyles } from '@mui/styles'
@@ -23,7 +24,6 @@ import Settings from './Settings/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Profile from '../../components/Profile.jsx'
 import You from './You/index.jsx'
-import UIContext from '../../UIContext'
 
 const useStyles = makeStyles(style, {
   name: 'Dashboard'
@@ -37,13 +37,9 @@ const Dashboard = () => {
     redirectIfLoggedOut(history)
   }, [history])
 
-  const { useBreakpoint } = useContext(UIContext)
-
   const breakpoints = useBreakpoint()
-  console.log('dashboard:breakpoints:', breakpoints)
   const contentWrapDisplay = breakpoints.sm || breakpoints.xs ? 'content_wrap_hide' : 'content_wrap_show'
   const listWrapDisplay = breakpoints.sm || breakpoints.xs ? 'list_wrap_hide' : 'list_wrap_show'
-  console.log('dashboard:listWrapDisplay:', listWrapDisplay)
 
   return (
     <div className={classes[contentWrapDisplay]}>

@@ -1,6 +1,6 @@
 export default theme => ({
   max_width: {
-    maxWidth: '16em'
+    maxWidth: '100vh'
   },
   content_wrap: theme.templates.page_wrap,
   logo: {
