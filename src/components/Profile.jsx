@@ -9,7 +9,6 @@ import { Edit } from '@mui/icons-material'
 
 const useStyles = makeStyles(theme => ({
   content_wrap: {
-    position: 'sticky',
     top: '0px',
     backgroundColor: theme.palette.grey[200],
     zIndex: 3,

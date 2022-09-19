@@ -1,10 +1,4 @@
 export default theme => ({
-  show_div: {
-    display: 'grid'
-  },
-  hide_div: {
-    display: 'none'
-  },
   fixed_nav: {
     backgroundColor: theme.palette.common.white,
     position: 'sticky',

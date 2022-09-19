@@ -106,11 +106,25 @@ const ProtocolPermissionHandler = () => {
     >
       <DialogContent>
         <center>
-          <img
-            src={`https://${originator}/favicon.ico`}
+          <object
+            type='image/x-icon'
+            data={`https://${originator}/favicon.ico`}
             alt=''
             className={classes.app_icon}
-          />
+          >
+            <object
+              data='https://projectbabbage.com/favicon.ico'
+              alt=''
+              type='image/x-icon'
+              className={classes.app_icon}
+            >
+              <img
+                src='https://projectbabbage.com/favicon.ico'
+                alt=''
+                className={classes.app_icon}
+              />
+            </object>
+          </object>
           <Typography
             variant='h2'
             paragraph

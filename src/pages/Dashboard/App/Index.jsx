@@ -50,11 +50,18 @@ const Apps = ({ match, history }) => {
           <ArrowBack />
         </IconButton>
         <div className={classes.top_grid}>
-          <img
-            src={appIcon}
+          <object
+            data={appIcon}
             alt=''
             className={classes.app_icon}
-          />
+            type='image/x-icon'
+          >
+            <img
+              src='https://projectbabbage.com/favicon.ico'
+              alt=''
+              className={classes.app_icon}
+            />
+          </object>
           <div>
             <Typography variant='h1'>
               {appName}

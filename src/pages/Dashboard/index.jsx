@@ -23,27 +23,24 @@ import App from './App/Index.jsx'
 import Settings from './Settings/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Profile from '../../components/Profile.jsx'
-import You from './You/index.jsx'
+import TopTabs from '../../components/TopTabs/index.jsx'
 
 const useStyles = makeStyles(style, {
   name: 'Dashboard'
 })
 
 const Dashboard = () => {
-  const classes = useStyles()
+  const breakpoints = useBreakpoint()
+  const classes = useStyles({ breakpoints })
   const history = useHistory()
 
   useEffect(() => {
     redirectIfLoggedOut(history)
   }, [history])
 
-  const breakpoints = useBreakpoint()
-  const contentWrapDisplay = breakpoints.sm || breakpoints.xs ? 'content_wrap_hide' : 'content_wrap_show'
-  const listWrapDisplay = breakpoints.sm || breakpoints.xs ? 'list_wrap_hide' : 'list_wrap_show'
-
   return (
-    <div className={classes[contentWrapDisplay]}>
-      <div className={classes[listWrapDisplay]}>
+    <div className={classes.content_wrap}>
+      <div className={classes.list_wrap}>
         <Profile />
         <List>
           <ListItem
@@ -138,7 +135,8 @@ const Dashboard = () => {
           </Typography>
         </center>
       </div>
-      <div>
+      <div className={classes.page_container}>
+        <TopTabs />
         <Switch>
           <Route
             path='/dashboard/feedback'
@@ -157,10 +155,6 @@ const Dashboard = () => {
           <Route
             path='/dashboard/settings'
             component={Settings}
-          />
-          <Route
-            path='/dashboard/you'
-            component={You}
           />
           <Route
             className={classes.full_width}

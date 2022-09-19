@@ -27,15 +27,26 @@ const AppChip = ({ label, history }) => {
       }}
       label={parsedLabel}
       icon={(
-        <img
-          src={`https://${label.substring(12)}/favicon.ico`}
+        <object
+          data={`https://${label.substring(12)}/favicon.ico`}
           alt=''
           style={{
             width: 20,
             marginLeft: 8,
             borderRadius: 4
           }}
-        />
+          type='image/x-icon'
+        >
+          <img
+            src='https://projectbabbage.com/favicon.ico'
+            alt=''
+            style={{
+              width: 20,
+              marginLeft: 2,
+              borderRadius: 4
+            }}
+          />
+        </object>
       )}
       onClick={() => {
         history.push(

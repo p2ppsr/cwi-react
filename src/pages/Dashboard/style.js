@@ -1,5 +1,5 @@
 export default theme => ({
-  content_wrap_show: {
+  content_wrap: {
     ...theme.templates.page_wrap,
     maxWidth: '100%',
     overflow: 'hidden',
@@ -16,44 +16,22 @@ export default theme => ({
       margin: '0px auto'
     }
   },
-  content_wrap_hide: {
-    ...theme.templates.page_wrap,
-    maxWidth: '100%',
-    overflow: 'hidden',
-    display: 'grid',
-    gridTemplateColumns: 'auto',
-    padding: '0px !important',
-    '& > :last-child': {
-      maxHeight: 'inherit',
-      overflow: 'scroll',
-      boxSizing: 'border-box',
-      padding: theme.spacing(3),
-      maxWidth: `calc(1280px + ${theme.spacing(6)})`,
-      width: '100%',
-      margin: '0px auto'
-    }
-  },
-  list_wrap_show: {
-    display: 'block',
+  list_wrap: {
     overflowY: 'scroll',
     minWidth: '16em',
-    height: '100%',
-    backgroundColor: theme.palette.grey[200]
+    height: '100vh',
+    backgroundColor: theme.palette.grey[200],
+    display: ({ breakpoints }) => (
+      (breakpoints.sm || breakpoints.xs) ? 'none' : 'block'
+    )
   },
-  list_wrap_hide: {
-    width: '100%',
-    display: 'none',
-    overflowY: 'scroll',
-    minWidth: '16em',
-    height: '100%',
-    backgroundColor: theme.palette.grey[200]
+  page_container: {
+    height: '100vh',
+    overflowY: 'scroll'
   },
   sig_wrap: {
     bottom: '1em',
-    marginBottom: theme.spacing(2),
-    [theme.breakpoints.up('xl')]: {
-      marginTop: 'max(0px, calc(100vh - 44.5em))'
-    }
+    marginBottom: theme.spacing(2)
   },
   signature: {
     userSelect: 'none'

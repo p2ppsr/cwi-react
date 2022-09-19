@@ -16,31 +16,15 @@ const useStyles = makeStyles(style, {
 
 const Settings = ({ history }) => {
   const classes = useStyles()
-  // const [tabValue, setTabValue] = useState(1)
-
-  const handleOnClose = async () => {
-    history.push('/dashboard/you')
-  }
-
   const breakpoints = useBreakpoint()
-  const displayClassName = breakpoints.sm || breakpoints.xs ? 'show_div' : 'hide_div'
 
   return (
     <>
       <div className={classes.fixed_nav}>
-        <div className={classes[displayClassName]}>
-          <Stack direction='row' justifyContent='end'>
-            <Tooltip placement='left' title='Return to YOU tab'>
-              <IconButton onClick={handleOnClose}>
-                <CloseIcon />
-              </IconButton>
-            </Tooltip>
-          </Stack>
-        </div>
+        {(!breakpoints.sm && !breakpoints.xs) &&
         <Typography variant='h1'>Settings</Typography>
-        <br />
-        <Divider />
-        <br />
+        }
+      </div>
         <PasswordSettings history={history} />
         <Divider />
         <br />
@@ -54,7 +38,6 @@ const Settings = ({ history }) => {
         <Divider />
         <br />
         <Logout history={history} />
-      </div>
     </>
   )
 }
