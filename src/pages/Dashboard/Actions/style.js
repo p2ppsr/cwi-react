@@ -1,5 +1,14 @@
 export default theme => ({
-  fixed_nav: {
+  show_div: {
+    display: 'grid'
+  },
+  hide_div: {
+    display: 'none'
+  },
+  tabs: {
+    marginBottom: '2em'
+  },
+  fixed_nav_show: {
     backgroundColor: theme.palette.common.white,
     position: 'sticky',
     top: theme.spacing(-3),

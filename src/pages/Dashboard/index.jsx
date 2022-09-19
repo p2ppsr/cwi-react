@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { useBreakpoint } from '../../utils/useBreakpoints.js'
 import { Switch, Route, useHistory } from 'react-router-dom'
 import style from './style'
 import { makeStyles } from '@mui/styles'
@@ -22,13 +23,15 @@ import App from './App/Index.jsx'
 import Settings from './Settings/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Profile from '../../components/Profile.jsx'
+import TopTabs from '../../components/TopTabs/index.jsx'
 
 const useStyles = makeStyles(style, {
   name: 'Dashboard'
 })
 
 const Dashboard = () => {
-  const classes = useStyles()
+  const breakpoints = useBreakpoint()
+  const classes = useStyles({ breakpoints })
   const history = useHistory()
 
   useEffect(() => {
@@ -44,16 +47,16 @@ const Dashboard = () => {
             button
             onClick={() => history.push('/dashboard')}
             selected={
-                history.location.pathname === '/dashboard'
-              }
+              history.location.pathname === '/dashboard'
+            }
           >
             <ListItemIcon>
               <ActionsIcon
                 color={
-                    history.location.pathname === '/dashboard'
-                      ? 'primary'
-                      : undefined
-                  }
+                  history.location.pathname === '/dashboard'
+                    ? 'primary'
+                    : undefined
+                }
               />
             </ListItemIcon>
             <ListItemText>
@@ -64,16 +67,16 @@ const Dashboard = () => {
             button
             onClick={() => history.push('/dashboard/settings')}
             selected={
-                history.location.pathname === '/dashboard/settings'
-              }
+              history.location.pathname === '/dashboard/settings'
+            }
           >
             <ListItemIcon>
               <SettingsIcon
                 color={
-                    history.location.pathname === '/dashboard/settings'
-                      ? 'primary'
-                      : undefined
-                  }
+                  history.location.pathname === '/dashboard/settings'
+                    ? 'primary'
+                    : undefined
+                }
               />
             </ListItemIcon>
             <ListItemText>
@@ -84,16 +87,16 @@ const Dashboard = () => {
             button
             onClick={() => history.push('/dashboard/browse-apps')}
             selected={
-                history.location.pathname === '/dashboard/browse-apps'
-              }
+              history.location.pathname === '/dashboard/browse-apps'
+            }
           >
             <ListItemIcon>
               <BrowseIcon
                 color={
-                    history.location.pathname === '/dashboard/browse-apps'
-                      ? 'primary'
-                      : undefined
-                  }
+                  history.location.pathname === '/dashboard/browse-apps'
+                    ? 'primary'
+                    : undefined
+                }
               />
             </ListItemIcon>
             <ListItemText>
@@ -104,16 +107,16 @@ const Dashboard = () => {
             button
             onClick={() => history.push('/dashboard/feedback')}
             selected={
-                history.location.pathname === '/dashboard/feedback'
-              }
+              history.location.pathname === '/dashboard/feedback'
+            }
           >
             <ListItemIcon>
               <FeedbackIcon
                 color={
-                    history.location.pathname === '/dashboard/feedback'
-                      ? 'primary'
-                      : undefined
-                  }
+                  history.location.pathname === '/dashboard/feedback'
+                    ? 'primary'
+                    : undefined
+                }
               />
             </ListItemIcon>
             <ListItemText>
@@ -132,30 +135,34 @@ const Dashboard = () => {
           </Typography>
         </center>
       </div>
-      <Switch>
-        <Route
-          path='/dashboard/feedback'
-          component={Feedback}
-          exact
-        />
-        <Route
-          path='/dashboard/browse-apps'
-          component={Browse}
-          exact
-        />
-        <Route
-          path='/dashboard/app/:app'
-          component={App}
-        />
-        <Route
-          path='/dashboard/settings'
-          component={Settings}
-        />
-        <Route
-          default
-          component={Actions}
-        />
-      </Switch>
+      <div className={classes.page_container}>
+        <TopTabs />
+        <Switch>
+          <Route
+            path='/dashboard/feedback'
+            component={Feedback}
+            exact
+          />
+          <Route
+            path='/dashboard/browse-apps'
+            component={Browse}
+            exact
+          />
+          <Route
+            path='/dashboard/app/:app'
+            component={App}
+          />
+          <Route
+            path='/dashboard/settings'
+            component={Settings}
+          />
+          <Route
+            className={classes.full_width}
+            default
+            component={Actions}
+          />
+        </Switch>
+      </div>
     </div>
   )
 }

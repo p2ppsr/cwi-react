@@ -1,5 +1,7 @@
 import React from 'react'
-import { Typography, Divider } from '@mui/material'
+import { useBreakpoint } from '../../../utils/useBreakpoints.js'
+import CloseIcon from '@mui/icons-material/Close'
+import { IconButton, Tooltip, Stack, Typography, Divider } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style'
 import PasswordSettings from './Password/index.jsx'
@@ -14,26 +16,29 @@ const useStyles = makeStyles(style, {
 
 const Settings = ({ history }) => {
   const classes = useStyles()
+  const breakpoints = useBreakpoint()
 
   return (
-    <div>
+    <>
       <div className={classes.fixed_nav}>
+        {(!breakpoints.sm && !breakpoints.xs) &&
         <Typography variant='h1'>Settings</Typography>
+        }
       </div>
-      <PasswordSettings history={history} />
-      <Divider />
-      <br />
-      <PhoneSettings />
-      <Divider />
-      <br />
-      <RecoveryKeySettings />
-      <Divider />
-      <br />
-      <About />
-      <Divider />
-      <br />
-      <Logout history={history} />
-    </div>
+        <PasswordSettings history={history} />
+        <Divider />
+        <br />
+        <PhoneSettings />
+        <Divider />
+        <br />
+        <RecoveryKeySettings />
+        <Divider />
+        <br />
+        <About />
+        <Divider />
+        <br />
+        <Logout history={history} />
+    </>
   )
 }
 

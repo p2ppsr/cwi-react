@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Tooltip, Typography, Button, Tabs, Tab, IconButton
-} from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import { Typography, Button, Tabs, Tab, IconButton } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import { ArrowBack } from '@mui/icons-material'
 import Actions from './Actions'
 import Trends from './Trends'
@@ -35,7 +33,9 @@ const Apps = ({ match, history }) => {
             setAppName(manifest.short_name)
           }
         }
-      } catch (e) {/* do nothing */}
+      } catch (e) {
+        /* do nothing */
+      }
     })()
   }, [appDomain])
 
@@ -45,15 +45,23 @@ const Apps = ({ match, history }) => {
         <IconButton
           className={classes.back_button}
           onClick={() => history.go(-1)}
-          size="large">
+          size='large'
+        >
           <ArrowBack />
         </IconButton>
         <div className={classes.top_grid}>
-          <img
-            src={appIcon}
+          <object
+            data={appIcon}
             alt=''
             className={classes.app_icon}
-          />
+            type='image/x-icon'
+          >
+            <img
+              src='https://projectbabbage.com/favicon.ico'
+              alt=''
+              className={classes.app_icon}
+            />
+          </object>
           <div>
             <Typography variant='h1'>
               {appName}
@@ -93,7 +101,7 @@ const Apps = ({ match, history }) => {
         <Permissions domain={appDomain} />
       )}
     </div>
-  );
+  )
 }
 
 export default Apps

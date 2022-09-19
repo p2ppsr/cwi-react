@@ -1,20 +1,27 @@
-import React from 'react'
-import { Typography, Button } from '@mui/material'
+import React, { useState, useContext } from 'react'
+import { useBreakpoint } from '../../../utils/useBreakpoints.js'
+import IconButton from '@mui/material/IconButton'
+import CloseIcon from '@mui/icons-material/Close'
+import { Tooltip, Stack, Tabs, Tab, Typography, Button } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style'
+import UIContext from '../../../UIContext'
 
 const useStyles = makeStyles(style, {
   name: 'About'
 })
 
-const About = () => {
+const Browse = ({ history }) => {
   const classes = useStyles()
 
+  const breakpoints = useBreakpoint()
   return (
-    <div className={classes.content_wrap}>
-      <Typography variant='h1' paragraph>
-        Babbage App Explorer
-      </Typography>
+    <div className={classes.fixed_nav}>
+      {(!breakpoints.sm && !breakpoints.xs) &&
+        <Typography variant='h1' paragraph>
+          Babbage App Explorer
+        </Typography>
+      }
       <Typography paragraph>
         Soon, you'll be able to view the latest and greatest titles from within Babbage Desktop itself! For now, head over to the App Catalogue to see what's new.
       </Typography>
@@ -34,4 +41,4 @@ const About = () => {
   )
 }
 
-export default About
+export default Browse

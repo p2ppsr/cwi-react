@@ -6,7 +6,7 @@ import {
   Button,
   LinearProgress
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import ProfileEditor from '../../components/ProfileEditor/index.jsx'
 import { toast } from 'react-toastify'

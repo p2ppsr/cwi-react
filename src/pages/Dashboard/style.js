@@ -6,7 +6,6 @@ export default theme => ({
     display: 'grid',
     gridTemplateColumns: 'auto 1fr',
     padding: '0px !important',
-    maxHeight: 'min(100vh, 800px)',
     '& > :last-child': {
       maxHeight: 'inherit',
       overflow: 'scroll',
@@ -20,15 +19,19 @@ export default theme => ({
   list_wrap: {
     overflowY: 'scroll',
     minWidth: '16em',
-    height: '100%',
-    backgroundColor: theme.palette.grey[200]
+    height: '100vh',
+    backgroundColor: theme.palette.grey[200],
+    display: ({ breakpoints }) => (
+      (breakpoints.sm || breakpoints.xs) ? 'none' : 'block'
+    )
+  },
+  page_container: {
+    height: '100vh',
+    overflowY: 'scroll'
   },
   sig_wrap: {
-    marginTop: 'max(0px, calc(100vh - 39.5em))',
-    marginBottom: theme.spacing(2),
-    [theme.breakpoints.up('xl')]: {
-      marginTop: 'max(0px, calc(100vh - 44.5em))'
-    }
+    bottom: '1em',
+    marginBottom: theme.spacing(2)
   },
   signature: {
     userSelect: 'none'

@@ -9,7 +9,6 @@ import { Edit } from '@mui/icons-material'
 
 const useStyles = makeStyles(theme => ({
   content_wrap: {
-    position: 'sticky',
     top: '0px',
     backgroundColor: theme.palette.grey[200],
     zIndex: 3,
@@ -23,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     minWidth: '10em',
     minHeight: '10em',
     maxWidth: '10em',
-    maxHeight: '10em',
+    maxHeight: '10em'
     // [theme.breakpoints.up('xl')]: {
     //   minWidth: '16em',
     //   minHeight: '16em',
@@ -35,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     minWidth: '10em',
     minHeight: '10em',
     maxWidth: '10em',
-    maxHeight: '10em',
+    maxHeight: '10em'
     // [theme.breakpoints.up('xl')]: {
     //   minWidth: '16em',
     //   minHeight: '16em',
@@ -78,7 +77,7 @@ const Profile = () => {
         await window.CWI.waitForAuthentication()
         refreshBalance()
         setAvatar(await window.CWI.ninja.getAvatar())
-      } catch (e) {}
+      } catch (e) { }
     })()
   }, [])
 
