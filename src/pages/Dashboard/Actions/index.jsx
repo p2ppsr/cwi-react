@@ -11,7 +11,6 @@ const useStyles = makeStyles(style, {
   name: 'Actions'
 })
 const Actions = ({ history }) => {
-  // console.log('history:', history)
   const classes = useStyles()
   const [tabValue, setTabValue] = useState(0)
 
