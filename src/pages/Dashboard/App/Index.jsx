@@ -26,7 +26,6 @@ const Apps = ({ match, history }) => {
         const manifest = await boomerang(
           'GET', `${appDomain.startsWith('localhost:') ? 'http' : 'https'}://${appDomain}/manifest.json`
         )
-        console.log('manifest:', manifest)
         if (typeof manifest === 'object') {
           if (manifest.name && manifest.name.length < 64) {
             setAppName(manifest.name)
