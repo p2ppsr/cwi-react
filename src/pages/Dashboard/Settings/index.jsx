@@ -15,7 +15,6 @@ const useStyles = makeStyles(style, {
 })
 
 const Settings = ({ history }) => {
-  console.log('history:', history)
   const classes = useStyles()
   // const [tabValue, setTabValue] = useState(1)
 
