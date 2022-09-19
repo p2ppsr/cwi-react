@@ -35,11 +35,8 @@ export default ({
   isPackaged = true,
   usePortal = false,
   portalDestination = document.body,
-  breakpointQueries,
   useBreakpoint = () => { }
 } = {}) => {
-  console.log('typeof useBreakpoint:', typeof useBreakpoint)
-
   useEffect(() => {
     (async () => {
       if (env !== 'dev') {
@@ -54,9 +51,7 @@ export default ({
     })()
   }, [])
 
-  console.log('breakpointQueries:', breakpointQueries)
-
-  let returnValue = (
+  const returnValue = (
     <UIContext.Provider value={{
       useBreakpoint,
       onFocusRequested,
@@ -67,12 +62,13 @@ export default ({
       appVersion,
       appName,
       env,
-      isPackaged,
-      breakpointQueries
-    }}>
+      isPackaged
+    }}
+    >
       <div style={{
         width: '100%'
-      }}>
+      }}
+      >
         <ErrorBoundary>
           <Theme>
             <Router>
@@ -123,9 +119,6 @@ export default ({
     </UIContext.Provider>
   )
   if (usePortal) {
-    //  return { UserInterface: ReactDOM.createPortal(returnValue, portalDestination), BreakpointProvider }
-    // } else {
-    //   return { UserInterface: returnValue, BreakpointProvider }
     return ReactDOM.createPortal(returnValue, portalDestination)
   } else {
     return returnValue

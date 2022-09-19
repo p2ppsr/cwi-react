@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react'
-import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
-import { Tooltip, Stack, Tabs, Tab, Typography } from '@mui/material'
+import { IconButton, Tooltip, Stack, Tabs, Tab, Typography } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style'
 import ActionList from '../../../components/ActionList/index.jsx'
