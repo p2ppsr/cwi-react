@@ -1,4 +1,7 @@
 export default theme => ({
+  max_width: {
+    maxWidth: '16em'
+  },
   content_wrap: theme.templates.page_wrap,
   logo: {
     margin: 'auto',

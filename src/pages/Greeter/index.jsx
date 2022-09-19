@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, forwardRef } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import style from './style'
 import {
   Accordion,
@@ -36,7 +36,7 @@ const Greeter = ({ history }) => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [accountStatus, setAccountStatus] = useState(undefined)
   const [loading, setLoading] = useState(false)
-  const [electronVersion, setElectronVersion] = useState('0.0.0')
+  // const [electronVersion, setElectronVersion] = useState('0.0.0')
 
   // Navigate to the dashboard if the user is already authenticated
   useEffect(() => {
@@ -146,186 +146,188 @@ const Greeter = ({ history }) => {
   }
 
   return (
-    <div className={classes.content_wrap}>
-      <center>
-        <CWILogo
-          className={classes.logo}
-          rotate
-        />
-        <Typography variant='h2' paragraph>
-          Babbage Desktop
-        </Typography>
-        <Divider />
-      </center>
-      <Accordion
-        expanded={accordionView === 'phone'}
-      >
-        <AccordionSummary
-          className={classes.panel_header}
-        >
-          <PhoneIcon className={classes.expansion_icon} />
-          <Typography
-            className={classes.panel_heading}
-          >
-            Phone Number
+    <div className={classes.max_width}>
+      <div className={classes.content_wrap}>
+        <center>
+          <CWILogo
+            className={classes.logo}
+            rotate
+          />
+          <Typography variant='h2' paragraph>
+            Babbage Desktop
           </Typography>
-          {(accordionView === 'code' || accordionView === 'password') && (
-            <CheckCircleIcon className={classes.complete_icon} />
-          )}
-        </AccordionSummary>
-        <form onSubmit={handleSubmitPhone}>
-          <AccordionDetails
-            className={classes.expansion_body}
-          >
-            <PhoneEntry
-              value={phone}
-              onChange={setPhone}
-              placeholder='Enter phone number'
-            />
-          </AccordionDetails>
-          <AccordionActions>
-            <Button
-              color='primary'
-              type='submit'
-              disabled={loading}
-            >
-              {!loading ? 'Send Code' : <CircularProgress />}
-            </Button>
-          </AccordionActions>
-        </form>
-      </Accordion>
-      <Accordion
-        expanded={accordionView === 'code'}
-      >
-        <AccordionSummary
-          className={classes.panel_header}
+          <Divider />
+        </center>
+        <Accordion
+          expanded={accordionView === 'phone'}
         >
-          <SMSIcon className={classes.expansion_icon} />
-          <Typography
-            className={classes.panel_heading}
+          <AccordionSummary
+            className={classes.panel_header}
           >
-            Get a Code
-          </Typography>
-          {accordionView === 'password' && (
-            <CheckCircleIcon className={classes.complete_icon} />
-          )}
-        </AccordionSummary>
-        <form onSubmit={handleSubmitCode}>
-          <AccordionDetails
-            className={classes.expansion_body}
-          >
-            <TextField
-              onChange={e => setCode(e.target.value)}
-              label='Code'
-              fullWidth
-            />
-          </AccordionDetails>
-          <AccordionActions>
-            <Button
-              color='primary'
-              onClick={() => setAccordionView('phone')}
-              disabled={loading}
+            <PhoneIcon className={classes.expansion_icon} />
+            <Typography
+              className={classes.panel_heading}
             >
-              Back
-            </Button>
-            <Button
-              color='primary'
-              type='submit'
-              disabled={loading}
+              Phone Number
+            </Typography>
+            {(accordionView === 'code' || accordionView === 'password') && (
+              <CheckCircleIcon className={classes.complete_icon} />
+            )}
+          </AccordionSummary>
+          <form onSubmit={handleSubmitPhone}>
+            <AccordionDetails
+              className={classes.expansion_body}
             >
-              {!loading ? 'Next' : <CircularProgress />}
-            </Button>
-          </AccordionActions>
-        </form>
-      </Accordion>
-      <Accordion
-        expanded={accordionView === 'password'}
-      >
-        <AccordionSummary
-          className={classes.panel_header}
+              <PhoneEntry
+                value={phone}
+                onChange={setPhone}
+                placeholder='Enter phone number'
+              />
+            </AccordionDetails>
+            <AccordionActions>
+              <Button
+                color='primary'
+                type='submit'
+                disabled={loading}
+              >
+                {!loading ? 'Send Code' : <CircularProgress />}
+              </Button>
+            </AccordionActions>
+          </form>
+        </Accordion>
+        <Accordion
+          expanded={accordionView === 'code'}
         >
-          <LockIcon className={classes.expansion_icon} />
-          <Typography
-            className={classes.panel_heading}
+          <AccordionSummary
+            className={classes.panel_header}
           >
-            Password
-          </Typography>
-        </AccordionSummary>
-        <form onSubmit={handleSubmitPassword}>
-          <AccordionDetails
-            className={classes.expansion_body}
-          >
-            <div
-              className={
-                accountStatus === 'new-user'
-                  ? classes.new_password_grid
-                  : classes.password_grid
-              }
+            <SMSIcon className={classes.expansion_icon} />
+            <Typography
+              className={classes.panel_heading}
+            >
+              Get a Code
+            </Typography>
+            {accordionView === 'password' && (
+              <CheckCircleIcon className={classes.complete_icon} />
+            )}
+          </AccordionSummary>
+          <form onSubmit={handleSubmitCode}>
+            <AccordionDetails
+              className={classes.expansion_body}
             >
               <TextField
-                onChange={e => setPassword(e.target.value)}
-                label='Password'
+                onChange={e => setCode(e.target.value)}
+                label='Code'
                 fullWidth
-                type='password'
               />
-              {accountStatus === 'new-user' && (
+            </AccordionDetails>
+            <AccordionActions>
+              <Button
+                color='primary'
+                onClick={() => setAccordionView('phone')}
+                disabled={loading}
+              >
+                Back
+              </Button>
+              <Button
+                color='primary'
+                type='submit'
+                disabled={loading}
+              >
+                {!loading ? 'Next' : <CircularProgress />}
+              </Button>
+            </AccordionActions>
+          </form>
+        </Accordion>
+        <Accordion
+          expanded={accordionView === 'password'}
+        >
+          <AccordionSummary
+            className={classes.panel_header}
+          >
+            <LockIcon className={classes.expansion_icon} />
+            <Typography
+              className={classes.panel_heading}
+            >
+              Password
+            </Typography>
+          </AccordionSummary>
+          <form onSubmit={handleSubmitPassword}>
+            <AccordionDetails
+              className={classes.expansion_body}
+            >
+              <div
+                className={
+                  accountStatus === 'new-user'
+                    ? classes.new_password_grid
+                    : classes.password_grid
+                }
+              >
                 <TextField
-                  onChange={e => setConfirmPassword(e.target.value)}
-                  label='Retype Password'
+                  onChange={e => setPassword(e.target.value)}
+                  label='Password'
                   fullWidth
                   type='password'
                 />
-              )}
-            </div>
-          </AccordionDetails>
-          <AccordionActions>
-            <Button
-              color='primary'
-              onClick={() => setAccordionView('phone')}
-              disabled={loading}
-            >
-              Back
-            </Button>
-            <Button
-              variant='contained'
-              color='primary'
-              type='submit'
-              disabled={loading}
-            >
-              {!loading
-                ? (
+                {accountStatus === 'new-user' && (
+                  <TextField
+                    onChange={e => setConfirmPassword(e.target.value)}
+                    label='Retype Password'
+                    fullWidth
+                    type='password'
+                  />
+                )}
+              </div>
+            </AccordionDetails>
+            <AccordionActions>
+              <Button
+                color='primary'
+                onClick={() => setAccordionView('phone')}
+                disabled={loading}
+              >
+                Back
+              </Button>
+              <Button
+                variant='contained'
+                color='primary'
+                type='submit'
+                disabled={loading}
+              >
+                {!loading
+                  ? (
                     accountStatus === 'new-user'
                       ? 'Create Account'
                       : 'Log In'
                   )
-                : <CircularProgress />}
-            </Button>
-          </AccordionActions>
-        </form>
-      </Accordion>
-      <Link to='/recovery'>
-        <Button
-          color='secondary'
-          className={classes.recovery_link}
+                  : <CircularProgress />}
+              </Button>
+            </AccordionActions>
+          </form>
+        </Accordion>
+        <Link to='/recovery'>
+          <Button
+            color='secondary'
+            className={classes.recovery_link}
+          >
+            Need Help?
+          </Button>
+        </Link>
+        <Typography
+          align='center'
+          color='textSecondary'
+          className={classes.copyright_text}
         >
-          Need Help?
-        </Button>
-      </Link>
-      <Typography
-        align='center'
-        color='textSecondary'
-        className={classes.copyright_text}
-      >
-        <b>{appName} version {appVersion}</b>
-      </Typography>
-      <Typography
-        align='center'
-        color='textSecondary'
-        className={classes.copyright_text}
-      >
-        Copyright &copy; 2020-2021 Peer-to-peer Privacy Systems Research, LLC. All rights reserved. Redistribution of this software is strictly prohibited. Use of this software is subject to the{' '}
-        <a href='https://projectbabbage.com/desktop/license' target='_blank' rel='noopener noreferrer'>Babbage Desktop License Agreement</a>.
-      </Typography>
+          <b>{appName} version {appVersion}</b>
+        </Typography>
+        <Typography
+          align='center'
+          color='textSecondary'
+          className={classes.copyright_text}
+        >
+          Copyright &copy; 2020-2021 Peer-to-peer Privacy Systems Research, LLC. All rights reserved. Redistribution of this software is strictly prohibited. Use of this software is subject to the{' '}
+          <a href='https://projectbabbage.com/desktop/license' target='_blank' rel='noopener noreferrer'>Babbage Desktop License Agreement</a>.
+        </Typography>
+      </div>
     </div>
   )
 }
