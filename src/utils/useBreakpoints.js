@@ -53,11 +53,6 @@ const BreakpointProvider = ({ children, queries }) => {
 
 const useBreakpoint = () => {
   const context = useContext(BreakpointContext)
-  if (context === defaultValue) {
-    const e = new Error('Error useBreakpoint function must be used within BreakpointProvider')
-    e.code = 'ERR_USE_IN_BREAKPOINT_PROVIDER'
-    throw e
-  }
   return context
 }
 
