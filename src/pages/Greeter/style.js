@@ -1,6 +1,7 @@
 export default theme => ({
   max_width: {
-    maxWidth: '100vh'
+    maxWidth: '30em',
+    margin: 'auto'
   },
   content_wrap: theme.templates.page_wrap,
   logo: {
