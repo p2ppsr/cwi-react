@@ -12,7 +12,6 @@ const useStyles = makeStyles(style, {
   name: 'Feedback'
 })
 const Feedback = ({ history }) => {
-  console.log('history:', history)
   const classes = useStyles()
   const [feedback, setFeedback] = useState('')
   const [loading, setLoading] = useState(false)
