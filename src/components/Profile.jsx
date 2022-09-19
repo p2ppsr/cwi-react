@@ -107,7 +107,7 @@ const Profile = () => {
           </Fab>
         </div>
         <Typography variant='h3'>
-          {avatar.name || 'Welcome Bob!'}
+          {avatar.name || 'Welcome!'}
         </Typography>
         <Typography onClick={() => refreshBalance()} color='textSecondary'>
           <Satoshis>{accountBalance}</Satoshis>
