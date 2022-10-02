@@ -38,7 +38,13 @@ const ActionList = ({ app }) => {
       setTotalActions(result.totalTransactions)
       setActionsLoading(false)
     } catch (e) {
+      console.error(e)
       setActionsLoading(false)
+    }
+    try {
+      await window.CWI.ninja.processPendingTransactions()
+    } catch (e) {
+      console.error(e)
     }
   }
 
@@ -86,6 +92,13 @@ const ActionList = ({ app }) => {
             if (protocol.indexOf(',') !== -1) {
               protocol = protocol.split(',')[1]
             }
+            if (!granted) {
+              return ( // TODO
+                <Typography component='span' paragraph key={i}>
+                  You revoked a protocol permission
+                </Typography>
+              )
+            }
             return (
               <Typography component='span' paragraph key={i}>
                 You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> to access <b>{protocol}</b>
@@ -97,6 +110,13 @@ const ActionList = ({ app }) => {
             const app = fields[1]
             const amount = fields[2]
             const expiry = fields[3]
+            if (!authorized) {
+              return ( // TODO
+                <Typography component='span' paragraph key={i}>
+                  You revoked a previous spending authorization
+                </Typography>
+              )
+            }
             return (
               <Typography component='span' paragraph key={i}>
                 You {authorized ? 'allowed' : 'revoked a previous authorization for'} <AppChip label={`babbage_app_${app}`} /> to spend up to <b><Satoshis>{amount}</Satoshis></b>{authorized && ` on or before ${format(new Date(parseInt(expiry) * 1000), 'MMMM do yyyy')}`}

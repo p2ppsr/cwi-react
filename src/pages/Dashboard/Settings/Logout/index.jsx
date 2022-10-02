@@ -13,7 +13,7 @@ const Logout = ({ history }) => {
       await new Promise(resolve => setTimeout(resolve, 750))
       if (
         !window.confirm(
-          'Are you absolutely sure you want to log out of Babbage Desktop on this device?\n\nYou will also be logged out of all apps and websites that use Babbage Desktop.'
+          'Are you absolutely sure you want to exit this MetaNet portal?\n\nYou will also be logged out of all apps and systems that use this portal.'
         )
       ) {
         return
@@ -36,7 +36,7 @@ const Logout = ({ history }) => {
       onClick={signout}
       disabled={loading}
     >
-      Sign Out of Babbage Desktop and All Apps
+      Exit This MetaNet Portal
     </Button>
   )
 }

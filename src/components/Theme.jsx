@@ -9,7 +9,7 @@ const baseTheme = createTheme(adaptV4Theme({
     h1: {
       fontWeight: 'bold',
       fontSize: '2.5em',
-      color: '#433FFC'
+      color: '#424242'
     },
     h2: {
       fontWeight: 'bold',
@@ -32,7 +32,10 @@ const baseTheme = createTheme(adaptV4Theme({
   },
   palette: {
     primary: {
-      main: '#433FFC'
+      main: '#424242'
+    },
+    secondary: {
+      main: '#FC433F'
     }
   },
   overrides: {}
@@ -85,12 +88,12 @@ const Theme = withStyles({
   },
   '@global a': {
     textDecoration: 'none',
-    color: '#433FFC'
+    color: '#424242'
   },
   '@global h1': {
     fontWeight: 'bold',
     fontSize: '2.5em',
-    color: '#433FFC'
+    color: '#424242'
   },
   '@global h2': {
     fontWeight: 'bold',

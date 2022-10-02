@@ -7,7 +7,8 @@ import {
   Feedback as FeedbackIcon,
   AllInclusive as ActionsIcon,
   Apps as BrowseIcon,
-  Settings as SettingsIcon
+  Settings as SettingsIcon,
+  School as SchoolIcon
 } from '@mui/icons-material'
 import {
   List,
@@ -54,7 +55,7 @@ const Dashboard = () => {
               <ActionsIcon
                 color={
                   history.location.pathname === '/dashboard'
-                    ? 'primary'
+                    ? 'secondary'
                     : undefined
                 }
               />
@@ -74,7 +75,7 @@ const Dashboard = () => {
               <SettingsIcon
                 color={
                   history.location.pathname === '/dashboard/settings'
-                    ? 'primary'
+                    ? 'secondary'
                     : undefined
                 }
               />
@@ -94,7 +95,7 @@ const Dashboard = () => {
               <BrowseIcon
                 color={
                   history.location.pathname === '/dashboard/browse-apps'
-                    ? 'primary'
+                    ? 'secondary'
                     : undefined
                 }
               />
@@ -114,7 +115,7 @@ const Dashboard = () => {
               <FeedbackIcon
                 color={
                   history.location.pathname === '/dashboard/feedback'
-                    ? 'primary'
+                    ? 'secondary'
                     : undefined
                 }
               />
@@ -123,6 +124,16 @@ const Dashboard = () => {
               Help & feedback
             </ListItemText>
           </ListItem>
+          <a href='https://projectbabbage.com/docs' target='_blank'>
+          <ListItem button>
+            <ListItemIcon>
+              <SchoolIcon />
+            </ListItemIcon>
+            <ListItemText>
+              Learn MetaNet Tech
+            </ListItemText>
+            </ListItem>
+          </a>
         </List>
         <center className={classes.sig_wrap}>
           <Typography

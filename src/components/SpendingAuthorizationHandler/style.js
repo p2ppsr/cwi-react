@@ -19,7 +19,8 @@ export default theme => ({
   },
   slider: {
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(5)
+    marginBottom: theme.spacing(5),
+    width: '80%'
   },
   select: {
     width: '100%'

@@ -13,6 +13,7 @@ import {
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import UploadIcon from '@mui/icons-material/Backup'
+import DeleteIcon from '@mui/icons-material/Delete'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import { toast } from 'react-toastify'
@@ -105,6 +106,7 @@ const ProfileEditor = ({
         const response = await upload({
           uploadURL: payResult.uploadURL,
           publicURL: invoiceResult.publicURL,
+          serverURL,
           file,
           config: {
             nanostoreURL: serverURL
@@ -201,6 +203,30 @@ const ProfileEditor = ({
     }
   }
 
+  const handleDelete = async () => {
+    try {
+      setLoading(true)
+      if (!window.confirm('Delete your profile photo?')) {
+        setLoading(false)
+        return
+      }
+      // The new Avatar is updated with Ninja
+      await window.CWI.ninja.setAvatar({
+        name: editableName,
+        photoURL: ''
+      })
+      // Save, close and stop loading
+      onSave()
+      onClose()
+    } catch (e) {
+      toast.error(e.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const resolvers = bridgeportResolvers()
+
   return (
     <Dialog open={!!open} onClose={handleClose}>
       <DialogTitle>
@@ -257,12 +283,19 @@ const ProfileEditor = ({
                   >
                     <UploadIcon />
                   </Fab>
+                  <Fab
+                    className={classes.delete_button}
+                    onClick={handleDelete}
+                    size='small'
+                  >
+                    <DeleteIcon color='secondary' />
+                  </Fab>
                   {editablePhotoURL && (
                     <Img
                       src={editablePhotoURL}
                       className={classes.photo}
                       alt=''
-                      bridgeportResolvers={bridgeportResolvers()}
+                      bridgeportResolvers={resolvers}
                     />
                   )}
                 </div>

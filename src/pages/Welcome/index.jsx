@@ -52,7 +52,7 @@ const Welcome = ({ history }) => {
         onClose={handleEditorDone}
         open={editorOpen}
         // A default profile photo is provided
-        photoURL='uhrp:XUUDw85K5U6ccmjGjtirk1wZnsruBXayzuLeqz4woTQK1LfhvuY6'
+        photoURL='uhrp:XUSw3EKLvt4uWHrMvKSDychPSvnAqVeKCrReidew2C2rUN6Sps3S'
       />
     </div>
   )

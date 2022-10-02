@@ -1,14 +1,5 @@
 export default theme => ({
-  show_div: {
-    display: 'grid'
-  },
-  hide_div: {
-    display: 'none'
-  },
-  tabs: {
-    marginBottom: '2em'
-  },
-  fixed_nav_show: {
+  fixed_nav: {
     backgroundColor: theme.palette.common.white,
     position: 'sticky',
     top: theme.spacing(-3),
@@ -17,24 +8,5 @@ export default theme => ({
     zIndex: 1000,
     boxSizing: 'border-box',
     padding: theme.spacing(3)
-  },
-  pending_title_grid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr auto auto',
-    gridGap: theme.spacing(3)
-  },
-  action_card: {
-    marginBottom: theme.spacing(3)
-  },
-  pending_action_buttons: {
-    display: 'grid',
-    gridTemplateColumns: '1fr auto auto',
-    gridGap: theme.spacing(3)
-  },
-  buy_grid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr auto',
-    gridGap: theme.spacing(7),
-    placeItems: 'center'
   }
 })

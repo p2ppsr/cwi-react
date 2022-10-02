@@ -2,7 +2,7 @@ import React from 'react'
 import {
   Dialog, DialogTitle, Typography, useMediaQuery
 } from '@mui/material'
-import Logo from '@cwi/logo-react'
+import Logo from '../Logo.jsx'
 import { useTheme, makeStyles } from '@mui/styles'
 import style from './style'
 

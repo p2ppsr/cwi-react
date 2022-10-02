@@ -20,7 +20,7 @@ import {
 import PhoneEntry from '../../components/PhoneEntry.jsx'
 import { makeStyles } from '@mui/styles'
 import { Link } from 'react-router-dom'
-import CWILogo from '@cwi/logo-react'
+import CWILogo from '../../components/Logo.jsx'
 import { toast } from 'react-toastify'
 import UIContext from '../../UIContext'
 
@@ -154,7 +154,7 @@ const Greeter = ({ history }) => {
             rotate
           />
           <Typography variant='h2' paragraph>
-            Babbage Desktop
+            {appName}
           </Typography>
           <Divider />
         </center>
@@ -324,7 +324,7 @@ const Greeter = ({ history }) => {
           className={classes.copyright_text}
         >
           Copyright &copy; 2020-2022 Peer-to-peer Privacy Systems Research, LLC. All rights reserved. Redistribution of this software is strictly prohibited. Use of this software is subject to the{' '}
-          <a href='https://projectbabbage.com/desktop/license' target='_blank' rel='noopener noreferrer'>Babbage Desktop License Agreement</a>.
+          <a href='https://projectbabbage.com/desktop/license' target='_blank' rel='noopener noreferrer'>Babbage Software License Agreement</a>.
         </Typography>
       </div>
     </div>

@@ -3,17 +3,24 @@ import { Chip } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import boomerang from 'boomerang-http'
 
-const AppChip = ({ label, history }) => {
-  const [parsedLabel, setParsedLabel] = useState(
-    label.substring(12)
-  )
+const AppChip = ({ label, history, clickable = true, size = 1 }) => {
+  if (label.startsWith('babbage_app_')) {
+    label = label.substring(12)
+  }
+  if (label.startsWith('https://')) {
+    label = label.substring(8)
+  }
+  if (label.startsWith('http://')) {
+    label = label.substring(7)
+  }
+  const [parsedLabel, setParsedLabel] = useState(label)
 
   useEffect(() => {
     (async () => {
       try {
         const manifest = await boomerang(
           'GET',
-          `https://${label.substring(12)}/manifest.json`
+          `https://${label}/manifest.json`
         )
         setParsedLabel(manifest.name)
       } catch (e) { /* ignore, nothing we can do and not our problem */ }
@@ -23,15 +30,17 @@ const AppChip = ({ label, history }) => {
   return (
     <Chip
       style={{
-        margin: '8px'
+        margin: `${8 * size}px`,
+        paddingTop: `${16 * size}px`,
+        paddingBottom: `${16 * size}px`
       }}
-      label={parsedLabel}
+      label={<span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>}
       icon={(
         <object
-          data={`https://${label.substring(12)}/favicon.ico`}
+          data={`https://${label}/favicon.ico`}
           alt=''
           style={{
-            width: 20,
+            width: 20 * size,
             marginLeft: 8,
             borderRadius: 4
           }}
@@ -41,7 +50,7 @@ const AppChip = ({ label, history }) => {
             src='https://projectbabbage.com/favicon.ico'
             alt=''
             style={{
-              width: 20,
+              width: 20 * size,
               marginLeft: 2,
               borderRadius: 4
             }}
@@ -49,9 +58,11 @@ const AppChip = ({ label, history }) => {
         </object>
       )}
       onClick={() => {
-        history.push(
-          `/dashboard/app/${encodeURIComponent(label.substring(12))}`
-        )
+        if (clickable) {
+          history.push(
+            `/dashboard/app/${encodeURIComponent(label)}`
+          )
+        }
       }}
     />
   )

@@ -7,6 +7,7 @@ import style from './style'
 import boomerang from 'boomerang-http'
 import CustomDialog from '../CustomDialog/index.jsx'
 import UIContext from '../../UIContext'
+import AppChip from '../AppChip'
 
 const useStyles = makeStyles(style, {
   name: 'ProtocolPermissionHandler'
@@ -106,32 +107,7 @@ const ProtocolPermissionHandler = () => {
     >
       <DialogContent>
         <center>
-          <object
-            type='image/x-icon'
-            data={`https://${originator}/favicon.ico`}
-            alt=''
-            className={classes.app_icon}
-          >
-            <object
-              data='https://projectbabbage.com/favicon.ico'
-              alt=''
-              type='image/x-icon'
-              className={classes.app_icon}
-            >
-              <img
-                src='https://projectbabbage.com/favicon.ico'
-                alt=''
-                className={classes.app_icon}
-              />
-            </object>
-          </object>
-          <Typography
-            variant='h2'
-            paragraph
-            className={classes.title}
-          >
-            <b>{appName || originator}</b>
-          </Typography>
+          <AppChip size={1.5} label={originator}  clickable={false} />
         </center>
         <DialogContentText>
           The app "{appName || originator}" would like to access <b>{protocolID}</b>.

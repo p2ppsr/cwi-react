@@ -25,6 +25,11 @@ export default theme => ({
     display: 'boock',
     zIndex: 2
   },
+  delete_button: {
+    right: '-1em',
+    bottom: '-1em',
+    position: 'absolute'
+  },
   crop_buttons_wrap: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',

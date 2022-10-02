@@ -19,6 +19,7 @@ import boomerang from 'boomerang-http'
 import formatDistance from 'date-fns/formatDistance'
 import CustomDialog from '../CustomDialog/index.jsx'
 import UIContext from '../../UIContext'
+import AppChip from '../AppChip'
 
 const useStyles = makeStyles(style, {
   name: 'SpendingAuthorizationHandler'
@@ -32,7 +33,7 @@ const SpendingAuthorizationHandler = () => {
   } = useContext(UIContext)
   const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false) 
   const classes = useStyles()
-  const now = parseInt(Date.now() / 1000)
+  const [now] = useState(parseInt(Date.now() / 1000))
   const [description, setDescription] = useState('')
   const [originator, setOriginator] = useState('')
   const [appName, setAppName] = useState(null)
@@ -105,7 +106,10 @@ const SpendingAuthorizationHandler = () => {
           setRenewal(renewal)
           setTransactionAmount(transactionAmount)
           setAuthorizationAmount(authorizationAmount)
+          setSliderValue(authorizationAmount)
+          setAmount(authorizationAmount)
           setExpirationTime(expirationTime)
+          setExpiry(expirationTime)
           setOpen(true)
           if (!wasOriginallyFocused) {
             await onFocusRequested()
@@ -128,11 +132,6 @@ const SpendingAuthorizationHandler = () => {
     >
       <DialogContent>
         <center>
-          <img
-            src={`https://${originator}/favicon.ico`}
-            alt=''
-            className={classes.app_icon}
-          />
           <Typography
             variant='h2'
             paragraph
@@ -140,7 +139,7 @@ const SpendingAuthorizationHandler = () => {
           >
             <b>
               {!showAuthorizeApp
-                ? (appName || originator)
+                ? <AppChip size={1.5} label={originator} clickable={false} />
                 : (`Always Allow "${(appName || originator)}"?`)}
             </b>
           </Typography>
@@ -162,7 +161,7 @@ const SpendingAuthorizationHandler = () => {
                     variant='extended'
                   >
                     <Cancel className={classes.button_icon} />
-                    Deny Permission
+                    Abort
                   </Fab>
                 </Tooltip>
                 <Tooltip title='Allow Once'>
@@ -172,17 +171,17 @@ const SpendingAuthorizationHandler = () => {
                     variant='extended'
                   >
                     <Send className={classes.button_icon} />
-                    Allow Once
+                    Allow
                   </Fab>
                 </Tooltip>
               </div>
               <center>
-                <Button
-                  color='primary'
+                <Fab
+                  variant='extended'
                   onClick={() => setShowAuthorizeApp(true)}
                 >
-                  Always Allow This App...
-                </Button>
+                  Always...
+                </Fab>
               </center>
             </>
             )
@@ -208,16 +207,18 @@ const SpendingAuthorizationHandler = () => {
               <Typography color='textSecondary' paragraph>
                 This app will ask again if it goes over this amount
               </Typography>
-              <Slider
-                max={authorizationAmount * 5}
-                min={transactionAmount}
-                onChangeCommitted={(e, v) => setAmount(parseInt(v))}
-                value={sliderValue}
-                onChange={(e, v) => setSliderValue(v)}
-                color='primary'
-                valueLabelDisplay='auto'
-                className={classes.slider}
-              />
+              <center>
+                <Slider
+                  max={authorizationAmount * 20}
+                  min={transactionAmount}
+                  onChangeCommitted={(e, v) => setAmount(parseInt(v))}
+                  value={sliderValue}
+                  onChange={(e, v) => setSliderValue(v)}
+                  color='primary'
+                  valueLabelDisplay='auto'
+                  className={classes.slider}
+                />
+              </center>
               <Typography variant='h5'>
                 <b>Authorization Expires</b>
               </Typography>
@@ -239,7 +240,7 @@ const SpendingAuthorizationHandler = () => {
                   now + 60 * 60 * 24 * 365, // one year
                   now + 60 * 60 * 24 * 365 * 3 // three years
                 ].map((x, i) => (
-                  <MenuItem key={i} value={x}>
+                  <MenuItem key={i} value={'' + x}>
                     {formatDistance(new Date(x * 1000), new Date(), { addSuffix: true })}
                   </MenuItem>
                 ))}
@@ -260,8 +261,8 @@ const SpendingAuthorizationHandler = () => {
             onClick={() => handleGrant({ singular: false })}
           >
             <Send className={classes.button_icon} />
-            Always Allow This App
-          </Button>
+              Send & Allow
+            </Button>
         </DialogActions>
       )}
     </CustomDialog>

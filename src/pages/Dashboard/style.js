@@ -4,7 +4,9 @@ export default theme => ({
     maxWidth: '100%',
     overflow: 'hidden',
     display: 'grid',
-    gridTemplateColumns: 'auto 1fr',
+    gridTemplateColumns:  ({ breakpoints }) => (
+      (breakpoints.sm || breakpoints.xs) ? '1fr' : 'auto 1fr'
+    ),
     padding: '0px !important',
     '& > :last-child': {
       maxHeight: 'inherit',

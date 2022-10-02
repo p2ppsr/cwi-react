@@ -6,6 +6,7 @@ import bridgeportResolvers from '../utils/bridgeportResolvers'
 import { makeStyles } from '@mui/styles'
 import { Typography, Fab, Divider, CircularProgress } from '@mui/material'
 import { Edit } from '@mui/icons-material'
+import AddAPhoto from '@mui/icons-material/AddAPhoto'
 
 const useStyles = makeStyles(theme => ({
   content_wrap: {
@@ -23,24 +24,17 @@ const useStyles = makeStyles(theme => ({
     minHeight: '10em',
     maxWidth: '10em',
     maxHeight: '10em'
-    // [theme.breakpoints.up('xl')]: {
-    //   minWidth: '16em',
-    //   minHeight: '16em',
-    //   maxWidth: '16em',
-    //   maxHeight: '16em'
-    // }
   },
   profile_loading: {
     minWidth: '10em',
     minHeight: '10em',
     maxWidth: '10em',
-    maxHeight: '10em'
-    // [theme.breakpoints.up('xl')]: {
-    //   minWidth: '16em',
-    //   minHeight: '16em',
-    //   maxWidth: '16em',
-    //   maxHeight: '16em'
-    // }
+    maxHeight: '10em',
+    alignItems: 'center',
+    display: 'grid'
+  },
+  add_photo_button: {
+    margin: '6em auto'
   },
   image_edit: {
     marginTop: theme.spacing(7),
@@ -58,6 +52,7 @@ const Profile = () => {
   const [avatar, setAvatar] = useState({})
   const [editorOpen, setEditorOpen] = useState(false)
   const [accountBalance, setAccountBalance] = useState(null)
+  const [balanceLoading, setBalanceLoading] = useState(true)
   const classes = useStyles()
 
   const refreshProfile = async () => {
@@ -66,36 +61,43 @@ const Profile = () => {
 
   const refreshBalance = async () => {
     try {
+      setBalanceLoading(true)
       const result = await window.CWI.ninja.getTotalValue()
       setAccountBalance(result.total)
-    } catch (e) { /* ignore */ } // If the balance cannot be refreshed, it is probably because the user's internet has dropped. We don't want this error to be thrown, because it will just clutter up Bugsnag.
+      setBalanceLoading(false)
+    } catch (e) {
+      setBalanceLoading(false)
+    }
   }
 
   useEffect(() => {
     (async () => {
       try {
-        await window.CWI.waitForAuthentication()
         refreshBalance()
         setAvatar(await window.CWI.ninja.getAvatar())
       } catch (e) { }
     })()
   }, [])
 
-  useEffect(() => {
-    const interval = setInterval(refreshBalance, 30000)
-    return () => clearInterval(interval)
-  }, [])
+  const resolvers = bridgeportResolvers()
 
   return (
     <>
       <div className={classes.content_wrap}>
-        <div className={classes.image_edit}>
+        {avatar.photoURL ? (
+          <div className={classes.image_edit}>
           <Img
             className={classes.profile_icon}
-            src={avatar.photoURL || 'uhrp:XUUDw85K5U6ccmjGjtirk1wZnsruBXayzuLeqz4woTQK1LfhvuY6'}
+              src={avatar.photoURL || 'uhrp:XUSw3EKLvt4uWHrMvKSDychPSvnAqVeKCrReidew2C2rUN6Sps3S'}
             alt=''
-            loading={<CircularProgress className={classes.profile_loading} />}
-            bridgeportResolvers={bridgeportResolvers()}
+            loading={
+              <div className={classes.profile_loading}>
+                <center>
+                  <CircularProgress />
+                </center>
+              </div>
+            }
+            bridgeportResolvers={resolvers}
           />
           <Fab
             size='small'
@@ -105,13 +107,28 @@ const Profile = () => {
             <Edit color='primary' />
           </Fab>
         </div>
+        ): (
+          <Fab
+            size='large'
+            onClick={() => setEditorOpen(true)}
+              color='primary'
+              className={classes.add_photo_button}
+          >
+            <AddAPhoto />
+          </Fab>
+        )}
         <Typography variant='h3'>
           {avatar.name || 'Welcome!'}
         </Typography>
-        <Typography onClick={() => refreshBalance()} color='textSecondary'>
-          <Satoshis>{accountBalance}</Satoshis>
+        <Typography
+          onClick={() => refreshBalance()}
+          color='textSecondary'
+        >
+          {balanceLoading
+            ? '---'
+            : <Satoshis>{accountBalance}</Satoshis>
+          }
         </Typography>
-        <Divider />
       </div>
       <ProfileEditor
         open={editorOpen}

@@ -23,7 +23,7 @@ const Browse = ({ history }) => {
         </Typography>
       }
       <Typography paragraph>
-        Soon, you'll be able to view the latest and greatest titles from within Babbage Desktop itself! For now, head over to the App Catalogue to see what's new.
+        Soon, the newest releases from around the MetaNet will be browsable and searchable from this Babbage portal. For now, head over to our website to check it out.
       </Typography>
       <center>
         <Button

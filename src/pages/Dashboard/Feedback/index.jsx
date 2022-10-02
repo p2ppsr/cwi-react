@@ -11,6 +11,7 @@ const useStyles = makeStyles(style, {
 const Feedback = ({ history }) => {
   const classes = useStyles()
   const [feedback, setFeedback] = useState('')
+  const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [tabValue, setTabValue] = useState(2)
   const submitFeedback = async e => {
@@ -21,15 +22,21 @@ const Feedback = ({ history }) => {
         return
       }
       setLoading(true)
-      await window.CWI.createAction({
-        description: 'Submit feedback to Project Babbage',
-        originator: 'projectbabbage.com',
-        data: [
-          window.btoa('1UUFPLWjtyoyTPYAjt8SqeGZZ1GGFBfNH'),
-          window.btoa('1KcqKANgwbqFLYvgwGieKtuRmkpUvEYLSf'),
-          window.btoa(feedback)
-        ]
+      let result = await fetch('https://usercom.babbage.systems/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'feedback',
+          feedback,
+          email
+        })
       })
+      result = await result.json()
+      if (result.status === 'error') {
+        const e = new Error(result.description)
+        e.code = result.code
+        throw e
+      }
       toast.dark('Feedback submitted!')
       setLoading(false)
       setFeedback('')
@@ -49,13 +56,22 @@ const Feedback = ({ history }) => {
           <Typography variant='h1' paragraph>Leave Feedback</Typography>
         }
         <Typography paragraph>
-          We want to hear what you think! Post your ideas here to help improve Project Babbage and our ecosystem of apps. Note that your submission will be public.
+          We want to hear what you think! Post your ideas here to help improve Project Babbage and our ecosystem of apps.
         </Typography>
+        <TextField
+          fullWidth
+          autoFocus
+          value={email}
+          disabled={loading}
+          onChange={e => setEmail(e.target.value)}
+          placeholder='Email (optional)'
+        />
+        <br />
+        <br />
         <TextField
           multiline
           rows={8}
           fullWidth
-          autoFocus
           value={feedback}
           disabled={loading}
           onChange={e => setFeedback(e.target.value)}
