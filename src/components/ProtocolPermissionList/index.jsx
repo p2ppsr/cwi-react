@@ -19,6 +19,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import style from './style'
 import { Folder, Delete } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
+import { toast } from 'react-toastify'
 
 const useStyles = makeStyles(style, {
   name: 'ProtocolPermissionList'
@@ -45,12 +46,26 @@ const ProtocolPermissionList = ({ app, protocol }) => {
   }
 
   const handleConfirm = async () => {
-    setDialogLoading(true)
-    await window.CWI.revokeProtocolPermission(currentPerm)
-    refreshPerms()
-    setCurrentPerm(null)
-    setDialogOpen(false)
-    setDialogLoading(false)
+    try {
+      setDialogLoading(true)
+      await window.CWI.revokeProtocolPermission(currentPerm)
+      setPerms(oldPerm =>
+        oldPerm.filter(x =>
+          x.permissionGrantID !== currentPerm.permissionGrantID
+        )
+      )
+      setCurrentPerm(null)
+      setDialogOpen(false)
+      setDialogLoading(false)
+      await new Promise(resolve => setTimeout(resolve, 15000))
+      refreshPerms()
+    } catch (e) {
+      toast.error('Permission may not have been revoked: ' + e.message)
+      refreshPerms()
+      setCurrentPerm(null)
+      setDialogOpen(false)
+      setDialogLoading(false)
+    }
   }
 
   const handleDialogClose = () => {

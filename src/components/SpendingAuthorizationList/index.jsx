@@ -21,6 +21,7 @@ import style from './style'
 import { AttachMoney, Delete } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
 import Satoshis from '../Satoshis.jsx'
+import { toast } from 'react-toastify'
 
 const useStyles = makeStyles(style, {
   name: 'SpendingAuthorizationList'
@@ -29,7 +30,7 @@ const useStyles = makeStyles(style, {
 const SpendingAuthorizationList = ({ app }) => {
   const [authorizations, setAuthorizations] = useState([])
   const [currentSpending, setCurrentSpending] = useState(0)
-  const [authorizedAmount, setAuthorizedAmount] = useState(1)
+  const [authorizedAmount, setAuthorizedAmount] = useState(0)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentAuthorization, setCurrentAuthorization] = useState(null)
   const [dialogLoading, setDialogLoading] = useState(false)
@@ -52,12 +53,26 @@ const SpendingAuthorizationList = ({ app }) => {
   }
 
   const handleConfirm = async () => {
-    setDialogLoading(true)
-    await window.CWI.revokeSpendingAuthorization(currentAuthorization)
-    refreshAuthorizations()
-    setCurrentAuthorization(null)
-    setDialogOpen(false)
-    setDialogLoading(false)
+    try {
+      setDialogLoading(true)
+      await window.CWI.revokeSpendingAuthorization(currentAuthorization)
+      setAuthorizations(oldAuth =>
+        oldAuth.filter(x =>
+          x.authorizationGrantID !== currentAuthorization.authorizationGrantID
+        )
+      )
+      setCurrentAuthorization(null)
+      setDialogOpen(false)
+      setDialogLoading(false)
+      await new Promise(resolve => setTimeout(resolve, 15000))
+      refreshAuthorizations()
+    } catch (e) {
+      refreshAuthorizations()
+      toast.error('Permission may not have been revoked: ' + e.message)
+      setCurrentAuthorization(null)
+      setDialogOpen(false)
+      setDialogLoading(false)
+    }
   }
 
   const handleDialogClose = () => {

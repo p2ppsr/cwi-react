@@ -15,14 +15,16 @@ const Actions = ({ history }) => {
 
   return (
     <>
-    <div className={classes.fixed_nav}>
       {(!breakpoints.sm && !breakpoints.xs) ? (
-        <Typography variant='h1' paragraph>Your Actions</Typography>
+        <div className={classes.fixed_nav}>
+          <Typography variant='h1' paragraph>
+            Your Actions
+          </Typography>
+        </div>
       ) : (
         <Profile />
       )}
-    </div>
-    <ActionList />
+      <ActionList />
     </>
   )
 }

@@ -72,7 +72,7 @@ const ActionList = ({ app }) => {
     <div className={classes.content_wrap}>
       <Button
         color='primary'
-        startIcon={<Refresh color='primary' />}
+        endIcon={<Refresh color='primary' />}
         onClick={() => refreshActions(label)}
         className={classes.refresh_btn}
         disabled={actionsLoading}
