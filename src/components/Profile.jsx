@@ -59,9 +59,11 @@ const Profile = () => {
     setAvatar(await window.CWI.ninja.getAvatar())
   }
 
-  const refreshBalance = async () => {
+  const refreshBalance = async (initialRequest = false) => {
     try {
-      setBalanceLoading(true)
+      if (initialRequest) {
+        setBalanceLoading(true)
+      }
       const result = await window.CWI.ninja.getTotalValue()
       setAccountBalance(result.total)
       setBalanceLoading(false)
@@ -70,13 +72,15 @@ const Profile = () => {
     }
   }
 
-  useEffect(() => {
-    (async () => {
+  useEffect(async () => {
+    setAvatar(await window.CWI.ninja.getAvatar())
+    refreshBalance(true)
+    const id = setInterval(async () => {
       try {
         refreshBalance()
-        setAvatar(await window.CWI.ninja.getAvatar())
       } catch (e) { }
-    })()
+    }, 5000)
+    return () => clearInterval(id)
   }, [])
 
   const resolvers = bridgeportResolvers()
@@ -84,39 +88,41 @@ const Profile = () => {
   return (
     <>
       <div className={classes.content_wrap}>
-        {avatar.photoURL ? (
-          <div className={classes.image_edit}>
-          <Img
-            className={classes.profile_icon}
-              src={avatar.photoURL || 'uhrp:XUSw3EKLvt4uWHrMvKSDychPSvnAqVeKCrReidew2C2rUN6Sps3S'}
-            alt=''
-            loading={
-              <div className={classes.profile_loading}>
-                <center>
-                  <CircularProgress />
-                </center>
-              </div>
+        {avatar.photoURL
+          ? (
+            <div className={classes.image_edit}>
+              <Img
+                className={classes.profile_icon}
+                src={avatar.photoURL || 'uhrp:XUSw3EKLvt4uWHrMvKSDychPSvnAqVeKCrReidew2C2rUN6Sps3S'}
+                alt=''
+                loading={
+                  <div className={classes.profile_loading}>
+                    <center>
+                      <CircularProgress />
+                    </center>
+                  </div>
             }
-            bridgeportResolvers={resolvers}
-          />
-          <Fab
-            size='small'
-            onClick={() => setEditorOpen(true)}
-            className={classes.edit}
-          >
-            <Edit color='primary' />
-          </Fab>
-        </div>
-        ): (
-          <Fab
-            size='large'
-            onClick={() => setEditorOpen(true)}
+                bridgeportResolvers={resolvers}
+              />
+              <Fab
+                size='small'
+                onClick={() => setEditorOpen(true)}
+                className={classes.edit}
+              >
+                <Edit color='primary' />
+              </Fab>
+            </div>
+            )
+          : (
+            <Fab
+              size='large'
+              onClick={() => setEditorOpen(true)}
               color='primary'
               className={classes.add_photo_button}
-          >
-            <AddAPhoto />
-          </Fab>
-        )}
+            >
+              <AddAPhoto />
+            </Fab>
+            )}
         <Typography variant='h3'>
           {avatar.name || 'Welcome!'}
         </Typography>
@@ -126,8 +132,7 @@ const Profile = () => {
         >
           {balanceLoading
             ? '---'
-            : <Satoshis>{accountBalance}</Satoshis>
-          }
+            : <Satoshis>{accountBalance}</Satoshis>}
         </Typography>
       </div>
       <ProfileEditor
