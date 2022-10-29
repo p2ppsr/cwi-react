@@ -13,7 +13,7 @@ This component has a few peer dependencies that you need to add alongside it to 
 
 Before @cwi/react will load, a few things need to have happened:
 - You must first call `CWI.initialize()` and "boot" the CWI kernel with its snapshot MBR
-- You must somehow enstantiate `window.CWI` with the initialized CWI kernel instance
+- You must somehow instantiate `window.CWI` with the initialized CWI kernel instance
 - You must be able to provide the various callbacks and other props required by the UI
 
 ### Electron

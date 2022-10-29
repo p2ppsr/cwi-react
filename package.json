@@ -23,7 +23,7 @@
     "@mui/material": "^5.10.5",
     "@mui/styles": "^5.10.3",
     "date-fns": "^2.29.2",
-    "nanostore-publisher": "^0.1.12",
+    "nanostore-publisher": "^0.1.13",
     "react-image-crop": "^8.6.9",
     "react-phone-number-input": "^3.2.11",
     "react-router": "^5.2.0",
