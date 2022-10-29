@@ -157,7 +157,7 @@ const ActionList = ({ app }) => {
                     .filter(l => l.startsWith('babbage_app_'))
                     .map((l, j) => (
                       <AppChip
-                        key={j}
+                        key={`${a.txid}-${j}`}
                         label={l}
                       />
                     ))}
