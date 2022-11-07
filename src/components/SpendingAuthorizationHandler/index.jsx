@@ -176,12 +176,14 @@ const SpendingAuthorizationHandler = () => {
                 </Tooltip>
               </div>
               <center>
-                <Fab
-                  variant='extended'
-                  onClick={() => setShowAuthorizeApp(true)}
-                >
-                  Always...
-                </Fab>
+                <Tooltip title='Always Allow This App'>
+                  <Fab
+                    variant='extended'
+                    onClick={() => setShowAuthorizeApp(true)}
+                  >
+                    Always...
+                  </Fab>
+                </Tooltip>
               </center>
             </>
             )
