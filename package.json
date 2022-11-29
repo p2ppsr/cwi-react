@@ -24,7 +24,6 @@
     "@mui/styles": "^5.10.3",
     "date-fns": "^2.29.2",
     "nanostore-publisher": "^0.1.16",
-    "react-collapsible": "^2.10.0",
     "react-image-crop": "^8.6.9",
     "react-phone-number-input": "^3.2.11",
     "react-router": "^5.2.0",

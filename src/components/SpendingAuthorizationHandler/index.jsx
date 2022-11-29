@@ -27,7 +27,6 @@ import formatDistance from 'date-fns/formatDistance'
 import CustomDialog from '../CustomDialog/index.jsx'
 import UIContext from '../../UIContext'
 import AppChip from '../AppChip'
-import Collapsible from 'react-collapsible'
 
 const useStyles = makeStyles(style, {
   name: 'SpendingAuthorizationHandler'
@@ -166,39 +165,45 @@ const SpendingAuthorizationHandler = () => {
               </Typography>
 
               <Typography align='center'>
-                <Collapsible trigger='View Details' triggerWhenOpen='Hide Details' triggerClassName={classes.CustomTriggerCSS} triggerOpenedClassName={classes.CustomTriggerCSS}>
-                  <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 250 }} aria-label='simple table'>
-                      <TableHead>
+                <TableContainer component={Paper}>
+                  <Table sx={{ minWidth: 250 }} aria-label='simple table' size='small'>
+                    <TableHead>
+                      <TableRow
+                        sx={{
+                          borderBottom: '2px solid black',
+                          '& th': {
+                            fontSize: '14px',
+                            fontWeight: 'bold'
+                          }
+                        }}
+                      >
+                        <TableCell>Description</TableCell>
+                        <TableCell align='right'>Amount</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {lineItems.map((row) => (
                         <TableRow
-                          sx={{
-                            borderBottom: '2px solid black',
-                            '& th': {
-                              fontSize: '14px',
-                              fontWeight: 'bold'
-                            }
-                          }}
+                          key={row.description}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                          <TableCell>Description</TableCell>
-                          <TableCell align='right'>Satoshis</TableCell>
+                          <TableCell component='th' scope='row'>
+                            {row.description}
+                          </TableCell>
+                          <TableCell align='right'> <Satoshis showPlus abbreviate>{row.satoshis}</Satoshis></TableCell>
                         </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {lineItems.map((row) => (
-                          <TableRow
-                            key={row.description}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                          >
-                            <TableCell component='th' scope='row'>
-                              {row.description}
-                            </TableCell>
-                            <TableCell align='right'>{row.satoshis}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Collapsible>
+                      ))}
+                      <TableRow
+                        sx={{ '&:last-child td, &:last-child th': { border: 0, fontWeight: 'bold' } }}
+                      >
+                        <TableCell component='th' scope='row'>
+                          <b>Total</b>
+                        </TableCell>
+                        <TableCell align='right'><Satoshis showPlus abbreviate>{transactionAmount * -1}</Satoshis></TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </Typography>
 
               <div className={classes.fabs_wrap}>

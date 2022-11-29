@@ -9,12 +9,13 @@ export default theme => ({
     marginBottom: theme.spacing(1)
   },
   title: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(0.5)
   },
   fabs_wrap: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr 1fr',
-    margin: `${theme.spacing(7)} auto`,
+    marginTop: `${theme.spacing(5)}`,
+    marginBottom: `${theme.spacing(2.5)}`,
     placeItems: 'center'
   },
   slider: {
@@ -27,21 +28,5 @@ export default theme => ({
   },
   button_icon: {
     marginRight: theme.spacing(1)
-  },
-  // Style the spending details Collapsible Trigger button
-  CustomTriggerCSS: {
-    border: '5px',
-    borderColor: 'black',
-    borderRadius: '10px',
-    borderStyle: 'solid',
-    borderWidth: '2px',
-    boxShadow: '0 3px 5px 2px rgba(40, 40, 40, .15)',
-    color: 'black',
-    height: 48,
-    padding: '9px',
-    margin: '9px',
-    placeItems: 'center',
-    cursor: 'pointer',
-    fontSize: '14px'
   }
 })
