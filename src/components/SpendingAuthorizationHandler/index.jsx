@@ -9,9 +9,16 @@ import {
   MenuItem,
   Button,
   Tooltip,
-  Slider
+  Slider,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import Satoshis from '../Satoshis.jsx'
 import { Send, Cancel } from '@mui/icons-material'
@@ -20,6 +27,7 @@ import formatDistance from 'date-fns/formatDistance'
 import CustomDialog from '../CustomDialog/index.jsx'
 import UIContext from '../../UIContext'
 import AppChip from '../AppChip'
+import Collapsible from 'react-collapsible'
 
 const useStyles = makeStyles(style, {
   name: 'SpendingAuthorizationHandler'
@@ -31,11 +39,12 @@ const SpendingAuthorizationHandler = () => {
     onFocusRelinquished,
     isFocused
   } = useContext(UIContext)
-  const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false) 
+  const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false)
   const classes = useStyles()
   const [now] = useState(parseInt(Date.now() / 1000))
   const [description, setDescription] = useState('')
   const [originator, setOriginator] = useState('')
+  const [lineItems, setLineItems] = useState([])
   const [appName, setAppName] = useState(null)
   const [renewal, setRenewal] = useState(false)
   const [requestID, setRequestID] = useState(null)
@@ -50,8 +59,8 @@ const SpendingAuthorizationHandler = () => {
 
   const handleCancel = async () => {
     window.CWI.denySpendingAuthorization({ requestID })
-     setOpen(false)
-     if (!wasOriginallyFocused) {
+    setOpen(false)
+    if (!wasOriginallyFocused) {
       await onFocusRelinquished()
     }
   }
@@ -81,7 +90,8 @@ const SpendingAuthorizationHandler = () => {
           transactionAmount,
           authorizationAmount,
           expirationTime,
-          renewal
+          renewal,
+          lineItems
         }) => {
           try {
             const result = await boomerang(
@@ -102,6 +112,7 @@ const SpendingAuthorizationHandler = () => {
           setWasOriginallyFocused(wasOriginallyFocused)
           setRequestID(requestID)
           setOriginator(originator)
+          setLineItems(lineItems)
           setDescription(description)
           setRenewal(renewal)
           setTransactionAmount(transactionAmount)
@@ -153,6 +164,43 @@ const SpendingAuthorizationHandler = () => {
               <Typography variant='h3' align='center' paragraph>
                 <Satoshis>{transactionAmount}</Satoshis>
               </Typography>
+
+              <Typography align='center'>
+                <Collapsible trigger='View Details' triggerWhenOpen='Hide Details' triggerClassName={classes.CustomTriggerCSS} triggerOpenedClassName={classes.CustomTriggerCSS}>
+                  <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 250 }} aria-label='simple table'>
+                      <TableHead>
+                        <TableRow
+                          sx={{
+                            borderBottom: '2px solid black',
+                            '& th': {
+                              fontSize: '14px',
+                              fontWeight: 'bold'
+                            }
+                          }}
+                        >
+                          <TableCell>Description</TableCell>
+                          <TableCell align='right'>Satoshis</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {lineItems.map((row) => (
+                          <TableRow
+                            key={row.description}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell component='th' scope='row'>
+                              {row.description}
+                            </TableCell>
+                            <TableCell align='right'>{row.satoshis}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Collapsible>
+              </Typography>
+
               <div className={classes.fabs_wrap}>
                 <Tooltip title='Deny Permission'>
                   <Fab
@@ -162,6 +210,14 @@ const SpendingAuthorizationHandler = () => {
                   >
                     <Cancel className={classes.button_icon} />
                     Abort
+                  </Fab>
+                </Tooltip>
+                <Tooltip title='Always Allow This App'>
+                  <Fab
+                    variant='extended'
+                    onClick={() => setShowAuthorizeApp(true)}
+                  >
+                    Always...
                   </Fab>
                 </Tooltip>
                 <Tooltip title='Allow Once'>
@@ -175,16 +231,6 @@ const SpendingAuthorizationHandler = () => {
                   </Fab>
                 </Tooltip>
               </div>
-              <center>
-                <Tooltip title='Always Allow This App'>
-                  <Fab
-                    variant='extended'
-                    onClick={() => setShowAuthorizeApp(true)}
-                  >
-                    Always...
-                  </Fab>
-                </Tooltip>
-              </center>
             </>
             )
           : (
@@ -263,8 +309,8 @@ const SpendingAuthorizationHandler = () => {
             onClick={() => handleGrant({ singular: false })}
           >
             <Send className={classes.button_icon} />
-              Send & Allow
-            </Button>
+            Send & Allow
+          </Button>
         </DialogActions>
       )}
     </CustomDialog>
