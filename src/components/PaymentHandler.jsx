@@ -3,6 +3,7 @@ import { DialogActions, DialogContent, Button, DialogContentText } from '@mui/ma
 import CustomDialog from './CustomDialog/index.jsx'
 import Satoshis from './Satoshis.jsx'
 import UIContext from '../UIContext'
+import { SatoshiShopper } from '@cwi/satoshi-shopper'
 
 const PaymentHandler = () => {
   const {
@@ -58,6 +59,19 @@ const PaymentHandler = () => {
     }
   }
 
+  const onSatoshiShopperTransactionReceived = async ({
+    status,
+    transaction,
+    acknowledge
+  }) => {
+    debugger
+    await window.CWI.ninja.submitDirectTransaction({
+      protocol: '3241645161d8',
+      transaction
+    })
+    // await acknowledge()
+  }
+
   return (
     <CustomDialog
       open={open}
@@ -65,8 +79,12 @@ const PaymentHandler = () => {
       title='Fund Your Account'
     >
       <form onSubmit={handleSubmit}>
-      <DialogContent>
-        <DialogContentText>
+        <DialogContent>
+          <SatoshiShopper
+        minimumSatoshis={amount}
+        onTransactionReceived={onSatoshiShopperTransactionReceived}
+      />
+        {/* <DialogContentText>
           The following action requires Bitcoin SV (BSV) tokens, which you can use throughout the entire CWI ecosystem:
         </DialogContentText>
         <DialogContentText>
@@ -83,7 +101,7 @@ const PaymentHandler = () => {
           </DialogContentText>
           <DialogContentText>
             TODO functionality — buy more — for now, cancel, and then email us at satoshis@projectabbage.com or use Ninja to top-up. Click "Payment Sent" once money is there.
-          </DialogContentText>
+          </DialogContentText> */}
       </DialogContent>
       <DialogActions>
         <Button color='secondary' onClick={handleCancel}>
