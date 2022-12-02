@@ -90,7 +90,7 @@ const BasketAccessHandler = () => {
     <CustomDialog
       open={open}
       onClose={handleCancel}
-      title='App Permission Request'
+      title='Basket Access Request'
     >
       <DialogContent>
         <center>
