@@ -18,6 +18,7 @@ import PasswordHandler from 'components/PasswordHandler.jsx'
 import RecoveryKeyHandler from 'components/RecoveryKeyHandler.jsx'
 import ProtocolPermissionHandler from 'components/ProtocolPermissionHandler/index.jsx'
 import SpendingAuthorizationHandler from 'components/SpendingAuthorizationHandler/index.jsx'
+import BasketAccessHandler from 'components/BasketAccessHandler/index.jsx'
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
 import UIContext from './UIContext'
@@ -85,6 +86,7 @@ export default ({
                 <RecoveryKeyHandler />
                 <ProtocolPermissionHandler />
                 <SpendingAuthorizationHandler />
+                <BasketAccessHandler />
                 <PaymentHandler />
                 <ToastContainer
                   position='top-center'
