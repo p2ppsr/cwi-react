@@ -133,7 +133,7 @@ const PaymentHandler = () => {
         {env === 'dev' || env === 'staging' ? (
         <iframe
             seamless
-              src={`https://satoshiframe-master-ivi63c6zsq-uc.a.run.app/?minimumSatoshis=${amount}`}
+              src={`https://staging-satoshiframe.babbage.systems/?minimumSatoshis=${amount}`}
               style={{
                 width: '100%',
                 minHeight: '20em'
