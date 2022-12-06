@@ -25,7 +25,7 @@ const CertificateAccessHandler = () => {
   const [open, setOpen] = useState(false)
 
   const handleCancel = async () => {
-    window.CWI.denyBasketAccess({ requestID })
+    window.CWI.denyCertificateAccess({ requestID })
     setOpen(false)
     if (!wasOriginallyFocused) {
       await onFocusRelinquished()
@@ -33,7 +33,7 @@ const CertificateAccessHandler = () => {
   }
 
   const handleGrant = async () => {
-    window.CWI.grantBasketAccess({ requestID })
+    window.CWI.grantCertificateAccess({ requestID })
     setOpen(false)
     if (!wasOriginallyFocused) {
       await onFocusRelinquished()
@@ -47,7 +47,7 @@ const CertificateAccessHandler = () => {
         'onCertificateAccessRequested',
         async ({
           originator,
-          verifierPublicKey: verifier,
+          verifierPublicKey,
           type: certificateType,
           fields,
           renewal,
@@ -103,7 +103,7 @@ const CertificateAccessHandler = () => {
           <AppChip size={1.5} label={originator} clickable={false} />
         </center>
         <DialogContentText>
-          The app "{appName || originator}" would like to access certificate type "{certificateType}" and the following fields...TODO<b>{fields[0]}</b>.
+          The app "{appName || originator || verifierPublicKey}" would like to access certificate type "{certificateType}" and the following fields...TODO<b>{fields[0]}</b>.
         </DialogContentText>
         <DialogContentText>
           {description}
