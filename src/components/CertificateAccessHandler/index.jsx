@@ -1,6 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react'
 import {
-  DialogContent, DialogContentText, DialogActions, Button
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Typography,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper
 } from '@mui/material'
 import boomerang from 'boomerang-http'
 import CustomDialog from '../CustomDialog/index.jsx'
@@ -103,12 +114,46 @@ const CertificateAccessHandler = () => {
           <AppChip size={1.5} label={originator} clickable={false} />
         </center>
         <DialogContentText>
-          The app "{appName || originator || verifierPublicKey}" would like to access certificate type "{certificateType}" and the following fields...TODO<b>{fields[0]}</b>.
+          The app "{appName || originator}" would like to access certificate type "{certificateType}", for the following verifier:
+        </DialogContentText>
+        <DialogContentText style={{ alignSelf: 'baseline' }}>
+          <b>{verifierPublicKey}</b>
         </DialogContentText>
         <DialogContentText>
           {description}
         </DialogContentText>
       </DialogContent>
+      <Typography align='center'>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 250 }} aria-label='simple table' size='small'>
+            <TableHead>
+              <TableRow
+                sx={{
+                  borderBottom: '2px solid black',
+                  '& th': {
+                    fontSize: '14px',
+                    fontWeight: 'bold'
+                  }
+                }}
+              >
+                <TableCell>Fields Requested</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {fields.map((field) => (
+                <TableRow
+                  key={field}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component='th' scope='row'>
+                    {field}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Typography>
       {renewal && (
         <DialogContentText>
           The app has requested access before.
