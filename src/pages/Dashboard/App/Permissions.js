@@ -1,5 +1,6 @@
 import React from 'react'
 import ProtocolPermissionList from '../../../components/ProtocolPermissionList/index.jsx'
+import BasketAccessList from '../../../components/BasketAccessList/index.jsx'
 import SpendingAuthorizationList from '../../../components/SpendingAuthorizationList/index.jsx'
 import { Typography } from '@mui/material'
 
@@ -18,6 +19,13 @@ export default ({ domain }) => {
         These are the kinds of information you have allowed this app to be concerned with.
       </Typography>
       <ProtocolPermissionList app={domain} />
+      <br />
+      <br />
+      <Typography variant='h2'>Basket Access Grants</Typography>
+      <Typography paragraph>
+        These are the token baskets you have allowed this app to have access to.
+      </Typography>
+      <BasketAccessList app={domain} />
     </>
   )
 }
