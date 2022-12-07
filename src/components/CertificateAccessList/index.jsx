@@ -13,11 +13,21 @@ import {
   DialogContentText,
   DialogActions,
   Button,
-  Typography
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
-import { Folder, Delete } from '@mui/icons-material'
+import { Folder, Delete, ExpandMore } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
 import { toast } from 'react-toastify'
 
@@ -25,26 +35,30 @@ const useStyles = makeStyles(style, {
   name: 'CertificateAccessList'
 })
 
-const CertificateAccessList = ({ app, type, verifier, fields }) => {
+const CertificateAccessList = ({ app, type }) => {
   const [grants, setGrants] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentAccessGrant, setCurrentAccessGrant] = useState(null)
   const [dialogLoading, setDialogLoading] = useState(false)
+  const [expandedPanel, setExpandedPanel] = useState(false)
   const classes = useStyles()
 
   const refreshGrants = useCallback(async () => {
     const result = await window.CWI.listCertificateAccess({
       targetDomain: app,
-      targetCertificateType: type,
-      targetVerifier: verifier,
-      targetFields: fields
+      targetCertificateType: type
     })
     setGrants(result)
-  }, [app, type, verifier, fields])
+  }, [app, type])
 
   const revokeAccess = async grant => {
     setCurrentAccessGrant(grant)
     setDialogOpen(true)
+  }
+
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    console.log({ event, isExpanded })
+    setExpandedPanel(isExpanded ? panel : false)
   }
 
   const handleConfirm = async () => {
@@ -121,10 +135,62 @@ const CertificateAccessList = ({ app, type, verifier, fields }) => {
                 <Folder />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText
-              primary={grant.type}
-              secondary={`Expires ${formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}`}
-            />
+
+            <Accordion
+              expanded={expandedPanel === 'panel' + i} onChange={handleAccordionChange('panel' + i)}
+              style={{ maxWidth: window.outerWidth * 0.60 }} // ?
+            >
+              <AccordionSummary expandIcon={<ExpandMore />}>
+                {grant.type}
+              </AccordionSummary>
+              <AccordionDetails
+                className={classes.expansion_body}
+              >
+                <b>Verifier</b>
+                <ListItemText
+                  style={{ padding: '20px', wordWrap: 'break-word' }}
+                >{grant.verifier}
+                </ListItemText>
+                <ListItemText
+                  secondary={`Expires ${formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}`}
+                />
+
+                <TableContainer component={Paper}>
+                  <Table sx={{ minWidth: 100 }} aria-label='simple table'>
+                    <TableHead>
+                      <TableRow
+                        sx={{
+                          borderBottom: '2px solid black',
+                          '& th': {
+                            fontSize: '14px',
+                            fontWeight: 'bold'
+                          }
+                        }}
+                      >
+                        <TableCell>Fields</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow
+                        key={i}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      />
+                      {grant.fields.map((field, i) => (
+                        <TableRow
+                          key={i}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                          <TableCell component='th' scope='row'>
+                            {field}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </AccordionDetails>
+            </Accordion>
+
             <ListItemSecondaryAction>
               <IconButton edge='end' onClick={() => revokeAccess(grant)} size='large'>
                 <Delete />
