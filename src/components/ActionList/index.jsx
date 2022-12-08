@@ -92,17 +92,29 @@ const ActionList = ({ app }) => {
             if (protocol.indexOf(',') !== -1) {
               protocol = protocol.split(',')[1]
             }
-            if (!granted) {
-              return ( // TODO
-                <Typography component='span' paragraph key={i}>
-                  You revoked a protocol permission
-                </Typography>
-              )
-            }
             return (
-              <Typography component='span' paragraph key={i}>
-                You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> to access <b>{protocol}</b>
-              </Typography>
+              <Card
+                key={i}
+                className={classes.action_card}
+                elevation={4}
+              >
+                <CardContent>
+                  <Typography
+                    variant='h3'
+                    className={classes.title_text}
+                  >
+                    Protocol Permission {granted ? 'Granted' : 'Revoked'}
+                  </Typography>
+                  <Typography component='span' paragraph key={i}>
+                    You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> permission for protocol: <b>{protocol}</b>
+                  </Typography>
+                  <Typography>
+                    <Satoshis showPlus>
+                      {a.amount}
+                    </Satoshis>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
+                  </Typography>
+                </CardContent>
+              </Card>
             )
           } if (a.labels.includes('babbage_basket_access')) {
             const fields = a.note.split(' ')
@@ -110,43 +122,40 @@ const ActionList = ({ app }) => {
             const app = fields[1]
             fields.shift()
             fields.shift()
-            let protocol = fields.join(' ').split(':')[0]
-            if (protocol.indexOf(',') !== -1) {
-              protocol = protocol.split(',')[1]
-            }
-            if (!granted) {
-              return ( // TODO
-                <Typography component='span' paragraph key={i}>
-                  You revoked a basket access grant
-                </Typography>
-              )
+            let basket = fields.join(' ').split(':')[0]
+            if (basket.indexOf(',') !== -1) {
+              basket = basket.split(',')[1]
             }
             return (
-              <Typography component='span' paragraph key={i}>
-                You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> to access ?<b>{protocol}</b>
-              </Typography>
+              <Card
+                key={i}
+                className={classes.action_card}
+                elevation={4}
+              >
+                <CardContent>
+                  <Typography
+                    variant='h3'
+                    className={classes.title_text}
+                  >
+                    Basket Access {granted ? 'Granted' : 'Revoked'}
+                  </Typography>
+                  <Typography component='span' paragraph key={i}>
+                    You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> access to basket: <b>{basket}</b>
+                  </Typography>
+                  <Typography>
+                    <Satoshis showPlus>
+                      {a.amount}
+                    </Satoshis>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
+                  </Typography>
+                </CardContent>
+              </Card>
             )
           } if (a.labels.includes('babbage_certificate_access')) {
-            debugger
             const fields = a.note.split(' ')
             const granted = fields[0] === 'Grant'
             const app = fields[1]
-            fields.shift()
-            fields.shift()
-            let certificateType = fields.join(' ').split(':')[0]
-            if (certificateType.indexOf(',') !== -1) {
-              certificateType = certificateType.split(',')[1]
-            }
-            if (certificateType.indexOf(' ') !== -1) {
-              certificateType = certificateType.split(' ')[1]
-            }
-            if (!granted) {
-              return (
-                <Typography component='span' paragraph key={i}>
-                  You revoked a certificate access grant
-                </Typography>
-              )
-            }
+            const verifier = fields[2]
+            const certificateType = fields[3]
             return (
               <Card
                 key={i}
@@ -161,7 +170,13 @@ const ActionList = ({ app }) => {
                     Certificate Access {granted ? 'Granted' : 'Revoked'}
                   </Typography>
                   <Typography component='span' paragraph key={i}>
-                    You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> to access fields for certificate type: <b>{certificateType}</b>
+                    You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> access to fields for the following certificate:<b>{'\n'}</b>
+                  </Typography>
+                  <Typography paragraph key={i}>
+                    <b>Type: </b>{certificateType}
+                  </Typography>
+                  <Typography paragraph key={i} style={{ wordWrap: 'break-word' }}>
+                    <b>Verifier: </b>{verifier}
                   </Typography>
                   <Typography>
                     <Satoshis showPlus>
