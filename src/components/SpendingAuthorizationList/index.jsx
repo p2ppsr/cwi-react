@@ -16,7 +16,7 @@ import {
   Typography,
   LinearProgress
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import { AttachMoney, Delete } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
@@ -64,7 +64,6 @@ const SpendingAuthorizationList = ({ app }) => {
       setCurrentAuthorization(null)
       setDialogOpen(false)
       setDialogLoading(false)
-      await new Promise(resolve => setTimeout(resolve, 15000))
       refreshAuthorizations()
     } catch (e) {
       refreshAuthorizations()
@@ -84,7 +83,8 @@ const SpendingAuthorizationList = ({ app }) => {
     refreshAuthorizations()
   }, [refreshAuthorizations])
 
-  return <>
+  return (
+<>
     <Dialog
       open={dialogOpen}
     >
@@ -164,7 +164,8 @@ const SpendingAuthorizationList = ({ app }) => {
         />
       </div>
     )}
-  </>;
+  </>
+);
 }
 
 export default SpendingAuthorizationList

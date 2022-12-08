@@ -64,7 +64,7 @@ const CertificateAccessList = ({ app, type }) => {
   const handleConfirm = async () => {
     try {
       setDialogLoading(true)
-      await window.CWI.revokeCertificateAccess(currentAccessGrant)
+      await window.CWI.revokeCertificateAccess({ grant: currentAccessGrant })
       setGrants(oldAccessGrant =>
         oldAccessGrant.filter(x =>
           x.accessGrantID !== currentAccessGrant.accessGrantID
@@ -73,7 +73,6 @@ const CertificateAccessList = ({ app, type }) => {
       setCurrentAccessGrant(null)
       setDialogOpen(false)
       setDialogLoading(false)
-      await new Promise(resolve => setTimeout(resolve, 15000))
       refreshGrants()
     } catch (e) {
       toast.error('Access may not have been revoked: ' + e.message)

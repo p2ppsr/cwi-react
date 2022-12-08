@@ -15,7 +15,7 @@ import {
   Button,
   Typography
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import { Folder, Delete } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
@@ -48,7 +48,7 @@ const ProtocolPermissionList = ({ app, protocol }) => {
   const handleConfirm = async () => {
     try {
       setDialogLoading(true)
-      await window.CWI.revokeProtocolPermission(currentPerm)
+      await window.CWI.revokeProtocolPermission({ permission: currentPerm })
       setPerms(oldPerm =>
         oldPerm.filter(x =>
           x.permissionGrantID !== currentPerm.permissionGrantID
@@ -57,7 +57,6 @@ const ProtocolPermissionList = ({ app, protocol }) => {
       setCurrentPerm(null)
       setDialogOpen(false)
       setDialogLoading(false)
-      await new Promise(resolve => setTimeout(resolve, 15000))
       refreshPerms()
     } catch (e) {
       toast.error('Permission may not have been revoked: ' + e.message)
@@ -77,19 +76,20 @@ const ProtocolPermissionList = ({ app, protocol }) => {
     refreshPerms()
   }, [refreshPerms])
 
-  return <>
-    <Dialog
-      open={dialogOpen}
-    >
-      <DialogTitle>
+  return (
+    <>
+      <Dialog
+    open={dialogOpen}
+  >
+    <DialogTitle>
         Revoke Permission?
       </DialogTitle>
-      <DialogContent>
+    <DialogContent>
         <DialogContentText>
           You can re-authorize this permission next time you use this app.
         </DialogContentText>
       </DialogContent>
-      <DialogActions>
+    <DialogActions>
         <Button
           color='primary'
           disabled={dialogLoading}
@@ -105,9 +105,9 @@ const ProtocolPermissionList = ({ app, protocol }) => {
           Revoke
         </Button>
       </DialogActions>
-    </Dialog>
-    <List>
-      {perms.map((perm, i) => (
+  </Dialog>
+      <List>
+    {perms.map((perm, i) => (
         <ListItem
           key={i}
           className={classes.action_card}
@@ -123,21 +123,22 @@ const ProtocolPermissionList = ({ app, protocol }) => {
             secondary={`Expires ${formatDistance(new Date(perm.expiry * 1000), new Date(), { addSuffix: true })}`}
           />
           <ListItemSecondaryAction>
-            <IconButton edge='end' onClick={() => revokePermission(perm)} size="large">
+            <IconButton edge='end' onClick={() => revokePermission(perm)} size='large'>
               <Delete />
             </IconButton>
           </ListItemSecondaryAction>
         </ListItem>
       ))}
-    </List>
-    <center>
-      <Typography
+  </List>
+      <center>
+    <Typography
         color='textSecondary'
       >
         <i>Total Permissions: {perms.length}</i>
       </Typography>
-    </center>
-  </>;
+  </center>
+        </>
+  )
 }
 
 export default ProtocolPermissionList
