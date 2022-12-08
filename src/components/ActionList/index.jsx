@@ -104,6 +104,73 @@ const ActionList = ({ app }) => {
                 You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> to access <b>{protocol}</b>
               </Typography>
             )
+          } if (a.labels.includes('babbage_basket_access')) {
+            const fields = a.note.split(' ')
+            const granted = fields[0] === 'Grant'
+            const app = fields[1]
+            fields.shift()
+            fields.shift()
+            let protocol = fields.join(' ').split(':')[0]
+            if (protocol.indexOf(',') !== -1) {
+              protocol = protocol.split(',')[1]
+            }
+            if (!granted) {
+              return ( // TODO
+                <Typography component='span' paragraph key={i}>
+                  You revoked a basket access grant
+                </Typography>
+              )
+            }
+            return (
+              <Typography component='span' paragraph key={i}>
+                You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> to access ?<b>{protocol}</b>
+              </Typography>
+            )
+          } if (a.labels.includes('babbage_certificate_access')) {
+            debugger
+            const fields = a.note.split(' ')
+            const granted = fields[0] === 'Grant'
+            const app = fields[1]
+            fields.shift()
+            fields.shift()
+            let certificateType = fields.join(' ').split(':')[0]
+            if (certificateType.indexOf(',') !== -1) {
+              certificateType = certificateType.split(',')[1]
+            }
+            if (certificateType.indexOf(' ') !== -1) {
+              certificateType = certificateType.split(' ')[1]
+            }
+            if (!granted) {
+              return (
+                <Typography component='span' paragraph key={i}>
+                  You revoked a certificate access grant
+                </Typography>
+              )
+            }
+            return (
+              <Card
+                key={i}
+                className={classes.action_card}
+                elevation={4}
+              >
+                <CardContent>
+                  <Typography
+                    variant='h3'
+                    className={classes.title_text}
+                  >
+                    Certificate Access {granted ? 'Granted' : 'Revoked'}
+                  </Typography>
+                  <Typography component='span' paragraph key={i}>
+                    You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> to access fields for certificate type: <b>{certificateType}</b>
+                  </Typography>
+                  <Typography>
+                    <Satoshis showPlus>
+                      {a.amount}
+                    </Satoshis>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
+                  </Typography>
+                </CardContent>
+              </Card>
+            )
           } else if (a.labels.includes('babbage_spend_auth')) {
             const fields = a.note.split(' ')
             const authorized = fields[0] === 'Authorize'
@@ -126,7 +193,7 @@ const ActionList = ({ app }) => {
             a.labels.includes('babbage_protocol_perm_preaction') ||
             a.labels.includes('babbage_spend_auth_preaction')
           ) {
-            return null // Do not show "Invisible" preactions
+            return null
           } else {
             return (
               <Card

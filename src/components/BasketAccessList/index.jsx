@@ -48,7 +48,7 @@ const BasketAccessList = ({ app, basket }) => {
   const handleConfirm = async () => {
     try {
       setDialogLoading(true)
-      await window.CWI.revokeBasketAccess(currentAccessGrant)
+      await window.CWI.revokeBasketAccess({ grant: currentAccessGrant })
       setGrants(oldAccessGrant =>
         oldAccessGrant.filter(x =>
           x.accessGrantID !== currentAccessGrant.accessGrantID
@@ -57,7 +57,6 @@ const BasketAccessList = ({ app, basket }) => {
       setCurrentAccessGrant(null)
       setDialogOpen(false)
       setDialogLoading(false)
-      await new Promise(resolve => setTimeout(resolve, 15000))
       refreshGrants()
     } catch (e) {
       toast.error('Access may not have been revoked: ' + e.message)
