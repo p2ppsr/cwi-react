@@ -1,6 +1,7 @@
 import React from 'react'
 import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles'
 import { withStyles } from '@mui/styles'
+import { ExchangeRateContextProvider } from './Satoshis.jsx'
 
 const baseTheme = createTheme(adaptV4Theme({
   spacing: 8,
@@ -117,7 +118,9 @@ const Theme = withStyles({
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme={baseTheme}>
       <ThemeProvider theme={extendedTheme}>
-        {children}
+        <ExchangeRateContextProvider>
+          {children}
+        </ExchangeRateContextProvider>
       </ThemeProvider>
     </ThemeProvider>
   </StyledEngineProvider>
