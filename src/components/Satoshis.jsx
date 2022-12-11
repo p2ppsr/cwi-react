@@ -11,7 +11,7 @@ export const formatSatoshisAsUSD = (
   satoshisPerUSD = null
 ) => {
   const usd = (satoshisPerUSD && Number.isInteger(Number(satoshis))) ? satoshis / satoshisPerUSD : NaN
-  return (!Number(usd))
+  return (usd === NaN)
     ? '...'
     : (Math.abs(usd) >= 1)
       ? usdFormat.format(usd)
@@ -97,7 +97,7 @@ export class Satoshis extends React.Component {
     this.abbreviate = !!props.abbreviate
     this.showPlus = !!props.showPlus
     this.satoshis = (Number.isInteger(Number(props.children))) ? this.satoshis = Number(props.children) : NaN
-    this.formattedSatoshis = (Number(this.satoshis)) ? formatSatoshis(this.satoshis, this.showPlus) : '...'
+    this.formattedSatoshis = (this.satoshis !== NaN) ? formatSatoshis(this.satoshis, this.showPlus) : '...'
     this.state = { formattedFiatAmount: '...' }
   }
 
