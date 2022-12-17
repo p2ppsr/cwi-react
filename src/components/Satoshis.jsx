@@ -36,20 +36,6 @@ const satoshisOptions = {
       abbrev: 'sats'
     },
     {
-      unit: 'mBSV',
-      decimal: null,
-      group: null,
-      label: 'mBSV',
-      abbrev: ''
-    },
-    {
-      unit: 'BSV',
-      decimal: null,
-      group: null,
-      label: 'BSV',
-      abbrev: ''
-    },
-    {
       unit: 'SATS',
       decimal: '.',
       group: '_',
@@ -58,9 +44,23 @@ const satoshisOptions = {
     },
     {
       unit: 'mBSV',
+      decimal: null,
+      group: null,
+      label: 'mBSV',
+      abbrev: ''
+    },
+    {
+      unit: 'mBSV',
       decimal: '.',
       group: '_',
       label: 'mBSV',
+      abbrev: ''
+    },
+    {
+      unit: 'BSV',
+      decimal: null,
+      group: null,
+      label: 'BSV',
       abbrev: ''
     },
     {
