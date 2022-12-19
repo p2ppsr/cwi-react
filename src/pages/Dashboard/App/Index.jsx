@@ -7,6 +7,7 @@ import Trends from './Trends'
 import Permissions from './Permissions'
 import boomerang from 'boomerang-http'
 import style from './style'
+import isImageUrl from '../../../utils/isImageUrl'
 
 const useStyles = makeStyles(style, {
   name: 'Apps'
@@ -21,7 +22,12 @@ const Apps = ({ match, history }) => {
 
   useEffect(() => {
     (async () => {
-      setAppIcon(`https://${appDomain}/favicon.ico`)
+      // Validate that the default favicon path is actually an image
+      if (await isImageUrl(`https://${appDomain}/favicon.ico`)) {
+        setAppIcon(`https://${appDomain}/favicon.ico`)
+      } else {
+        setAppIcon('https://projectbabbage.com/favicon.ico')
+      }
       try {
         const manifest = await boomerang(
           'GET', `${appDomain.startsWith('localhost:') ? 'http' : 'https'}://${appDomain}/manifest.json`
@@ -50,18 +56,11 @@ const Apps = ({ match, history }) => {
           <ArrowBack />
         </IconButton>
         <div className={classes.top_grid}>
-          <object
-            data={appIcon}
+          <img
+            src={appIcon}
             alt=''
             className={classes.app_icon}
-            type='image/x-icon'
-          >
-            <img
-              src='https://projectbabbage.com/favicon.ico'
-              alt=''
-              className={classes.app_icon}
-            />
-          </object>
+          />
           <div>
             <Typography variant='h1'>
               {appName}
