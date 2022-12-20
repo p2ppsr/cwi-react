@@ -55,7 +55,7 @@ const SpendingAuthorizationList = ({ app }) => {
   const handleConfirm = async () => {
     try {
       setDialogLoading(true)
-      await window.CWI.revokeSpendingAuthorization(currentAuthorization)
+      await window.CWI.revokeSpendingAuthorization({ authorizationGrant: currentAuthorization })
       setAuthorizations(oldAuth =>
         oldAuth.filter(x =>
           x.authorizationGrantID !== currentAuthorization.authorizationGrantID
@@ -84,88 +84,89 @@ const SpendingAuthorizationList = ({ app }) => {
   }, [refreshAuthorizations])
 
   return (
-<>
-    <Dialog
-      open={dialogOpen}
-    >
-      <DialogTitle>
-        Revoke Authorization?
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          You can re-authorize spending next time you use this app.
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button
-          color='primary'
-          disabled={dialogLoading}
-          onClick={handleDialogClose}
-        >
-          Cancel
-        </Button>
-        <Button
-          color='primary'
-          disabled={dialogLoading}
-          onClick={handleConfirm}
-        >
-          Revoke
-        </Button>
-      </DialogActions>
-    </Dialog>
-    <List>
-      {authorizations.map((authorization, i) => (
-        <ListItem
-          key={i}
-          className={classes.action_card}
-          elevation={4}
-        >
-          <ListItemAvatar>
-            <Avatar className={classes.icon}>
-              <AttachMoney />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={<Satoshis>{authorization.amount}</Satoshis>}
-            secondary={`Must be used with${formatDistance(new Date(authorization.expiry * 1000), new Date(), { addSuffix: true })}`}
-          />
-          <ListItemSecondaryAction>
-            <IconButton
-              edge='end'
-              onClick={() => revokeAuthorization(authorization)}
-              size="large">
-              <Delete />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
-      ))}
-    </List>
-    <center>
-      <Typography
-        color='textSecondary'
-        paragraph
+    <>
+      <Dialog
+        open={dialogOpen}
       >
-        <i>Total Authorizations: {authorizations.length}</i>
-      </Typography>
-    </center>
-    {Number.isInteger(Number(authorizedAmount)) && authorizedAmount > 0 && (
-      <div>
-        <Typography variant='h5' paragraph>
-          <b>
-            Current Spending (since {formatDistance(new Date(earliestAuthorization * 1000), new Date(), { addSuffix: true })}):
-          </b> <Satoshis>{currentSpending}</Satoshis>
+        <DialogTitle>
+          Revoke Authorization?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You can re-authorize spending next time you use this app.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color='primary'
+            disabled={dialogLoading}
+            onClick={handleDialogClose}
+          >
+            Cancel
+          </Button>
+          <Button
+            color='primary'
+            disabled={dialogLoading}
+            onClick={handleConfirm}
+          >
+            Revoke
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <List>
+        {authorizations.map((authorization, i) => (
+          <ListItem
+            key={i}
+            className={classes.action_card}
+            elevation={4}
+          >
+            <ListItemAvatar>
+              <Avatar className={classes.icon}>
+                <AttachMoney />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={<Satoshis>{authorization.amount}</Satoshis>}
+              secondary={`Must be used with${formatDistance(new Date(authorization.expiry * 1000), new Date(), { addSuffix: true })}`}
+            />
+            <ListItemSecondaryAction>
+              <IconButton
+                edge='end'
+                onClick={() => revokeAuthorization(authorization)}
+                size='large'
+              >
+                <Delete />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))}
+      </List>
+      <center>
+        <Typography
+          color='textSecondary'
+          paragraph
+        >
+          <i>Total Authorizations: {authorizations.length}</i>
         </Typography>
-        <Typography variant='h5' paragraph>
-          <b>Authorized Amount:</b> <Satoshis>{authorizedAmount}</Satoshis>
-        </Typography>
-        <LinearProgress
-          variant='determinate'
-          value={parseInt((currentSpending / authorizedAmount) * 100)}
-        />
-      </div>
-    )}
-  </>
-);
+      </center>
+      {Number.isInteger(Number(authorizedAmount)) && authorizedAmount > 0 && (
+        <div>
+          <Typography variant='h5' paragraph>
+            <b>
+              Current Spending (since {formatDistance(new Date(earliestAuthorization * 1000), new Date(), { addSuffix: true })}):
+            </b> <Satoshis>{currentSpending}</Satoshis>
+          </Typography>
+          <Typography variant='h5' paragraph>
+            <b>Authorized Amount:</b> <Satoshis>{authorizedAmount}</Satoshis>
+          </Typography>
+          <LinearProgress
+            variant='determinate'
+            value={parseInt((currentSpending / authorizedAmount) * 100)}
+          />
+        </div>
+      )}
+    </>
+  )
 }
 
 export default SpendingAuthorizationList

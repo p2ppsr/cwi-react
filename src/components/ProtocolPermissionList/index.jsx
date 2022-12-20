@@ -79,65 +79,65 @@ const ProtocolPermissionList = ({ app, protocol }) => {
   return (
     <>
       <Dialog
-    open={dialogOpen}
-  >
-    <DialogTitle>
-        Revoke Permission?
-      </DialogTitle>
-    <DialogContent>
-        <DialogContentText>
-          You can re-authorize this permission next time you use this app.
-        </DialogContentText>
-      </DialogContent>
-    <DialogActions>
-        <Button
-          color='primary'
-          disabled={dialogLoading}
-          onClick={handleDialogClose}
-        >
-          Cancel
-        </Button>
-        <Button
-          color='primary'
-          disabled={dialogLoading}
-          onClick={handleConfirm}
-        >
-          Revoke
-        </Button>
-      </DialogActions>
-  </Dialog>
-      <List>
-    {perms.map((perm, i) => (
-        <ListItem
-          key={i}
-          className={classes.action_card}
-          elevation={4}
-        >
-          <ListItemAvatar>
-            <Avatar className={classes.icon}>
-              <Folder />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={perm.protocol}
-            secondary={`Expires ${formatDistance(new Date(perm.expiry * 1000), new Date(), { addSuffix: true })}`}
-          />
-          <ListItemSecondaryAction>
-            <IconButton edge='end' onClick={() => revokePermission(perm)} size='large'>
-              <Delete />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
-      ))}
-  </List>
-      <center>
-    <Typography
-        color='textSecondary'
+        open={dialogOpen}
       >
-        <i>Total Permissions: {perms.length}</i>
-      </Typography>
-  </center>
-        </>
+        <DialogTitle>
+          Revoke Permission?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You can re-authorize this permission next time you use this app.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color='primary'
+            disabled={dialogLoading}
+            onClick={handleDialogClose}
+          >
+            Cancel
+          </Button>
+          <Button
+            color='primary'
+            disabled={dialogLoading}
+            onClick={handleConfirm}
+          >
+            Revoke
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <List>
+        {perms.map((perm, i) => (
+          <ListItem
+            key={i}
+            className={classes.action_card}
+            elevation={4}
+          >
+            <ListItemAvatar>
+              <Avatar className={classes.icon}>
+                <Folder />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={perm.protocol}
+              secondary={`Expires ${formatDistance(new Date(perm.expiry * 1000), new Date(), { addSuffix: true })}`}
+            />
+            <ListItemSecondaryAction>
+              <IconButton edge='end' onClick={() => revokePermission(perm)} size='large'>
+                <Delete />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))}
+      </List>
+      <center>
+        <Typography
+          color='textSecondary'
+        >
+          <i>Total Permissions: {perms.length}</i>
+        </Typography>
+      </center>
+    </>
   )
 }
 
