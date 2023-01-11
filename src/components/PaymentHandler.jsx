@@ -1,11 +1,43 @@
 import React, { useState, useEffect, useContext } from 'react'
-import {
-  DialogActions, DialogContent, Button, DialogContentText
-} from '@mui/material'
-import CustomDialog from './CustomDialog/index.jsx'
+import { Dialog, IconButton, Button, Typography, Tooltip } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import Satoshis from './Satoshis.jsx'
 import UIContext from '../UIContext'
 import { toast } from 'react-toastify'
+import Refresh from '@mui/icons-material/Refresh'
+import Cancel from '@mui/icons-material/Cancel'
+
+const useStyles = makeStyles({
+  refresh_btn: {
+    position: 'absolute',
+    top: '0.75em',
+    right: '1em'
+  },
+  close_btn: {
+    position: 'absolute',
+    top: '0.25em',
+    left: '0.25em'
+  },
+  frame: {
+    width: '100%',
+    minHeight: 'calc(100vh - 3.75em)',
+    marginTop: '3.5em',
+    outline: 'none',
+    border: 'none',
+    boxSizing: 'border-box',
+    boxShadow: '0px 12px 10px 3px #555'
+  },
+  no_support_div: {
+    width: '100%',
+    height: 'calc(100vh - 3.75em)',
+    marginTop: '3.5em',
+    boxSizing: 'border-box',
+    boxShadow: '0px 12px 10px 3px #555',
+    overflowY: 'scroll',
+    padding: '1em',
+  }
+}, { name: 'PaymentHandler' })
+
 
  {/* <DialogContentText>
           The following action requires Bitcoin SV (BSV) tokens, which you can use throughout the entire CWI ecosystem:
@@ -39,6 +71,7 @@ const PaymentHandler = () => {
   const [reason, setReason] = useState('')
   const [paymentID, setPaymentID] = useState('')
   const [amount, setAmount] = useState('')
+  const classes = useStyles()
 
   useEffect(() => {
     let id
@@ -124,32 +157,58 @@ const PaymentHandler = () => {
   }
 
   return (
-    <CustomDialog
-      open={open}
-      onClose={handleCancel}
-      title='Fund Your Account'
-    >
+    <Dialog fullScreen open={open} onClose={handleCancel}>
       <form onSubmit={handleSubmit}>
+        <Tooltip title='Cancel This Action' placement='right'>
+        <IconButton
+          className={classes.close_btn}
+          onClick={handleCancel}
+        >
+          <Cancel />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title='Send This Action'>
+        <Button
+          className={classes.refresh_btn}
+          startIcon={<Refresh />}
+          color='primary'
+          type='submit'
+          variant='outlined'
+        >
+          Check for payment...
+          </Button>
+          </Tooltip>
         {env === 'dev' || env === 'staging' ? (
+          <center>
         <iframe
             seamless
-              src={`https://staging-satoshiframe.babbage.systems/?minimumSatoshis=${amount}`}
-              style={{
-                width: '100%',
-                minHeight: '20em'
-              }}
-        />
-        ) : <p>Only Devline and Stageline can buy Testnet satoshis for now. Mainnet satoshis are not for sale. Mainnet is not launched.</p>}
-      <DialogActions>
-        <Button color='secondary' onClick={handleCancel}>
-          Cancel This Action
-        </Button>
-        <Button color='primary' type='submit'>
-          Payment Sent
-        </Button>
-      </DialogActions>
-    </form>
-    </CustomDialog>
+            src={`https://staging-satoshiframe.babbage.systems/?minimumSatoshis=${amount}&reason=${reason}`}
+            className={classes.frame}
+            />
+            </center>
+        ) : <div className={classes.no_support_div}>
+            <Typography paragraph>
+              Your account balance is running low, and you need to get more satohsis before you can take this Action.
+            </Typography>
+            <Typography paragraph>
+              In the future, you will be able to buy more satoshis on this screen. This is not yet possible until certain legal requirements are met. For now:
+            </Typography>
+            <Typography paragraph>
+              <ul>
+                <li>Ask friends to send you a few</li>
+                <li>Other services that can import them to Babbage?</li>
+                <li>If all else fails, try contacting Ty Everett via DM</li>
+              </ul>
+            </Typography>
+            <Typography paragraph>
+              <b>Action:</b> {reason}
+            </Typography>
+            <Typography paragraph>
+              <b>Satoshis Needed:</b> {amount}
+            </Typography>
+        </div>}
+      </form>
+      </Dialog>
   )
 }
 
