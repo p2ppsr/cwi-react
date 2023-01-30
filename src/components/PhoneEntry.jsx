@@ -24,11 +24,6 @@ const PhoneEntry = props => {
   const [countryCode, setCountryCode] = useState('UK')
   return (
     <div className={classes.phone_wrap}>
-      {/* <CountrySelect
-        className={classes.countrySelect}
-        defaultCountry={countryCode}
-        onChange={countryCode => setCountryCode(countryCode)}
-      /> */}
       <PhoneInput
         country={countryCode}
         inputComponent={PhoneField}
