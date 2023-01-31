@@ -1,8 +1,8 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef } from 'react'
 import { makeStyles } from '@mui/styles'
-import PhoneInput from 'react-phone-number-input';
 import { TextField } from '@mui/material'
-import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
 
 const useStyles = makeStyles(theme => ({
   phone_wrap: {
@@ -29,7 +29,7 @@ const PhoneEntry = props => {
         {...props}
       />
     </div>
-  );
-};
+  )
+}
 
-export default PhoneEntry;
+export default PhoneEntry
