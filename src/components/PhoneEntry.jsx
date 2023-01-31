@@ -1,8 +1,8 @@
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef } from 'react';
 import { makeStyles } from '@mui/styles'
+import PhoneInput from 'react-phone-number-input';
 import { TextField } from '@mui/material'
-import PhoneInput from 'react-phone-number-input'
-import 'react-phone-number-input/style.css'
+import 'react-phone-number-input/style.css';
 
 const useStyles = makeStyles(theme => ({
   phone_wrap: {
@@ -21,16 +21,15 @@ const PhoneField = forwardRef((props, ref) => (
 ))
 const PhoneEntry = props => {
   const classes = useStyles()
-  const [countryCode, setCountryCode] = useState('UK')
   return (
     <div className={classes.phone_wrap}>
       <PhoneInput
-        country={countryCode}
+        defaultCountry="US"
         inputComponent={PhoneField}
         {...props}
       />
     </div>
-  )
-}
+  );
+};
 
-export default PhoneEntry
+export default PhoneEntry;

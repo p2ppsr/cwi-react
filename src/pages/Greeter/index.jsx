@@ -102,6 +102,18 @@ const Greeter = ({ history }) => {
       setLoading(false)
     }
   }
+  const handleResendCode = async () => {
+    try {
+      setLoading(true)
+      await window.CWI.submitPhoneNumber(phone)
+      toast.success('A new code has been sent to your phone.')
+    } catch (e) {
+      console.error(e)
+      toast.error(e.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleSubmitPassword = async e => {
     e.preventDefault()
@@ -205,7 +217,7 @@ const Greeter = ({ history }) => {
             <Typography
               className={classes.panel_heading}
             >
-              Get a Code
+              Enter code
             </Typography>
             {accordionView === 'password' && (
               <CheckCircleIcon className={classes.complete_icon} />
@@ -221,6 +233,16 @@ const Greeter = ({ history }) => {
                 fullWidth
               />
             </AccordionDetails>
+            <AccordionActions>
+              <Button
+                color="secondary"
+                onClick={handleResendCode}
+                disabled={loading}
+                align='left'
+              >
+                Resend Code
+              </Button>
+            </AccordionActions>
             <AccordionActions>
               <Button
                 color='primary'
