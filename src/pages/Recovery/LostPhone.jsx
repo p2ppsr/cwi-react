@@ -131,17 +131,13 @@ const RecoveryLostPhone = ({ history }) => {
             />
           </AccordionDetails>
           <AccordionActions>
-            {loading
-              ? <CircularProgress />
-              : (
-                <Button
-                  variant='contained'
-                  color='primary'
-                  type='submit'
-                >
-                  Next
-                </Button>
-                )}
+            <Button
+              variant='contained'
+              color='primary'
+              type='submit'
+            >
+              Next
+            </Button>
           </AccordionActions>
         </form>
       </Accordion>
@@ -180,7 +176,7 @@ const RecoveryLostPhone = ({ history }) => {
                 >
                   Continue
                 </Button>
-                )}
+              )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -218,7 +214,7 @@ const RecoveryLostPhone = ({ history }) => {
                 >
                   Finish
                 </Button>
-                )}
+              )}
           </AccordionActions>
         </form>
       </Accordion>
