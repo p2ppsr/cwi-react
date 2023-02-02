@@ -21,10 +21,9 @@ import { makeStyles } from '@mui/styles'
 import { toast } from 'react-toastify'
 import UIContext from '../../UIContext'
 import PhoneEntry from '../../components/PhoneEntry.jsx'
+import style from './style'
 
-const useStyles = makeStyles(theme => ({
-
-}, { name: 'Home' }))
+const useStyles = makeStyles(style, { name: 'LostPassword' })
 
 const RecoveryLostPassword = ({ history }) => {
   const { saveLocalSnapshot } = useContext(UIContext)
@@ -36,10 +35,17 @@ const RecoveryLostPassword = ({ history }) => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [authenticated, setAuthenticated] = useState(false)
 
   // Ensure the correct authentication mode
   useEffect(() => {
     window.CWI.setAuthenticationMode('phone-number-and-recovery-key')
+  }, [])
+
+  useEffect(() => {
+    (async () => {
+      setAuthenticated(await window.CWI.isAuthenticated())
+    })()
   }, [])
 
   useEffect(() => {
@@ -135,6 +141,23 @@ const RecoveryLostPassword = ({ history }) => {
 
   return (
     <div className={classes.content_wrap}>
+      {authenticated && (
+        <div>
+          <Typography paragraph>
+            You are currently logged in. You must log out in order to reset your password.
+          </Typography>
+          <Button
+            color='secondary'
+            onClick={async () => {
+              if (!window.confirm('Log out?')) return
+              await window.CWI.logout()
+              setAuthenticated(false)
+            }}
+          >
+            Log Out
+          </Button>
+        </div>
+      )}
       <Accordion
         expanded={accordianView === 'phone'}
       >
@@ -315,6 +338,12 @@ const RecoveryLostPassword = ({ history }) => {
           </AccordionActions>
         </form>
       </Accordion>
+      <Button
+        onClick={() => history.go(-1)}
+        className={classes.back_button}
+      >
+        Go Back
+      </Button>
     </div>
   )
 }

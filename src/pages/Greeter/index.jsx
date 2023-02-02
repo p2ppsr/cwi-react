@@ -346,7 +346,7 @@ const Greeter = ({ history }) => {
           color='textSecondary'
           className={classes.copyright_text}
         >
-          Copyright &copy; 2020-2022 Peer-to-peer Privacy Systems Research, LLC. All rights reserved. Redistribution of this software is strictly prohibited. Use of this software is subject to the{' '}
+          Copyright &copy; 2020-2023 Peer-to-peer Privacy Systems Research, LLC. All rights reserved. Redistribution of this software is strictly prohibited. Use of this software is subject to the{' '}
           <a href='https://projectbabbage.com/desktop/license' target='_blank' rel='noopener noreferrer'>Babbage Software License Agreement</a>.
         </Typography>
       </div>

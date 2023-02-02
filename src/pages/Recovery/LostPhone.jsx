@@ -200,8 +200,8 @@ const RecoveryLostPhone = ({ history }) => {
             className={classes.expansion_body}
           >
             <PhoneEntry
-
-              onChange={e => setNewPhone(e.target.value)}
+              value={newPhone}
+              onChange={setNewPhone}
               placeholder='Enter phone number'
               fullWidth
             />
