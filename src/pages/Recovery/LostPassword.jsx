@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import style from './style'
+import 'react-phone-number-input/style.css'
 import {
   Accordion,
   AccordionSummary,
@@ -20,8 +20,10 @@ import {
 import { makeStyles } from '@mui/styles'
 import { toast } from 'react-toastify'
 import UIContext from '../../UIContext'
+import PhoneEntry from '../../components/PhoneEntry.jsx'
+import style from './style'
 
-const useStyles = makeStyles(style, { name: 'Home' })
+const useStyles = makeStyles(style, { name: 'LostPassword' })
 
 const RecoveryLostPassword = ({ history }) => {
   const { saveLocalSnapshot } = useContext(UIContext)
@@ -33,10 +35,17 @@ const RecoveryLostPassword = ({ history }) => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [authenticated, setAuthenticated] = useState(false)
 
   // Ensure the correct authentication mode
   useEffect(() => {
     window.CWI.setAuthenticationMode('phone-number-and-recovery-key')
+  }, [])
+
+  useEffect(() => {
+    (async () => {
+      setAuthenticated(await window.CWI.isAuthenticated())
+    })()
   }, [])
 
   useEffect(() => {
@@ -64,6 +73,7 @@ const RecoveryLostPassword = ({ history }) => {
       const success = await window.CWI.submitPhoneNumber(phone)
       if (success === true) {
         setAccordianView('code')
+        toast.success('A code has been sent to your phone.')
       }
     } catch (e) {
       console.error(e)
@@ -88,7 +98,18 @@ const RecoveryLostPassword = ({ history }) => {
       setLoading(false)
     }
   }
-
+  const handleResendCode = async () => {
+    try {
+      setLoading(true)
+      await window.CWI.submitPhoneNumber(phone)
+      toast.success('A new code has been sent to your phone.')
+    } catch (e) {
+      console.error(e)
+      toast.error(e.message)
+    } finally {
+      setLoading(false)
+    }
+  }
   const handleSubmitRecoveryKey = async e => {
     e.preventDefault()
     try {
@@ -120,6 +141,23 @@ const RecoveryLostPassword = ({ history }) => {
 
   return (
     <div className={classes.content_wrap}>
+      {authenticated && (
+        <div>
+          <Typography paragraph>
+            You are currently logged in. You must log out in order to reset your password.
+          </Typography>
+          <Button
+            color='secondary'
+            onClick={async () => {
+              if (!window.confirm('Log out?')) return
+              await window.CWI.logout()
+              setAuthenticated(false)
+            }}
+          >
+            Log Out
+          </Button>
+        </div>
+      )}
       <Accordion
         expanded={accordianView === 'phone'}
       >
@@ -140,10 +178,10 @@ const RecoveryLostPassword = ({ history }) => {
           <AccordionDetails
             className={classes.expansion_body}
           >
-            <TextField
-              onChange={e => setPhone(e.target.value)}
-              label='Phone'
-              fullWidth
+            <PhoneEntry
+              value={phone}
+              onChange={setPhone}
+              placeholder='Enter phone number'
             />
           </AccordionDetails>
           <AccordionActions>
@@ -157,7 +195,7 @@ const RecoveryLostPassword = ({ history }) => {
                 >
                   Send Code
                 </Button>
-                )}
+              )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -171,7 +209,7 @@ const RecoveryLostPassword = ({ history }) => {
           <Typography
             className={classes.panel_heading}
           >
-            Get a Code
+            Enter code
           </Typography>
           {accordianView === 'password' && (
             <CheckCircleIcon className={classes.complete_icon} />
@@ -188,6 +226,14 @@ const RecoveryLostPassword = ({ history }) => {
             />
           </AccordionDetails>
           <AccordionActions>
+            <Button
+              color="secondary"
+              onClick={handleResendCode}
+              disabled={loading}
+              align='left'
+            >
+              Resend Code
+            </Button>
             {loading
               ? <CircularProgress />
               : (
@@ -198,11 +244,12 @@ const RecoveryLostPassword = ({ history }) => {
                 >
                   Next
                 </Button>
-                )}
+              )}
           </AccordionActions>
         </form>
       </Accordion>
       <Accordion
+        className={classes.accordion}
         expanded={accordianView === 'recovery-key'}
       >
         <AccordionSummary
@@ -239,7 +286,7 @@ const RecoveryLostPassword = ({ history }) => {
                 >
                   Continue
                 </Button>
-                )}
+              )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -261,12 +308,15 @@ const RecoveryLostPassword = ({ history }) => {
             className={classes.expansion_body}
           >
             <TextField
+              margin='normal'
               onChange={e => setPassword(e.target.value)}
               label='Password'
               fullWidth
               type='password'
             />
+            <br />
             <TextField
+              margin='normal'
               onChange={e => setConfirmPassword(e.target.value)}
               label='Confirm Password'
               fullWidth
@@ -284,7 +334,7 @@ const RecoveryLostPassword = ({ history }) => {
                 >
                   Finish
                 </Button>
-                )}
+              )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -297,5 +347,8 @@ const RecoveryLostPassword = ({ history }) => {
     </div>
   )
 }
+
+
+
 
 export default RecoveryLostPassword

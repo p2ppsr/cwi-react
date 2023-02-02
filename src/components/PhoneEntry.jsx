@@ -12,7 +12,6 @@ const useStyles = makeStyles(theme => ({
     }
   }
 }), { name: 'PhoneEntry' })
-
 const PhoneField = forwardRef((props, ref) => (
   <TextField
     {...props}
@@ -20,12 +19,12 @@ const PhoneField = forwardRef((props, ref) => (
     fullWidth
   />
 ))
-
 const PhoneEntry = props => {
   const classes = useStyles()
   return (
     <div className={classes.phone_wrap}>
       <PhoneInput
+        defaultCountry="US"
         inputComponent={PhoneField}
         {...props}
       />

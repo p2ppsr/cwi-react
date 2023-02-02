@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import { DialogActions, DialogContent, Button, DialogContentText, TextField } from '@mui/material'
+import {
+  DialogActions,
+  DialogContent,
+  Button,
+  DialogContentText,
+  TextField,
+  CircularProgress
+} from '@mui/material'
 import CustomDialog from './CustomDialog/index.jsx'
+import { toast } from 'react-toastify'
 
 const CodeHandler = () => {
   const [open, setOpen] = useState(false)
   const [phone, setPhone] = useState('')
   const [reason, setReason] = useState('')
   const [code, setCode] = useState('')
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     let id
@@ -25,9 +34,16 @@ const CodeHandler = () => {
   }, [])
 
   const handleSubmit = async () => {
-    const success = await window.CWI.submitCode(code)
-    if (success) {
-      setOpen(false)
+    try {
+      setLoading(true)
+      const success = await window.CWI.submitCode(code)
+      if (success) {
+        setOpen(false)
+      }
+    } catch (e) {
+      toast.success(e.message)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -47,18 +63,24 @@ const CodeHandler = () => {
         <DialogContentText>
           {reason}.
         </DialogContentText>
-        <TextField
-          label='Enter Code'
-          onChange={e => setCode(e.target.value)}
-        />
+        <br />
+        <br />
+        <center>
+          <TextField
+            label='Enter Code'
+            onChange={e => setCode(e.target.value)}
+            disabled={loading}
+          />
+        </center>
       </DialogContent>
       <DialogActions>
-        <Button
+        {loading && <CircularProgress />}
+        {!loading && <Button
           color='primary'
           onClick={handleSubmit}
         >
           submit
-        </Button>
+        </Button>}
       </DialogActions>
     </CustomDialog>
   )

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import style from './style'
+import 'react-phone-number-input/style.css'
 import {
   Accordion,
   AccordionSummary,
@@ -19,6 +20,7 @@ import {
 import { makeStyles } from '@mui/styles'
 import { toast } from 'react-toastify'
 import UIContext from '../../UIContext'
+import PhoneEntry from '../../components/PhoneEntry.jsx'
 
 const useStyles = makeStyles(style, { name: 'RecoveryLostPhoneNumber' })
 
@@ -131,17 +133,13 @@ const RecoveryLostPhone = ({ history }) => {
             />
           </AccordionDetails>
           <AccordionActions>
-            {loading
-              ? <CircularProgress />
-              : (
-                <Button
-                  variant='contained'
-                  color='primary'
-                  type='submit'
-                >
-                  Next
-                </Button>
-                )}
+            <Button
+              variant='contained'
+              color='primary'
+              type='submit'
+            >
+              Next
+            </Button>
           </AccordionActions>
         </form>
       </Accordion>
@@ -180,7 +178,7 @@ const RecoveryLostPhone = ({ history }) => {
                 >
                   Continue
                 </Button>
-                )}
+              )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -201,9 +199,10 @@ const RecoveryLostPhone = ({ history }) => {
           <AccordionDetails
             className={classes.expansion_body}
           >
-            <TextField
-              onChange={e => setNewPhone(e.target.value)}
-              label='New Phone'
+            <PhoneEntry
+              value={newPhone}
+              onChange={setNewPhone}
+              placeholder='Enter phone number'
               fullWidth
             />
           </AccordionDetails>
@@ -218,7 +217,7 @@ const RecoveryLostPhone = ({ history }) => {
                 >
                   Finish
                 </Button>
-                )}
+              )}
           </AccordionActions>
         </form>
       </Accordion>
