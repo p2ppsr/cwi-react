@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import style from './style'
+import 'react-phone-number-input/style.css'
 import {
   Accordion,
   AccordionSummary,
@@ -19,6 +20,7 @@ import {
 import { makeStyles } from '@mui/styles'
 import { toast } from 'react-toastify'
 import UIContext from '../../UIContext'
+import PhoneEntry from '../../components/PhoneEntry.jsx'
 
 const useStyles = makeStyles(style, { name: 'RecoveryLostPhoneNumber' })
 
@@ -197,9 +199,10 @@ const RecoveryLostPhone = ({ history }) => {
           <AccordionDetails
             className={classes.expansion_body}
           >
-            <TextField
+            <PhoneEntry
+
               onChange={e => setNewPhone(e.target.value)}
-              label='New Phone'
+              placeholder='Enter phone number'
               fullWidth
             />
           </AccordionDetails>

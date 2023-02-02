@@ -78,6 +78,7 @@ const Greeter = ({ history }) => {
       const success = await window.CWI.submitPhoneNumber(phone)
       if (success === true) {
         setAccordionView('code')
+        toast.success('A code has been sent to your phone.')
       }
     } catch (e) {
       console.error(e)

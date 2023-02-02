@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react'
-import style from './style'
 import 'react-phone-number-input/style.css'
 import {
   Accordion,
@@ -23,7 +22,9 @@ import { toast } from 'react-toastify'
 import UIContext from '../../UIContext'
 import PhoneEntry from '../../components/PhoneEntry.jsx'
 
-const useStyles = makeStyles(style, { name: 'Home' })
+const useStyles = makeStyles(theme => ({
+
+}, { name: 'Home' }))
 
 const RecoveryLostPassword = ({ history }) => {
   const { saveLocalSnapshot } = useContext(UIContext)
@@ -66,6 +67,7 @@ const RecoveryLostPassword = ({ history }) => {
       const success = await window.CWI.submitPhoneNumber(phone)
       if (success === true) {
         setAccordianView('code')
+        toast.success('A code has been sent to your phone.')
       }
     } catch (e) {
       console.error(e)
@@ -283,12 +285,15 @@ const RecoveryLostPassword = ({ history }) => {
             className={classes.expansion_body}
           >
             <TextField
+              margin='normal'
               onChange={e => setPassword(e.target.value)}
               label='Password'
               fullWidth
               type='password'
             />
+            <br />
             <TextField
+              margin='normal'
               onChange={e => setConfirmPassword(e.target.value)}
               label='Confirm Password'
               fullWidth
