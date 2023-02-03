@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import {
-  DialogContent, DialogContentText, DialogActions, Button
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+  FormControlLabel,
+  Checkbox
 } from '@mui/material'
 import CustomDialog from './CustomDialog/index.jsx'
+import LockIcon from '@mui/icons-material/Lock'
+import DownloadIcon from '@mui/icons-material/Download'
 
 const RecoveryKeyHandler = () => {
   const [open, setOpen] = useState(false)
   const [recoveryKey, setRecoveryKey] = useState('')
+  const [myResponsibility, setMyResponsibility] = useState(false)
+  const [atLeastTwo, setAtLeastTwo] = useState(false)
 
   useEffect(() => {
     let id
@@ -31,18 +40,73 @@ const RecoveryKeyHandler = () => {
     setOpen(false)
   }
 
+  const handleDownload = async () => {
+    const blobData = new Blob([`MetaNet Recovery Key:\n\n${recoveryKey}\n\nSaved: ${new Date()}`], { type: 'text/plain' })
+    const urlToBlob = window.URL.createObjectURL(blobData)
+    const a = document.createElement('a')
+    a.style.setProperty('display', 'none')
+    document.body.appendChild(a)
+    a.href = urlToBlob
+    a.download = 'MetaNet Recovery Key.txt'
+    a.click()
+    window.URL.revokeObjectURL(urlToBlob)
+    a.remove()
+  }
+
   return (
     <CustomDialog
       open={open}
-      title='Save This Key'
+      title='Save Your MetaNet Recovery Key'
     >
       <DialogContent>
         <DialogContentText>
-          You'll need this key if you ever forget your password or lose your phone.
+          The security of your MetaNet identity depends on saving your recovery key in case you lose your phone or password:
+        </DialogContentText>
+        <br />
+        <DialogContentText>
+          <b
+            style={{
+              userSelect: 'all',
+              wordWrap: 'break-word'
+            }}
+          >
+            {recoveryKey}
+          </b>
         </DialogContentText>
         <DialogContentText>
-          <b style={{ wordWrap: 'break-word' }}>{recoveryKey}</b>
+          <ul>
+            <li>Take a screenshot</li>
+            <li>Email it to yourself</li>
+            <li>Write it down and put it in a safe</li>
+          </ul>
         </DialogContentText>
+        <center style={{ marginBottom: '0.5em' }}>
+          <Button
+            color='primary'
+            startIcon={<DownloadIcon />}
+            onClick={handleDownload}
+          >
+            Download Local File
+          </Button>
+        </center>
+        <DialogContentText>
+          You need <b>at least two</b> of your phone, password and recovery key to log into your MetaNet identity. No one can help you if you lose access.
+        </DialogContentText>
+        <FormControlLabel
+          control={<Checkbox
+            checked={myResponsibility}
+            onChange={() => setMyResponsibility(x => !x)}
+          />}
+          label="My Responsibility"
+        />
+        <br />
+        <FormControlLabel
+          control={<Checkbox
+            checked={atLeastTwo}
+            onChange={() => setAtLeastTwo(x => !x)}
+          />}
+          label="...at least two..."
+        />
       </DialogContent>
       <DialogActions>
         <Button
@@ -55,11 +119,14 @@ const RecoveryKeyHandler = () => {
         >
           Abort & Cancel
         </Button>
+        {console.log(`(!${myResponsibility}) || (!${atLeastTwo})`)}
         <Button
           onClick={onKeySaved}
           color='primary'
+          endIcon={<LockIcon />}
+          disabled={(!myResponsibility) || (!atLeastTwo)}
         >
-          Continue
+          Securely Saved
         </Button>
       </DialogActions>
     </CustomDialog>

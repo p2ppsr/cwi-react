@@ -112,6 +112,8 @@ const Greeter = ({ history }) => {
       console.error(e)
       toast.error(e.message)
     } finally {
+      // Prevent lots of re-send spam clicks
+      await new Promise(resolve => setTimeout(resolve, 3000))
       setLoading(false)
     }
   }
@@ -195,6 +197,7 @@ const Greeter = ({ history }) => {
                 value={phone}
                 onChange={setPhone}
                 placeholder='Enter phone number'
+                autoFocus
               />
             </AccordionDetails>
             <AccordionActions>
@@ -232,6 +235,7 @@ const Greeter = ({ history }) => {
                 onChange={e => setCode(e.target.value)}
                 label='Code'
                 fullWidth
+                autoFocus
               />
             </AccordionDetails>
             <AccordionActions>
@@ -291,6 +295,7 @@ const Greeter = ({ history }) => {
                   label='Password'
                   fullWidth
                   type='password'
+                  autoFocus
                 />
                 {accountStatus === 'new-user' && (
                   <TextField
