@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { DialogActions, DialogContent, Button, DialogContentText, TextField } from '@mui/material'
+import { DialogActions, DialogContent, Button, DialogContentText, TextField, InputAdornment, IconButton } from '@mui/material'
 import CustomDialog from './CustomDialog/index.jsx'
 import UIContext from '../UIContext'
+import { Visibility, VisibilityOff } from '@material-ui/icons'
 
 const PasswordHandler = () => {
   const {
@@ -9,10 +10,11 @@ const PasswordHandler = () => {
     onFocusRelinquished,
     isFocused
   } = useContext(UIContext)
-  const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false) 
+  const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false)
   const [open, setOpen] = useState(false)
   const [reason, setReason] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
     let id
@@ -72,8 +74,22 @@ const PasswordHandler = () => {
             label='Password'
             autoFocus
             fullWidth
-            type='password'
+            type={showPassword ? 'text' : 'password'}
             onChange={e => setPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton
+                    aria-label='toggle password visibility'
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge='end'
+                    style={{ color: 'inherit' }}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
         </DialogContent>
         <DialogActions>
@@ -89,8 +105,8 @@ const PasswordHandler = () => {
           >
             OK
           </Button>
-          </DialogActions>
-        </form>
+        </DialogActions>
+      </form>
     </CustomDialog>
   )
 }

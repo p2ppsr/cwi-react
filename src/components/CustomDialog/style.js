@@ -9,5 +9,8 @@ export default theme => ({
   },
   title: {
     color: theme.palette.common.white
+  },
+  iconButton: {
+    color: theme.palette.text.secondary
   }
 })

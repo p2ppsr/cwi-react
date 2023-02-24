@@ -58,5 +58,9 @@ export default theme => ({
       gridTemplateColumns: '1fr',
       gridTemplateRows: '1fr 1fr'
     }
+  },
+  iconButton: {
+    padding: 0,
+    marginLeft: '-12px'
   }
 })
