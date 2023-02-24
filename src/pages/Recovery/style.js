@@ -8,7 +8,12 @@ export default theme => ({
     position: 'relative'
   },
   panel_body: {
-    position: 'relative'
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '50vh'
   },
   expansion_icon: {
     marginRight: '0.5em'

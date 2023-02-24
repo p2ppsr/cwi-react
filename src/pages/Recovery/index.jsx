@@ -7,7 +7,7 @@ import {
   SettingsPhone as PhoneIcon
 } from '@mui/icons-material'
 import {
-  List, ListItem, ListItemIcon, ListItemText, Button
+  List, ListItem, ListItemIcon, ListItemText, Button, Typography
 } from '@mui/material'
 
 const useStyles = makeStyles(style, {
@@ -18,36 +18,42 @@ const Recovery = ({ history }) => {
   const classes = useStyles()
   return (
     <div className={classes.content_wrap}>
-      <List>
-        <ListItem
-          button
-          onClick={() => history.push('/recovery/lost-phone')}
+      <div className={classes.panel_body}>
+        <Typography variant='h2' paragraph fontFamily='Helvetica' fontSize='2em'>
+          Need help?
+        </Typography>
+        <List style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+          <ListItem
+            button
+            onClick={() => history.push('/recovery/lost-phone')}
+          >
+            <ListItemIcon>
+              <PhoneIcon />
+            </ListItemIcon>
+            <ListItemText>
+              Lost Phone
+            </ListItemText>
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => history.push('/recovery/lost-password')}
+          >
+            <ListItemIcon>
+              <LockIcon />
+            </ListItemIcon>
+            <ListItemText>
+              Lost Password
+            </ListItemText>
+          </ListItem>
+        </List>
+        <Button
+          className={classes.back_button}
+          onClick={() => history.go(-1)}
+          style={{ marginTop: '1rem' }}
         >
-          <ListItemIcon>
-            <PhoneIcon />
-          </ListItemIcon>
-          <ListItemText>
-            Lost Phone
-          </ListItemText>
-        </ListItem>
-        <ListItem
-          button
-          onClick={() => history.push('/recovery/lost-password')}
-        >
-          <ListItemIcon>
-            <LockIcon />
-          </ListItemIcon>
-          <ListItemText>
-            Lost Password
-          </ListItemText>
-        </ListItem>
-      </List>
-      <Button
-        className={classes.back_button}
-        onClick={() => history.go(-1)}
-      >
-        Go Back
-      </Button>
+          Go Back
+        </Button>
+      </div>
     </div>
   )
 }

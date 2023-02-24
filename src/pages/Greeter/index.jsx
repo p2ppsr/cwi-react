@@ -172,10 +172,10 @@ const Greeter = ({ history }) => {
             className={classes.logo}
             rotate
           />
-          <Typography variant='h2' paragraph>
+          <Typography variant='h2' paragraph fontFamily='Helvetica' fontSize='2em'>
             {appName}
           </Typography>
-          <Typography variant='h4' paragraph>
+          <Typography variant='h4' paragraph fontFamily='Helvetica'>
             Welcome!
           </Typography>
           <Typography variant='p' paragraph>
