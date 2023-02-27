@@ -23,6 +23,7 @@ import CertificateAccessHandler from 'components/CertificateAccessHandler/index.
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
 import UIContext from './UIContext'
+import mainBackground from './images/mainBackground.jpg'
 
 const queries = {
   xs: '(max-width: 500px)',
@@ -75,7 +76,12 @@ export default ({
       }}
       >
         <div style={{
-          width: '100%'
+          backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,1.0), rgba(255,255,255,0.85)), url(${mainBackground})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          width: '100vw',
+          height: '100vh',
+          backgroundColor: 'rgba(255, 255, 255, 0.4)'
         }}
         >
           <ErrorBoundary>

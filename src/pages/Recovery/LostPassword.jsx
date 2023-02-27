@@ -141,6 +141,9 @@ const RecoveryLostPassword = ({ history }) => {
 
   return (
     <div className={classes.content_wrap}>
+      <Typography variant='h2' paragraph fontFamily='Helvetica' fontSize='2em'>
+        Reset Password
+      </Typography>
       {authenticated && (
         <div>
           <Typography paragraph>
@@ -195,7 +198,7 @@ const RecoveryLostPassword = ({ history }) => {
                 >
                   Send Code
                 </Button>
-              )}
+                )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -227,7 +230,7 @@ const RecoveryLostPassword = ({ history }) => {
           </AccordionDetails>
           <AccordionActions>
             <Button
-              color="secondary"
+              color='secondary'
               onClick={handleResendCode}
               disabled={loading}
               align='left'
@@ -244,7 +247,7 @@ const RecoveryLostPassword = ({ history }) => {
                 >
                   Next
                 </Button>
-              )}
+                )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -286,7 +289,7 @@ const RecoveryLostPassword = ({ history }) => {
                 >
                   Continue
                 </Button>
-              )}
+                )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -334,7 +337,7 @@ const RecoveryLostPassword = ({ history }) => {
                 >
                   Finish
                 </Button>
-              )}
+                )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -347,8 +350,5 @@ const RecoveryLostPassword = ({ history }) => {
     </div>
   )
 }
-
-
-
 
 export default RecoveryLostPassword

@@ -30,7 +30,7 @@ const CustomDialog = ({ title, children, ...props }) => {
       </DialogTitle>
       {children}
     </Dialog>
-  );
+  )
 }
 
 export default CustomDialog

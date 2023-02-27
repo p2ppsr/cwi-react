@@ -9,7 +9,9 @@ import {
   Button,
   TextField,
   CircularProgress,
-  Divider
+  Divider,
+  InputAdornment,
+  IconButton
 } from '@mui/material'
 import {
   SettingsPhone as PhoneIcon,
@@ -23,6 +25,7 @@ import { Link } from 'react-router-dom'
 import CWILogo from '../../components/Logo.jsx'
 import { toast } from 'react-toastify'
 import UIContext from '../../UIContext'
+import { Visibility, VisibilityOff } from '@material-ui/icons'
 
 const useStyles = makeStyles(style, { name: 'Greeter' })
 
@@ -36,6 +39,7 @@ const Greeter = ({ history }) => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [accountStatus, setAccountStatus] = useState(undefined)
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   // const [electronVersion, setElectronVersion] = useState('0.0.0')
 
   // Navigate to the dashboard if the user is already authenticated
@@ -168,8 +172,14 @@ const Greeter = ({ history }) => {
             className={classes.logo}
             rotate
           />
-          <Typography variant='h2' paragraph>
+          <Typography variant='h2' paragraph fontFamily='Helvetica' fontSize='2em'>
             {appName}
+          </Typography>
+          <Typography variant='h4' paragraph fontFamily='Helvetica'>
+            Welcome!
+          </Typography>
+          <Typography variant='p' paragraph>
+            Please enter your phone number to login or sign up.
           </Typography>
           <Divider />
         </center>
@@ -202,7 +212,8 @@ const Greeter = ({ history }) => {
             </AccordionDetails>
             <AccordionActions>
               <Button
-                color='primary'
+                color='secondary'
+                style={{ fontWeight: 'bold' }}
                 type='submit'
                 disabled={loading}
               >
@@ -240,8 +251,9 @@ const Greeter = ({ history }) => {
             </AccordionDetails>
             <AccordionActions>
               <Button
-                color="secondary"
+                color='primary'
                 onClick={handleResendCode}
+                size='small'
                 disabled={loading}
                 align='left'
               >
@@ -257,7 +269,8 @@ const Greeter = ({ history }) => {
                 Back
               </Button>
               <Button
-                color='primary'
+                color='secondary'
+                style={{ fontWeight: 'bold' }}
                 type='submit'
                 disabled={loading}
               >
@@ -294,15 +307,43 @@ const Greeter = ({ history }) => {
                   onChange={e => setPassword(e.target.value)}
                   label='Password'
                   fullWidth
-                  type='password'
+                  type={showPassword ? 'text' : 'password'}
                   autoFocus
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <IconButton
+                          aria-label='toggle password visibility'
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge='end'
+                          style={{ color: 'inherit' }}
+                        >
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                 />
                 {accountStatus === 'new-user' && (
                   <TextField
                     onChange={e => setConfirmPassword(e.target.value)}
                     label='Retype Password'
                     fullWidth
-                    type='password'
+                    type={showPassword ? 'text' : 'password'}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <IconButton
+                            aria-label='toggle password visibility'
+                            onClick={() => setShowPassword(!showPassword)}
+                            edge='end'
+                            style={{ color: 'inherit' }}
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
                   />
                 )}
               </div>
@@ -323,9 +364,9 @@ const Greeter = ({ history }) => {
               >
                 {!loading
                   ? (accountStatus === 'new-user'
-                    ? 'Create Account'
-                    : 'Log In'
-                  )
+                      ? 'Create Account'
+                      : 'Log In'
+                    )
                   : <CircularProgress />}
               </Button>
             </AccordionActions>

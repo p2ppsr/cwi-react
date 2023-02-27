@@ -106,6 +106,9 @@ const RecoveryLostPhone = ({ history }) => {
 
   return (
     <div className={classes.content_wrap}>
+      <Typography variant='h2' paragraph fontFamily='Helvetica' fontSize='2em'>
+        Reset Phone Number
+      </Typography>
       <Accordion
         expanded={accordianView === 'recovery-key'}
       >
@@ -178,7 +181,7 @@ const RecoveryLostPhone = ({ history }) => {
                 >
                   Continue
                 </Button>
-              )}
+                )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -217,7 +220,7 @@ const RecoveryLostPhone = ({ history }) => {
                 >
                   Finish
                 </Button>
-              )}
+                )}
           </AccordionActions>
         </form>
       </Accordion>
