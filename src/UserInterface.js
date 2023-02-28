@@ -23,7 +23,6 @@ import CertificateAccessHandler from 'components/CertificateAccessHandler/index.
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
 import UIContext from './UIContext'
-import mainBackground from './images/mainBackground.jpg'
 
 const queries = {
   xs: '(max-width: 500px)',
@@ -76,7 +75,7 @@ export default ({
       }}
       >
         <div style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,1.0), rgba(255,255,255,0.85)), url(${mainBackground})`,
+          backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,1.0), rgba(255,255,255,0.85)), url(https://cdn.projectbabbage.com/media/pictures/mainBackground.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           width: '100vw',
