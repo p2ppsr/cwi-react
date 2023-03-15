@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import {
-  DialogContent, DialogContentText, Typography, DialogActions, Button
+  DialogContentText, Button
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
