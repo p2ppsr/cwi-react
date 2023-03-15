@@ -19,7 +19,7 @@ const ProtocolPermissionHandler = () => {
     onFocusRelinquished,
     isFocused
   } = useContext(UIContext)
-  const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false) 
+  const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false)
   const classes = useStyles()
   const [description, setDescription] = useState('')
   const [originator, setOriginator] = useState('')
@@ -105,9 +105,11 @@ const ProtocolPermissionHandler = () => {
       onClose={handleCancel}
       title='App Permission Request'
     >
-      <DialogContent>
+      <div
+        padding='1em'
+        textAlign='center'>
         <center>
-          <AppChip size={1.5} label={originator}  clickable={false} />
+          <AppChip size={1.5} label={originator} clickable={false} />
         </center>
         <DialogContentText>
           The app "{appName || originator}" would like to access <b>{protocolID}</b>.
@@ -120,13 +122,13 @@ const ProtocolPermissionHandler = () => {
         <DialogContentText>
           {description}
         </DialogContentText>
-      </DialogContent>
+      </div>
       {renewal && (
-          <DialogContentText>
-            The app has requested this permission before.
-          </DialogContentText>
-        )}
-      <DialogActions>
+        <DialogContentText>
+          The app has requested this permission before.
+        </DialogContentText>
+      )}
+      <div>
         <Button
           onClick={handleCancel}
           color='primary'
@@ -139,7 +141,7 @@ const ProtocolPermissionHandler = () => {
         >
           Grant
         </Button>
-      </DialogActions>
+      </div>
     </CustomDialog>
   )
 }
