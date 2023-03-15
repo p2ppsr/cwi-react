@@ -41,7 +41,7 @@ You provide the various props shown in the above-linked examples.
 
 You should familiarize yourself with the `@cwi/core` package, since it's the primary interface to CWI. This package is concerned with the UI components, while `@cwi/core` deals with the actual meat and potatoes.
 
-If you are an outside app developer or service provider workin to create things with Babbage, then you want to check out the [Babbage SDK](https://projectbabbage.com/sdk) instead.
+If you are an outside app developer or service provider working to create things with Babbage, then you want to check out the [Babbage SDK](https://projectbabbage.com/sdk) instead.
 
 ## Development
 
