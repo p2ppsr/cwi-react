@@ -109,19 +109,27 @@ const CertificateAccessHandler = () => {
       onClose={handleCancel}
       title='Certificate Access Request'
     >
-      <DialogContent>
+      <DialogContent style={{
+        textAlign: 'center',
+        padding: '1em',
+        flex: 'none'
+      }}
+      >
         <center>
           <AppChip size={1.5} label={originator} clickable={false} />
         </center>
         <DialogContentText>
           The app "{appName || originator}" would like to access certificate type "{certificateType}", for the following verifier:
         </DialogContentText>
+        <br />
         <DialogContentText style={{ alignSelf: 'baseline' }}>
           <b>{verifierPublicKey}</b>
         </DialogContentText>
+        <br />
         <DialogContentText>
           {description}
         </DialogContentText>
+        <br />
       </DialogContent>
       <Typography align='center'>
         <TableContainer component={Paper}>
@@ -153,13 +161,19 @@ const CertificateAccessHandler = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <br />
+        {renewal && (
+          <DialogContentText>
+            The app has requested access before.
+          </DialogContentText>
+        )}
       </Typography>
-      {renewal && (
-        <DialogContentText>
-          The app has requested access before.
-        </DialogContentText>
-      )}
-      <DialogActions>
+      <DialogActions style={{
+        justifyContent: 'space-around',
+        padding: '1em',
+        flex: 'none'
+      }}
+      >
         <Button
           onClick={handleCancel}
           color='primary'
