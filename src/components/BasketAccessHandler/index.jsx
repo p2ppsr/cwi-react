@@ -92,13 +92,15 @@ const BasketAccessHandler = () => {
       onClose={handleCancel}
       title='Basket Access Request'
     >
-      <DialogContent>
-        <center>
-          <AppChip size={1.5} label={originator} clickable={false} />
-        </center>
+      <DialogContent style={{
+        textAlign: 'center',
+        padding: '1em',
+        flex: 'none'
+      }}>
         <DialogContentText>
           The app "{appName || originator}" would like to access <b>{basket}</b>.
         </DialogContentText>
+        <br />
         <DialogContentText>
           {description}
         </DialogContentText>
@@ -108,7 +110,12 @@ const BasketAccessHandler = () => {
           The app has requested access before.
         </DialogContentText>
       )}
-      <DialogActions>
+      <br />
+      <DialogActions style={{
+        justifyContent: 'space-around',
+        padding: '1em',
+        flex: 'none'
+      }}>
         <Button
           onClick={handleCancel}
           color='primary'

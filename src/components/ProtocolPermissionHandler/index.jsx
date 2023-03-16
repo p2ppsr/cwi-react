@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import {
-  DialogContentText, Button
+  DialogContent, DialogContentText, Typography, DialogActions, Button
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
@@ -105,30 +105,38 @@ const ProtocolPermissionHandler = () => {
       onClose={handleCancel}
       title='App Permission Request'
     >
-      <div
-        padding='1em'
-        textAlign='center'>
+      <DialogContent style={{
+        textAlign: 'center',
+        padding: '1em',
+        flex: 'none'
+      }}>
         <center>
           <AppChip size={1.5} label={originator} clickable={false} />
         </center>
         <DialogContentText>
           The app "{appName || originator}" would like to access <b>{protocolID}</b>.
         </DialogContentText>
+        <br />
         {protocolSecurityLevel === 2 && counterparty && (
           <DialogContentText>
             <b>Counterparty</b>: {counterparty}
           </DialogContentText>
         )}
+        <br />
         <DialogContentText>
           {description}
         </DialogContentText>
-      </div>
+      </DialogContent>
       {renewal && (
         <DialogContentText>
           The app has requested this permission before.
         </DialogContentText>
       )}
-      <div>
+      <DialogActions style={{
+        justifyContent: 'space-around',
+        padding: '1em',
+        flex: 'none'
+      }}>
         <Button
           onClick={handleCancel}
           color='primary'
@@ -141,7 +149,7 @@ const ProtocolPermissionHandler = () => {
         >
           Grant
         </Button>
-      </div>
+      </DialogActions>
     </CustomDialog>
   )
 }
