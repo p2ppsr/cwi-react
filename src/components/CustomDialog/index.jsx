@@ -13,7 +13,7 @@ const useStyles = makeStyles(style, {
 const CustomDialog = ({ title, children, ...props }) => {
   const classes = useStyles()
   const theme = useTheme()
-  const isFullscreen = useMediaQuery(theme.breakpoints.down('md'))
+  const isFullscreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
     <Dialog
