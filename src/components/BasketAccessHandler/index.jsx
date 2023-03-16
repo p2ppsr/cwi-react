@@ -96,7 +96,8 @@ const BasketAccessHandler = () => {
         textAlign: 'center',
         padding: '1em',
         flex: 'none'
-      }}>
+      }}
+      >
         <DialogContentText>
           The app "{appName || originator}" would like to access <b>{basket}</b>.
         </DialogContentText>
@@ -104,18 +105,20 @@ const BasketAccessHandler = () => {
         <DialogContentText>
           {description}
         </DialogContentText>
+        <br />
+        {renewal && (
+          <DialogContentText>
+            The app has requested access before.
+          </DialogContentText>
+        )}
       </DialogContent>
-      {renewal && (
-        <DialogContentText>
-          The app has requested access before.
-        </DialogContentText>
-      )}
       <br />
       <DialogActions style={{
         justifyContent: 'space-around',
         padding: '1em',
         flex: 'none'
-      }}>
+      }}
+      >
         <Button
           onClick={handleCancel}
           color='primary'

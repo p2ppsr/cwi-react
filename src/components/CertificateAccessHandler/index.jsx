@@ -113,7 +113,8 @@ const CertificateAccessHandler = () => {
         textAlign: 'center',
         padding: '1em',
         flex: 'none'
-      }}>
+      }}
+      >
         <center>
           <AppChip size={1.5} label={originator} clickable={false} />
         </center>
@@ -160,17 +161,19 @@ const CertificateAccessHandler = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <br />
+        {renewal && (
+          <DialogContentText>
+            The app has requested access before.
+          </DialogContentText>
+        )}
       </Typography>
-      {renewal && (
-        <DialogContentText>
-          The app has requested access before.
-        </DialogContentText>
-      )}
       <DialogActions style={{
         justifyContent: 'space-around',
         padding: '1em',
         flex: 'none'
-      }}>
+      }}
+      >
         <Button
           onClick={handleCancel}
           color='primary'
