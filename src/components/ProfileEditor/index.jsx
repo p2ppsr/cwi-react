@@ -19,7 +19,7 @@ import 'react-image-crop/dist/ReactCrop.css'
 import { toast } from 'react-toastify'
 import { invoice, pay, upload } from 'nanostore-publisher'
 import { Img } from 'uhrp-react'
-import bridgeportResolvers from '../../utils/bridgeportResolvers'
+import confederacyHost from '../../utils/confederacyHost'
 import UIContext from '../../UIContext'
 
 const useStyles = makeStyles(style, {
@@ -225,8 +225,6 @@ const ProfileEditor = ({
     }
   }
 
-  const resolvers = bridgeportResolvers()
-
   return (
     <Dialog open={!!open} onClose={handleClose}>
       <DialogTitle>
@@ -266,7 +264,7 @@ const ProfileEditor = ({
                   </Button>
                 </div>
               </div>
-            )
+              )
             : (
               <>
                 <div className={classes.image_frame}>
@@ -295,7 +293,7 @@ const ProfileEditor = ({
                       src={editablePhotoURL}
                       className={classes.photo}
                       alt=''
-                      bridgeportResolvers={resolvers}
+                      confederacyHost={confederacyHost()}
                     />
                   )}
                 </div>
@@ -316,7 +314,7 @@ const ProfileEditor = ({
                   fullWidth
                 />
               </>
-            )}
+              )}
         </DialogContent>
         <DialogActions>
           {(welcome && !loading) && (
@@ -329,7 +327,7 @@ const ProfileEditor = ({
           {loading
             ? (
               <CircularProgress />
-            )
+              )
             : (
               <Button
                 type='submit'
@@ -337,7 +335,7 @@ const ProfileEditor = ({
               >
                 Save
               </Button>
-            )}
+              )}
         </DialogActions>
       </form>
     </Dialog>

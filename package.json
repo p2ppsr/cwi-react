@@ -32,7 +32,7 @@
     "react-router-dom": "^5.2.0",
     "react-toastify": "^9.0.8",
     "react-visibility-sensor": "^5.1.1",
-    "uhrp-react": "^0.1.4",
+    "uhrp-react": "^0.1.7",
     "whatsonchain": "^0.2.0"
   },
   "peerDependencies": {
