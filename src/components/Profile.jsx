@@ -87,7 +87,7 @@ const Profile = () => {
             <div className={classes.image_edit}>
               <Img
                 className={classes.profile_icon}
-                src={avatar.photoURL || 'uhrp:XUSw3EKLvt4uWHrMvKSDychPSvnAqVeKCrReidew2C2rUN6Sps3S'}
+                src={avatar.photoURL || 'XUSw3EKLvt4uWHrMvKSDychPSvnAqVeKCrReidew2C2rUN6Sps3S'}
                 alt=''
                 loading={
                   <div className={classes.profile_loading}>
@@ -95,7 +95,7 @@ const Profile = () => {
                       <CircularProgress />
                     </center>
                   </div>
-              }
+                }
                 confederacyHost={confederacyHost()}
               />
               <Fab
