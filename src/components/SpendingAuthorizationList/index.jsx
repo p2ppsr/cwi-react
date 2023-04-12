@@ -125,9 +125,10 @@ const SpendingAuthorizationList = ({ app }) => {
                 <AttachMoney />
               </Avatar>
             </ListItemAvatar>
+            {/* <h1>TODO: Fix the bug that cause an invalid timestamp with temp fix below:</h1> */}
             <ListItemText
               primary={<Satoshis>{authorization.amount}</Satoshis>}
-              secondary={`Must be used with${formatDistance(new Date(authorization.expiry * 1000), new Date(), { addSuffix: true })}`}
+              secondary={`Must be used within ${formatDistance(new Date(authorization.expiry <= 16817763900000 ? authorization.expiry * 1000 : Date.now() + 10000000), new Date(), { addSuffix: true })}`}
             />
             <ListItemSecondaryAction>
               <IconButton
