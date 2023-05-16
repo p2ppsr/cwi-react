@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ProfileEditor from './ProfileEditor/index.jsx'
 import Satoshis from './Satoshis.jsx'
 import { Img } from 'uhrp-react'
-import bridgeportResolvers from '../utils/bridgeportResolvers'
+import confederacyHost from '../utils/confederacyHost'
 import { makeStyles } from '@mui/styles'
 import { Typography, Fab, Divider, CircularProgress } from '@mui/material'
 import { Edit } from '@mui/icons-material'
@@ -79,7 +79,7 @@ const Profile = () => {
     })()
   }, [])
 
-  const resolvers = bridgeportResolvers()
+  const confederacyHostURL = confederacyHost()
 
   return (
     <>
@@ -92,12 +92,12 @@ const Profile = () => {
               alt=''
               loading={
                 <div className={classes.profile_loading}>
-                  <center>
-                    <CircularProgress />
+                  <center style={{ opacity: 0.3 }}>
+                    <CircularProgress thickness={2} />
                   </center>
                 </div>
               }
-              bridgeportResolvers={resolvers}
+              confederacyHost={confederacyHostURL}
             />
             <Fab
               size='small'

@@ -39,7 +39,7 @@ const useStyles = makeStyles({
 }, { name: 'PaymentHandler' })
 
 
- {/* <DialogContentText>
+/* <DialogContentText>
           The following action requires Bitcoin SV (BSV) tokens, which you can use throughout the entire CWI ecosystem:
         </DialogContentText>
         <DialogContentText>
@@ -56,8 +56,30 @@ const useStyles = makeStyles({
           </DialogContentText>
           <DialogContentText>
             TODO functionality — buy more — for now, cancel, and then email us at satoshis@projectabbage.com or use Ninja to top-up. Click "Payment Sent" once money is there.
-          </DialogContentText> */}
+          </DialogContentText> */
 
+
+          /*<div className={classes.no_support_div}>
+            <Typography paragraph>
+              Your account balance is running low, and you need to get more satohsis before you can take this Action.
+            </Typography>
+            <Typography paragraph>
+              In the future, you will be able to buy more satoshis on this screen. This is not yet possible until certain legal requirements are met. For now:
+            </Typography>
+            <Typography paragraph>
+              <ul>
+                <li>Ask friends to send you a few</li>
+                <li>Other services that can import them to Babbage?</li>
+                <li>If all else fails, try contacting Ty Everett via DM</li>
+              </ul>
+            </Typography>
+            <Typography paragraph>
+              <b>Action:</b> {reason}
+            </Typography>
+            <Typography paragraph>
+              <b>Satoshis Needed:</b> {amount}
+            </Typography>
+        </div>*/
 
 const PaymentHandler = () => {
   const {
@@ -178,35 +200,13 @@ const PaymentHandler = () => {
           Check for payment...
           </Button>
           </Tooltip>
-        {env === 'dev' || env === 'staging' ? (
           <center>
-        <iframe
+          <iframe
             seamless
-            src={`https://staging-satoshiframe.babbage.systems/?minimumSatoshis=${amount}&reason=${reason}`}
+            src={`https://${env === 'dev' || env === 'staging' ? 'staging-satoshiframe' : 'satoshiframe'}.babbage.systems/?minimumSatoshis=${amount}&reason=${reason}`}
             className={classes.frame}
-            />
-            </center>
-        ) : <div className={classes.no_support_div}>
-            <Typography paragraph>
-              Your account balance is running low, and you need to get more satohsis before you can take this Action.
-            </Typography>
-            <Typography paragraph>
-              In the future, you will be able to buy more satoshis on this screen. This is not yet possible until certain legal requirements are met. For now:
-            </Typography>
-            <Typography paragraph>
-              <ul>
-                <li>Ask friends to send you a few</li>
-                <li>Other services that can import them to Babbage?</li>
-                <li>If all else fails, try contacting Ty Everett via DM</li>
-              </ul>
-            </Typography>
-            <Typography paragraph>
-              <b>Action:</b> {reason}
-            </Typography>
-            <Typography paragraph>
-              <b>Satoshis Needed:</b> {amount}
-            </Typography>
-        </div>}
+          />
+        </center>
       </form>
       </Dialog>
   )
