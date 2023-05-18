@@ -217,6 +217,19 @@ export class Satoshis extends React.Component {
     this.state = { formattedFiatAmount: '...' }
   }
 
+  componentDidUpdate (prevProps) {
+    if (prevProps.children !== this.props.children || prevProps.showPlus !== this.props.showPlus || prevProps.abbreviate !== this.props.abbreviate) {
+      // Update the component when the relevant props change
+      this.abbreviate = !!this.props.abbreviate
+      this.showPlus = !!this.props.showPlus
+      this.satoshis = Number.isInteger(Number(this.props.children)) ? Number(this.props.children) : NaN
+      this.formattedSatoshis = this.satoshis !== NaN ? formatSatoshis(this.satoshis, this.showPlus, this.abbreviate) : '...'
+
+      // You can perform any additional computations or state updates here
+      this.setState({ formattedFiatAmount: '...' })
+    }
+  }
+
   static contextType = ExchangeRateContext
 
   render() {
