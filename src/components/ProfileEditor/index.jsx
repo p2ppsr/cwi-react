@@ -19,7 +19,7 @@ import 'react-image-crop/dist/ReactCrop.css'
 import { toast } from 'react-toastify'
 import { invoice, pay, upload } from 'nanostore-publisher'
 import { Img } from 'uhrp-react'
-import confederacyHost from '../../utils/confederacyHost'
+import getConfederacyHost from '../../utils/confederacyHost'
 import UIContext from '../../UIContext'
 
 const useStyles = makeStyles(style, {
@@ -225,6 +225,8 @@ const ProfileEditor = ({
     }
   }
 
+  const confederacyHostURL = getConfederacyHost()
+
   return (
     <Dialog open={!!open} onClose={handleClose}>
       <DialogTitle>
@@ -293,7 +295,7 @@ const ProfileEditor = ({
                       src={editablePhotoURL}
                       className={classes.photo}
                       alt=''
-                      confederacyHost={confederacyHost()}
+                      confederacyHost={confederacyHostURL}
                     />
                   )}
                 </div>

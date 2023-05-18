@@ -1,12 +1,12 @@
 import { useContext } from 'react'
 import UIContext from '../UIContext'
 
-// exports a function returning confederacy host for current ENV.
-// Resolvers are undefined in prod.
+// exports a function returning the Confederacy host for current ENV.
+// The host is undefined in prod.
 export default () => {
   const { env } = useContext(UIContext)
   return env === 'dev'
-    ? 'http://localhost:3002'
+    ? 'http://localhost:3103'
     : env === 'staging'
       ? 'https://staging-confederacy.babbage.systems'
       : undefined

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ProfileEditor from './ProfileEditor/index.jsx'
 import Satoshis from './Satoshis.jsx'
 import { Img } from 'uhrp-react'
-import confederacyHost from '../utils/confederacyHost.js'
+import confederacyHost from '../utils/confederacyHost'
 import { makeStyles } from '@mui/styles'
 import { Typography, Fab, Divider, CircularProgress } from '@mui/material'
 import { Edit } from '@mui/icons-material'
@@ -79,44 +79,44 @@ const Profile = () => {
     })()
   }, [])
 
+  const confederacyHostURL = confederacyHost()
+
   return (
     <>
       <div className={classes.content_wrap}>
-        {avatar.photoURL
-          ? (
-            <div className={classes.image_edit}>
-              <Img
-                className={classes.profile_icon}
-                src={avatar.photoURL || 'XUSw3EKLvt4uWHrMvKSDychPSvnAqVeKCrReidew2C2rUN6Sps3S'}
-                alt=''
-                loading={
-                  <div className={classes.profile_loading}>
-                    <center>
-                      <CircularProgress />
-                    </center>
-                  </div>
-                }
-                confederacyHost={confederacyHost()}
-              />
-              <Fab
-                size='small'
-                onClick={() => setEditorOpen(true)}
-                className={classes.edit}
-              >
-                <Edit color='primary' />
-              </Fab>
-            </div>
-            )
-          : (
+        {avatar.photoURL ? (
+          <div className={classes.image_edit}>
+            <Img
+              className={classes.profile_icon}
+              src={avatar.photoURL || 'uhrp:XUSw3EKLvt4uWHrMvKSDychPSvnAqVeKCrReidew2C2rUN6Sps3S'}
+              alt=''
+              loading={
+                <div className={classes.profile_loading}>
+                  <center style={{ opacity: 0.3 }}>
+                    <CircularProgress thickness={2} />
+                  </center>
+                </div>
+              }
+              confederacyHost={confederacyHostURL}
+            />
             <Fab
-              size='large'
+              size='small'
               onClick={() => setEditorOpen(true)}
-              color='primary'
-              className={classes.add_photo_button}
+              className={classes.edit}
             >
-              <AddAPhoto />
+              <Edit color='primary' />
             </Fab>
-            )}
+          </div>
+        ) : (
+          <Fab
+            size='large'
+            onClick={() => setEditorOpen(true)}
+            color='primary'
+            className={classes.add_photo_button}
+          >
+            <AddAPhoto />
+          </Fab>
+        )}
         <Typography variant='h3'>
           {avatar.name || 'Welcome!'}
         </Typography>
@@ -126,7 +126,8 @@ const Profile = () => {
         >
           {balanceLoading
             ? '---'
-            : <Satoshis>{accountBalance}</Satoshis>}
+            : <Satoshis>{accountBalance}</Satoshis>
+          }
         </Typography>
       </div>
       <ProfileEditor

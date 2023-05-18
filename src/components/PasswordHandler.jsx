@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { DialogActions, DialogContent, Button, DialogContentText, TextField, InputAdornment, IconButton } from '@mui/material'
 import CustomDialog from './CustomDialog/index.jsx'
 import UIContext from '../UIContext'
-import { Visibility, VisibilityOff } from '@material-ui/icons'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 
 const PasswordHandler = () => {
   const {

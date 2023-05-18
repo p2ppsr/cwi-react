@@ -25,7 +25,7 @@ import { Link } from 'react-router-dom'
 import CWILogo from '../../components/Logo.jsx'
 import { toast } from 'react-toastify'
 import UIContext from '../../UIContext'
-import { Visibility, VisibilityOff } from '@material-ui/icons'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 
 const useStyles = makeStyles(style, { name: 'Greeter' })
 
