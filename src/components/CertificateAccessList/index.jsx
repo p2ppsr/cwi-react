@@ -147,11 +147,10 @@ const CertificateAccessList = ({ app, type }) => {
                 className={classes.expansion_body}
               >
                 <b>Verifier</b>
-                <CounterpartyChip counterparty={grant.verifier} />
-                {/* <ListItemText
+                <ListItemText
                   style={{ padding: '20px', wordWrap: 'break-word' }}
                 >{grant.verifier}
-                </ListItemText> */}
+                </ListItemText>
                 <ListItemText
                   secondary={`Expires ${formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}`}
                 />
