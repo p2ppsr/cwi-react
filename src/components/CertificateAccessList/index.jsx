@@ -30,6 +30,7 @@ import style from './style'
 import { Folder, Delete, ExpandMore } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
 import { toast } from 'react-toastify'
+import CounterpartyChip from '../CounterpartyChip'
 
 const useStyles = makeStyles(style, {
   name: 'CertificateAccessList'
