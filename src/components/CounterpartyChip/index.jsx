@@ -39,11 +39,23 @@ const CounterpartyChip = ({ counterparty, history, clickable = false, size = 1.3
   return (
     <Chip
       style={{
-        margin: `${8 * size}px`,
-        paddingTop: `${16 * size}px`,
-        paddingBottom: `${16 * size}px`
+        margin: `${10 * size}px`,
+        paddingTop: `${23 * size}px`,
+        paddingBottom: `${23 * size}px`,
+        paddingLeft: `${10 * size}px`,
+        paddingRight: `${10 * size}px`
       }}
-      label={<span style={{ fontSize: `${size}em` }}>{signiaIdentity.firstName} {signiaIdentity.lastName}</span>}
+      label={
+        <div>
+          <span style={{ fontSize: `${size}em` }}>
+            {signiaIdentity.firstName} {signiaIdentity.lastName}
+          </span>
+          <span style={{ fontSize: '0.9em' }}>
+            <br />
+            {counterparty.substring(0, 8)}...
+          </span>
+        </div>
+      }
       icon={
         signiaIdentity.profilePhoto
           ? (
