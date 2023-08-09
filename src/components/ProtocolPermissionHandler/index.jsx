@@ -8,6 +8,7 @@ import boomerang from 'boomerang-http'
 import CustomDialog from '../CustomDialog/index.jsx'
 import UIContext from '../../UIContext'
 import AppChip from '../AppChip'
+import CounterpartyChip from '../CounterpartyChip'
 
 const useStyles = makeStyles(style, {
   name: 'ProtocolPermissionHandler'
@@ -120,7 +121,7 @@ const ProtocolPermissionHandler = () => {
         <br />
         {protocolSecurityLevel === 2 && counterparty && (
           <DialogContentText>
-            <b>Counterparty</b>: {counterparty}
+            <b>Counterparty</b>: <CounterpartyChip counterparty={counterparty} />
           </DialogContentText>
         )}
         <br />

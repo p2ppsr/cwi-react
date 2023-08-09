@@ -9,27 +9,31 @@ import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
 import signicertHost from '../../utils/signicertHost'
+import YellowCautionIcon from '../../images/cautionIcon'
 
 const useStyles = makeStyles(style, {
   name: 'CounterpartyChip'
 })
 
-const CounterpartyChip = ({ counterparty, history, clickable = true, size = 1.5 }) => {
+const CounterpartyChip = ({ counterparty, history, clickable = true, size = 1.3 }) => {
   const signia = new Signia(undefined, signicertHost()) // TODO: Get confederacy the same way.
   signia.config.confederacyHost = confederacyHost()
 
   const classes = useStyles()
 
   const [signiaIdentity, setSigniaIdentity] = useState({
-    profilePhoto: '',
-    firstName: '',
-    lastName: ''
+    profilePhoto: undefined,
+    firstName: 'Untrusted',
+    lastName: 'Counterparty'
   })
 
   useEffect(() => {
     (async () => {
-      const results = await signia.discoverByIdentityKey('02bc91718b3572462a471de6193f357b6e85ee0f8636cb87db456cb1590f913bea')
-      setSigniaIdentity(results[0].decryptedFields)
+      try {
+        const results = await signia.discoverByIdentityKey(counterparty)
+        setSigniaIdentity(results[0].decryptedFields)
+      } catch (error) {
+      }
     })()
   }, [signiaIdentity])
 
@@ -41,13 +45,17 @@ const CounterpartyChip = ({ counterparty, history, clickable = true, size = 1.5 
         paddingBottom: `${16 * size}px`
       }}
       label={<span style={{ fontSize: `${size}em` }}>{signiaIdentity.firstName} {signiaIdentity.lastName}</span>}
-      icon={(
-        <Img
-          src={signiaIdentity.profilePhoto}
-          className={classes.table_picture}
-          confederacyHost={confederacyHost()}
-        />
-      )}
+      icon={
+        signiaIdentity.profilePhoto
+          ? (
+            <Img
+              src={signiaIdentity.profilePhoto}
+              className={classes.table_picture}
+              confederacyHost={confederacyHost()}
+            />
+            )
+          : <YellowCautionIcon className={classes.table_picture} />
+}
       onClick={() => {
         if (clickable) {
           history.push(
