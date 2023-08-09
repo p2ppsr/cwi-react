@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Chip } from '@mui/material'
 import { withRouter } from 'react-router-dom'
-// import boomerang from 'boomerang-http'
-import isImageUrl from '../../utils/isImageUrl'
 import { Signia } from 'babbage-signia'
 import { Img } from 'uhrp-react'
 import makeStyles from '@mui/styles/makeStyles'
@@ -16,7 +14,7 @@ const useStyles = makeStyles(style, {
 })
 
 const CounterpartyChip = ({ counterparty, history, clickable = false, size = 1.3 }) => {
-  const signia = new Signia(undefined, signicertHost()) // TODO: Get confederacy the same way.
+  const signia = new Signia(undefined, signicertHost())
   signia.config.confederacyHost = confederacyHost()
 
   const classes = useStyles()
@@ -30,6 +28,7 @@ const CounterpartyChip = ({ counterparty, history, clickable = false, size = 1.3
   useEffect(() => {
     (async () => {
       try {
+        // Resolve a Signia verified identity from a counterparty
         const results = await signia.discoverByIdentityKey(counterparty)
         setSigniaIdentity(results[0].decryptedFields)
       } catch (error) {
