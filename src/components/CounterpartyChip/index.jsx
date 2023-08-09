@@ -15,7 +15,7 @@ const useStyles = makeStyles(style, {
   name: 'CounterpartyChip'
 })
 
-const CounterpartyChip = ({ counterparty, history, clickable = true, size = 1.3 }) => {
+const CounterpartyChip = ({ counterparty, history, clickable = false, size = 1.3 }) => {
   const signia = new Signia(undefined, signicertHost()) // TODO: Get confederacy the same way.
   signia.config.confederacyHost = confederacyHost()
 
