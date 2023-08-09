@@ -30,6 +30,7 @@ import style from './style'
 import { Folder, Delete, ExpandMore } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
 import { toast } from 'react-toastify'
+import CounterpartyChip from '../CounterpartyChip'
 
 const useStyles = makeStyles(style, {
   name: 'CertificateAccessList'
@@ -146,10 +147,11 @@ const CertificateAccessList = ({ app, type }) => {
                 className={classes.expansion_body}
               >
                 <b>Verifier</b>
-                <ListItemText
+                <CounterpartyChip counterparty={grant.verifier} />
+                {/* <ListItemText
                   style={{ padding: '20px', wordWrap: 'break-word' }}
                 >{grant.verifier}
-                </ListItemText>
+                </ListItemText> */}
                 <ListItemText
                   secondary={`Expires ${formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}`}
                 />
