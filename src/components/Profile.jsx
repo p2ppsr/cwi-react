@@ -84,8 +84,9 @@ const Profile = () => {
   return (
     <>
       <div className={classes.content_wrap}>
-        {avatar.photoURL ? (
-          <div className={classes.image_edit}>
+        {avatar.photoURL
+          ? (
+  <div className={classes.image_edit}>
             <Img
               className={classes.profile_icon}
               src={avatar.photoURL || 'uhrp:XUSw3EKLvt4uWHrMvKSDychPSvnAqVeKCrReidew2C2rUN6Sps3S'}
@@ -107,8 +108,9 @@ const Profile = () => {
               <Edit color='primary' />
             </Fab>
           </div>
-        ) : (
-          <Fab
+            )
+          : (
+  <Fab
             size='large'
             onClick={() => setEditorOpen(true)}
             color='primary'
@@ -116,7 +118,7 @@ const Profile = () => {
           >
             <AddAPhoto />
           </Fab>
-        )}
+            )}
         <Typography variant='h3'>
           {avatar.name || 'Welcome!'}
         </Typography>
@@ -126,8 +128,7 @@ const Profile = () => {
         >
           {balanceLoading
             ? '---'
-            : <Satoshis>{accountBalance}</Satoshis>
-          }
+            : <Satoshis>{accountBalance}</Satoshis>}
         </Typography>
       </div>
       <ProfileEditor
