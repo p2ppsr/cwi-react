@@ -74,8 +74,7 @@ const Profile = () => {
         >
           {balanceLoading
             ? '---'
-            : <Satoshis>{accountBalance}</Satoshis>
-          }
+            : <Satoshis>{accountBalance}</Satoshis>}
         </Typography>
       </div>
     </>
