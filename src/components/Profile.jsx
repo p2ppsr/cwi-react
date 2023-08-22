@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import ProfileEditor from './ProfileEditor/index.jsx'
 import Satoshis from './Satoshis.jsx'
-import { Img } from 'uhrp-react'
 import confederacyHost from '../utils/confederacyHost'
 import { makeStyles } from '@mui/styles'
-import { Typography, Fab, Divider, CircularProgress } from '@mui/material'
-import { Edit } from '@mui/icons-material'
-import AddAPhoto from '@mui/icons-material/AddAPhoto'
+import { Typography } from '@mui/material'
 
 const useStyles = makeStyles(theme => ({
   content_wrap: {
@@ -33,14 +29,6 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     display: 'grid'
   },
-  add_photo_button: {
-    margin: '6em auto'
-  },
-  image_edit: {
-    marginTop: theme.spacing(7),
-    marginBottom: theme.spacing(1),
-    position: 'relative'
-  },
   edit: {
     position: 'absolute',
     right: '-1em',
@@ -49,15 +37,9 @@ const useStyles = makeStyles(theme => ({
 }), { name: 'Profile' })
 
 const Profile = () => {
-  const [avatar, setAvatar] = useState({})
-  const [editorOpen, setEditorOpen] = useState(false)
   const [accountBalance, setAccountBalance] = useState(null)
   const [balanceLoading, setBalanceLoading] = useState(true)
   const classes = useStyles()
-
-  const refreshProfile = async () => {
-    setAvatar(await window.CWI.ninja.getAvatar())
-  }
 
   const refreshBalance = async () => {
     try {
@@ -74,7 +56,6 @@ const Profile = () => {
     (async () => {
       try {
         refreshBalance()
-        setAvatar(await window.CWI.ninja.getAvatar())
       } catch (e) { }
     })()
   }, [])
@@ -84,41 +65,8 @@ const Profile = () => {
   return (
     <>
       <div className={classes.content_wrap}>
-        {avatar.photoURL ? (
-          <div className={classes.image_edit}>
-            <Img
-              className={classes.profile_icon}
-              src={avatar.photoURL || 'uhrp:XUSw3EKLvt4uWHrMvKSDychPSvnAqVeKCrReidew2C2rUN6Sps3S'}
-              alt=''
-              loading={
-                <div className={classes.profile_loading}>
-                  <center style={{ opacity: 0.3 }}>
-                    <CircularProgress thickness={2} />
-                  </center>
-                </div>
-              }
-              confederacyHost={confederacyHostURL}
-            />
-            <Fab
-              size='small'
-              onClick={() => setEditorOpen(true)}
-              className={classes.edit}
-            >
-              <Edit color='primary' />
-            </Fab>
-          </div>
-        ) : (
-          <Fab
-            size='large'
-            onClick={() => setEditorOpen(true)}
-            color='primary'
-            className={classes.add_photo_button}
-          >
-            <AddAPhoto />
-          </Fab>
-        )}
         <Typography variant='h3'>
-          {avatar.name || 'Welcome!'}
+          {'Welcome!'}
         </Typography>
         <Typography
           onClick={() => refreshBalance()}
@@ -130,13 +78,6 @@ const Profile = () => {
           }
         </Typography>
       </div>
-      <ProfileEditor
-        open={editorOpen}
-        onClose={() => setEditorOpen(false)}
-        onSave={refreshProfile}
-        name={avatar.name}
-        photoURL={avatar.photoURL}
-      />
     </>
   )
 }
