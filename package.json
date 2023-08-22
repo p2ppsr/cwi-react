@@ -21,7 +21,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.10.5",
-    "@mui/styles": "^5.10.3",
+    "@mui/styles": "^5.14.5",
     "babbage-signia": "^0.1.3",
     "date-fns": "^2.29.2",
     "nanostore-publisher": "^0.1.19",
