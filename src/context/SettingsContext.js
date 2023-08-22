@@ -11,18 +11,17 @@ const SettingsProvider = ({ children }) => {
   // Theme settings
   const [settings, setSettings] = useState({ theme: 'light' })
   const confederacyHostURL = confederacyHost()
-  console.log(confederacyHostURL)
 
   const updateSettings = async (newSettings) => {
     try {
-      const mergedSettings = { theme: newSettings }
+      // Note: change update functionality as needed to support other theme features
+      debugger
+      const mergedSettings = { ...settings, theme: newSettings }
       setSettings(mergedSettings)
-
-      const stringifiedSettings = JSON.stringify(mergedSettings)
 
       // Encrypt the settings data
       const encryptedSettings = await encrypt({
-        plaintext: Buffer.from(stringifiedSettings),
+        plaintext: Buffer.from(JSON.stringify(mergedSettings)),
         protocolID: [2, PROTOCOL_ID],
         keyID: '1',
         counterparty: 'self',
