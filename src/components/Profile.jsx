@@ -6,7 +6,7 @@ import { Typography } from '@mui/material'
 
 const useStyles = makeStyles(theme => ({
   content_wrap: {
-    top: '0px',
+    topMargin: '5em',
     backgroundColor: theme.palette.grey[200],
     zIndex: 3,
     display: 'grid',
