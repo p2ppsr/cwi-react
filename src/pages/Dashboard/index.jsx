@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useBreakpoint } from '../../utils/useBreakpoints.js'
 import { Switch, Route, useHistory } from 'react-router-dom'
 import style from './style'
 import { makeStyles } from '@mui/styles'
 import {
-  Feedback as FeedbackIcon,
-  AllInclusive as ActionsIcon,
+  VolunteerActivism as TrustIcon,
+  Timeline as TrendsIcon,
   Apps as BrowseIcon,
   Settings as SettingsIcon,
-  School as SchoolIcon
+  School as SchoolIcon,
+  LockPerson as AccessIcon
 } from '@mui/icons-material'
 import {
   List,
@@ -18,7 +19,7 @@ import {
   Typography
 } from '@mui/material'
 import Feedback from './Feedback/index.jsx'
-import Browse from './Browse/index.jsx'
+import Trust from './Trust/index.jsx'
 import Actions from './Actions/index.jsx'
 import App from './App/Index.jsx'
 import Settings from './Settings/index.jsx'
@@ -27,6 +28,8 @@ import Profile from '../../components/Profile.jsx'
 import TopTabs from '../../components/TopTabs/index.jsx'
 import { SettingsProvider } from '../../context/SettingsContext.js'
 import UserTheme from '../../components/UserTheme.jsx'
+import UIContext from '../../UIContext'
+import PageLoading from '../../components/PageLoading'
 
 const useStyles = makeStyles(style, {
   name: 'Dashboard'
@@ -36,10 +39,19 @@ const Dashboard = () => {
   const breakpoints = useBreakpoint()
   const classes = useStyles({ breakpoints })
   const history = useHistory()
+  const { appName, appVersion } = useContext(UIContext)
+  const [pageLoading, setPageLoading] = useState(true)
 
   useEffect(() => {
-    redirectIfLoggedOut(history)
+    let isLoggedIn = redirectIfLoggedOut(history)
+    if (isLoggedIn) {
+      setPageLoading(false)
+    }
   }, [history])
+
+  if (pageLoading) {
+    return <PageLoading />
+  }
 
   return (
     <SettingsProvider>
@@ -50,22 +62,82 @@ const Dashboard = () => {
             <List>
               <ListItem
                 button
-                onClick={() => history.push('/dashboard')}
+                onClick={() => history.push('/dashboard/apps')}
                 selected={
-              history.location.pathname === '/dashboard'
+              history.location.pathname === '/dashboard/apps'
             }
               >
                 <ListItemIcon>
-                  <ActionsIcon
+                  <BrowseIcon
                     color={
-                  history.location.pathname === '/dashboard'
+                  history.location.pathname === '/dashboard/apps'
                     ? 'secondary'
                     : undefined
                 }
                   />
                 </ListItemIcon>
                 <ListItemText>
-                  Actions
+                  Dashboard
+                </ListItemText>
+              </ListItem>
+              <ListItem
+                button
+                onClick={() => history.push('/dashboard/trends')}
+                selected={
+              history.location.pathname === '/dashboard/trends'
+            }
+              >
+                <ListItemIcon>
+                  <TrendsIcon
+                    color={
+                  history.location.pathname === '/dashboard/trends'
+                    ? 'secondary'
+                    : undefined
+                }
+                  />
+                </ListItemIcon>
+                <ListItemText>
+                  Trends
+                </ListItemText>
+              </ListItem>
+              <ListItem
+                button
+                onClick={() => history.push('/dashboard/access')}
+                selected={
+              history.location.pathname === '/dashboard/access'
+            }
+              >
+                <ListItemIcon>
+                  <AccessIcon
+                    color={
+                  history.location.pathname === '/dashboard/access'
+                    ? 'secondary'
+                    : undefined
+                }
+                  />
+                </ListItemIcon>
+                <ListItemText>
+                  Access
+                </ListItemText>
+              </ListItem>
+              <ListItem
+                button
+                onClick={() => history.push('/dashboard/trust')}
+                selected={
+              history.location.pathname === '/dashboard/trust'
+            }
+              >
+                <ListItemIcon>
+                  <TrustIcon
+                    color={
+                  history.location.pathname === '/dashboard/trust'
+                    ? 'secondary'
+                    : undefined
+                }
+                  />
+                </ListItemIcon>
+                <ListItemText>
+                  Trust
                 </ListItemText>
               </ListItem>
               <ListItem
@@ -88,46 +160,6 @@ const Dashboard = () => {
                   Settings
                 </ListItemText>
               </ListItem>
-              <ListItem
-                button
-                onClick={() => history.push('/dashboard/browse-apps')}
-                selected={
-              history.location.pathname === '/dashboard/browse-apps'
-            }
-              >
-                <ListItemIcon>
-                  <BrowseIcon
-                    color={
-                  history.location.pathname === '/dashboard/browse-apps'
-                    ? 'secondary'
-                    : undefined
-                }
-                  />
-                </ListItemIcon>
-                <ListItemText>
-                  App explorer
-                </ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => history.push('/dashboard/feedback')}
-                selected={
-              history.location.pathname === '/dashboard/feedback'
-            }
-              >
-                <ListItemIcon>
-                  <FeedbackIcon
-                    color={
-                  history.location.pathname === '/dashboard/feedback'
-                    ? 'secondary'
-                    : undefined
-                }
-                  />
-                </ListItemIcon>
-                <ListItemText>
-                  Help & feedback
-                </ListItemText>
-              </ListItem>
               <a href='https://projectbabbage.com/docs' target='_blank' rel='noreferrer'>
                 <ListItem button>
                   <ListItemIcon>
@@ -146,23 +178,14 @@ const Dashboard = () => {
                 className={classes.signature}
                 align='center'
               >
-                Made with ❤️ for 🌍 by <i>Ty J Everett</i>
+                {appName} v{appVersion}<br /><br />
+                Made with love by<br /><i>the Babbage Team</i>
               </Typography>
             </center>
           </div>
           <div className={classes.page_container}>
             <TopTabs />
             <Switch>
-              <Route
-                path='/dashboard/feedback'
-                component={Feedback}
-                exact
-              />
-              <Route
-                path='/dashboard/browse-apps'
-                component={Browse}
-                exact
-              />
               <Route
                 path='/dashboard/app/:app'
                 component={App}
@@ -172,9 +195,21 @@ const Dashboard = () => {
                 component={Settings}
               />
               <Route
+                path='/dashboard/apps'
+                component={Actions}
+              />
+              <Route
+                path='/dashboard/trust'
+                component={Trust}
+              />
+              <Route
                 className={classes.full_width}
                 default
-                component={Actions}
+                component={() => {
+                  return <div style={{ padding: '1em' }}>
+                    <Typography align='center'>Select a page</Typography>
+                    </div>
+                }}
               />
             </Switch>
           </div>

@@ -9,8 +9,8 @@ const useStyles = makeStyles(style, {
 })
 
 const About = () => {
-  const { appName, appVersion } = useContext(UIContext)
   const classes = useStyles()
+  const { appName, appVersion } = useContext(UIContext)
   const [cwiVersion, setCwiVersion] = useState('---')
 
   useEffect(() => {

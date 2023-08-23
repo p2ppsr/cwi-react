@@ -13,26 +13,8 @@ const useStyles = makeStyles(theme => ({
     placeItems: 'center',
     paddingBottom: theme.spacing(2)
   },
-  profile_icon: {
-    borderRadius: theme.spacing(2),
-    boxShadow: theme.shadows[8],
-    minWidth: '10em',
-    minHeight: '10em',
-    maxWidth: '10em',
-    maxHeight: '10em'
-  },
-  profile_loading: {
-    minWidth: '10em',
-    minHeight: '10em',
-    maxWidth: '10em',
-    maxHeight: '10em',
-    alignItems: 'center',
-    display: 'grid'
-  },
-  edit: {
-    position: 'absolute',
-    right: '-1em',
-    top: '-1em'
+  manage_link: {
+    textDecoration: 'underline'
   }
 }), { name: 'Profile' })
 
@@ -65,17 +47,20 @@ const Profile = () => {
   return (
     <>
       <div className={classes.content_wrap}>
-        <Typography variant='h3'>
-          {'Welcome!'}
+        <Typography variant='h5'>
+          Current Balance
         </Typography>
         <Typography
           onClick={() => refreshBalance()}
           color='textSecondary'
+          variant='h2'
+          style={{ cursor: 'pointer' }}
         >
           {balanceLoading
             ? '---'
-            : <Satoshis>{accountBalance}</Satoshis>}
+            : <Satoshis abbreviate>{accountBalance}</Satoshis>}
         </Typography>
+        <a href='#' className={classes.manage_link}>manage</a>
       </div>
     </>
   )

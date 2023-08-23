@@ -22,7 +22,9 @@ const Settings = ({ history }) => {
 
   const handleThemeChange = (event) => {
     const newTheme = event.target.value
-    updateSettings(newTheme)
+    updateSettings({
+      theme: newTheme
+    })
   }
 
   return (

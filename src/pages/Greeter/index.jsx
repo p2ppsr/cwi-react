@@ -26,6 +26,7 @@ import CWILogo from '../../components/Logo.jsx'
 import { toast } from 'react-toastify'
 import UIContext from '../../UIContext'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
+import PageLoading from '../../components/PageLoading'
 
 const useStyles = makeStyles(style, { name: 'Greeter' })
 
@@ -40,6 +41,7 @@ const Greeter = ({ history }) => {
   const [accountStatus, setAccountStatus] = useState(undefined)
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [pageLoaded, setPageLoaded] = useState(false)
   // const [electronVersion, setElectronVersion] = useState('0.0.0')
 
   // Navigate to the dashboard if the user is already authenticated
@@ -49,8 +51,9 @@ const Greeter = ({ history }) => {
         if (typeof window.CWI.getNinja === 'function') {
           window.CWI.ninja = window.CWI.getNinja()
         }
-        history.push('/dashboard')
+        history.push('/dashboard/apps')
       }
+      setPageLoaded(true)
     })()
   }, [history])
 
@@ -162,6 +165,10 @@ const Greeter = ({ history }) => {
       )
     }
     setLoading(false)
+  }
+
+  if (!pageLoaded) {
+    return <PageLoading />
   }
 
   return (

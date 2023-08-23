@@ -12,11 +12,9 @@ const SettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState({ theme: 'light' })
   const confederacyHostURL = confederacyHost()
 
-  const updateSettings = async (newSettings) => {
+  const updateSettings = async (newSettings = {}) => {
     try {
-      // Note: change update functionality as needed to support other theme features
-      debugger
-      const mergedSettings = { ...settings, theme: newSettings }
+      const mergedSettings = { ...settings, ...newSettings }
       setSettings(mergedSettings)
 
       // Encrypt the settings data
@@ -28,9 +26,12 @@ const SettingsProvider = ({ children }) => {
         returnType: 'string'
       })
 
+      console.log(confederacyHostURL)
+
       await set(Buffer.from('MetaNetClientSettings').toString('base64'), encryptedSettings, { confederacyHost: confederacyHostURL, protocolID: PROTOCOL_ID })
     } catch (error) {
-      console.error(error)
+      throw error
+      // console.error(error)
     }
   }
 

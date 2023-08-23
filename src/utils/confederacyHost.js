@@ -9,5 +9,5 @@ export default () => {
     ? 'http://localhost:3103'
     : env === 'staging'
       ? 'https://staging-confederacy.babbage.systems'
-      : undefined
+      : 'https://confederacy.babbage.systems'
 }
