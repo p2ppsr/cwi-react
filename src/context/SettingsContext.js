@@ -26,9 +26,16 @@ const SettingsProvider = ({ children }) => {
         returnType: 'string'
       })
 
-      console.log(confederacyHostURL)
-
-      await set(Buffer.from('MetaNetClientSettings').toString('base64'), encryptedSettings, { confederacyHost: confederacyHostURL, protocolID: PROTOCOL_ID })
+      await set(
+        Buffer.from('MetaNetClientSettings').toString('base64'), encryptedSettings,
+        {
+          confederacyHost: confederacyHostURL,
+          protocolID: PROTOCOL_ID,
+          actionDescription: 'Update MetaNet settings',
+          outputDescription: 'New MetaNet settings',
+          spendingDescription: 'Old MetaNet settings'
+        }
+      )
     } catch (error) {
       throw error
       // console.error(error)
