@@ -1,11 +1,16 @@
 export default theme => ({
-  show_div: {
-    display: 'block'
+  master_grid: {
+    display: 'grid',
+    gridTemplateColumns: '3fr 2fr'
   },
-  hide_div: {
-    display: 'none'
+  entity_icon_name_grid: {
+    display: 'grid',
+    gridTemplateColumns: '4em 1fr'
   },
-  tabs: {
-    marginBottom: '2em'
+  slider_label_grid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
+    alignItems: 'center',
+    gridGap: theme.spacing(1)
   }
 })
