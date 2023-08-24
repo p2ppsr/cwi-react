@@ -1,4 +1,3 @@
-
 import React, { createContext, useEffect, useState } from 'react'
 import { get, set } from 'babbage-kvstore'
 import confederacyHost from '../utils/confederacyHost'
@@ -13,33 +12,28 @@ const SettingsProvider = ({ children }) => {
   const confederacyHostURL = confederacyHost()
 
   const updateSettings = async (newSettings = {}) => {
-    try {
-      const mergedSettings = { ...settings, ...newSettings }
-      setSettings(mergedSettings)
+    const mergedSettings = { ...settings, ...newSettings }
+    setSettings(mergedSettings)
 
-      // Encrypt the settings data
-      const encryptedSettings = await encrypt({
-        plaintext: Buffer.from(JSON.stringify(mergedSettings)),
-        protocolID: [2, PROTOCOL_ID],
-        keyID: '1',
-        counterparty: 'self',
-        returnType: 'string'
-      })
+    // Encrypt the settings data
+    const encryptedSettings = await encrypt({
+      plaintext: Buffer.from(JSON.stringify(mergedSettings)),
+      protocolID: [2, PROTOCOL_ID],
+      keyID: '1',
+      counterparty: 'self',
+      returnType: 'string'
+    })
 
-      await set(
-        Buffer.from('MetaNetClientSettings').toString('base64'), encryptedSettings,
-        {
-          confederacyHost: confederacyHostURL,
-          protocolID: PROTOCOL_ID,
-          actionDescription: 'Update MetaNet settings',
-          outputDescription: 'New MetaNet settings',
-          spendingDescription: 'Old MetaNet settings'
-        }
-      )
-    } catch (error) {
-      throw error
-      // console.error(error)
-    }
+    await set(
+      Buffer.from('MetaNetClientSettings').toString('base64'), encryptedSettings,
+      {
+        confederacyHost: confederacyHostURL,
+        protocolID: PROTOCOL_ID,
+        actionDescription: 'Update MetaNet settings',
+        outputDescription: 'New MetaNet settings',
+        spendingDescription: 'Old MetaNet settings'
+      }
+    )
   }
 
   const contextValue = {
