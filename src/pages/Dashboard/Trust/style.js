@@ -12,7 +12,11 @@ export default theme => ({
     display: 'grid',
     gridTemplateColumns: '3fr 2fr',
     alignItems: 'center',
-    gridColumnGap: theme.spacing(3)
+    gridColumnGap: theme.spacing(3),
+    [theme.breakpoints.down('md')]: {
+      gridTemplateColumns: '1fr',
+      gridRowGap: theme.spacing(3)
+    }
   },
   entity_icon_name_grid: {
     display: 'grid',

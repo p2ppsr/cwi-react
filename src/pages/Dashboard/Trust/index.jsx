@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { Typography, Button, Slider, TextField, InputAdornment, DialogContent, DialogContentText, DialogActions, LinearProgress } from '@mui/material'
+import { Typography, Button, Slider, TextField, InputAdornment, DialogContent, DialogContentText, DialogActions, LinearProgress, Hidden, Snackbar } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style.js'
 import { SettingsContext } from '../../../context/SettingsContext'
@@ -20,7 +20,7 @@ const useStyles = makeStyles(style, {
   name: 'Trust'
 })
 
-const TrustedEntity = ({ entity, setTrustedEntities, classes }) => {
+const TrustedEntity = ({ entity, setTrustedEntities, classes, history }) => {
           const [trust, setTrust] = useState(entity.trust)
 
           const handleTrustChange = (e, v) => {
@@ -44,6 +44,10 @@ const TrustedEntity = ({ entity, setTrustedEntities, classes }) => {
               <Slider onChange={handleTrustChange} min={0} max={10} step={1} value={trust} />
               <Typography><b>{trust}</b> / 10</Typography>
             </div>
+            <Hidden mdUp>
+              <div style={{ minHeight: '0.1em' }} />
+              <div />
+            </Hidden>
             </>
         }
 
@@ -138,6 +142,34 @@ const AddEntityModal = ({ open, setOpen, setTrustedEntities, classes }) => {
       }, { skipNote: true })
       setNote(name)
       setFieldsValid(true)
+    } catch (e) {
+      setFieldsValid(false)
+      if (e.field) {
+        if (e.field === 'name') {
+          setNameError(e.message)
+        } else if (e.field === 'icon') {
+          setIconError(e.message)
+        } else { // public key for anything else
+          setPublicKeyError(e.message)
+        }
+      } else {
+        setPublicKeyError(e.message) // Public key for other errors
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleTrust = async () => {
+    try {
+      setLoading(true)
+      setTrustedEntities(t => {
+        return [
+          { name, icon, note, publicKey, trust: 5 },
+          ...t
+        ]
+      })
+      setOpen(false)
     } catch (e) {
       setFieldsValid(false)
       if (e.field) {
@@ -327,6 +359,7 @@ const AddEntityModal = ({ open, setOpen, setTrustedEntities, classes }) => {
           disabled={!fieldsValid}
           variant='contained'
           endIcon={<Shield />}
+          onClick={handleTrust}
         >
           Trust This Entity
         </Button>
@@ -335,26 +368,52 @@ const AddEntityModal = ({ open, setOpen, setTrustedEntities, classes }) => {
   )
 }
 
+function arraysOfObjectsAreEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+
+    for (let i = 0; i < arr1.length; i++) {
+        let obj1 = arr1[i];
+        let obj2 = arr2[i];
+
+        let keys1 = Object.keys(obj1);
+        let keys2 = Object.keys(obj2);
+
+        if (keys1.length !== keys2.length) {
+            return false;
+        }
+
+        for (let key of keys1) {
+            if (obj1[key] !== obj2[key]) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 const Trust = ({ history }) => {
-  const [trustThreshold, setTrustThreshold] = useState(1)
-  const [trustedEntities, setTrustedEntities] = useState([
+  const { settings, updateSettings } = useContext(SettingsContext)
+  const [trustThreshold, setTrustThreshold] = useState(settings.trustThreshold || 1)
+  const [trustedEntities, setTrustedEntities] = useState(settings.trustedEntities ? JSON.parse(JSON.stringify(settings.trustedEntities)) : [
     {
       name: 'SigniCert', note: 'Certifies user identities', trust: 1,
-      icon: 'https://signia.babbage.systems/images/signiaIcon.png', publicKey: '033215465466846541651654565466684916541981565487955166545654985'
+      icon: 'https://signia.babbage.systems/images/signiaIcon.png', publicKey: 'asdffff'
     },
     {
       name: 'GoogCert', note: 'Certifies Google account ownership', trust: 1,
-      icon: 'https://static-00.iconduck.com/assets.00/google-icon-2048x2048-czn3g8x8.png', publicKey: '033215465466846541651654565466684916541981565487955166545654985'
+      icon: 'https://static-00.iconduck.com/assets.00/google-icon-2048x2048-czn3g8x8.png', publicKey: 'asdfaaaa'
     },
     {
       name: 'DiscordCert', note: 'Certifies Discord handles', trust: 1,
-      icon: 'https://static.vecteezy.com/system/resources/previews/018/930/718/original/discord-logo-discord-icon-transparent-free-png.png', publicKey: '033215465466846541651654565466684916541981565487955166545654985'
+      icon: 'https://static.vecteezy.com/system/resources/previews/018/930/718/original/discord-logo-discord-icon-transparent-free-png.png', publicKey: 'asssssds'
     }
   ])
   const [search, setSearch] = useState('')
   const [addEntityModalOpen, setAddEntityModalOpen] = useState(false)
   const classes = useStyles()
-  const { settings, updateSettings } = useContext(SettingsContext)
 
   const totalTrustPoints = trustedEntities.reduce((a, e) => a + e.trust, 0)
 
@@ -370,6 +429,17 @@ const Trust = ({ history }) => {
     }
     return x.name.toLowerCase().indexOf(search.toLowerCase()) !== -1 || x.note.toLowerCase().indexOf(search.toLowerCase()) !== -1
   })
+
+  const handleSave = async () => {
+    await updateSettings({
+      trustThreshold,
+      trustedEntities
+    })
+  }
+
+  const settingsNeedsUpdate = (
+    (settings.trustThreshold !== trustThreshold) || (!arraysOfObjectsAreEqual(settings.trustedEntities, trustedEntities))
+  )
 
   return (
     <div className={classes.content_wrap}>
@@ -388,6 +458,7 @@ const Trust = ({ history }) => {
         </div>
       </center>
       <div className={classes.master_grid}>
+        <Hidden mdDown>
         <div>
           <Button
             variant='outlined'
@@ -397,6 +468,16 @@ const Trust = ({ history }) => {
             Add Trusted Entity
           </Button>
           </div>
+        </Hidden>
+        <Hidden mdUp>
+          <Button
+            variant='outlined'
+            startIcon={<AddIcon />}
+            onClick={() => setAddEntityModalOpen(true)}
+          >
+            Add Trusted Entity
+          </Button>
+        </Hidden>
         <TextField
           value={search}
           onChange={(e => setSearch(e.target.value))}
@@ -420,13 +501,16 @@ const Trust = ({ history }) => {
             }
           }}
         />
-        <div style={{ minHeight: '1em' }} />
-        <div />
+        <Hidden mdDown>
+          <div style={{ minHeight: '1em' }} />
+          <div />
+        </Hidden>
         {shownTrustedEntities.map((entity, i) => <TrustedEntity
           entity={entity}
           setTrustedEntities={setTrustedEntities}
-          key={i}
+          key={`${entity.name}.${entity.note}.${entity.publicKey}`}
           classes={classes}
+          history={history}
         />)}
       </div>
       <AddEntityModal
@@ -435,6 +519,21 @@ const Trust = ({ history }) => {
         setTrustedEntities={setTrustedEntities}
         classes={classes}
       />
+      <Snackbar
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      open={settingsNeedsUpdate}
+      message="You have unsaved changes!"
+      action={
+        <>
+          <Button color='secondary' size="small" onClick={handleSave}>
+            Save
+          </Button>
+        </>
+      }
+    />
     </div>
   )
 }
