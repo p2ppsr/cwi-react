@@ -1,5 +1,5 @@
 export default (url) => {
-  const img = new Image()
+  const img = new window.Image()
   img.src = url
   return new Promise((resolve) => {
     img.onload = () => resolve(true)
