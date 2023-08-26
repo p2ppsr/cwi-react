@@ -46,7 +46,7 @@ const TrustedEntity = ({ entity, setTrustedEntities, classes, history }) => {
 
   return <>
     <div
-      className={classes.entity_icon_name_grid}
+      className={classes.clickable_entity_icon_name_grid}
       role='button'
       onClick={() => history.push(`/dashboard/access/counterparty/${entity.publicKey}`)}
     >
@@ -422,21 +422,19 @@ function arraysOfObjectsAreEqual(arr1, arr2) {
 
 const Trust = ({ history }) => {
   const { settings, updateSettings } = useContext(SettingsContext)
-  const [trustThreshold, setTrustThreshold] = useState(settings.trustThreshold || 1)
+
+  // These are some hard-coded defaults, if the user doesn't have any in Settings.
+  const [trustThreshold, setTrustThreshold] = useState(settings.trustThreshold || 2)
   const [trustedEntities, setTrustedEntities] = useState(settings.trustedEntities ? JSON.parse(JSON.stringify(settings.trustedEntities)) : [
     {
-      name: 'SigniCert', note: 'Certifies user identities', trust: 1,
-      icon: 'https://signia.babbage.systems/images/signiaIcon.png', publicKey: 'asdffff'
-    },
-    {
-      name: 'GoogCert', note: 'Certifies Google account ownership', trust: 1,
-      icon: 'https://static-00.iconduck.com/assets.00/google-icon-2048x2048-czn3g8x8.png', publicKey: 'asdfaaaa'
-    },
-    {
-      name: 'DiscordCert', note: 'Certifies Discord handles', trust: 1,
-      icon: 'https://static.vecteezy.com/system/resources/previews/018/930/718/original/discord-logo-discord-icon-transparent-free-png.png', publicKey: 'asssssds'
+      name: 'SigniCert',
+      note: 'Certifies legal first and last name, and photos',
+      trust: 3,
+      icon: 'https://signia.babbage.systems/images/signiaIcon.png',
+      publicKey: '0295bf1c7842d14babf60daf2c733956c331f9dcb2c79e41f85fd1dda6a3fa4549'
     }
   ])
+
   const [search, setSearch] = useState('')
   const [addEntityModalOpen, setAddEntityModalOpen] = useState(false)
   const [settingsLoading, setSettingsLoading] = useState(false)

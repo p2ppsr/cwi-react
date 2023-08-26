@@ -23,6 +23,14 @@ export default theme => ({
     gridTemplateColumns: '4em 1fr',
     alignItems: 'center',
     gridGap: theme.spacing(2),
+    padding: theme.spacing(1),
+    borderRadius: '6px'
+  },
+  clickable_entity_icon_name_grid: {
+    display: 'grid',
+    gridTemplateColumns: '4em 1fr',
+    alignItems: 'center',
+    gridGap: theme.spacing(2),
     cursor: 'pointer',
     transition: 'all 0.3s',
     padding: theme.spacing(1),
