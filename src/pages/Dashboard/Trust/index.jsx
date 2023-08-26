@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { Typography, Button, Slider, TextField, InputAdornment, DialogContent, DialogContentText, DialogActions, LinearProgress, Hidden, Snackbar } from '@mui/material'
+import { Typography, Button, Slider, TextField, InputAdornment, DialogContent, DialogContentText, DialogActions, LinearProgress, Hidden, Snackbar, IconButton } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style.js'
 import { SettingsContext } from '../../../context/SettingsContext'
@@ -10,46 +10,79 @@ import ExpandMore from '@mui/icons-material/ExpandMore'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import GetTrust from '@mui/icons-material/DocumentScanner'
 import Shield from '@mui/icons-material/Security'
+import Delete from '@mui/icons-material/Close'
 import NameIcon from '@mui/icons-material/Person'
 import PictureIcon from '@mui/icons-material/InsertPhoto'
 import PublicKeyIcon from '@mui/icons-material/Key'
 import CustomDialog from '../../../components/CustomDialog'
 import isImageUrl from '../../../utils/isImageUrl'
+import { toast } from 'react-toastify'
 
 const useStyles = makeStyles(style, {
   name: 'Trust'
 })
 
 const TrustedEntity = ({ entity, setTrustedEntities, classes, history }) => {
-          const [trust, setTrust] = useState(entity.trust)
+  const [trust, setTrust] = useState(entity.trust)
+  const [deleteOpen, setDeleteOpen] = useState(false)
 
-          const handleTrustChange = (e, v) => {
-            setTrust(v)
-            setTrustedEntities(old => {
-              let newEntities = [...old]
-              newEntities[newEntities.indexOf(entity)].trust = v
-              return newEntities
-            })
-          }
+  const handleTrustChange = (e, v) => {
+    setTrust(v)
+    setTrustedEntities(old => {
+      let newEntities = [...old]
+      newEntities[newEntities.indexOf(entity)].trust = v
+      return newEntities
+    })
+  }
 
-          return <>
-            <div className={classes.entity_icon_name_grid} role='button' onClick={() => history.push(`/dashboard/access/counterparty/${entity.publicKey}`)}>
+  const handleDelete = () => {
+    setTrustedEntities(old => {
+      let newEntities = [...old]
+      newEntities.splice(newEntities.indexOf(entity), 1)
+      return newEntities
+    })
+    setDeleteOpen(false)
+  }
+
+  return <>
+    <div
+      className={classes.entity_icon_name_grid}
+      role='button'
+      onClick={() => history.push(`/dashboard/access/counterparty/${entity.publicKey}`)}
+    >
+      <img src={entity.icon} className={classes.entity_icon} />
+        <div>
+          <Typography><b>{entity.name}</b></Typography>
+          <Typography variant='caption' color='textSecondary'>{entity.note}</Typography>
+        </div>
+      </div>
+    <div className={classes.slider_label_delete_grid}>
+      <Typography><b>{trust}</b> / 10</Typography>
+      <Slider onChange={handleTrustChange} min={0} max={10} step={1} value={trust} />
+      <IconButton onClick={() => setDeleteOpen(true)}><Delete fontSize='small' color='textSecondary' /></IconButton>
+      </div>
+    <Hidden mdUp>
+      <div style={{ minHeight: '0.1em' }} />
+      <div />
+    </Hidden>
+    <CustomDialog title='Delete Trust Relationship' open={deleteOpen} onClose={() => setDeleteOpen(false)}>
+      <DialogContent>
+        <DialogContentText>Do you want to delete this trust relationship?</DialogContentText>
+        <div className={classes.entity_icon_name_grid}>
               <img src={entity.icon} className={classes.entity_icon} />
               <div>
                 <Typography><b>{entity.name}</b></Typography>
                 <Typography variant='caption' color='textSecondary'>{entity.note}</Typography>
               </div>
             </div>
-            <div className={classes.slider_label_grid}>
-              <Slider onChange={handleTrustChange} min={0} max={10} step={1} value={trust} />
-              <Typography><b>{trust}</b> / 10</Typography>
-            </div>
-            <Hidden mdUp>
-              <div style={{ minHeight: '0.1em' }} />
-              <div />
-            </Hidden>
-            </>
-        }
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setDeleteOpen(false)}>Cancel</Button>
+        <Button onClick={handleDelete}>Yes, Delete</Button>
+      </DialogActions>
+    </CustomDialog>
+  </>
+}
 
 const validateTrust = async (trust, { skipNote = false } = {}) => {
   if (trust.name.length < 5 || trust.name.length > 30) {
@@ -78,7 +111,9 @@ const validateTrust = async (trust, { skipNote = false } = {}) => {
   return true
 }
 
-const AddEntityModal = ({ open, setOpen, setTrustedEntities, classes }) => {
+const AddEntityModal = ({
+  open, setOpen, trustedEntities, setTrustedEntities, classes
+}) => {
   const [domain, setDomain] = useState('')
   const [advanced, setAdvanced] = useState(false)
   const [name, setName] = useState('')
@@ -161,31 +196,22 @@ const AddEntityModal = ({ open, setOpen, setTrustedEntities, classes }) => {
   }
 
   const handleTrust = async () => {
-    try {
-      setLoading(true)
-      setTrustedEntities(t => {
-        return [
-          { name, icon, note, publicKey, trust: 5 },
-          ...t
-        ]
-      })
-      setOpen(false)
-    } catch (e) {
-      setFieldsValid(false)
-      if (e.field) {
-        if (e.field === 'name') {
-          setNameError(e.message)
-        } else if (e.field === 'icon') {
-          setIconError(e.message)
-        } else { // public key for anything else
-          setPublicKeyError(e.message)
-        }
-      } else {
-        setPublicKeyError(e.message) // Public key for other errors
+    setTrustedEntities(t => {
+      if (t.some(x => x.publicKey === publicKey)) {
+        toast.error('An entity with this public key is already in the list!')
+        return t
       }
-    } finally {
-      setLoading(false)
-    }
+      setDomain('')
+      setName('')
+      setNote('')
+      setPublicKey('')
+      setFieldsValid(false)
+      setOpen(false)
+      return [
+        { name, icon, note, publicKey, trust: 5 },
+        ...t
+      ]
+    })
   }
 
   return (
@@ -413,6 +439,7 @@ const Trust = ({ history }) => {
   ])
   const [search, setSearch] = useState('')
   const [addEntityModalOpen, setAddEntityModalOpen] = useState(false)
+  const [settingsLoading, setSettingsLoading] = useState(false)
   const classes = useStyles()
 
   const totalTrustPoints = trustedEntities.reduce((a, e) => a + e.trust, 0)
@@ -431,10 +458,18 @@ const Trust = ({ history }) => {
   })
 
   const handleSave = async () => {
-    await updateSettings({
-      trustThreshold,
-      trustedEntities
-    })
+    try {
+      setSettingsLoading(true)
+      await updateSettings(JSON.parse(JSON.stringify({
+        trustThreshold,
+        trustedEntities
+      })))
+      toast.success('Trust relationships updated')
+    } catch (e) {
+      toast.error(e.message)
+    } finally {
+      setSettingsLoading(false)
+    }
   }
 
   const settingsNeedsUpdate = (
@@ -453,8 +488,8 @@ const Trust = ({ history }) => {
       </Typography>
       <center className={classes.trust_threshold}>
         <div className={classes.slider_label_grid}>
-          <Slider min={1} max={totalTrustPoints} step={1} onChange={(e, v) => setTrustThreshold(v)} value={trustThreshold} />
           <Typography><b>{trustThreshold}</b> / {totalTrustPoints}</Typography>
+          <Slider min={1} max={totalTrustPoints} step={1} onChange={(e, v) => setTrustThreshold(v)} value={trustThreshold} />
         </div>
       </center>
       <div className={classes.master_grid}>
@@ -513,9 +548,13 @@ const Trust = ({ history }) => {
           history={history}
         />)}
       </div>
+      {shownTrustedEntities.length === 0 && (
+          <Typography align='center' color='textSecondary' style={{ marginTop: '2em' }}>No Trusted Entities</Typography>
+        )}
       <AddEntityModal
         open={addEntityModalOpen}
         setOpen={setAddEntityModalOpen}
+        trustedEntities={trustedEntities}
         setTrustedEntities={setTrustedEntities}
         classes={classes}
       />
@@ -528,8 +567,12 @@ const Trust = ({ history }) => {
       message="You have unsaved changes!"
       action={
         <>
-          <Button color='secondary' size="small" onClick={handleSave}>
-            Save
+          <Button
+            disabled={settingsLoading}
+            color='secondary' size="small"
+            onClick={handleSave}
+          >
+            {settingsLoading ? 'Saving...' : 'Save'}
           </Button>
         </>
       }

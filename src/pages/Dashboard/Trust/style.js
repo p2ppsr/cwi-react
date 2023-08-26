@@ -38,8 +38,14 @@ export default theme => ({
   },
   slider_label_grid: {
     display: 'grid',
-    gridTemplateColumns: '1fr auto',
+    gridTemplateColumns: 'auto 1fr',
     alignItems: 'center',
-    gridGap: theme.spacing(1)
+    gridGap: theme.spacing(2)
+  },
+  slider_label_delete_grid: {
+    display: 'grid',
+    gridTemplateColumns: 'auto 1fr auto',
+    alignItems: 'center',
+    gridGap: theme.spacing(2)
   }
 })

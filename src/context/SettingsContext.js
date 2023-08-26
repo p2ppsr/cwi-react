@@ -13,7 +13,6 @@ const SettingsProvider = ({ children }) => {
 
   const updateSettings = async (newSettings = {}) => {
     const mergedSettings = { ...settings, ...newSettings }
-    setSettings(mergedSettings)
 
     // Encrypt the settings data
     const encryptedSettings = await encrypt({
@@ -34,6 +33,7 @@ const SettingsProvider = ({ children }) => {
         spendingDescription: 'Old MetaNet settings'
       }
     )
+    setSettings(mergedSettings)
   }
 
   const contextValue = {
