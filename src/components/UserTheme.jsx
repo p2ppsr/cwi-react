@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { SettingsContext } from '../context/SettingsContext'
+import { CssBaseline } from '@mui/material'
 
 const UserTheme = ({ children }) => {
   const { settings } = useContext(SettingsContext)
@@ -23,6 +24,7 @@ const UserTheme = ({ children }) => {
         })
       }}
     >
+      <CssBaseline />
       {children}
     </ThemeProvider>
   )
