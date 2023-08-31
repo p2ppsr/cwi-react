@@ -1,8 +1,8 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useBreakpoint } from '../../../utils/useBreakpoints.js'
-import CloseIcon from '@mui/icons-material/Close'
-import { IconButton, Tooltip, Stack, Typography, Divider } from '@mui/material'
+import { Typography, Divider, LinearProgress } from '@mui/material'
 import { makeStyles } from '@mui/styles'
+import { toast } from 'react-toastify'
 import style from './style'
 import PasswordSettings from './Password/index.jsx'
 import PhoneSettings from './Phone/index.jsx'
@@ -19,12 +19,22 @@ const Settings = ({ history }) => {
   const classes = useStyles()
   const breakpoints = useBreakpoint()
   const { settings, updateSettings } = useContext(SettingsContext)
+  const [settingsLoading, setSettingsLoading] = useState(false)
 
-  const handleThemeChange = (event) => {
+  const handleThemeChange = async (event) => {
     const newTheme = event.target.value
-    updateSettings({
-      theme: newTheme
-    })
+
+    try {
+      setSettingsLoading(true)
+      await updateSettings({
+        theme: newTheme
+      })
+      toast.success('Settings saved!', 'center')
+    } catch (e) {
+      toast.error(e.message)
+    } finally {
+      setSettingsLoading(false)
+    }
   }
 
   return (
@@ -36,6 +46,7 @@ const Settings = ({ history }) => {
           <option value='light'>Light</option>
           <option value='dark'>Dark</option>
         </select>
+        {settingsLoading ? <LinearProgress style={{ marginTop: '1em' }} /> : <></>}
       </div>
       <PasswordSettings history={history} />
       <Divider />
