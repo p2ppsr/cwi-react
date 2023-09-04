@@ -5,6 +5,7 @@ import style from './style'
 import ActionList from '../../../components/ActionList/index.jsx'
 import { useBreakpoint } from '../../../utils/useBreakpoints'
 import Profile from '../../../components/Profile'
+import BasketChip from '../../../components/BasketChip'
 
 const useStyles = makeStyles(style, {
   name: 'Actions'
@@ -21,6 +22,7 @@ const Actions = ({ history }) => {
             <Typography variant='h1' paragraph>
               Dashboard
             </Typography>
+            <BasketChip />
           </div>
           )
         : (
