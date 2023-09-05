@@ -9,6 +9,7 @@ import CustomDialog from '../CustomDialog/index.jsx'
 import UIContext from '../../UIContext'
 import AppChip from '../AppChip'
 import CounterpartyChip from '../CounterpartyChip'
+import ProtoChip from '../ProtoChip'
 
 const useStyles = makeStyles(style, {
   name: 'ProtocolPermissionHandler'
@@ -122,6 +123,7 @@ const ProtocolPermissionHandler = () => {
         {protocolSecurityLevel === 2 && counterparty && (
           <DialogContentText>
             <b>Counterparty</b>: <CounterpartyChip counterparty={counterparty} />
+            <ProtoChip />
           </DialogContentText>
         )}
         <br />
