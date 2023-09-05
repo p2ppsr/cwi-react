@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Avatar, Badge, Grid, Chip } from '@mui/material'
+import { Avatar, Badge, Grid, Chip, Typography } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import { CertMap } from 'certmap'
 import { Img } from 'uhrp-react'
@@ -13,7 +13,7 @@ const useStyles = makeStyles(style, {
   name: 'CertificateChip'
 })
 
-const CertificateChip = ({ certType, registryOperator, lastAccessed, counterparty, history, clickable = false, size = 1.3 }) => {
+const CertificateChip = ({ certType, registryOperator, lastAccessed, issuer, history, clickable = false, size = 1.3 }) => {
   const certmap = new CertMap()
   certmap.config.confederacyHost = confederacyHost()
 
@@ -28,7 +28,7 @@ const CertificateChip = ({ certType, registryOperator, lastAccessed, counterpart
   useEffect(() => {
     (async () => {
       try {
-        // Resolve a Signia verified identity from a counterparty
+        // Resolve a certificate by type
         const results = await certmap.resolveCertificateByType(certType, registryOperator)
         setCertName(results.name)
         setIconURL(results.iconURL)
@@ -54,24 +54,26 @@ const CertificateChip = ({ certType, registryOperator, lastAccessed, counterpart
           <span style={{ fontSize: `${size}em` }}>
             {certName}
           </span>
-          <span style={{ fontSize: '0.9em' }}>
-            <br />
-            {description}
-          </span>
-          <span style={{ fontSize: '0.9em' }}>
-            <br />
-            {lastAccessed}
-          </span>
+          {lastAccessed ?
+              <span style={{ fontSize: '0.9em' }}>
+              <br />
+              {lastAccessed}
+            </span>
+            : <></>
+          }
           <span>
-            {counterparty
+            {issuer
               ? <div>
 
                 <Grid container alignContent='center'>
                   <Grid item>
-                    <p>With</p>
+                    <br />
+                    <Typography style={{ fontSize: '0.9em', color: 'textSecondary'}}>
+                      Issuer
+                    </Typography>
                   </Grid>
                   <Grid item>
-                    <CounterpartyChip counterparty={counterparty} />
+                    <CounterpartyChip counterparty={issuer} />
                   </Grid>
                 </Grid>
               </div>

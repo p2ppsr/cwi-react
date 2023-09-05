@@ -51,21 +51,20 @@ const ProtoChip = ({ securityLevel = '1', protocolID = 'social apps', registryOp
           <span style={{ fontSize: `${size}em` }}>
             {protocolName}
           </span>
-          <span style={{ fontSize: '0.9em' }}>
-            <br />
-            {description}
-          </span>
-          <span style={{ fontSize: '0.9em' }}>
-            <br />
-            {lastAccessed}
-          </span>
+          {lastAccessed ?
+              <span style={{ fontSize: '0.9em' }}>
+              <br />
+              {lastAccessed}
+            </span>
+            : <></>
+          }
           <span>
             {counterparty
               ? <div>
 
                 <Grid container alignContent='center'>
                   <Grid item>
-                    <p>With</p>
+                  <p style={{ fontSize: '0.9em', fontWeight: 'normal'}}>With</p>
                   </Grid>
                   <Grid item>
                     <CounterpartyChip counterparty={counterparty} />

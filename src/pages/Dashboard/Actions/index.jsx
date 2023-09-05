@@ -21,12 +21,9 @@ const Actions = ({ history }) => {
       {(!breakpoints.sm && !breakpoints.xs)
         ? (
           <div className={classes.fixed_nav}>
-            <ProtoChip />
             <Typography variant='h1' paragraph>
-              Dashboard
+              Actions
             </Typography>
-            <CertificateChip />
-            <BasketChip />
           </div>
           )
         : (

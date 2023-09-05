@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Chip, Badge, Avatar } from '@mui/material'
+import { Grid, Typography, Chip, Badge, Avatar } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import { BasketMap } from 'basketmap'
 import { Img } from 'uhrp-react'
@@ -7,12 +7,13 @@ import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
 import YellowCautionIcon from '../../images/cautionIcon'
+import CounterpartyChip from '../CounterpartyChip'
 
 const useStyles = makeStyles(style, {
   name: 'BasketChip'
 })
 
-const BasketChip = ({ basketId = 'todo', registryOperator = '0249e28e064db6dc0762c2e4a71ead8cf7b05c3fd9cd0f4d222af5b6847c5c900d', history, clickable = false, size = 1.3 }) => {
+const BasketChip = ({ basketId = 'todo', registryOperator = '0249e28e064db6dc0762c2e4a71ead8cf7b05c3fd9cd0f4d222af5b6847c5c900d', lastAccessed, history, clickable = false, size = 1.3 }) => {
   const classes = useStyles()
 
   // Initialize BasketMap
@@ -39,24 +40,24 @@ const BasketChip = ({ basketId = 'todo', registryOperator = '0249e28e064db6dc076
     <Chip
       style={{
         margin: `${10 * size}px`,
-        paddingTop: `${35 * size}px`,
-        paddingBottom: `${35 * size}px`,
+        height: '100%',
+        paddingTop: `${8 * size}px`,
+        paddingBottom: `${8 * size}px`,
         paddingLeft: `${10 * size}px`,
-        paddingRight: `${0 * size}px`
+        paddingRight: `${10 * size}px`
       }}
       label={
         <div style={{ marginLeft: '1em' }}>
           <span style={{ fontSize: `${size}em` }}>
             {basketName}
           </span>
-          <span style={{ fontSize: '0.9em' }}>
-            <br />
-            {description}
-          </span>
-          <span style={{ fontSize: '0.9em' }}>
-            <br />
-            {registryOperator.substring(0, 8)}...
-          </span>
+          {lastAccessed ?
+              <span style={{ fontSize: '0.9em', color: 'secondaryText' }}>
+              <br />
+              {lastAccessed}
+            </span>
+            : <></>
+          }
         </div>
       }
       icon={
@@ -69,7 +70,7 @@ const BasketChip = ({ basketId = 'todo', registryOperator = '0249e28e064db6dc076
           badgeContent={
             <Avatar
               sx={{
-                backgroundColor: 'red',
+                backgroundColor: 'Black',
                 width: 20,
                 height: 20,
                 borderRadius: '0%',
