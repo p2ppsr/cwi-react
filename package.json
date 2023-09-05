@@ -26,6 +26,7 @@
     "babbage-signia": "^0.1.3",
     "date-fns": "^2.29.2",
     "nanostore-publisher": "^0.1.17",
+    "protomap": "^0.0.75",
     "react-country-region-selector": "^3.6.1",
     "react-image-crop": "^8.6.9",
     "react-phone-number-input": "^3.2.11",
