@@ -7,6 +7,7 @@ import { useBreakpoint } from '../../../utils/useBreakpoints'
 import Profile from '../../../components/Profile'
 import ProtoChip from '../../../components/ProtoChip'
 import CertificateChip from '../../../components/CertificateChip'
+import BasketChip from '../../../components/BasketChip'
 
 const useStyles = makeStyles(style, {
   name: 'Actions'
@@ -25,6 +26,7 @@ const Actions = ({ history }) => {
               Dashboard
             </Typography>
             <CertificateChip />
+            <BasketChip />
           </div>
           )
         : (
