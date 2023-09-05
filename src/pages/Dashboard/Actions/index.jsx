@@ -22,10 +22,10 @@ const Actions = ({ history }) => {
               Your Actions
             </Typography>
           </div>
-          )
+        )
         : (
           <Profile />
-          )}
+        )}
       <ActionList />
     </>
   )
