@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Chip, Badge, Avatar } from '@mui/material'
+import { Grid, Chip, Badge, Avatar } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import { ProtoMap } from 'babbage-protomap'
 import { Img } from 'uhrp-react'
@@ -13,7 +13,7 @@ const useStyles = makeStyles(style, {
   name: 'ProtoChip'
 })
 
-const ProtoChip = ({ securityLevel, protocolID, registryOperator, counterparty, lastAccessed, history, clickable = false, size = 1.3 }) => {
+const ProtoChip = ({ securityLevel = '1', protocolID = 'social apps', registryOperator = '0249e28e064db6dc0762c2e4a71ead8cf7b05c3fd9cd0f4d222af5b6847c5c900d', counterparty, lastAccessed, history, clickable = false, size = 1.3 }) => {
   const classes = useStyles()
 
   // Initialize ProtoMap
@@ -44,7 +44,7 @@ const ProtoChip = ({ securityLevel, protocolID, registryOperator, counterparty, 
         paddingTop: `${10 * size}px`,
         paddingBottom: `${10 * size}px`,
         paddingLeft: `${10 * size}px`,
-        paddingRight: `${10 * size}px`
+        paddingRight: `${5 * size}px`
       }}
       label={
         <div style={{ marginLeft: '1em' }}>
@@ -62,8 +62,15 @@ const ProtoChip = ({ securityLevel, protocolID, registryOperator, counterparty, 
           <span>
             {counterparty
               ? <div>
-                <p>With Counterparty</p>
-                <CounterpartyChip counterparty={counterparty} />
+
+                <Grid container alignContent='center'>
+                  <Grid item>
+                    <p>With</p>
+                  </Grid>
+                  <Grid item>
+                    <CounterpartyChip counterparty={counterparty} />
+                  </Grid>
+                </Grid>
               </div>
               : ''}
           </span>
