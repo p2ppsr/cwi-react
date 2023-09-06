@@ -19,7 +19,7 @@ const Actions = ({ history }) => {
         ? (
           <div className={classes.fixed_nav}>
             <Typography variant='h1' paragraph>
-              Dashboard
+              Actions
             </Typography>
           </div>
           )
