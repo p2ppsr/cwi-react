@@ -30,7 +30,6 @@
     "certmap": "^0.1.0",
     "date-fns": "^2.29.2",
     "nanostore-publisher": "^0.1.17",
-    "protomap": "^0.0.75",
     "react-country-region-selector": "^3.6.1",
     "react-image-crop": "^8.6.9",
     "react-phone-number-input": "^3.3.4",
