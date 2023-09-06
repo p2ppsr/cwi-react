@@ -13,7 +13,7 @@ const useStyles = makeStyles(style, {
   name: 'ProtoChip'
 })
 
-const ProtoChip = ({ securityLevel = '1', protocolID = 'social apps', registryOperator = '0249e28e064db6dc0762c2e4a71ead8cf7b05c3fd9cd0f4d222af5b6847c5c900d', counterparty, lastAccessed, history, clickable = false, size = 1.3 }) => {
+const ProtoChip = ({ securityLevel, protocolID, registryOperator, counterparty, lastAccessed, history, clickable = false, size = 1.3 }) => {
   const classes = useStyles()
 
   // Initialize ProtoMap
