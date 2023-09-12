@@ -10,6 +10,7 @@ import RecoveryKeySettings from './RecoveryKey/index.jsx'
 import About from './About/index.jsx'
 import Logout from './Logout/index.jsx'
 import { SettingsContext } from '../../../context/SettingsContext.js'
+import KernelConfigurator from '../../../components/KernelConfigurator.jsx'
 
 const useStyles = makeStyles(style, {
   name: 'Settings'
@@ -59,6 +60,9 @@ const Settings = ({ history }) => {
       <br />
       <About />
       <Divider />
+      <br />
+      <KernelConfigurator />
+      <br />
       <br />
       <Logout history={history} />
     </>

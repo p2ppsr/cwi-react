@@ -27,6 +27,7 @@ import { toast } from 'react-toastify'
 import UIContext from '../../UIContext'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import PageLoading from '../../components/PageLoading'
+import KernelConfigurator from '../../components/KernelConfigurator.jsx'
 
 const useStyles = makeStyles(style, { name: 'Greeter' })
 
@@ -379,6 +380,9 @@ const Greeter = ({ history }) => {
             </AccordionActions>
           </form>
         </Accordion>
+        <KernelConfigurator />
+        <br />
+        <br />
         <Link to='/recovery'>
           <Button
             color='secondary'
