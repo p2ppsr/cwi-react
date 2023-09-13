@@ -42,11 +42,10 @@ const CertificateChip = ({ certType, registryOperator, lastAccessed, issuer, his
   return (
     <Chip
       style={{
-        margin: `${10 * size}px`,
         height: '100%',
-        paddingTop: `${10 * size}px`,
-        paddingBottom: `${10 * size}px`,
-        paddingLeft: `${10 * size}px`,
+        paddingTop: `${4 * size}px`,
+        paddingBottom: `${4 * size}px`,
+        paddingLeft: `${5 * size}px`,
         paddingRight: `${5 * size}px`
       }}
       label={

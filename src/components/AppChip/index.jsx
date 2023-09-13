@@ -5,6 +5,9 @@ import boomerang from 'boomerang-http'
 import isImageUrl from '../../utils/isImageUrl'
 
 const AppChip = ({ label, history, clickable = true, size = 1 }) => {
+  if (typeof label !== 'string') {
+    throw new Error('Error in AppChip: label prop must be a string!')
+  }
   if (label.startsWith('babbage_app_')) {
     label = label.substring(12)
   }

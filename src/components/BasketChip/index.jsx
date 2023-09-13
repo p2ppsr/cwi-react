@@ -39,7 +39,6 @@ const BasketChip = ({ basketId = 'todo', registryOperator = '0249e28e064db6dc076
   return (
     <Chip
       style={{
-        margin: `${10 * size}px`,
         height: '100%',
         paddingTop: `${8 * size}px`,
         paddingBottom: `${8 * size}px`,

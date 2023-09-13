@@ -39,7 +39,6 @@ const CounterpartyChip = ({ counterparty, history, clickable = false, size = 1.3
   return (
     <Chip
       style={{
-        margin: `${10 * size}px`,
         paddingTop: `${23 * size}px`,
         paddingBottom: `${23 * size}px`,
         paddingLeft: `${10 * size}px`,

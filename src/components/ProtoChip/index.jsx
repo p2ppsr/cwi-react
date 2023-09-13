@@ -39,7 +39,6 @@ const ProtoChip = ({ securityLevel, protocolID, registryOperator, counterparty, 
   return (
     <Chip
       style={{
-        margin: `${10 * size}px`,
         height: '100%',
         paddingTop: `${10 * size}px`,
         paddingBottom: `${10 * size}px`,
@@ -64,7 +63,7 @@ const ProtoChip = ({ securityLevel, protocolID, registryOperator, counterparty, 
 
                 <Grid container alignContent='center'>
                   <Grid item>
-                  <p style={{ fontSize: '0.9em', fontWeight: 'normal'}}>With</p>
+                  <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>With</p>
                   </Grid>
                   <Grid item>
                     <CounterpartyChip counterparty={counterparty} />
