@@ -104,8 +104,8 @@ const ProtocolPermissionHandler = () => {
   return (
     <CustomDialog
       open={open}
-      onClose={handleCancel}
-      title='App Permission Request'
+      // onClose={handleCancel}
+      title={!renewal ? 'App Permission Request' : 'App Permission Renewal'}
     >
       <DialogContent style={{
         textAlign: 'center',
@@ -113,29 +113,42 @@ const ProtocolPermissionHandler = () => {
         flex: 'none'
       }}
       >
+        <DialogContentText>
+          <br />
+          An app is requesting to talk in a specific language (protocol) using your information.
+        </DialogContentText>
+        <br />
         <center>
-          <AppChip size={1.5} label={originator} clickable={false} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
+          <span>app:</span>
+            {originator && <div>
+              <AppChip
+                size={2.5}
+                showDomain
+                label={originator}
+                clickable={false}
+              />
+            </div>}
+          </div>
+          <br />
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
+          <span>protocol:</span>
+            <div>
+              <ProtoChip
+                securityLevel={protocolSecurityLevel}
+                protocolID={protocolID}
+                counterparty={counterparty}
+              />
+            </div>
+          </div>
+          <br />
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', gridGap: '2em', margin: '0px 1.5em' }}>
+          <span>reason:</span>
+            <DialogContentText>
+              {description}
+            </DialogContentText>
+          </div>
         </center>
-        <DialogContentText>
-          The app "{appName || originator}" would like to access <b>{protocolID}</b>.
-        </DialogContentText>
-        <br />
-        {protocolSecurityLevel === 2 && counterparty && (
-          <DialogContentText>
-            <b>Counterparty</b>: <CounterpartyChip counterparty={counterparty} />
-            <ProtoChip />
-          </DialogContentText>
-        )}
-        <br />
-        <DialogContentText>
-          {description}
-        </DialogContentText>
-        <br />
-        {renewal && (
-          <DialogContentText>
-            The app has requested this permission before.
-          </DialogContentText>
-        )}
       </DialogContent>
       <DialogActions style={{
         justifyContent: 'space-around',

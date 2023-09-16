@@ -3,8 +3,12 @@ import { Chip } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import boomerang from 'boomerang-http'
 import isImageUrl from '../../utils/isImageUrl'
+import { useTheme } from '@mui/styles'
 
-const AppChip = ({ label, history, clickable = true, size = 1 }) => {
+const AppChip = ({
+  label, showDomain = false, history, clickable = true, size = 1
+}) => {
+  const theme = useTheme()
   if (typeof label !== 'string') {
     throw new Error('Error in AppChip: label prop must be a string!')
   }
@@ -29,21 +33,41 @@ const AppChip = ({ label, history, clickable = true, size = 1 }) => {
       try {
         const manifest = await boomerang(
           'GET',
-          `https://${label}/manifest.json`
+          `${label.startsWith('localhost:') ? 'http' : 'https'}://${label}/manifest.json`
         )
         setParsedLabel(manifest.name)
-      } catch (e) { /* ignore, nothing we can do and not our problem */ }
+      } catch (e) {
+        console.error(e)
+        /* ignore, nothing we can do and not our problem */
+      }
     })()
   }, [label])
 
   return (
     <Chip
       style={{
-        margin: `${8 * size}px`,
         paddingTop: `${16 * size}px`,
         paddingBottom: `${16 * size}px`
       }}
-      label={<span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>}
+      label={
+        (showDomain && label !== parsedLabel)
+          ? <div style={{
+            textAlign: 'left'
+          }}>
+            <span style={{ fontSize: `${size * 0.6}em`, fontWeight: 'bold' }}>
+              {parsedLabel}
+            </span>
+            <br />
+            <span
+              style={{
+                fontSize: `${size * 0.5}em`,
+                color: theme.palette.text.secondary
+              }}
+            >
+              {label}
+            </span>
+          </div>
+          : <span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>}
       icon={(
         <img
           src={appIconImageUrl}
@@ -56,6 +80,7 @@ const AppChip = ({ label, history, clickable = true, size = 1 }) => {
           }}
         />
       )}
+      disableRipple={!clickable}
       onClick={() => {
         if (clickable) {
           history.push(

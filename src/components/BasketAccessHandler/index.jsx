@@ -89,7 +89,7 @@ const BasketAccessHandler = () => {
   return (
     <CustomDialog
       open={open}
-      onClose={handleCancel}
+      // onClose={handleCancel}
       title='Basket Access Request'
     >
       <DialogContent style={{

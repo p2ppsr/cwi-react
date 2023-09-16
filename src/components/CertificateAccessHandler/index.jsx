@@ -106,7 +106,7 @@ const CertificateAccessHandler = () => {
   return (
     <CustomDialog
       open={open}
-      onClose={handleCancel}
+      // onClose={handleCancel}
       title='Certificate Access Request'
     >
       <DialogContent style={{

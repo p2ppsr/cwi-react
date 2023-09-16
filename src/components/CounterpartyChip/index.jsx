@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom'
 import { Signia } from 'babbage-signia'
 import { Img } from 'uhrp-react'
 import makeStyles from '@mui/styles/makeStyles'
+import { useTheme } from '@mui/styles'
 import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
 import signicertHost from '../../utils/signicertHost'
@@ -16,6 +17,7 @@ const useStyles = makeStyles(style, {
 const CounterpartyChip = ({ counterparty, history, clickable = false, size = 1.3 }) => {
   const signia = new Signia(undefined, signicertHost())
   signia.config.confederacyHost = confederacyHost()
+  const theme = useTheme()
 
   const classes = useStyles()
 
@@ -44,28 +46,49 @@ const CounterpartyChip = ({ counterparty, history, clickable = false, size = 1.3
         paddingLeft: `${10 * size}px`,
         paddingRight: `${10 * size}px`
       }}
+      disableRipple={!clickable}
       label={
         <div>
           <span style={{ fontSize: `${size}em` }}>
-            {signiaIdentity.firstName} {signiaIdentity.lastName}
+            {counterparty === 'self'
+              ? 'Self'
+              : counterparty === 'anyone'
+                ? 'Anyone'
+                : `${signiaIdentity.firstName} ${signiaIdentity.lastName}`}
           </span>
-          <span style={{ fontSize: '0.9em' }}>
-            <br />
-            {counterparty.substring(0, 8)}...
-          </span>
+          {counterparty !== 'self' && counterparty !== 'anyone' && (
+            <span
+              style={{
+                fontSize: '0.9em',
+                color: signiaIdentity.profilePhoto
+                  ? theme.palette.text.secondary.main
+                  : 'red'
+              }}
+            >
+              <br />
+              {counterparty.substring(0, 10)}...
+            </span>
+          )}
         </div>
       }
       icon={
-        signiaIdentity.profilePhoto
+        signiaIdentity.profilePhoto ||
+          counterparty === 'self' ||
+          counterparty === 'anyone'
           ? (
             <Img
-              src={signiaIdentity.profilePhoto}
+              src={counterparty === 'self'
+                ? 'https://projectbabbage.com/favicon.ico'
+                : counterparty === 'anyone'
+                  ? 'https://projectbabbage.com/favicon.ico'
+                  : signiaIdentity.profilePhoto
+              }
               className={classes.table_picture}
               confederacyHost={confederacyHost()}
             />
             )
           : <YellowCautionIcon className={classes.table_picture} />
-}
+      }
       onClick={() => {
         if (clickable) {
           history.push(

@@ -137,7 +137,7 @@ const SpendingAuthorizationHandler = () => {
   return (
     <CustomDialog
       open={open}
-      onClose={handleCancel}
+      // onClose={handleCancel}
       title='App Spending Request'
     >
       <DialogContent>

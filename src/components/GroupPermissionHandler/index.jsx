@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import {
-  DialogContent, DialogContentText, DialogActions, Button, Typography, Divider, Checkbox, Chip
+  DialogContent, DialogContentText, DialogActions, Button, Typography, Divider, Checkbox, Chip, FormControlLabel
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import boomerang from 'boomerang-http'
@@ -11,6 +11,7 @@ import ProtoChip from '../ProtoChip/index.jsx'
 import CounterpartyChip from '../CounterpartyChip/index.jsx'
 import CertificateChip from '../CertificateChip/index.jsx'
 import BasketChip from '../BasketChip/index.jsx'
+import { Satoshis } from '../Satoshis.jsx'
 
 const useStyles = makeStyles({
   protocol_grid: {
@@ -18,7 +19,7 @@ const useStyles = makeStyles({
     gridTemplateColumns: 'auto 1fr',
     alignItems: 'center',
     gridColumnGap: '0.5em',
-    padding: '0.5em 0px'
+    padding: '1em 0px'
   },
   protocol_inset: {
     marginLeft: '2.5em',
@@ -160,24 +161,44 @@ const GroupPermissionHandler = () => {
   return (
     <CustomDialog
       open={open}
-      onClose={handleCancel}
+      // onClose={handleCancel}
       title='Select App Permissions'
     >
       <DialogContent>
+        <DialogContentText>
+          <br />
+          An app is requesting access to some of your information, and it wants to do some things on your behalf. Have a look through the below list of items, and select the ones you'd be okay with.
+        </DialogContentText>
+        <br />
         <center>
-          {originator && <AppChip size={2} label={originator} />}
-          <DialogContentText>
-          would like access to the following:
-          </DialogContentText>
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
+          <span>app:</span>
+            {originator && <div>
+              <AppChip
+                size={2.5}
+                showDomain
+                label={originator}
+                clickable={false}
+              />
+            </div>}
+          </div>
         </center>
         <br />
-        <Typography variant='h3'>Spending Authorization</Typography>
         {spendingAuthorization && (
-          <DialogContentText>
-            {spendingAuthorization.amount} sats to be spent over the next 2 months
-        </DialogContentText>
+          <>
+            <Typography variant='h3'>Spending Authorization</Typography>
+            <FormControlLabel
+              control={<Checkbox />}
+              label={<span>Let the app spend <Satoshis abbreviate>{spendingAuthorization.amount}</Satoshis> over the next 2 months without asking.</span>}
+            />
+            <br />
+            <br />
+          </>
         )}
         <Typography variant='h3'>Protocol Permissions</Typography>
+        <Typography color='textSecondary' variant='caption'>
+          Protocols let apps talk in specific languages using your information.
+        </Typography>
         {protocolPermissions.map((x, i) => (
           <div key={i} className={classes.protocol_grid}>
             <div>
@@ -190,7 +211,7 @@ const GroupPermissionHandler = () => {
               counterparty={x.counterparty}
             />
             <div className={classes.protocol_inset}>
-              <p style={{ marginBottom: '0px' }}><b>Description:{' '}</b>{x.description}</p>
+              <p style={{ marginBottom: '0px' }}><b>Reason:{' '}</b>{x.description}</p>
             </div>
             </div>
           </div>
@@ -228,7 +249,7 @@ const GroupPermissionHandler = () => {
                   />
                 </div>
                 </div>
-                <p style={{ marginBottom: '0px' }}><b>Description:{' '}</b>{x.description}</p>
+                <p style={{ marginBottom: '0px' }}><b>Reason:{' '}</b>{x.description}</p>
               </div>
             </div>
           </div>
@@ -244,7 +265,7 @@ const GroupPermissionHandler = () => {
                 basketId={x.name}
               />
               <div className={classes.basket_inset}>
-                <p style={{ marginBottom: '0px' }}><b>Description:{' '}</b>{x.description}</p>
+                <p style={{ marginBottom: '0px' }}><b>Reason:{' '}</b>{x.description}</p>
               </div>
             </div>
           </div>
@@ -261,13 +282,13 @@ const GroupPermissionHandler = () => {
           onClick={handleCancel}
           color='primary'
         >
-          Deny
+          Deny All
         </Button>
         <Button
           color='primary'
           onClick={handleGrant}
         >
-          Grant
+          Grant Selected
         </Button>
       </DialogActions>
     </CustomDialog>

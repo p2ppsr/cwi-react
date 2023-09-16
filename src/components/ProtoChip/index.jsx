@@ -4,31 +4,41 @@ import { withRouter } from 'react-router-dom'
 import { ProtoMap } from 'babbage-protomap'
 import { Img } from 'uhrp-react'
 import makeStyles from '@mui/styles/makeStyles'
+import { useTheme } from '@mui/styles'
 import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
 import YellowCautionIcon from '../../images/cautionIcon'
 import CounterpartyChip from '../CounterpartyChip'
+import registryOperator from '../../utils/registryOperator'
 
 const useStyles = makeStyles(style, {
   name: 'ProtoChip'
 })
 
-const ProtoChip = ({ securityLevel, protocolID, registryOperator, counterparty, lastAccessed, history, clickable = false, size = 1.3 }) => {
+const ProtoChip = ({
+  securityLevel, protocolID, counterparty, lastAccessed, history, clickable = false, size = 1.3
+}) => {
   const classes = useStyles()
+  const theme = useTheme()
+  const registry = registryOperator()
 
   // Initialize ProtoMap
   const protomap = new ProtoMap()
   protomap.config.confederacyHost = confederacyHost()
 
-  const [protocolName, setProtocolName] = useState('Unknown')
-  const [iconURL, setIconURL] = useState('unknown')
-  const [description, setDescription] = useState('Protocol description not provided.')
+  const [protocolName, setProtocolName] = useState(protocolID)
+  const [iconURL, setIconURL] = useState(
+    'https://projectbabbage.com/favicon.ico'
+  )
+  const [description, setDescription] = useState(
+    'Protocol description not found.'
+  )
 
   useEffect(() => {
     (async () => {
       try {
         // Resolve a Protocol info from id and operator
-        const results = await protomap.resolveProtocol(registryOperator, securityLevel, protocolID)
+        const results = await protomap.resolveProtocol(registry, securityLevel, protocolID)
         setProtocolName(results.name)
         setIconURL(results.iconURL)
         setDescription(results.description)
@@ -46,9 +56,13 @@ const ProtoChip = ({ securityLevel, protocolID, registryOperator, counterparty, 
         paddingRight: `${5 * size}px`
       }}
       label={
-        <div style={{ marginLeft: '1em' }}>
+        <div style={{ marginLeft: '1em', textAlign: 'left' }}>
           <span style={{ fontSize: `${size}em` }}>
-            {protocolName}
+            <b>{protocolName}</b>
+          </span>
+          <br />
+          <span style={{ fontSize: `${size * 0.8}em`, color: theme.palette.text.secondary }}>
+            {description}
           </span>
           {lastAccessed ?
               <span style={{ fontSize: '0.9em' }}>
@@ -58,12 +72,11 @@ const ProtoChip = ({ securityLevel, protocolID, registryOperator, counterparty, 
             : <></>
           }
           <span>
-            {counterparty
+            {counterparty && counterparty !== 'self'
               ? <div>
-
                 <Grid container alignContent='center'>
                   <Grid item>
-                  <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>With</p>
+                  <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>with:</p>
                   </Grid>
                   <Grid item>
                     <CounterpartyChip counterparty={counterparty} />
@@ -116,6 +129,7 @@ const ProtoChip = ({ securityLevel, protocolID, registryOperator, counterparty, 
               )}
         </Badge>
   }
+      disableRipple={!clickable}
       onClick={() => {
         if (clickable) {
           history.push(
