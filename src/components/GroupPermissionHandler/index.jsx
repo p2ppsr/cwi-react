@@ -61,9 +61,6 @@ const useStyles = makeStyles({
     alignItems: 'center',
     gridGap: '0.5em'
   },
-  certificate_field: {
-    margin: '0px 0.25em'
-  },
   certificate_display: {
     display: 'grid',
     gridTemplateRows: 'auto'
@@ -96,15 +93,33 @@ const GroupPermissionHandler = () => {
   }
 
   const handleGrant = async () => {
-    window.CWI.grantGroupPermission({
-      requestID,
-      granted: {
-        spendingAuthorization,
-        protocolPermissions,
-        basketAccess,
-        certificateAccess
+    const granted = {
+      protocolPermissions: [],
+      basketAccess: [],
+      certificateAccess: []
+    }
+    if (
+      typeof spendingAuthorization === 'object' &&
+      spendingAuthorization.enabled
+    ) {
+      granted.spendingAuthorization = spendingAuthorization
+    }
+    for (const x of protocolPermissions) {
+      if (x.enabled) {
+        granted.protocolPermissions.push(x)
       }
-    })
+    }
+    for (const x of basketAccess) {
+      if (x.enabled) {
+        granted.basketAccess.push(x)
+      }
+    }
+    for (const x of certificateAccess) {
+      if (x.enabled) {
+        granted.certificateAccess.push(x)
+      }
+    }
+    window.CWI.grantGroupPermission({ requestID, granted })
     setOpen(false)
     if (!wasOriginallyFocused) {
       await onFocusRelinquished()
@@ -138,10 +153,24 @@ const GroupPermissionHandler = () => {
           }
           const wasOriginallyFocused = await isFocused()
           setRequestID(requestID)
-          setSpendingAuthorization(groupPermissions.spendingAuthorization)
-          setProtocolPermissions(groupPermissions.protocolPermissions)
-          setBasketAccess(groupPermissions.basketAccess)
-          setCertificateAccess(groupPermissions.certificateAccess)
+          if (typeof groupPermissions.spendingAuthorization === 'object') {
+            setSpendingAuthorization({
+              ...groupPermissions.spendingAuthorization,
+              enabled: true
+            })
+          }
+          setProtocolPermissions(
+            groupPermissions.protocolPermissions
+              .map(x => ({ ...x, enabled: true }))
+          )
+          setBasketAccess(
+            groupPermissions.basketAccess
+              .map(x => ({ ...x, enabled: true }))
+          )
+          setCertificateAccess(
+            groupPermissions.certificateAccess
+              .map(x => ({ ...x, enabled: true }))
+          )
           setOriginator(originator)
           setOpen(true)
           setWasOriginallyFocused(wasOriginallyFocused)
@@ -157,6 +186,24 @@ const GroupPermissionHandler = () => {
       }
     }
   }, [])
+
+  const toggleProtocolPermission = (index) => {
+    setProtocolPermissions(prev => prev.map((item, idx) => (
+      idx === index ? { ...item, enabled: !item.enabled } : item
+    )))
+  }
+
+  const toggleCertificateAccess = (index) => {
+    setCertificateAccess(prev => prev.map((item, idx) => (
+      idx === index ? { ...item, enabled: !item.enabled } : item
+    )))
+  }
+
+  const toggleBasketAccess = (index) => {
+    setBasketAccess(prev => prev.map((item, idx) => (
+      idx === index ? { ...item, enabled: !item.enabled } : item
+    )))
+  }
 
   return (
     <CustomDialog
@@ -188,13 +235,17 @@ const GroupPermissionHandler = () => {
           <>
             <Typography variant='h3'>Spending Authorization</Typography>
             <FormControlLabel
-              control={<Checkbox />}
+              control={<Checkbox
+                checked={spendingAuthorization.enabled}
+                onChange={() => setSpendingAuthorization(prev => ({ ...prev, enabled: !prev.enabled }))}
+              />}
               label={<span>Let the app spend <Satoshis abbreviate>{spendingAuthorization.amount}</Satoshis> over the next 2 months without asking.</span>}
             />
             <br />
             <br />
           </>
         )}
+        {protocolPermissions.length > 0 && <>
         <Typography variant='h3'>Protocol Permissions</Typography>
         <Typography color='textSecondary' variant='caption'>
           Protocols let apps talk in specific languages using your information.
@@ -202,7 +253,10 @@ const GroupPermissionHandler = () => {
         {protocolPermissions.map((x, i) => (
           <div key={i} className={classes.protocol_grid}>
             <div>
-            <Checkbox />
+              <Checkbox
+                checked={x.enabled}
+                onChange={() => toggleProtocolPermission(i)}
+              />
             </div>
             <div>
             <ProtoChip
@@ -216,49 +270,51 @@ const GroupPermissionHandler = () => {
             </div>
           </div>
         ))}
+        </>}
+        {certificateAccess.length > 0 && <>
         <Typography variant='h3'>Certificate Access</Typography>
+        <Typography color='textSecondary' variant='caption'>
+          Certificates are documents issued to you by various third parties.
+        </Typography>
         {certificateAccess.map((x, i) => (
           <div key={i} className={classes.certificate_grid}>
             <div>
-              <Checkbox />
+              <Checkbox
+                checked={x.enabled}
+                onChange={() => toggleCertificateAccess(i)}
+              />
             </div>
             <div className={classes.certificate_display}>
               <div>
                 <CertificateChip
                   certType={x.type}
+                  verifier={x.verifierPublicKey}
+                  fieldsToDisplay={x.fields}
                 />
               </div>
               <div className={classes.certificate_inset}>
               <div className={classes.certificate_attribute_wrap}>
-                <div style={{ minHeight: '1em' }} />
+                <div style={{ minHeight: '0.5em' }} />
                 <div />
-                <b>Fields:</b>
-                <div>
-                  {x.fields.map((y, j) => (
-                    <Chip
-                      className={classes.certificate_field}
-                      key={j}
-                      label={y}
-                    />
-                  ))}
-                </div>
-                <b>Verifier:</b>
-                <div>
-                  <CounterpartyChip
-                    counterparty={x.verifierPublicKey}
-                  />
-                </div>
                 </div>
                 <p style={{ marginBottom: '0px' }}><b>Reason:{' '}</b>{x.description}</p>
               </div>
             </div>
           </div>
         ))}
-        <Typography variant='h3'>Basket Access</Typography>
+        </>}
+        {basketAccess.length > 0 && <>
+          <Typography variant='h3'>Basket Access</Typography>
+        <Typography color='textSecondary' variant='caption'>
+          Baskets hold various tokens or "things" you own.
+        </Typography>
         {basketAccess.map((x, i) => (
           <div key={i} className={classes.basket_grid}>
             <div>
-              <Checkbox />
+              <Checkbox
+                checked={x.enabled}
+                onChange={() => toggleBasketAccess(i)}
+              />
             </div>
             <div>
               <BasketChip
@@ -270,6 +326,7 @@ const GroupPermissionHandler = () => {
             </div>
           </div>
         ))}
+        </>}
       </DialogContent>
       <br />
       <DialogActions style={{

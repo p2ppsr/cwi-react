@@ -17,7 +17,7 @@ const useStyles = makeStyles(style, {
 })
 
 const ProtoChip = ({
-  securityLevel, protocolID, counterparty, lastAccessed, history, clickable = false, size = 1.3, onClick
+  securityLevel, protocolID, counterparty, lastAccessed, history, clickable = false, size = 1.3, onClick, onCounterpartyClick
 }) => {
   if (typeof protocolID !== 'string') {
     throw new Error('ProtoChip requires protocolID to be a string')
@@ -78,12 +78,15 @@ const ProtoChip = ({
           <span>
             {counterparty && counterparty !== 'self'
               ? <div>
-                <Grid container alignContent='center'>
+                <Grid container alignContent='center' style={{ alignItems: 'center' }}>
                   <Grid item>
                   <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>with:</p>
                   </Grid>
                   <Grid item>
-                    <CounterpartyChip counterparty={counterparty} />
+                    <CounterpartyChip
+                      counterparty={counterparty}
+                      onClick={onCounterpartyClick}
+                    />
                   </Grid>
                 </Grid>
               </div>
@@ -150,6 +153,7 @@ const ProtoChip = ({
           if (typeof onClick === 'function') {
             onClick(e)
           } else {
+            e.stopPropagation()
             history.push(
               `/dashboard/protocol/${encodeURIComponent(`${securityLevel}-${protocolID}`)}`
             )

@@ -14,7 +14,9 @@ const useStyles = makeStyles(style, {
   name: 'CounterpartyChip'
 })
 
-const CounterpartyChip = ({ counterparty, history, clickable = false, size = 1.3 }) => {
+const CounterpartyChip = ({
+  counterparty, history, clickable = false, size = 1.3, onClick
+}) => {
   const signia = new Signia(undefined, signicertHost())
   signia.config.confederacyHost = confederacyHost()
   const theme = useTheme()
@@ -89,11 +91,16 @@ const CounterpartyChip = ({ counterparty, history, clickable = false, size = 1.3
             )
           : <YellowCautionIcon className={classes.table_picture} />
       }
-      onClick={() => {
+      onClick={e => {
         if (clickable) {
-          history.push(
-            `/dashboard/app/${encodeURIComponent(counterparty)}`
-          )
+          if (typeof onClick === 'function') {
+            onClick(e)
+          } else {
+            e.stopPropagation()
+            history.push(
+              `/dashboard/counterparty/${encodeURIComponent(counterparty)}`
+            )
+          }
         }
       }}
     />

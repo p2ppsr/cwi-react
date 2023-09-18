@@ -139,6 +139,7 @@ const BasketChip = ({
           if (typeof onClick === 'function') {
             onClick(e)
           } else {
+            e.stopPropagation()
             history.push(
               `/dashboard/basket/${encodeURIComponent(basketId)}`
             )

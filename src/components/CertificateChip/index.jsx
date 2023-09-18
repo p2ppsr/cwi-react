@@ -1,27 +1,38 @@
 import React, { useState, useEffect } from 'react'
-import { Avatar, Badge, Grid, Chip, Typography } from '@mui/material'
+import { Avatar, Badge, Grid, Chip, Typography, Tooltip } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import { CertMap } from 'certmap'
 import { Img } from 'uhrp-react'
-import makeStyles from '@mui/styles/makeStyles'
+import { useTheme, makeStyles } from '@mui/styles'
 import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
+import registryOperator from '../../utils/registryOperator'
 import YellowCautionIcon from '../../images/cautionIcon'
 import CounterpartyChip from '../CounterpartyChip'
+import ArtTrack from '@mui/icons-material/ArtTrack'
 
 const useStyles = makeStyles(style, {
   name: 'CertificateChip'
 })
 
-const CertificateChip = ({ certType, registryOperator, lastAccessed, issuer, history, clickable = false, size = 1.3 }) => {
+const CertificateChip = ({
+  certType, lastAccessed, issuer, onIssuerClick, verifier, onVerifierClick, onClick, fieldsToDisplay, history, clickable = false, size = 1.3
+}) => {
+  if (typeof certType !== 'string') {
+    throw new Error('The certType prop in CertificateChip is not a string')
+  }
+  const certificateRegistryOperator = registryOperator()
   const certmap = new CertMap()
   certmap.config.confederacyHost = confederacyHost()
 
   const classes = useStyles()
+  const theme = useTheme()
 
   const [certName, setCertName] = useState('Unknown Cert')
-  const [iconURL, setIconURL] = useState('unknown')
-  const [description, setDescription] = useState('No certificate description was provided.')
+  const [iconURL, setIconURL] = useState(
+    'https://projectbabbage.com/favicon.ico'
+  )
+  const [description, setDescription] = useState(`${certType.substr(0, 12)}...`)
   const [documentationURL, setDocumentationURL] = useState('unknown')
   const [fields, setFields] = useState({})
 
@@ -29,15 +40,19 @@ const CertificateChip = ({ certType, registryOperator, lastAccessed, issuer, his
     (async () => {
       try {
         // Resolve a certificate by type
-        const results = await certmap.resolveCertificateByType(certType, registryOperator)
+        const results = await certmap.resolveCertificateByType(
+          certType,
+          certificateRegistryOperator
+        )
         setCertName(results.name)
         setIconURL(results.iconURL)
         setDescription(results.description)
         setDocumentationURL(results.documentationURL)
       } catch (error) {
+        console.error(error)
       }
     })()
-  }, [certName])
+  }, [certType])
 
   return (
     <Chip
@@ -48,31 +63,70 @@ const CertificateChip = ({ certType, registryOperator, lastAccessed, issuer, his
         paddingLeft: `${5 * size}px`,
         paddingRight: `${5 * size}px`
       }}
+      disableRipple={!clickable}
       label={
-        <div style={{ marginLeft: '1em' }}>
+        <div style={{ marginLeft: '0.125em', textAlign: 'left' }}>
           <span style={{ fontSize: `${size}em` }}>
-            {certName}
+            <b>{certName}</b>
           </span>
-          {lastAccessed ?
-              <span style={{ fontSize: '0.9em' }}>
-              <br />
-              {lastAccessed}
-            </span>
-            : <></>
-          }
+          <br />
+          <span style={{
+            fontSize: `${size * 0.8}em`,
+            color: theme.palette.text.secondary,
+            maxWidth: '20em',
+            display: 'block'
+          }}>
+            {lastAccessed || description}
+          </span>
+          <span>
+            {Array.isArray(fieldsToDisplay) && fieldsToDisplay.length > 0
+              ? <div>
+                <Grid container alignContent='center' style={{ alignItems: 'center' }}>
+                  <Grid item>
+                    <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>fields:</p>
+                  </Grid>
+                  <Grid item>
+                    {fieldsToDisplay.map((y, j) => (
+                      <Chip
+                        style={{ margin: '0px 0.25em' }}
+                        key={j}
+                        label={y}
+                      />
+                    ))}
+                  </Grid>
+                </Grid>
+              </div>
+              : ''}
+          </span>
           <span>
             {issuer
               ? <div>
-
-                <Grid container alignContent='center'>
+                <Grid container alignContent='center' style={{ alignItems: 'center' }}>
                   <Grid item>
-                    <br />
-                    <Typography style={{ fontSize: '0.9em', color: 'textSecondary'}}>
-                      Issuer
-                    </Typography>
+                    <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>issuer:</p>
                   </Grid>
                   <Grid item>
-                    <CounterpartyChip counterparty={issuer} />
+                    <CounterpartyChip
+                      counterparty={issuer}
+                      onClick={onIssuerClick}
+                    />
+                  </Grid>
+                </Grid>
+              </div>
+              : ''}
+          </span>
+          <span>
+            {verifier
+              ? <div>
+                <Grid container alignContent='center' style={{ alignItems: 'center' }}>
+                  <Grid item>
+                    <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>verifier:</p>
+                  </Grid>
+                  <Grid item>
+                    <CounterpartyChip
+                      counterparty={verifier}
+                      onClick={onVerifierClick}
+                    />
                   </Grid>
                 </Grid>
               </div>
@@ -88,45 +142,61 @@ const CertificateChip = ({ certType, registryOperator, lastAccessed, issuer, his
             horizontal: 'right'
           }}
           badgeContent={
+            <Tooltip
+              arrow
+              title='Digital Certificate (click to learn more about certificates)'
+              onClick={e => {
+                e.stopPropagation()
+                window.open(
+                  'https://projectbabbage.com/docs/babbage-sdk/concepts/certificates',
+                  '_blank'
+                )
+              }}
+            >
             <Avatar
               sx={{
-                backgroundColor: 'black', // TODO: Use theme
+                backgroundColor: 'darkgoldenrod',
                 width: 20,
                 height: 20,
-                borderRadius: '0%',
+                borderRadius: '3px',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
                 fontSize: '1.2em',
-                marginRight: '0.3em',
+                marginRight: '0.25em',
                 marginBottom: '0.3em'
               }}
             >
-              C
-            </Avatar>
-      }
-        >
-          {iconURL
-            ? (
-              <Avatar
-                sx={{
-                  width: '3.2em',
-                  height: '3.2em'
-                }}
-              >
-                <Img src={iconURL} style={{ width: '100%', height: '100%' }} className={classes.table_picture} confederacyHost={confederacyHost()} />
+              <ArtTrack style={{ width: 16, height: 16 }} />
               </Avatar>
-              )
-            : (
-              <YellowCautionIcon className={classes.table_picture} />
-              )}
+            </Tooltip>
+          }
+        >
+          <Avatar
+            sx={{
+              width: '3.2em',
+              height: '3.2em'
+            }}
+          >
+            <Img
+              src={iconURL}
+              style={{ width: '100%', height: '100%' }}
+              className={classes.table_picture}
+              confederacyHost={confederacyHost()}
+            />
+          </Avatar>
         </Badge>
-  }
-      onClick={() => {
+      }
+      onClick={e => {
         if (clickable) {
-          history.push(
-            `/dashboard/app/${encodeURIComponent(certName)}`
-          )
+          if (typeof onClick === 'function') {
+            onClick(e)
+          } else {
+            e.stopPropagation()
+            history.push(
+              `/dashboard/certificate/${encodeURIComponent(certType)}`
+            )
+          }
         }
       }}
     />

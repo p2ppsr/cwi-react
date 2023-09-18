@@ -17,6 +17,7 @@ import boomerang from 'boomerang-http'
 import CustomDialog from '../CustomDialog/index.jsx'
 import UIContext from '../../UIContext'
 import AppChip from '../AppChip'
+import CertificateChip from '../CertificateChip'
 
 const CertificateAccessHandler = () => {
   const {
@@ -107,7 +108,10 @@ const CertificateAccessHandler = () => {
     <CustomDialog
       open={open}
       // onClose={handleCancel}
-      title='Certificate Access Request'
+      title={!renewal
+        ? 'Certificate Access Request'
+        : 'Certificate Access Renewal'
+      }
     >
       <DialogContent style={{
         textAlign: 'center',
@@ -115,59 +119,43 @@ const CertificateAccessHandler = () => {
         flex: 'none'
       }}
       >
+        <DialogContentText>
+          <br />
+          Someone wants to use an app to look at some of your digital certificates.
+        </DialogContentText>
+        <br />
         <center>
-          <AppChip size={1.5} label={originator} clickable={false} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
+          <span>app:</span>
+            {originator && <div>
+              <AppChip
+                size={2.5}
+                showDomain
+                label={originator}
+                clickable={false}
+              />
+            </div>}
+          </div>
+          <br />
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
+          <span>certificate:</span>
+            <div>
+              <CertificateChip
+                certType={certificateType}
+                fieldsToDisplay={fields}
+                verifier={verifierPublicKey}
+              />
+            </div>
+          </div>
+          <br />
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', gridGap: '2em', margin: '0px 1.5em' }}>
+          <span>reason:</span>
+            <DialogContentText>
+              {description}
+            </DialogContentText>
+          </div>
         </center>
-        <DialogContentText>
-          The app "{appName || originator}" would like to access certificate type "{certificateType}", for the following verifier:
-        </DialogContentText>
-        <br />
-        <DialogContentText style={{ alignSelf: 'baseline' }}>
-          <b>{verifierPublicKey}</b>
-        </DialogContentText>
-        <br />
-        <DialogContentText>
-          {description}
-        </DialogContentText>
-        <br />
       </DialogContent>
-      <Typography align='center'>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 250 }} aria-label='simple table' size='small'>
-            <TableHead>
-              <TableRow
-                sx={{
-                  borderBottom: '2px solid black',
-                  '& th': {
-                    fontSize: '14px',
-                    fontWeight: 'bold'
-                  }
-                }}
-              >
-                <TableCell>Fields Requested</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {fields.map((field) => (
-                <TableRow
-                  key={field}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component='th' scope='row'>
-                    {field}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <br />
-        {renewal && (
-          <DialogContentText>
-            The app has requested access before.
-          </DialogContentText>
-        )}
-      </Typography>
       <DialogActions style={{
         justifyContent: 'space-around',
         padding: '1em',

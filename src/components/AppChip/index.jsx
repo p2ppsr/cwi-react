@@ -137,6 +137,7 @@ const AppChip = ({
           if (typeof onClick === 'function') {
             onClick(e)
           } else {
+            e.stopPropagation()
             history.push(
               `/dashboard/app/${encodeURIComponent(label)}`
             )
