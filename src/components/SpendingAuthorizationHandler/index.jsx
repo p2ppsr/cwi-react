@@ -32,6 +32,12 @@ const useStyles = makeStyles(style, {
   name: 'SpendingAuthorizationHandler'
 })
 
+const formatNumber = (num) => {
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+  if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+  return num.toString();
+}
+
 const SpendingAuthorizationHandler = () => {
   const {
     onFocusRequested,
@@ -141,18 +147,16 @@ const SpendingAuthorizationHandler = () => {
       title='App Spending Request'
     >
       <DialogContent>
+        <br />
         <center>
-          <Typography
-            variant='h2'
-            paragraph
-            className={classes.title}
-          >
-            <b>
-              {!showAuthorizeApp
-                ? <AppChip size={1.5} label={originator} clickable={false} />
-                : (`Always Allow "${(appName || originator)}"?`)}
-            </b>
-          </Typography>
+          <AppChip
+            size={2.5}
+            label={originator}
+            clickable={false}
+            showDomain
+          />
+          <br />
+          <br />
         </center>
         {!showAuthorizeApp
           ? (
@@ -243,17 +247,17 @@ const SpendingAuthorizationHandler = () => {
               {!renewal
                 ? (
                   <DialogContentText>
-                    Do you want to allow this app to spend up to <b><Satoshis>{amount}</Satoshis></b>?
+                    Spend amount: <b><Satoshis>{amount}</Satoshis></b>
                   </DialogContentText>
                   )
                 : (
                   <DialogContentText>
-                    Do you want to allow this app to spend up to another <b><Satoshis>{amount}</Satoshis></b>? You have allowed this app in the past.
+                    Spend another: <b><Satoshis>{amount}</Satoshis></b>
                   </DialogContentText>
                   )}
-              <DialogContentText>
+              {/* <DialogContentText>
                 {description}
-              </DialogContentText>
+              </DialogContentText> */}
               <Typography variant='h5'>
                 <b>Authorization Amount</b>
               </Typography>
@@ -269,6 +273,7 @@ const SpendingAuthorizationHandler = () => {
                   onChange={(e, v) => setSliderValue(v)}
                   color='primary'
                   valueLabelDisplay='auto'
+                  valueDisplayFormat={formatNumber}
                   className={classes.slider}
                 />
               </center>

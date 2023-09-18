@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Grid, Typography, Chip, Badge, Avatar } from '@mui/material'
+import { Grid, Typography, Chip, Badge, Avatar, Tooltip } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import { BasketMap } from 'basketmap'
 import { Img } from 'uhrp-react'
@@ -8,34 +8,53 @@ import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
 import YellowCautionIcon from '../../images/cautionIcon'
 import CounterpartyChip from '../CounterpartyChip'
+import registryOperator from '../../utils/registryOperator'
+import { useTheme } from '@mui/styles'
+import ShoppingBasket from '@mui/icons-material/ShoppingBasket'
 
 const useStyles = makeStyles(style, {
   name: 'BasketChip'
 })
 
-const BasketChip = ({ basketId = 'todo', registryOperator = '0249e28e064db6dc0762c2e4a71ead8cf7b05c3fd9cd0f4d222af5b6847c5c900d', lastAccessed, history, clickable = false, size = 1.3 }) => {
+const BasketChip = ({
+  basketId, lastAccessed, history, clickable = false, size = 1.3, onClick
+}) => {
+  if (typeof basketId !== 'string') {
+    throw new Error('BasketChip was initialized without a valid basketId')
+  }
+  const basketRegistryOperator = registryOperator()
   const classes = useStyles()
+  const theme = useTheme()
 
   // Initialize BasketMap
   const basketmap = new BasketMap()
   basketmap.config.confederacyHost = confederacyHost()
 
-  const [basketName, setBasketName] = useState('unknown')
-  const [iconURL, setIconURL] = useState('unknown')
-  const [description, setDescription] = useState('unknown')
+  const [basketName, setBasketName] = useState(basketId)
+  const [iconURL, setIconURL] = useState(
+    'https://projectbabbage.com/favicon.ico'
+  )
+  const [description, setDescription] = useState(
+    'Basket description not found.'
+  )
 
   useEffect(() => {
     (async () => {
       try {
         // Resolve a Basket info from id and operator
-        const results = await basketmap.resolveBasketById(basketId, registryOperator)
+        const results = await basketmap.resolveBasketById(
+          basketId,
+          basketRegistryOperator
+        )
         setBasketName(results.name)
         setIconURL(results.iconURL)
         setDescription(results.description)
       } catch (error) {
+        console.error(error)
       }
     })()
-  }, [basketName])
+  }, [basketId])
+
   return (
     <Chip
       style={{
@@ -46,19 +65,22 @@ const BasketChip = ({ basketId = 'todo', registryOperator = '0249e28e064db6dc076
         paddingRight: `${10 * size}px`
       }}
       label={
-        <div style={{ marginLeft: '1em' }}>
+        <div style={{ marginLeft: '0.125em', textAlign: 'left' }}>
           <span style={{ fontSize: `${size}em` }}>
-            {basketName}
+            <b>{basketName}</b>
           </span>
-          {lastAccessed ?
-              <span style={{ fontSize: '0.9em', color: 'secondaryText' }}>
-              <br />
-              {lastAccessed}
-            </span>
-            : <></>
-          }
+          <br />
+          <span style={{
+            fontSize: `${size * 0.8}em`,
+            color: theme.palette.text.secondary,
+            maxWidth: '20em',
+            display: 'block'
+          }}>
+            {lastAccessed || description}
+          </span>
         </div>
       }
+      disableRipple={!clickable}
       icon={
         <Badge
           overlap='circular'
@@ -67,45 +89,60 @@ const BasketChip = ({ basketId = 'todo', registryOperator = '0249e28e064db6dc076
             horizontal: 'right'
           }}
           badgeContent={
+            <Tooltip
+              arrow
+              title='Token Basket (click to learn more about baskets)'
+              onClick={e => {
+                e.stopPropagation()
+                window.open(
+                  'https://projectbabbage.com/docs/babbage-sdk/concepts/baskets',
+                  '_blank'
+                )
+              }}
+            >
             <Avatar
               sx={{
-                backgroundColor: 'Black',
+                backgroundColor: 'darkgreen',
                 width: 20,
                 height: 20,
-                borderRadius: '0%',
+                borderRadius: '3px',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
                 fontSize: '1.2em',
-                marginRight: '0.3em',
+                marginRight: '0.25em',
                 marginBottom: '0.3em'
               }}
             >
-              B
-            </Avatar>
-      }
-        >
-          {iconURL
-            ? (
-              <Avatar
-                sx={{
-                  width: '3.2em',
-                  height: '3.2em'
-                }}
-              >
-                <Img src={iconURL} style={{ width: '100%', height: '100%' }} className={classes.table_picture} confederacyHost={confederacyHost()} />
+              <ShoppingBasket style={{ width: 16, height: 16 }} />
               </Avatar>
-              )
-            : (
-              <YellowCautionIcon className={classes.table_picture} />
-              )}
+            </Tooltip>
+          }
+        >
+          <Avatar
+            sx={{
+              width: '3.2em',
+              height: '3.2em'
+            }}
+          >
+            <Img
+              src={iconURL}
+              style={{ width: '100%', height: '100%' }}
+              className={classes.table_picture}
+              confederacyHost={confederacyHost()}
+            />
+          </Avatar>
         </Badge>
-  }
-      onClick={() => {
+      }
+      onClick={e => {
         if (clickable) {
-          history.push(
-            `/dashboard/app/${encodeURIComponent(basketId)}`
-          )
+          if (typeof onClick === 'function') {
+            onClick(e)
+          } else {
+            history.push(
+              `/dashboard/basket/${encodeURIComponent(basketId)}`
+            )
+          }
         }
       }}
     />

@@ -6,6 +6,7 @@ import boomerang from 'boomerang-http'
 import CustomDialog from '../CustomDialog/index.jsx'
 import UIContext from '../../UIContext'
 import AppChip from '../AppChip'
+import BasketChip from '../BasketChip'
 
 const BasketAccessHandler = () => {
   const {
@@ -90,7 +91,7 @@ const BasketAccessHandler = () => {
     <CustomDialog
       open={open}
       // onClose={handleCancel}
-      title='Basket Access Request'
+      title={!renewal ? 'App Permission Request' : 'App Permission Renewal'}
     >
       <DialogContent style={{
         textAlign: 'center',
@@ -99,18 +100,39 @@ const BasketAccessHandler = () => {
       }}
       >
         <DialogContentText>
-          The app "{appName || originator}" would like to access <b>{basket}</b>.
+          <br />
+          An app is requesting to access some tokens ("things") stored in one of your baskets.
         </DialogContentText>
         <br />
-        <DialogContentText>
-          {description}
-        </DialogContentText>
-        <br />
-        {renewal && (
-          <DialogContentText>
-            The app has requested access before.
-          </DialogContentText>
-        )}
+        <center>
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
+          <span>app:</span>
+            {originator && <div>
+              <AppChip
+                size={2.5}
+                showDomain
+                label={originator}
+                clickable={false}
+              />
+            </div>}
+          </div>
+          <br />
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
+          <span>basket:</span>
+            <div>
+              <BasketChip
+                basketId={basket}
+              />
+            </div>
+          </div>
+          <br />
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', gridGap: '2em', margin: '0px 1.5em' }}>
+          <span>reason:</span>
+            <DialogContentText>
+              {description}
+            </DialogContentText>
+          </div>
+        </center>
       </DialogContent>
       <br />
       <DialogActions style={{

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Grid, Chip, Badge, Avatar } from '@mui/material'
+import { Grid, Chip, Badge, Avatar, Tooltip } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import { ProtoMap } from 'babbage-protomap'
 import { Img } from 'uhrp-react'
@@ -10,14 +10,18 @@ import confederacyHost from '../../utils/confederacyHost'
 import YellowCautionIcon from '../../images/cautionIcon'
 import CounterpartyChip from '../CounterpartyChip'
 import registryOperator from '../../utils/registryOperator'
+import DataObject from '@mui/icons-material/DataObject'
 
 const useStyles = makeStyles(style, {
   name: 'ProtoChip'
 })
 
 const ProtoChip = ({
-  securityLevel, protocolID, counterparty, lastAccessed, history, clickable = false, size = 1.3
+  securityLevel, protocolID, counterparty, lastAccessed, history, clickable = false, size = 1.3, onClick
 }) => {
+  if (typeof protocolID !== 'string') {
+    throw new Error('ProtoChip requires protocolID to be a string')
+  }
   const classes = useStyles()
   const theme = useTheme()
   const registry = registryOperator()
@@ -43,9 +47,11 @@ const ProtoChip = ({
         setIconURL(results.iconURL)
         setDescription(results.description)
       } catch (error) {
+        console.error(error)
       }
     })()
-  }, [protocolName])
+  }, [protocolID])
+
   return (
     <Chip
       style={{
@@ -56,21 +62,19 @@ const ProtoChip = ({
         paddingRight: `${5 * size}px`
       }}
       label={
-        <div style={{ marginLeft: '1em', textAlign: 'left' }}>
+        <div style={{ marginLeft: '0.125em', textAlign: 'left' }}>
           <span style={{ fontSize: `${size}em` }}>
             <b>{protocolName}</b>
           </span>
           <br />
-          <span style={{ fontSize: `${size * 0.8}em`, color: theme.palette.text.secondary }}>
-            {description}
+          <span style={{
+            fontSize: `${size * 0.8}em`,
+            color: theme.palette.text.secondary,
+            maxWidth: '20em',
+            display: 'block'
+          }}>
+            {lastAccessed || description}
           </span>
-          {lastAccessed ?
-              <span style={{ fontSize: '0.9em' }}>
-              <br />
-              {lastAccessed}
-            </span>
-            : <></>
-          }
           <span>
             {counterparty && counterparty !== 'self'
               ? <div>
@@ -95,46 +99,61 @@ const ProtoChip = ({
             horizontal: 'right'
           }}
           badgeContent={
+            <Tooltip
+              arrow
+              title='Data Protocol (click to learn more about protocols)'
+              onClick={e => {
+                e.stopPropagation()
+                window.open(
+                  'https://projectbabbage.com/docs/babbage-sdk/concepts/ppm',
+                  '_blank'
+                )
+              }}
+            >
             <Avatar
               sx={{
-                backgroundColor: 'black', // TODO: Use theme
+                backgroundColor: 'darkblue',
                 width: 20,
                 height: 20,
-                borderRadius: '0%',
+                borderRadius: '3px',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
                 fontSize: '1.2em',
-                marginRight: '0.3em',
+                marginRight: '0.25em',
                 marginBottom: '0.3em'
               }}
             >
-              P
-            </Avatar>
-      }
-        >
-          {iconURL
-            ? (
-              <Avatar
-                sx={{
-                  width: '3.2em',
-                  height: '3.2em'
-                }}
-              >
-                <Img src={iconURL} style={{ width: '100%', height: '100%' }} className={classes.table_picture} confederacyHost={confederacyHost()} />
+              <DataObject style={{ width: 16, height: 16 }} />
               </Avatar>
-              )
-            : (
-              <YellowCautionIcon className={classes.table_picture} />
-              )}
+            </Tooltip>
+          }
+        >
+          <Avatar
+            sx={{
+              width: '3.2em',
+              height: '3.2em'
+            }}
+          >
+            <Img
+              src={iconURL}
+              style={{ width: '100%', height: '100%' }}
+              className={classes.table_picture}
+              confederacyHost={confederacyHost()}
+            />
+          </Avatar>
         </Badge>
-  }
+      }
       disableRipple={!clickable}
-      onClick={() => {
+      onClick={e => {
         if (clickable) {
-          history.push(
-            `/dashboard/app/${encodeURIComponent(protocolID)}`
-          )
+          if (typeof onClick === 'function') {
+            onClick(e)
+          } else {
+            history.push(
+              `/dashboard/protocol/${encodeURIComponent(`${securityLevel}-${protocolID}`)}`
+            )
+          }
         }
       }}
     />

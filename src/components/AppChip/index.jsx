@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { Chip } from '@mui/material'
+import { Chip, Badge, Tooltip, Avatar } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import boomerang from 'boomerang-http'
 import isImageUrl from '../../utils/isImageUrl'
 import { useTheme } from '@mui/styles'
+import confederacyHost from '../../utils/confederacyHost'
+import { Img } from 'uhrp-react'
+import Memory from '@mui/icons-material/Memory'
 
 const AppChip = ({
-  label, showDomain = false, history, clickable = true, size = 1
+  label, showDomain = false, history, clickable = true, size = 1, onClick
 }) => {
   const theme = useTheme()
   if (typeof label !== 'string') {
@@ -69,23 +72,75 @@ const AppChip = ({
           </div>
           : <span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>}
       icon={(
-        <img
-          src={appIconImageUrl}
-          id='appIcon'
-          alt=''
-          style={{
-            width: 20 * size,
-            marginLeft: 2,
-            borderRadius: 4
+        <Badge
+          overlap='circular'
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
           }}
-        />
+          badgeContent={
+            <Tooltip
+              arrow
+              title='App (click to learn more about apps)'
+              onClick={e => {
+                e.stopPropagation()
+                window.open(
+                  'https://projectbabbage.com/docs/babbage-sdk/concepts/apps',
+                  '_blank'
+                )
+              }}
+            >
+            <Avatar
+              sx={{
+                backgroundColor: 'darkred',
+                width: 8 * size,
+                height: 8 * size,
+                borderRadius: size,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: `${(1.2 * 0.4) * size}em`,
+                marginRight: `${(0.25 * 0.4) * size}em`,
+                marginBottom: `${(0.3 * 0.4) * size}em`
+              }}
+            >
+                <Memory style={{
+                  width: (16 * 0.4) * size,
+                  height: (16 * 0.4) * size
+                }} />
+              </Avatar>
+            </Tooltip>
+          }
+        >
+          <Avatar
+            sx={{
+              width: `${(3.2 * 0.4) * size}em`,
+              height: `${(3.2 * 0.4) * size}em`
+            }}
+          >
+            <Img
+              src={appIconImageUrl}
+              style={{
+                width: '100%',
+                height: '100%', 
+                maxWidth: '5em',
+                borderRadius: '3em'
+              }}
+              confederacyHost={confederacyHost()}
+            />
+          </Avatar>
+        </Badge>
       )}
       disableRipple={!clickable}
-      onClick={() => {
+      onClick={e => {
         if (clickable) {
-          history.push(
-            `/dashboard/app/${encodeURIComponent(label)}`
-          )
+          if (typeof onClick === 'function') {
+            onClick(e)
+          } else {
+            history.push(
+              `/dashboard/app/${encodeURIComponent(label)}`
+            )
+          }
         }
       }}
     />
