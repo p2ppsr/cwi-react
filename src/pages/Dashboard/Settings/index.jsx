@@ -1,6 +1,8 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { useBreakpoint } from '../../../utils/useBreakpoints.js'
-import { Typography, Divider, LinearProgress } from '@mui/material'
+import {
+  Typography, Divider, LinearProgress, FormControlLabel, Checkbox
+} from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { toast } from 'react-toastify'
 import style from './style'
@@ -21,6 +23,25 @@ const Settings = ({ history }) => {
   const breakpoints = useBreakpoint()
   const { settings, updateSettings } = useContext(SettingsContext)
   const [settingsLoading, setSettingsLoading] = useState(false)
+  const [autoLaunchEnabled, setAutoLaunchEnabled] = useState(false)
+
+  const showAutoLaunch = typeof window.CWI.isAutoLaunchEnabled === 'function'
+
+  useEffect(() => {
+    (async () => {
+      if (showAutoLaunch) {
+        const enabled = await window.CWI.isAutoLaunchEnabled()
+        setAutoLaunchEnabled(enabled)
+      }
+    })()
+  }, [])
+
+  const handleAutoLaunchChange = () => {
+    setAutoLaunchEnabled(x => {
+      window.CWI.setAutoLaunchEnabled(!x)
+      return !x
+    })
+  }
 
   const handleThemeChange = async (event) => {
     const newTheme = event.target.value
@@ -64,6 +85,17 @@ const Settings = ({ history }) => {
       <KernelConfigurator />
       <br />
       <br />
+      {showAutoLaunch && <>
+        <FormControlLabel
+          control={<Checkbox
+            checked={autoLaunchEnabled}
+            onChange={handleAutoLaunchChange}
+          />}
+          label={<span>Auto-launch MetaNet Client when you log in</span>}
+        />
+        <br />
+        <br />
+      </>}
       <Logout history={history} />
     </>
   )
