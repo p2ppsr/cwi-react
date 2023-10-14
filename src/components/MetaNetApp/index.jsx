@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, Typography } from '@mui/material'
 import { withRouter } from 'react-router-dom'
-import boomerang from 'boomerang-http'
 import isImageUrl from '../../utils/isImageUrl'
 import { useTheme } from '@mui/styles'
 import confederacyHost from '../../utils/confederacyHost'
