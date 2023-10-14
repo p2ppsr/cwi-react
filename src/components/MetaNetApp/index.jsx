@@ -20,7 +20,7 @@ const MetaNetApp = ({
   }
 
   // State variables for the app name and icon url
-  const [parsedAppName, setParsedAppName] = useState('MetaNet App')
+  const [parsedAppName, setParsedAppName] = useState(domain)
   const [appIconImageUrl, setAppIconImageUrl] = useState(DEFAULT_APP_ICON)
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const MetaNetApp = ({
         onClick(e)
       } else {
         e.stopPropagation()
-        history.push(`/dashboard/app/${encodeURIComponent(parsedAppName)}`)
+        history.push(`/dashboard/app/${encodeURIComponent(domain)}`)
       }
     }
   }
@@ -88,9 +88,16 @@ const MetaNetApp = ({
             confederacyHost={confederacyHost()}
           />
         </div>
+        {/*
+          TODO: Remove references to webkit once browsers mature to a good level
+        */}
         <Typography style={{
           color: theme.palette.text.primary,
-          paddingTop: '0.4em'
+          paddingTop: '0.4em',
+          display: '-webkit-box',
+          overflow: 'hidden',
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 1
         }}
         >
           {parsedAppName}
