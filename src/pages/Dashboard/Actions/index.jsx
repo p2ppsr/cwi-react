@@ -14,15 +14,15 @@ const Actions = ({ history }) => {
   const breakpoints = useBreakpoint()
   const [apps, setApps] = useState([])
 
-  useEffect(() => {
+  useEffect(async () => {
     // Obtain a list of all apps ordered alphabetically
     try {
-      const results = window.CWI.ninja.getTransactionLabels({
+      const results = await window.CWI.ninja.getTransactionLabels({
         prefix: 'babbage_app_',
         sortBy: 'label'
       })
-      if (Array.isArray(results)) {
-        setApps(results)
+      if (results && Array.isArray(results.labels)) {
+        setApps(results.labels)
       }
     } catch (error) {
       console.error(error)
@@ -39,7 +39,7 @@ const Actions = ({ history }) => {
             <Grid container spacing={2}>
               {apps.map((app, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                  <MetaNetApp domain={app.label} />
+                  <MetaNetApp domain={app.label.replace(/^babbage_app_/, '')} />
                 </Grid>
               ))}
             </Grid>
