@@ -12,24 +12,21 @@ const useStyles = makeStyles(style, {
 const Actions = ({ history }) => {
   const classes = useStyles()
   const breakpoints = useBreakpoint()
-  const mockedApps = [
-    'projectbabbage.com',
-    'x',
-    'projectbabbage.com',
-    'x',
-    'projectbabbage.com',
-    'projectbabbage.com',
-    'projectbabbage.com',
-    'projectbabbage.com',
-    'projectbabbage.com'
-  ]
   const [apps, setApps] = useState([])
 
   useEffect(() => {
-    // Mocking window.CWI.ninja.listTransactionLabels
-    // TODO: When the component loads,
-    // it will call window.CWI.ninja.listTransactionLabels with the babbage_app_ prefix, to obtain a list of all apps ordered alphabetically.
-    setApps(mockedApps)
+    // Obtain a list of all apps ordered alphabetically
+    try {
+      const results = window.CWI.ninja.getTransactionLabels({
+        prefix: 'babbage_app_',
+        sortBy: 'label'
+      })
+      if (Array.isArray(results)) {
+        setApps(results)
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }, [])
   return (
     <>
@@ -40,9 +37,9 @@ const Actions = ({ history }) => {
               All Apps
             </Typography>
             <Grid container spacing={2}>
-              {apps.map((originator, index) => (
+              {apps.map((app, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                  <MetaNetApp domain={originator} />
+                  <MetaNetApp domain={app.label} />
                 </Grid>
               ))}
             </Grid>
