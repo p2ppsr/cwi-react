@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Typography, Button, Tabs, Tab, IconButton } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
+import { Typography, Button, IconButton } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'
+import makeStyles from '@mui/styles/makeStyles'
 import Actions from './Actions'
 import Trends from './Trends'
 import Permissions from './Permissions'
@@ -10,15 +10,38 @@ import style from './style'
 import isImageUrl from '../../../utils/isImageUrl'
 
 const useStyles = makeStyles(style, {
-  name: 'Apps'
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%'
+  },
+  header: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  top_grid: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '16px', // Add this line to create a gap between the back button and the app icon
+    padding: '16px'
+  },
+  back_button: {
+    marginRight: '16px'
+  },
+  list_container: {
+    display: 'grid',
+    gridTemplateRows: 'repeat(auto-fill, minmax(25%, 1fr))'
+  },
+  app_icon: {
+    width: '48px',
+    name: 'Apps'
+  }
 })
 
 const Apps = ({ match, history }) => {
   const appDomain = decodeURIComponent(match.params.app)
   const [appName, setAppName] = useState(appDomain)
   const [appIcon, setAppIcon] = useState('')
-  const [tabValue, setTabValue] = useState(0)
-  const classes = useStyles()
 
   useEffect(() => {
     (async () => {
@@ -45,17 +68,22 @@ const Apps = ({ match, history }) => {
     })()
   }, [appDomain])
 
+  const classes = useStyles()
+
   return (
-    <div>
-      <div className={classes.fixed_nav}>
-        <IconButton
-          className={classes.back_button}
-          onClick={() => history.go(-1)}
-          size='large'
+    <div className={classes.root}>
+      <div className={classes.header}>
+        <div
+          className={classes.top_grid}
+          backgroundColor='white'
         >
-          <ArrowBack />
-        </IconButton>
-        <div className={classes.top_grid}>
+          <IconButton
+            className={classes.back_button}
+            onClick={() => history.go(-1)}
+            size='large'
+          >
+            <ArrowBack />
+          </IconButton>
           <img
             src={appIcon}
             alt=''
@@ -80,25 +108,12 @@ const Apps = ({ match, history }) => {
             Launch
           </Button>
         </div>
-        <Tabs
-          centered
-          value={tabValue}
-          onChange={(e, v) => setTabValue(v)}
-        >
-          <Tab label='Actions' />
-          <Tab label='Trends' />
-          <Tab label='Permissions' />
-        </Tabs>
       </div>
-      {tabValue === 0 && (
-        <Actions app={appDomain} />
-      )}
-      {tabValue === 1 && (
-        <Trends />
-      )}
-      {tabValue === 2 && (
-        <Permissions domain={appDomain} />
-      )}
+      <div className={classes.list_container}>
+        <div><Actions app={appDomain} /></div>
+        <div><Trends /></div>
+        <div><Permissions domain={appDomain} /></div>
+      </div>
     </div>
   )
 }

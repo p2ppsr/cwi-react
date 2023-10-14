@@ -84,39 +84,41 @@ const Profile = () => {
   return (
     <>
       <div className={classes.content_wrap}>
-        {avatar.photoURL ? (
-          <div className={classes.image_edit}>
-            <Img
-              className={classes.profile_icon}
-              src={avatar.photoURL || 'uhrp:XUSw3EKLvt4uWHrMvKSDychPSvnAqVeKCrReidew2C2rUN6Sps3S'}
-              alt=''
-              loading={
-                <div className={classes.profile_loading}>
-                  <center>
-                    <CircularProgress />
-                  </center>
-                </div>
-              }
-              bridgeportResolvers={resolvers}
-            />
+        {avatar.photoURL
+          ? (
+            <div className={classes.image_edit}>
+              <Img
+                className={classes.profile_icon}
+                src={avatar.photoURL || 'uhrp:XUSw3EKLvt4uWHrMvKSDychPSvnAqVeKCrReidew2C2rUN6Sps3S'}
+                alt=''
+                loading={
+                  <div className={classes.profile_loading}>
+                    <center>
+                      <CircularProgress />
+                    </center>
+                  </div>
+                }
+                bridgeportResolvers={resolvers}
+              />
+              <Fab
+                size='small'
+                onClick={() => setEditorOpen(true)}
+                className={classes.edit}
+              >
+                <Edit color='primary' />
+              </Fab>
+            </div>
+          )
+          : (
             <Fab
-              size='small'
+              size='large'
               onClick={() => setEditorOpen(true)}
-              className={classes.edit}
+              color='primary'
+              className={classes.add_photo_button}
             >
-              <Edit color='primary' />
+              <AddAPhoto />
             </Fab>
-          </div>
-        ) : (
-          <Fab
-            size='large'
-            onClick={() => setEditorOpen(true)}
-            color='primary'
-            className={classes.add_photo_button}
-          >
-            <AddAPhoto />
-          </Fab>
-        )}
+          )}
         <Typography variant='h3'>
           {avatar.name || 'Welcome!'}
         </Typography>
@@ -126,8 +128,7 @@ const Profile = () => {
         >
           {balanceLoading
             ? '---'
-            : <Satoshis>{accountBalance}</Satoshis>
-          }
+            : <Satoshis>{accountBalance}</Satoshis>}
         </Typography>
       </div>
       <ProfileEditor
@@ -136,6 +137,9 @@ const Profile = () => {
         onSave={refreshProfile}
         name={avatar.name}
         photoURL={avatar.photoURL}
+      />
+      <Divider
+        maxWidth='30px'
       />
     </>
   )

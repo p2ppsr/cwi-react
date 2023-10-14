@@ -4,13 +4,17 @@ export default theme => ({
     gridTemplateColumns: 'auto 1fr auto',
     alignItems: 'center',
     gridGap: theme.spacing(3),
-    padding: `${theme.spacing(7)} ${theme.spacing(5)}`,
     boxSizing: 'border-box',
-    backgroundColor: theme.palette.grey[200]
+    backgroundColor: theme.palette.white
   },
   app_icon: {
     width: '5em',
     height: '5em'
+  },
+  gridContainer: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '1rem'
   },
   fixed_nav: {
     backgroundColor: theme.palette.common.white,
