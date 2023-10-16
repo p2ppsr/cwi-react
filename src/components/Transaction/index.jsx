@@ -8,7 +8,7 @@ import CheckIcon from '@mui/icons-material/Check'
 /**
  * Transaction Component for displaying information about an Action that happened
  * @param {object} props
- * @param {string}  props.txid - the id of transaction associated with the action being displayed
+ * @param {string} props.txid - the id of transaction associated with the action being displayed
  * @param {string} props.description - action description to display
  * @param {string} props.amount - amount of this transaction formatted with + or - depending on debit / credit
  * @param {object} props.inputs - the inputs to this transaction
@@ -18,8 +18,17 @@ import CheckIcon from '@mui/icons-material/Check'
  * @param {boolean} [props.isExpanded] - allows a parent page to override the expanded property of the accordion display the transaction details
  * @returns
  */
-const Transaction = (props) => {
-  const [expanded, setExpanded] = useState(props.isExpanded || false)
+const Transaction = ({
+  txid,
+  description,
+  amount,
+  inputs,
+  outputs,
+  timestamp,
+  onClick,
+  isExpanded
+}) => {
+  const [expanded, setExpanded] = useState(isExpanded || false)
   const [copied, setCopied] = useState(false)
   const theme = useTheme()
 
@@ -37,19 +46,19 @@ const Transaction = (props) => {
 
   // Allow parent accordion override
   const handleExpand = () => {
-    if (props.isExpanded !== undefined) {
-      setExpanded(props.isExpanded)
+    if (isExpanded !== undefined) {
+      setExpanded(isExpanded)
     } else {
       setExpanded(!expanded)
     }
-    if (props.onClick) {
-      props.onClick()
+    if (onClick) {
+      onClick()
     }
   }
 
   // Copies the TXID and timeouts the checkmark icon
   const handleCopy = () => {
-    navigator.clipboard.writeText(props.txid)
+    navigator.clipboard.writeText(txid)
     setCopied(true)
     setTimeout(() => {
       setCopied(false)
@@ -62,7 +71,7 @@ const Transaction = (props) => {
     const secondLine = str.slice(length)
     return [firstLine, secondLine]
   }
-  const [firstLine, secondLine] = splitString(props.txid, 32)
+  const [firstLine, secondLine] = splitString(txid, 32)
 
   // Gets time ago assuming standard ISO 8601 time format
   const getTimeAgo = (timestamp) => {
@@ -105,15 +114,15 @@ const Transaction = (props) => {
       >
         <Grid container direction='column'>
           <Grid item>
-            <Typography variant='h5' style={{ color: theme.palette.text.primary }}>{props.description}</Typography>
+            <Typography variant='h5' style={{ color: theme.palette.text.primary }}>{description}</Typography>
           </Grid>
           <Grid item>
             <Grid container justifyContent='space-between'>
               <Grid item>
-                <Typography variant='h6' style={{ color: determineAmountColor(props.amount) }}>{props.amount}</Typography>
+                <Typography variant='h6' style={{ color: determineAmountColor(amount) }}>{amount}</Typography>
               </Grid>
               <Grid item>
-                <Typography variant='body2' style={{ color: theme.palette.text.secondary }}>{getTimeAgo(props.timestamp)}</Typography>
+                <Typography variant='body2' style={{ color: theme.palette.text.secondary }}>{getTimeAgo(timestamp)}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -156,7 +165,7 @@ const Transaction = (props) => {
             <Typography variant='h6'>Inputs:</Typography>
             <div style={{ marginLeft: '0.5em' }}>
               <Grid container direction='column' style={{ padding: '0.5em' }}>
-                {props.inputs.map((input, index) => (
+                {inputs.map((input, index) => (
                   <div key={index}>
                     <Grid item sx={12}>
                       <Typography variant='body'>{`${index + 1}. ${input.description}`}</Typography>
@@ -171,7 +180,7 @@ const Transaction = (props) => {
             <Typography variant='h6'>Outputs:</Typography>
             <div style={{ marginLeft: '0.5em' }}>
               <Grid container direction='column' style={{ padding: '0.5em' }}>
-                {props.outputs.map((output, index) => (
+                {outputs.map((output, index) => (
                   <div key={index}>
                     <Grid item sx={12}>
                       <Typography variant='body'>{`${index + 1}. ${output.description}`}</Typography>
