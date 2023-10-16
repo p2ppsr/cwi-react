@@ -20,7 +20,7 @@ const Recovery = ({ history }) => {
     <div className={classes.content_wrap}>
       <div className={classes.panel_body}>
         <Typography variant='h2' paragraph fontFamily='Helvetica' fontSize='2em'>
-          Need help?
+          Account Recovery
         </Typography>
         <List style={{ marginTop: '1rem', marginBottom: '1rem' }}>
           <ListItem
