@@ -22,7 +22,7 @@ const Actions = ({ history }) => {
     try {
       const results = await window.CWI.ninja.getTransactionLabels({
         prefix: 'babbage_app_',
-        sortBy: 'date'
+        sortBy: 'whenLastUsed'
       })
       if (results && Array.isArray(results.labels)) {
         setRecentApps(results.labels)
@@ -41,7 +41,7 @@ const Actions = ({ history }) => {
         setApps(results.labels)
       }
     } catch (error) {
-      console.error(error)
+      console.error('ERROR: Obtaining list of popular apps:', error)
     }
   }, [])
   return (
