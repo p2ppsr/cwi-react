@@ -29,6 +29,7 @@
     "basketmap": "^0.1.0",
     "certmap": "^0.1.0",
     "date-fns": "^2.29.2",
+    "fuse.js": "^6.6.2",
     "nanostore-publisher": "^0.1.17",
     "react-country-region-selector": "^3.6.1",
     "react-image-crop": "^8.6.9",

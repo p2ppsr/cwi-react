@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Card, CardContent, Typography } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import isImageUrl from '../../utils/isImageUrl'
 import { useTheme } from '@mui/styles'
 import confederacyHost from '../../utils/confederacyHost'
-import parseAppManifest from '../../utils/parseAppManifest'
 import { Img } from 'uhrp-react'
 
 const DEFAULT_APP_ICON = 'https://www.projectbabbage.com/favicon.ico'
 
 const MetaNetApp = ({
-  domain, history, onClick, clickable = true
+  iconImageUrl = DEFAULT_APP_ICON,
+  domain,
+  appName = domain,
+  history,
+  onClick,
+  clickable = true
 }) => {
   const theme = useTheme()
 
@@ -18,26 +22,6 @@ const MetaNetApp = ({
   if (typeof domain !== 'string') {
     throw new Error('Error in MetaNetApp Component: domain prop must be a string!')
   }
-
-  // State variables for the app name and icon url
-  const [parsedAppName, setParsedAppName] = useState(domain)
-  const [appIconImageUrl, setAppIconImageUrl] = useState(DEFAULT_APP_ICON)
-
-  useEffect(() => {
-    (async () => {
-      try {
-        // Validate favicon url is a valid Image
-        if (await isImageUrl(`https://${domain}/favicon.ico`)) {
-          setAppIconImageUrl(`https://${domain}/favicon.ico`)
-        }
-        const manifest = await parseAppManifest({ domain })
-        setParsedAppName(manifest.name)
-      } catch (e) {
-        console.error(e)
-        /* ignore, nothing we can do and not our problem */
-      }
-    })()
-  }, [domain])
 
   // Handle onClick events if supported
   const handleClick = (e) => {
@@ -60,6 +44,7 @@ const MetaNetApp = ({
         display: 'flex',
         flexDirection: 'column', // Stack items vertically
         height: '100%', // Fill the container height
+        background: '0',
         justifyContent: 'center',
         maxHeight: '10em',
         width: '8.5em',
@@ -82,8 +67,8 @@ const MetaNetApp = ({
           }}
         >
           <Img
-            src={isImageUrl(appIconImageUrl) ? appIconImageUrl : DEFAULT_APP_ICON}
-            alt={parsedAppName}
+            src={isImageUrl(iconImageUrl) ? iconImageUrl : DEFAULT_APP_ICON}
+            alt={appName}
             style={{ maxWidth: '5em', maxHeight: '5em' }}
             confederacyHost={confederacyHost()}
           />
@@ -100,7 +85,7 @@ const MetaNetApp = ({
           WebkitLineClamp: 1
         }}
         >
-          {parsedAppName}
+          {appName}
         </Typography>
       </CardContent>
     </Card>

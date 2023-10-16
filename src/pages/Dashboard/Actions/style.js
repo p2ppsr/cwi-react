@@ -1,6 +1,6 @@
 export default theme => ({
   fixed_nav: {
-    backgroundColor: theme.palette.common.white,
+    // backgroundColor: theme.palette.common.white,
     position: 'sticky',
     top: theme.spacing(-3),
     margin: theme.spacing(-3),
