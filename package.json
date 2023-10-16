@@ -20,7 +20,7 @@
     "@bugsnag/plugin-react": "^7.17.4",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.10.3",
+    "@mui/icons-material": "^5.14.13",
     "@mui/material": "^5.14.5",
     "@mui/styles": "^5.10.3",
     "babbage-kvstore": "^1.1.18",
