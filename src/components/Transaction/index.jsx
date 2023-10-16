@@ -121,17 +121,17 @@ const Transaction = ({
               <Grid item>
                 <Typography variant='h6' style={{ color: determineAmountColor(amount) }}>{amount}</Typography>
               </Grid>
-              <Grid item>
+              <Grid item paddingRight='1em'>
                 <Typography variant='body2' style={{ color: theme.palette.text.secondary }}>{getTimeAgo(timestamp)}</Typography>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
       </AccordionSummary>
-      <AccordionDetails style={{ padding: '1.5em' }}>
-        <Typography>TXID</Typography>
-        <div style={{ width: '100%' }}>
-          <Grid container alignItems='center'>
+      <AccordionDetails style={{ padding: '1.5em', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+        <div>
+          <Typography>TXID</Typography>
+          <Grid container alignItems='center' style={{ padding: '0.5em' }}>
             <div style={{
               display: 'inline-block',
               wordBreak: 'break-all',
@@ -161,37 +161,45 @@ const Transaction = ({
               Copied!
             </Alert>
           </Snackbar>
-          <div>
-            <Typography variant='h6'>Inputs:</Typography>
-            <div style={{ marginLeft: '0.5em' }}>
-              <Grid container direction='column' style={{ padding: '0.5em' }}>
-                {inputs.map((input, index) => (
-                  <div key={index}>
-                    <Grid item sx={12}>
-                      <Typography variant='body'>{`${index + 1}. ${input.description}`}</Typography>
+          {(inputs && inputs.length !== 0) ? <Typography variant='h6'>Inputs</Typography> : <></>}
+          <div style={{ marginLeft: '0.5em' }}>
+            <Grid container direction='column' style={{ padding: '0.5em' }}>
+              {inputs.map((input, index) => (
+                <div key={index}>
+                  <Grid container direction='row'>
+                    <Grid item style={{ paddingRight: '0.6em' }}>
+                      <Typography variant='h6'>{`${index + 1}.`}</Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant='body2' style={{ color: determineAmountColor(input.amount), marginLeft: '1em' }}>{input.amount}</Typography>
+                      <Typography variant='body'>{input.description}</Typography>
                     </Grid>
-                  </div>
-                ))}
-              </Grid>
-            </div>
-            <Typography variant='h6'>Outputs:</Typography>
-            <div style={{ marginLeft: '0.5em' }}>
-              <Grid container direction='column' style={{ padding: '0.5em' }}>
-                {outputs.map((output, index) => (
-                  <div key={index}>
-                    <Grid item sx={12}>
-                      <Typography variant='body'>{`${index + 1}. ${output.description}`}</Typography>
+                  </Grid>
+                  <Grid item style={{ marginLeft: '1.7em', paddingRight: '1em' }}>
+                    <Typography variant='body2' style={{ color: determineAmountColor(input.amount) }}>{input.amount}</Typography>
+                  </Grid>
+                </div>
+              ))}
+            </Grid>
+          </div>
+          {(outputs && outputs.length !== 0) ? <Typography variant='h6'>Outputs</Typography> : <></>}
+          <div style={{ marginLeft: '0.5em' }}>
+            <Grid container direction='column' style={{ padding: '0.5em' }}>
+              {outputs.map((output, index) => (
+                <div key={index}>
+                  <Grid container direction='row'>
+                    <Grid item style={{ paddingRight: '0.6em' }}>
+                      <Typography variant='h6'>{`${index + 1}.`}</Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant='body2' style={{ color: determineAmountColor(output.amount), marginLeft: '1em' }}>{output.amount}</Typography>
+                      <Typography variant='body'>{output.description}</Typography>
                     </Grid>
-                  </div>
-                ))}
-              </Grid>
-            </div>
+                  </Grid>
+                  <Grid item style={{ marginLeft: '1.7em', paddingRight: '1em' }}>
+                    <Typography variant='body2' style={{ color: determineAmountColor(output.amount) }}>{output.amount}</Typography>
+                  </Grid>
+                </div>
+              ))}
+            </Grid>
           </div>
         </div>
       </AccordionDetails>
