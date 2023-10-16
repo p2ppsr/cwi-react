@@ -13,7 +13,7 @@ import CheckIcon from '@mui/icons-material/Check'
  * @param {string} props.amount - amount of this transaction formatted with + or - depending on debit / credit
  * @param {object} props.inputs - the inputs to this transaction
  * @param {object} props.outputs - the outputs to this transaction
- * @param {string} props.formattedTime - transaction date formatted in standard ISO 8601 datetime format
+ * @param {string} props.timestamp - transaction date formatted in standard ISO 8601 datetime format
  * @param {function} [props.onClick] - callback function to call when this component is clicked
  * @param {boolean} [props.isExpanded] - allows a parent page to override the expanded property of the accordion display the transaction details
  * @returns
@@ -113,7 +113,7 @@ const Transaction = (props) => {
                 <Typography variant='h6' style={{ color: determineAmountColor(props.amount) }}>{props.amount}</Typography>
               </Grid>
               <Grid item>
-                <Typography variant='body2' style={{ color: theme.palette.text.secondary }}>{getTimeAgo(props.formattedTime)}</Typography>
+                <Typography variant='body2' style={{ color: theme.palette.text.secondary }}>{getTimeAgo(props.timestamp)}</Typography>
               </Grid>
             </Grid>
           </Grid>
