@@ -9,16 +9,21 @@ import SearchIcon from '@mui/icons-material/Search'
 import parseAppManifest from '../../../utils/parseAppManifest'
 import isImageUrl from '../../../utils/isImageUrl'
 import Fuse from 'fuse.js'
+import POPULAR_APPS from '../../../constants/popularApps'
+import Monkey from '../../../images/cautionIcon'
 
-const getApps = async () => {
+const getApps = async ({ sortBy = 'label', limit }) => {
   const results = await window.CWI.ninja.getTransactionLabels({
     prefix: 'babbage_app_',
-    sortBy: 'label'
+    sortBy
   })
+  if (limit === undefined) {
+    limit = results.length
+  }
   if (results && Array.isArray(results.labels)) {
     return results.labels.map(x => {
       return x.label.replace(/^babbage_app_/, '')
-    })
+    }).slice(0, limit)
   }
   return []
 }
@@ -30,14 +35,17 @@ const Actions = ({ history }) => {
   const classes = useStyles()
   const theme = useTheme()
   const breakpoints = useBreakpoint()
-  const inputRef = useRef(null)
-  const storageKey = 'cached_apps'
-
   const [apps, setApps] = useState([])
+  const [recentApps, setRecentApps] = useState([])
+
   const [filteredApps, setFilteredApps] = useState([])
   const [fuseInstance, setFuseInstance] = useState(null)
   const [search, setSearch] = useState('')
   const [isExpanded, setIsExpanded] = useState(false)
+
+  const inputRef = useRef(null)
+  const storageKeyApps = 'cached_apps'
+  const storageKeyRecentApps = 'cached_recent_apps'
 
   // Configure fuse to search by app name
   const options = {
@@ -79,40 +87,57 @@ const Actions = ({ history }) => {
     inputRef.current.focus()
   }
 
+  const resolveAppDataFromDomain = async ({ appDomains }) => {
+    const dataPromises = appDomains.map(async (domain, index) => {
+      let appIconImageUrl
+      let appName = domain
+      try {
+        if (await isImageUrl(`https://${domain}/favicon.ico`)) {
+          appIconImageUrl = `https://${domain}/favicon.ico`
+        }
+        // Try to parse the app manifest to find the app info
+        const manifest = await parseAppManifest({ domain })
+        if (typeof manifest.name === 'string') {
+          appName = manifest.name
+        }
+      } catch (e) {
+        console.error(e)
+      }
+
+      return { appName, appIconImageUrl, domain }
+    })
+    return await Promise.all(dataPromises)
+  }
+
   useEffect(async () => {
     // Obtain a list of all apps ordered alphabetically
     try {
       // Check if there is storage app data for this session
-      let parsedAppData = JSON.parse(sessionStorage.getItem(storageKey))
+      let parsedAppData = JSON.parse(window.sessionStorage.getItem(storageKeyApps))
+      let parsedRecentAppData = JSON.parse(window.sessionStorage.getItem(storageKeyRecentApps))
 
+      // Parse out the app data from the domains
       if (parsedAppData) {
         setApps(parsedAppData)
       } else {
-        const results = await getApps()
-        const dataPromises = results.map(async (domain, index) => {
-          let appIconImageUrl
-          let appName = domain
-          try {
-            if (await isImageUrl(`https://${domain}/favicon.ico`)) {
-              appIconImageUrl = `https://${domain}/favicon.ico`
-            }
-            // Try to parse the app manifest to find the app info
-            const manifest = await parseAppManifest({ domain })
-            if (typeof manifest.name === 'string') {
-              appName = manifest.name
-            }
-          } catch (e) {
-            console.error(e)
-          }
-
-          return { appName, appIconImageUrl, domain }
-        })
-        parsedAppData = await Promise.all(dataPromises)
-
+        const appDomains = await getApps({ sortBy: 'label' })
+        parsedAppData = await resolveAppDataFromDomain({ appDomains })
         // Store the current fetched apps in sessionStorage for a better UX
-        sessionStorage.setItem(storageKey, JSON.stringify(parsedAppData))
+        window.sessionStorage.setItem(storageKeyApps, JSON.stringify(parsedAppData))
       }
+
+      // Parse out the recent app data from the domains
+      if (parsedRecentAppData) {
+        setRecentApps(parsedRecentAppData)
+      } else {
+        const recentAppsFetched = await getApps({ sortBy: 'whenLastUsed', limit: 4 })
+        parsedRecentAppData = await resolveAppDataFromDomain({ appDomains: recentAppsFetched })
+        // Store the current fetched apps in sessionStorage for a better UX
+        window.sessionStorage.setItem(storageKeyRecentApps, JSON.stringify(parsedRecentAppData))
+      }
+
       setApps(parsedAppData)
+      setRecentApps(parsedRecentAppData)
       setFilteredApps(parsedAppData)
 
       // Initialize fuse for filtering apps
@@ -122,6 +147,7 @@ const Actions = ({ history }) => {
       console.error(error)
     }
   }, [])
+
   return (
     <>
       {(!breakpoints.sm && !breakpoints.xs)
@@ -154,9 +180,58 @@ const Actions = ({ history }) => {
                 }}
               />
             </Container>
-            <Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
-              All Apps
-            </Typography>
+
+            {(search === '') && <>
+              {(recentApps.length < 5)
+                ? (
+                  <><Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
+                    Popular Apps
+                    </Typography><Grid container spacing={2}>
+                    {POPULAR_APPS.map((app, index) => (
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                        <MetaNetApp
+                            appName={app.appName}
+                            iconImageUrl={app.appIconImageUrl}
+                            domain={app.domain}
+                          />
+                      </Grid>
+                      ))}
+                               </Grid>
+                  </>
+                  )
+                : (
+                  <><Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
+                    Recent Apps
+                    </Typography><Grid container spacing={2}>
+                    {recentApps.map((app, index) => (
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                        <MetaNetApp
+                            appName={app.appName}
+                            iconImageUrl={app.appIconImageUrl}
+                            domain={app.domain}
+                          />
+                      </Grid>
+                      ))}
+                               </Grid>
+                  </>
+                  )}
+              <Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
+                All Apps
+              </Typography>
+            </>}
+
+            {filteredApps.length === 0 && <>
+              <center>
+                <Typography variant='h2' align='center' color='textSecondary' paddingTop='2em'>No apps found!</Typography>
+                {/* <img
+                  src=''
+                  paddingTop='1em'
+                /> */}
+                <Monkey />
+              </center>
+
+            </>}
+
             <Grid container spacing={2}>
               {filteredApps.map((app, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
@@ -176,5 +251,4 @@ const Actions = ({ history }) => {
     </>
   )
 }
-
 export default Actions
