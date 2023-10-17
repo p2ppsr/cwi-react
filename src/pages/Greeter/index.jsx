@@ -388,7 +388,7 @@ const Greeter = ({ history }) => {
             color='secondary'
             className={classes.recovery_link}
           >
-            Need Help?
+            Account Recovery?
           </Button>
         </Link>
         <Typography

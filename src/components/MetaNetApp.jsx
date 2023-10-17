@@ -1,0 +1,95 @@
+import React from 'react'
+import { Card, CardContent, Typography } from '@mui/material'
+import { withRouter } from 'react-router-dom'
+import isImageUrl from '../utils/isImageUrl'
+import { useTheme } from '@mui/styles'
+import confederacyHost from '../utils/confederacyHost'
+import { Img } from 'uhrp-react'
+
+const DEFAULT_APP_ICON = 'https://www.projectbabbage.com/favicon.ico'
+
+const MetaNetApp = ({
+  iconImageUrl = DEFAULT_APP_ICON,
+  domain,
+  appName = domain,
+  history,
+  onClick,
+  clickable = true
+}) => {
+  const theme = useTheme()
+
+  // Make sure valid props are provided
+  if (typeof domain !== 'string') {
+    throw new Error('Error in MetaNetApp Component: domain prop must be a string!')
+  }
+
+  // Handle onClick events if supported
+  const handleClick = (e) => {
+    if (clickable) {
+      if (typeof onClick === 'function') {
+        onClick(e)
+      } else {
+        e.stopPropagation()
+        history.push(`/dashboard/app/${encodeURIComponent(domain)}`)
+      }
+    }
+  }
+
+  return (
+    <Card
+      sx={{
+        cursor: clickable ? 'pointer' : '',
+        boxShadow: 'none',
+        textAlign: 'center',
+        display: 'flex',
+        flexDirection: 'column', // Stack items vertically
+        height: '100%', // Fill the container height
+        background: '0',
+        justifyContent: 'center',
+        maxHeight: '10em',
+        width: '8.5em',
+        transition: 'background 0.3s ease',
+        '&:hover': clickable
+          ? {
+              background: theme.palette.action.hover
+            }
+          : ''
+      }}
+      onClick={handleClick}
+    >
+      <CardContent>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '10px'
+          }}
+        >
+          <Img
+            src={isImageUrl(iconImageUrl) ? iconImageUrl : DEFAULT_APP_ICON}
+            alt={appName}
+            style={{ maxWidth: '5em', maxHeight: '5em' }}
+            confederacyHost={confederacyHost()}
+          />
+        </div>
+        {/*
+          TODO: Remove references to webkit once browsers mature to a good level
+        */}
+        <Typography style={{
+          color: theme.palette.text.primary,
+          paddingTop: '0.4em',
+          display: '-webkit-box',
+          overflow: 'hidden',
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 1
+        }}
+        >
+          {appName}
+        </Typography>
+      </CardContent>
+    </Card>
+  )
+}
+
+export default withRouter(MetaNetApp)
