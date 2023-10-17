@@ -1,222 +1,180 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { useBreakpoint } from '../../utils/useBreakpoints.js'
-import { Switch, Route, useHistory } from 'react-router-dom'
+import React, { useEffect, useState, useRef } from 'react'
+import { Typography, Grid, Container, TextField } from '@mui/material'
+import { makeStyles, useTheme } from '@mui/styles'
 import style from './style'
-import { makeStyles } from '@mui/styles'
-import {
-  VolunteerActivism as TrustIcon,
-  Timeline as TrendsIcon,
-  Apps as BrowseIcon,
-  Settings as SettingsIcon,
-  School as SchoolIcon,
-  LockPerson as AccessIcon
-} from '@mui/icons-material'
-import {
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography
-} from '@mui/material'
-import Feedback from './Feedback/index.jsx'
-import Trust from './Trust/index.jsx'
-import Actions from './Actions/index.jsx'
-import App from './App/Index.jsx'
-import Settings from './Settings/index.jsx'
-import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
-import Profile from '../../components/Profile.jsx'
-import TopTabs from '../../components/TopTabs/index.jsx'
-import { SettingsProvider } from '../../context/SettingsContext.js'
-import UserTheme from '../../components/UserTheme.jsx'
-import UIContext from '../../UIContext'
-import PageLoading from '../../components/PageLoading'
+import { useBreakpoint } from '../../../utils/useBreakpoints'
+import Profile from '../../../components/Profile'
+import MetaNetApp from '../../../components/MetaNetApp'
+import SearchIcon from '@mui/icons-material/Search'
+import parseAppManifest from '../../../utils/parseAppManifest'
+import isImageUrl from '../../../utils/isImageUrl'
+import Fuse from 'fuse.js'
+
+const getApps = async () => {
+  const results = await window.CWI.ninja.getTransactionLabels({
+    prefix: 'babbage_app_',
+    sortBy: 'label'
+  })
+  if (results && Array.isArray(results.labels)) {
+    return results.labels.map(x => {
+      return x.label.replace(/^babbage_app_/, '')
+    })
+  }
+  return []
+}
 
 const useStyles = makeStyles(style, {
-  name: 'Dashboard'
+  name: 'Actions'
 })
-
-const Dashboard = () => {
+const Actions = ({ history }) => {
+  const classes = useStyles()
+  const theme = useTheme()
   const breakpoints = useBreakpoint()
-  const classes = useStyles({ breakpoints })
-  const history = useHistory()
-  const { appName, appVersion } = useContext(UIContext)
-  const [pageLoading, setPageLoading] = useState(true)
+  const inputRef = useRef(null)
+  const storageKey = 'cached_apps'
 
-  useEffect(() => {
-    let isLoggedIn = redirectIfLoggedOut(history)
-    if (isLoggedIn) {
-      setPageLoading(false)
-    }
-  }, [history])
+  const [apps, setApps] = useState([])
+  const [filteredApps, setFilteredApps] = useState([])
+  const [fuseInstance, setFuseInstance] = useState(null)
+  const [search, setSearch] = useState('')
+  const [isExpanded, setIsExpanded] = useState(false)
 
-  if (pageLoading) {
-    return <PageLoading />
+  // Configure fuse to search by app name
+  const options = {
+    // shouldSort: true,
+    threshold: 0.3,
+    location: 0,
+    distance: 100,
+    includeMatches: true,
+    useExtendedSearch: true,
+    keys: ['appName']
   }
 
+  const handleSearchChange = async (e) => {
+    const value = e.target.value
+    setSearch(value)
+
+    // Clear the filtered apps once the text box is empty (instead of searching for empty)
+    if (value === '') {
+      setFilteredApps(apps)
+      return
+    }
+
+    // Search for a matching app by name
+    if (fuseInstance) {
+      const results = fuseInstance.search(value).map(match => match.item)
+      setFilteredApps(results)
+    }
+  }
+
+  // Support the search field expand animation
+  const handleSearchFocus = () => {
+    setIsExpanded(true)
+  }
+  const handleSearchBlur = () => {
+    setIsExpanded(false)
+  }
+  const handleIconClick = () => {
+    setIsExpanded(true)
+    inputRef.current.focus()
+  }
+
+  useEffect(async () => {
+    // Obtain a list of all apps ordered alphabetically
+    try {
+      // Check if there is storage app data for this session
+      let parsedAppData = JSON.parse(sessionStorage.getItem(storageKey))
+
+      if (parsedAppData) {
+        setApps(parsedAppData)
+      } else {
+        const results = await getApps()
+        const dataPromises = results.map(async (domain, index) => {
+          let appIconImageUrl
+          let appName = domain
+          try {
+            if (await isImageUrl(`https://${domain}/favicon.ico`)) {
+              appIconImageUrl = `https://${domain}/favicon.ico`
+            }
+            // Try to parse the app manifest to find the app info
+            const manifest = await parseAppManifest({ domain })
+            if (typeof manifest.name === 'string') {
+              appName = manifest.name
+            }
+          } catch (e) {
+            console.error(e)
+          }
+
+          return { appName, appIconImageUrl, domain }
+        })
+        parsedAppData = await Promise.all(dataPromises)
+
+        // Store the current fetched apps in sessionStorage for a better UX
+        sessionStorage.setItem(storageKey, JSON.stringify(parsedAppData))
+      }
+      setApps(parsedAppData)
+      setFilteredApps(parsedAppData)
+
+      // Initialize fuse for filtering apps
+      const fuse = new Fuse(parsedAppData, options)
+      setFuseInstance(fuse)
+    } catch (error) {
+      console.error(error)
+    }
+  }, [])
   return (
-    <SettingsProvider>
-      <UserTheme>
-        <div className={classes.content_wrap}>
-          <div className={classes.list_wrap}>
-            <Profile />
-            <List>
-              <ListItem
-                button
-                onClick={() => history.push('/dashboard/apps')}
-                selected={
-              history.location.pathname === '/dashboard/apps'
-            }
-              >
-                <ListItemIcon>
-                  <BrowseIcon
-                    color={
-                  history.location.pathname === '/dashboard/apps'
-                    ? 'secondary'
-                    : undefined
-                }
-                  />
-                </ListItemIcon>
-                <ListItemText>
-                  Dashboard
-                </ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => history.push('/dashboard/trends')}
-                selected={
-              history.location.pathname === '/dashboard/trends'
-            }
-              >
-                <ListItemIcon>
-                  <TrendsIcon
-                    color={
-                  history.location.pathname === '/dashboard/trends'
-                    ? 'secondary'
-                    : undefined
-                }
-                  />
-                </ListItemIcon>
-                <ListItemText>
-                  Trends
-                </ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => history.push('/dashboard/access')}
-                selected={
-              history.location.pathname === '/dashboard/access'
-            }
-              >
-                <ListItemIcon>
-                  <AccessIcon
-                    color={
-                  history.location.pathname === '/dashboard/access'
-                    ? 'secondary'
-                    : undefined
-                }
-                  />
-                </ListItemIcon>
-                <ListItemText>
-                  Access
-                </ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => history.push('/dashboard/trust')}
-                selected={
-              history.location.pathname === '/dashboard/trust'
-            }
-              >
-                <ListItemIcon>
-                  <TrustIcon
-                    color={
-                  history.location.pathname === '/dashboard/trust'
-                    ? 'secondary'
-                    : undefined
-                }
-                  />
-                </ListItemIcon>
-                <ListItemText>
-                  Trust
-                </ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => history.push('/dashboard/settings')}
-                selected={
-              history.location.pathname === '/dashboard/settings'
-            }
-              >
-                <ListItemIcon>
-                  <SettingsIcon
-                    color={
-                  history.location.pathname === '/dashboard/settings'
-                    ? 'secondary'
-                    : undefined
-                }
-                  />
-                </ListItemIcon>
-                <ListItemText>
-                  Settings
-                </ListItemText>
-              </ListItem>
-              <a href='https://projectbabbage.com/docs' target='_blank' rel='noreferrer'>
-                <ListItem button>
-                  <ListItemIcon>
-                    <SchoolIcon />
-                  </ListItemIcon>
-                  <ListItemText>
-                    Learn MetaNet Tech
-                  </ListItemText>
-                </ListItem>
-              </a>
-            </List>
-            <center className={classes.sig_wrap}>
-              <Typography
-                variant='caption'
-                color='textSecondary'
-                className={classes.signature}
-                align='center'
-              >
-                {appName} v{appVersion}<br /><br />
-                Made with love by<br /><i>the Babbage Team</i>
-              </Typography>
-            </center>
-          </div>
-          <div className={classes.page_container}>
-            <TopTabs />
-            <Switch>
-              <Route
-                path='/dashboard/app/:app'
-                component={App}
-              />
-              <Route
-                path='/dashboard/settings'
-                component={Settings}
-              />
-              <Route
-                path='/dashboard/apps'
-                component={Actions}
-              />
-              <Route
-                path='/dashboard/trust'
-                component={Trust}
-              />
-              <Route
-                className={classes.full_width}
-                default
-                component={() => {
-                  return <div style={{ padding: '1em' }}>
-                    <Typography align='center'>Select a page</Typography>
-                    </div>
+    <>
+      {(!breakpoints.sm && !breakpoints.xs)
+        ? (
+          <div className={classes.fixed_nav}>
+            <Container style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+              <TextField
+                variant='outlined'
+                fullWidth
+                value={search}
+                onChange={handleSearchChange}
+                placeholder='Search'
+                onFocus={handleSearchFocus}
+                onBlur={handleSearchBlur}
+                inputRef={inputRef}
+                InputProps={{
+                  startAdornment: (
+                    <SearchIcon onClick={handleIconClick} style={{ marginRight: '8px' }} />
+                  ),
+                  sx: {
+                    borderRadius: '25px',
+                    height: '3em'
+                  }
+                }}
+                sx={{
+                  marginTop: theme.spacing(3),
+                  marginBottom: theme.spacing(2),
+                  width: isExpanded ? 'calc(50%)' : '8em',
+                  transition: 'width 0.3s ease'
                 }}
               />
-            </Switch>
+            </Container>
+            <Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
+              All Apps
+            </Typography>
+            <Grid container spacing={2}>
+              {filteredApps.map((app, index) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                  <MetaNetApp
+                    appName={app.appName}
+                    iconImageUrl={app.appIconImageUrl}
+                    domain={app.domain}
+                  />
+                </Grid>
+              ))}
+            </Grid>
           </div>
-        </div>
-      </UserTheme>
-    </SettingsProvider>
+          )
+        : (
+          <Profile />
+          )}
+    </>
   )
 }
 
-export default Dashboard
+export default Actions
