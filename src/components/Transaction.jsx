@@ -131,21 +131,16 @@ const Transaction = ({
       <AccordionDetails style={{ padding: '1.5em', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
         <div>
           <Typography>TXID</Typography>
-          <Grid container alignItems='center' style={{ padding: '0.5em' }}>
-            <div style={{
-              display: 'inline-block',
-              wordBreak: 'break-all',
-              maxWidth: '32ch',
-              marginLeft: '0.5em',
-              marginRight: '0.5em'
-            }}
-            >
-              <Typography variant='body' style={{ color: theme.palette.text.secondary, userSelect: 'all' }}>{firstLine}</Typography>
-              <Typography variant='body' style={{ color: theme.palette.text.secondary, userSelect: 'all' }}>{secondLine}</Typography>
-            </div>
-            <IconButton onClick={handleCopy} disabled={copied}>
-              {copied ? <CheckIcon /> : <FileCopyIcon />}
-            </IconButton>
+          <Grid container direction='row'>
+            <Grid item sx={9} style={{ paddingRight: '0.5em' }}>
+              <div><Typography variant='body' style={{ fontFamily: 'monospace', color: theme.palette.text.secondary, userSelect: 'all' }}>{firstLine}</Typography></div>
+              <div><Typography variant='body' style={{ fontFamily: 'monospace', color: theme.palette.text.secondary, userSelect: 'all' }}>{secondLine}</Typography></div>
+            </Grid>
+            <Grid item sx={3}>
+              <IconButton onClick={handleCopy} disabled={copied}>
+                {copied ? <CheckIcon /> : <FileCopyIcon />}
+              </IconButton>
+            </Grid>
           </Grid>
           <Snackbar
             open={copied}
