@@ -1,26 +1,35 @@
 export default theme => ({
   top_grid: {
     display: 'grid',
-    gridTemplateColumns: 'auto 1fr auto',
+    gridTemplateColumns: 'auto auto 1fr auto',
     alignItems: 'center',
-    gridGap: theme.spacing(3),
-    padding: `${theme.spacing(7)} ${theme.spacing(5)}`,
-    boxSizing: 'border-box',
-    backgroundColor: theme.palette.grey[200]
+    gridGap: theme.spacing(2),
+    boxSizing: 'border-box'
   },
   app_icon: {
     width: '5em',
     height: '5em'
   },
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%'
+  },
+  header: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
   fixed_nav: {
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: theme.palette.common.white, // Support theming
     position: 'sticky',
     top: theme.spacing(-3),
     margin: theme.spacing(-3),
     marginBottom: theme.spacing(4),
     zIndex: 1000
   },
-  back_button: {
-    position: 'absolute'
+  launch_button: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   }
 })

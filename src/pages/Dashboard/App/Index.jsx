@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { Typography, Button, Tabs, Tab, IconButton } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
+import { Typography, Button, IconButton } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'
+import makeStyles from '@mui/styles/makeStyles'
 import Actions from './Actions'
 import Trends from './Trends'
 import Permissions from './Permissions'
 import boomerang from 'boomerang-http'
 import style from './style'
 import isImageUrl from '../../../utils/isImageUrl'
-
-const useStyles = makeStyles(style, {
-  name: 'Apps'
-})
+import { Img } from 'uhrp-react'
+const useStyles = makeStyles(style, { name: 'apps' })
 
 const Apps = ({ match, history }) => {
   const appDomain = decodeURIComponent(match.params.app)
   const [appName, setAppName] = useState(appDomain)
   const [appIcon, setAppIcon] = useState('')
-  const [tabValue, setTabValue] = useState(0)
-  const classes = useStyles()
 
   useEffect(() => {
     (async () => {
@@ -45,22 +41,28 @@ const Apps = ({ match, history }) => {
     })()
   }, [appDomain])
 
+  const classes = useStyles()
+
   return (
-    <div>
-      <div className={classes.fixed_nav}>
-        <IconButton
-          className={classes.back_button}
-          onClick={() => history.go(-1)}
-          size='large'
-        >
-          <ArrowBack />
-        </IconButton>
+    <div className={classes.root}>
+      <div>
         <div className={classes.top_grid}>
-          <img
-            src={appIcon}
-            alt=''
-            className={classes.app_icon}
-          />
+          <div>
+            <IconButton
+              className={classes.back_button}
+              onClick={() => history.go(-1)}
+              size='large'
+            >
+              <ArrowBack />
+            </IconButton>
+          </div>
+          <div>
+            <Img
+              className={classes.app_icon}
+              src={appIcon}
+              alt=''
+            />
+          </div>
           <div>
             <Typography variant='h1'>
               {appName}
@@ -69,36 +71,26 @@ const Apps = ({ match, history }) => {
               {appDomain}
             </Typography>
           </div>
-          <Button
-            variant='contained'
-            color='primary'
-            size='large'
-            onClick={() => {
-              window.open(`https://${appDomain}`, '_blank')
-            }}
-          >
-            Launch
-          </Button>
+          <div>
+            <Button
+              className={classes.launch_button}
+              variant='contained'
+              color='primary'
+              size='large'
+              onClick={() => {
+                window.open(`https://${appDomain}`, '_blank')
+              }}
+            >
+              Launch
+            </Button>
+          </div>
         </div>
-        <Tabs
-          centered
-          value={tabValue}
-          onChange={(e, v) => setTabValue(v)}
-        >
-          <Tab label='Actions' />
-          <Tab label='Trends' />
-          <Tab label='Permissions' />
-        </Tabs>
       </div>
-      {tabValue === 0 && (
-        <Actions app={appDomain} />
-      )}
-      {tabValue === 1 && (
-        <Trends />
-      )}
-      {tabValue === 2 && (
-        <Permissions domain={appDomain} />
-      )}
+      <div className={classes.list_container}>
+        <div><Actions app={appDomain} /></div>
+        <div><Trends /></div>
+        <div><Permissions domain={appDomain} /></div>
+      </div>
     </div>
   )
 }
