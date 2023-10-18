@@ -35,7 +35,7 @@ const Transaction = ({
   // Dynamically figure out if the amount is a credit or debit
   // Note: assumes standard amount string starting with + or -
   const determineAmountColor = (amount) => {
-    if (amount[0] === '+') {
+    if (amount[0] !== '-' && !isNaN(amount[0])) {
       return 'green'
     } else if (amount[0] === '-') {
       return 'red'
@@ -67,6 +67,9 @@ const Transaction = ({
 
   // Splits the txid into two evenly sized strings for displaying
   const splitString = (str, length) => {
+    if (str === undefined || str === null) {
+      str = ''
+    }
     const firstLine = str.slice(0, length)
     const secondLine = str.slice(length)
     return [firstLine, secondLine]
@@ -165,8 +168,10 @@ const Transaction = ({
                     <Grid item style={{ paddingRight: '0.6em' }}>
                       <Typography variant='h6'>{`${index + 1}.`}</Typography>
                     </Grid>
-                    <Grid item>
-                      <Typography variant='body'>{input.description}</Typography>
+                    <Grid item maxWidth='22em'>
+                      <Typography variant='body' style={{ whiteSpace: 'pre-line', wordWrap: 'break-word' }}>
+                        {input.description}
+                      </Typography>
                     </Grid>
                   </Grid>
                   <Grid item style={{ marginLeft: '1.7em', paddingRight: '1em' }}>
@@ -181,12 +186,14 @@ const Transaction = ({
             <Grid container direction='column' style={{ padding: '0.5em' }}>
               {outputs.map((output, index) => (
                 <div key={index}>
-                  <Grid container direction='row'>
+                  <Grid container>
                     <Grid item style={{ paddingRight: '0.6em' }}>
                       <Typography variant='h6'>{`${index + 1}.`}</Typography>
                     </Grid>
-                    <Grid item>
-                      <Typography variant='body'>{output.description}</Typography>
+                    <Grid item maxWidth='22em'>
+                      <Typography variant='body' style={{ whiteSpace: 'pre-line', wordWrap: 'break-word' }}>
+                        {output.description}
+                      </Typography>
                     </Grid>
                   </Grid>
                   <Grid item style={{ marginLeft: '1.7em', paddingRight: '1em' }}>

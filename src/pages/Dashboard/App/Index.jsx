@@ -2,46 +2,66 @@ import React, { useState, useEffect } from 'react'
 import { Typography, Button, IconButton } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'
 import makeStyles from '@mui/styles/makeStyles'
-import Actions from './Actions'
-import Trends from './Trends'
-import Permissions from './Permissions'
-import boomerang from 'boomerang-http'
 import style from './style'
 import isImageUrl from '../../../utils/isImageUrl'
 import { Img } from 'uhrp-react'
+import parseAppManifest from '../../../utils/parseAppManifest'
+import RecentActions from './RecentActions'
+
 const useStyles = makeStyles(style, { name: 'apps' })
 
 const Apps = ({ match, history }) => {
   const appDomain = decodeURIComponent(match.params.app)
   const [appName, setAppName] = useState(appDomain)
-  const [appIcon, setAppIcon] = useState('')
+  const [appIcon, setAppIcon] = useState('MetaNet App')
+  const [displayLimit, setDisplayLimit] = useState(5)
+  const [appActions, setAppActions] = useState({})
+  const [loading, setLoading] = useState(false)
+  const [refresh, setRefresh] = useState(false)
+  const recentActionParams = {
+    loading,
+    appActions,
+    displayLimit,
+    setDisplayLimit,
+    setRefresh
+  }
+  const classes = useStyles()
 
   useEffect(() => {
     (async () => {
-      // Validate that the default favicon path is actually an image
-      if (await isImageUrl(`https://${appDomain}/favicon.ico`)) {
-        setAppIcon(`https://${appDomain}/favicon.ico`)
-      } else {
-        setAppIcon('https://projectbabbage.com/favicon.ico')
-      }
       try {
-        const manifest = await boomerang(
-          'GET', `${appDomain.startsWith('localhost:') ? 'http' : 'https'}://${appDomain}/manifest.json`
-        )
-        if (typeof manifest === 'object') {
-          if (manifest.name && manifest.name.length < 64) {
-            setAppName(manifest.name)
-          } else if (manifest.short_name && manifest.short_name.length < 64) {
-            setAppName(manifest.short_name)
-          }
+        setLoading(true)
+        // Validate that the default favicon path is actually an image
+        if (await isImageUrl(`https://${appDomain}/favicon.ico`)) {
+          setAppIcon(`https://${appDomain}/favicon.ico`)
+        } else {
+          setAppIcon('https://projectbabbage.com/favicon.ico')
         }
+        // Try to parse the app manifest to find the app info
+        const manifest = await parseAppManifest({ domain: appDomain })
+        if (typeof manifest.name === 'string') {
+          setAppName(manifest.name)
+        }
+
+        // Get a list of the 5 most recent actions from the app
+        // Also request input and output amounts and descriptions from Ninja
+        const appActions = await window.CWI.ninja.getTransactions({
+          limit: displayLimit,
+          order: 'descending',
+          label: `babbage_app_${appDomain}`,
+          addInputsAndOutputs: true
+        })
+        setAppActions(appActions)
+        setLoading(false)
+        setRefresh(false)
+        console.log('reloaded')
       } catch (e) {
         /* do nothing */
+        setLoading(false)
+        setRefresh(false)
       }
     })()
-  }, [appDomain])
-
-  const classes = useStyles()
+  }, [refresh])
 
   return (
     <div className={classes.root}>
@@ -86,11 +106,12 @@ const Apps = ({ match, history }) => {
           </div>
         </div>
       </div>
-      <div className={classes.list_container}>
-        <div><Actions app={appDomain} /></div>
-        <div><Trends /></div>
-        <div><Permissions domain={appDomain} /></div>
-      </div>
+      {/* <Grid container>
+        <Grid item sx={12} style={{ width: '100%' }}>
+          <Typography paddingBottom='2em' align='center'>Total App Cashflow</Typography>
+        </Grid>
+      </Grid> */}
+      <RecentActions {...recentActionParams} />
     </div>
   )
 }
