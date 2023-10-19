@@ -107,11 +107,11 @@ const Apps = ({ match, history }) => {
           </div>
         </div>
       </div>
-      <Grid container>
+      {/* <Grid container>
         <Grid item sx={12} style={{ width: '100%', height: '10em', background: 'gray' }}>
           <Typography paddingBottom='2em' align='center'>Total App Cashflow</Typography>
         </Grid>
-      </Grid>
+      </Grid> */}
       <Grid container spacing={3}>
         <Grid item lg={6} xs={12}>
           <RecentActions {...recentActionParams} />
