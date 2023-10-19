@@ -10,9 +10,9 @@ import getTransactionOutputs from './mocking/AccessAtAGlance'
 * Calls ninja to obtain the output data to be displayed by the appropriate chip components for the passed in App
 * @param {object} obj - all params given in an object.
 * @param {string} obj.basket - Only outputs with the corresponding basket label are returned, if the label is '' (empty string), then all basket outputs are returned. (optional, default '').
-* @param {string} obj.type - Type of request, only the outputs for either the identified 'basket' label or for all 'counterparty' are returned. (optional, default 'basket')
+* @param {string} obj.type - Type of request, only the outputs for either the identified 'basket' or for all 'counterparty' are returned. (optional, default 'basket')
 * @param {string} obj.order - The outputs are ordered according to this label. (optional, default 'whenLastUsed', sort in chronological order)
-* @param {number} obj.limit - Provide a limit on the number of outputs that will be returned. (optional, default `1`)
+* @param {number} obj.limit - Provide a limit on the number of outputs that will be returned. (optional, default 1)
 * @param {string} obj.originator - Only outputs from this identified App are returned.
 * @returns - The result object contains the requested output data
 */

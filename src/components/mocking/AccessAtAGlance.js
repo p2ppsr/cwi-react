@@ -19,8 +19,6 @@ Returns a set of transaction outputs that Dojo has tracked
 
 const THREE_HOURS = 180 * 60 * 1000
 
-// Assume history is just an array of similar objects
-
 const getTransactionOutputs = ({ basket, type, originator, order, limit }) => {
   if (basket === 'DPACP') {
     return {
