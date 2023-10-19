@@ -1,60 +1,4 @@
-/*
-   /**
-      * Returns transaction outputs matching options and total matching count available.
-      *
-      * @param options limit defaults to 25, offset defaults to 0, includeEnvelpe defaults to true
-      *
-      * getTransactionOutputs(options?: DojoGetTransactionOutputsOptions): Promise<{ outputs: DojoOutputApi[], total: number }>
-*/
-/*
-export interface DojoGetTransactionOutputsOptions {
-  /**
-     *  If provided, indicates which basket the outputs should be selected from.
-     *
-  basket?: string
-  /**
-     *  If provided, only outputs with the corresponding tracked value will be returned (true/false).
-     *
-  tracked?: boolean
-  /**
-     * If provided, returns a structure with the SPV envelopes for the UTXOS that have not been spent.
-     *
-  includeEnvelope?: boolean
-  /**
-     * If given as true or false, only outputs that have or have not (respectively) been spent will be returned. If not given, both spent and unspent outputs will be returned.
-     *
-  spendable?: boolean
-  /**
-     * If provided, only outputs of the specified type will be returned. If not provided, outputs of all types will be returned.
-     *
-  type?: string
-  /**
-     * Optional. How many transactions to return.
-     *
-  limit?: number
-  /**
-     * Optional. How many transactions to skip.
-     *
-  offset?: number
-}
-export type DojoTransactionLabelsSortBy = 'label' | 'whenLastUsed';
-
-export interface DojoGetTransactionLabelsOptions extends DojoGetTransactionsBaseOptions {
-   /**
-      * Optional. Filters labels to include only those starting with the specified prefix.
-      *
-   prefix?: string
-   /**
-      * Optional. Filters labels to include only those associated with the specified transaction ID.
-      *
-   transactionId?: number
-   /**
-      * Optional. Specify whether to sort by 'label' or 'whenLastUsed'.
-      *
-   sortBy?: DojoTransactionLabelsSortBy
-}
-
-*/
+/* eslint-disable react/prop-types */
 import React from 'react'
 import { Typography, Button, LinearProgress, Grid } from '@mui/material'
 import BasketChip from './BasketChip'
@@ -62,8 +6,8 @@ import ProtoChip from './ProtoChip'
 import CounterpartyChip from './CounterpartyChip'
 import CertChip from './CertificateChip'
 import getTransactionOutputs from './mocking/AccessAtAGlance'
-/*
-* Calls ninja to obtain the output data to be displayed by the approriate chip components for the passed in App
+/**
+* Calls ninja to obtain the output data to be displayed by the appropriate chip components for the passed in App
 * @param {object} obj - all params given in an object.
 * @param {string} obj.basket - Only outputs with the corresponding basket label are returned, if the label is '' (empty string), then all basket outputs are returned. (optional, default '').
 * @param {string} obj.type - Type of request, only the outputs for either the identified 'basket' label or for all 'counterparty' are returned. (optional, default 'basket')
@@ -80,7 +24,7 @@ const getAccessData = ({
   originator
 }) => {
   return getTransactionOutputs({ // Mocked
-  // return await window.CWI.ninja.getTransactionOutputs({
+  // TODO: return await window.CWI.ninja.getTransactionOutputs({
     basket,
     type,
     order,
@@ -108,11 +52,7 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
     protocolID: dpacpAccessData.protocolID,
     counterparty: dpacpAccessData.counterparty,
     lastAccessed: dpacpAccessData.lastAccessed,
-    history: dpacpAccessData.history
-    // clickable = false,
-    // size = 1.3,
-    // onClick,
-    // onCounterpartyClick
+    history
   }
   const counterpartyChipParams = {
     counterparty: counterpartyAccessData.counterparty,
@@ -120,24 +60,15 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
   }
   const basketChipParams = {
     counterparty: dbapAccessData.counterparty,
-    history: dbapAccessData.history,
-    basketId: dpacpAccessData.basketId
-    // clickable,
-    // size,
-    // onClick
+    basketId: dpacpAccessData.basketId,
+    history
   }
   const certChipParams = {
     certType: dcapAccessData.certType,
     lastAccessed: dcapAccessData.lastAccessed,
     issuer: dcapAccessData.issuer,
-    // onIssuerClick,
-    verifier: dcapAccessData.verifier
-    // onVerifierClick,
-    // onClick,
-    // fieldsToDisplay,
-    // history,
-    // clickable,
-    // size
+    verifier: dcapAccessData.verifier,
+    history
   }
   return (
     <div style={{ paddingTop: '1em' }}>
