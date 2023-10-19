@@ -56,6 +56,8 @@ const ProtoChip = ({
     <Chip
       style={{
         height: '100%',
+        width: '100%',
+        // maxWidth: '30em',
         paddingTop: `${10 * size}px`,
         paddingBottom: `${10 * size}px`,
         paddingLeft: `${10 * size}px`,
@@ -72,7 +74,8 @@ const ProtoChip = ({
             color: theme.palette.text.secondary,
             maxWidth: '20em',
             display: 'block'
-          }}>
+          }}
+          >
             {lastAccessed || description}
           </span>
           <span>
@@ -80,7 +83,7 @@ const ProtoChip = ({
               ? <div>
                 <Grid container alignContent='center' style={{ alignItems: 'center' }}>
                   <Grid item>
-                  <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>with:</p>
+                    <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>with:</p>
                   </Grid>
                   <Grid item>
                     <CounterpartyChip
@@ -113,21 +116,21 @@ const ProtoChip = ({
                 )
               }}
             >
-            <Avatar
-              sx={{
-                backgroundColor: 'darkblue',
-                width: 20,
-                height: 20,
-                borderRadius: '3px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '1.2em',
-                marginRight: '0.25em',
-                marginBottom: '0.3em'
-              }}
-            >
-              <DataObject style={{ width: 16, height: 16 }} />
+              <Avatar
+                sx={{
+                  backgroundColor: 'darkblue',
+                  width: 20,
+                  height: 20,
+                  borderRadius: '3px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: '1.2em',
+                  marginRight: '0.25em',
+                  marginBottom: '0.3em'
+                }}
+              >
+                <DataObject style={{ width: 16, height: 16 }} />
               </Avatar>
             </Tooltip>
           }

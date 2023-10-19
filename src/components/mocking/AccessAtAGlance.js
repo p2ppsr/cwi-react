@@ -24,28 +24,15 @@ const THREE_HOURS = 180 * 60 * 1000
 const getTransactionOutputs = ({ basket, type, originator, order, limit }) => {
   if (basket === 'DPACP') {
     return {
+      basketId: 'dpacp',
       securityLevel: 1,
       protocolID: 'Authrite',
-      counterparty: '023134563145080d3aee10aa0e342e45dae60cf1f35d31fb017d7f68033ae88822',
-      lastAccessed: Date.now() - THREE_HOURS,
-      history: [
-        {
-          securityLevel: 0,
-          protocolID: '[2, "3241645161d8"]',
-          counterparty: '03efedf63f94ff1fa137d102cda6e6b406c8167d989a778098791da7ff6a29769b',
-          lastAccessed: Date.now() - 200000
-        },
-        {
-          securityLevel: 2,
-          protocolID: 'todo list',
-          counterparty: '032e5bd6b837cfb30208bbb1d571db9ddf2fb1a7b59fb4ed2a31af632699f770a1',
-          lastAccessed: Date.now() - 300000
-        }
-      ]
+      counterparty: '023134563145080d3aee10aa0e342e45dae60cf1f35d31fb017d7f68033ae88822'
     }
   } else if (type === 'counterparty') {
     return {
       basketId: 'todo',
+      counterparty: '023134563145080d3aee10aa0e342e45dae60cf1f35d31fb017d7f68033ae88822',
       lastAccessed: Date.now() - THREE_HOURS,
       history: [
         {

@@ -56,12 +56,12 @@ export interface DojoGetTransactionLabelsOptions extends DojoGetTransactionsBase
 
 */
 import React from 'react'
-import { Typography, Button, LinearProgress } from '@mui/material'
-import BasketChip from '../../../components/BasketChip'
-import ProtoChip from '../../../components/ProtoChip'
-import CounterpartyChip from '../../../components/CounterpartyChip'
-import CertChip from '../../../components/CertChip'
-import getTransactionOutputs from '../../../components/mocking/AccessAtAGlance'
+import { Typography, Button, LinearProgress, Grid } from '@mui/material'
+import BasketChip from './BasketChip'
+import ProtoChip from './ProtoChip'
+import CounterpartyChip from './CounterpartyChip'
+import CertChip from './CertificateChip'
+import getTransactionOutputs from './mocking/AccessAtAGlance'
 /*
 * Calls ninja to obtain the output data to be displayed by the approriate chip components for the passed in App
 * @param {object} obj - all params given in an object.
@@ -95,9 +95,10 @@ const getAccessData = ({
  * @param {string} obj.originator - app name
  * @param {boolean} obj.loading - the state of fetching app transactions
  * @param {function} obj.setRefresh - setter for refresh state variable which determines if the UI should be rerendered
+ * @param {Router} obj.history - Allows React to navigate to different pages
  * @returns component chips to be displayed
  */
-const AccessAtAGlance = ({ originator, loading, setRefresh }) => {
+const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
   const dpacpAccessData = getAccessData({ basket: 'DPACP', originator: `app_${originator}` })
   const counterpartyAccessData = getAccessData({ type: 'counterparty', originator: `app_${originator}` })
   const dbapAccessData = getAccessData({ basket: 'DBAP', originator: `app_${originator}` })
@@ -114,16 +115,13 @@ const AccessAtAGlance = ({ originator, loading, setRefresh }) => {
     // onCounterpartyClick
   }
   const counterpartyChipParams = {
-    basketId: counterpartyAccessData.basketId,
-    lastAccessed: counterpartyAccessData.lastAccess,
-    history: counterpartyAccessData.history
-    // clickable = false,
-    // size = 1.3,
-    // onClick
+    counterparty: counterpartyAccessData.counterparty,
+    history
   }
   const basketChipParams = {
     counterparty: dbapAccessData.counterparty,
-    history: dbapAccessData.history
+    history: dbapAccessData.history,
+    basketId: dpacpAccessData.basketId
     // clickable,
     // size,
     // onClick
@@ -142,33 +140,35 @@ const AccessAtAGlance = ({ originator, loading, setRefresh }) => {
     // size
   }
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', paddingTop: '1em' }}>
-      <div style={{ width: '30em', paddingBottom: '2em', marginRight: '1em' }}>
-        <Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
-          Access At A Glance
-        </Typography>
-        <div>
-          <ProtoChip { ...protoChipParams }
-          />
-          ({counterpartyAccessData.basketId !== 'self'})
-          ?
-            <CounterpartyChip { ...counterpartyChipParams }
-            />
-          <BasketChip { ...basketChipParams }
-          />
-          <CertChip { ...certChipParams }
-          />
-        </div>
-        {loading && <LinearProgress paddingTop='1em' />}
-        <center style={{ paddingTop: '1em' }}>
-          <Button onClick={() => {
-            setRefresh(true)
-          }}
-          >
-            View More Access Data
-          </Button>
-        </center>
-      </div>
+    <div style={{ paddingTop: '1em' }}>
+      <Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
+        Access At A Glance
+      </Typography>
+      <Grid container spacing={2} textAlign='center' alignItems='center' justifyContent='center'>
+        <Grid item xs={12}>
+          <ProtoChip {...protoChipParams} />
+        </Grid>
+        <Grid item xs={12}>
+          {counterpartyAccessData.counterparty !== 'self' &&
+            <CounterpartyChip {...counterpartyChipParams} />}
+        </Grid>
+        <Grid item xs={12}>
+          <BasketChip {...basketChipParams} />
+        </Grid>
+        <Grid item xs={12}>
+          <CertChip {...certChipParams} />
+        </Grid>
+      </Grid>
+
+      {loading && <LinearProgress paddingTop='1em' />}
+      <center style={{ paddingTop: '1em' }}>
+        <Button onClick={() => {
+          setRefresh(true)
+        }}
+        >
+          Manage App Access
+        </Button>
+      </center>
     </div>
   )
 }

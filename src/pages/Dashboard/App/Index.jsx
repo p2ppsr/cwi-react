@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Typography, Button, IconButton } from '@mui/material'
+import { Typography, Button, IconButton, Grid } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import isImageUrl from '../../../utils/isImageUrl'
 import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
-import RecentActions from './RecentActions'
+import RecentActions from '../../../components/RecentActions'
+import AccessAtAGlance from '../../../components/AccessAtAGlance'
 
 const useStyles = makeStyles(style, { name: 'apps' })
 
@@ -106,12 +107,19 @@ const Apps = ({ match, history }) => {
           </div>
         </div>
       </div>
-      {/* <Grid container>
-        <Grid item sx={12} style={{ width: '100%' }}>
+      <Grid container>
+        <Grid item sx={12} style={{ width: '100%', height: '10em', background: 'gray' }}>
           <Typography paddingBottom='2em' align='center'>Total App Cashflow</Typography>
         </Grid>
-      </Grid> */}
-      <RecentActions {...recentActionParams} />
+      </Grid>
+      <Grid container spacing={3}>
+        <Grid item lg={6} xs={12}>
+          <RecentActions {...recentActionParams} />
+        </Grid>
+        <Grid item lg={6} xs={12}>
+          <AccessAtAGlance {...{ originator: appDomain, loading, setRefresh, history }} />
+        </Grid>
+      </Grid>
     </div>
   )
 }
