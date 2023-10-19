@@ -17,76 +17,79 @@ Returns a set of transaction outputs that Dojo has tracked
     *   `obj.offset` **[Number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Provide an offset into the list of outputs. (optional, default `0`)
 */
 
+const THREE_HOURS = 180 * 60 * 1000
+
+// Assume history is just an array of similar objects
 
 const getTransactionOutputs = ({ basket, type, originator, order, limit }) => {
 
   if (basket === 'DPACP') {
     return {
       securityLevel: 1,
-      protocolID: '[2, PROTOCOL_ID]',
-      counterparty: '021fd9ef7157080d3aee10aa0e342e45dae60cf1f35d31fb017d7f68033ae88822',
-      lastAccessed: Date,
+      protocolID: 'Authrite',
+      counterparty: '023134563145080d3aee10aa0e342e45dae60cf1f35d31fb017d7f68033ae88822',
+      lastAccessed: Date.now() - THREE_HOURS,
       history: [
         {
           securityLevel: 0,
           protocolID: '[2, "3241645161d8"]',
           counterparty: '03efedf63f94ff1fa137d102cda6e6b406c8167d989a778098791da7ff6a29769b',
-          lastAccessed: Date - 10000,
+          lastAccessed: Date.now() - 200000,
         },
         {
           securityLevel: 2,
           protocolID: 'todo list',
           counterparty: '032e5bd6b837cfb30208bbb1d571db9ddf2fb1a7b59fb4ed2a31af632699f770a1',
-          lastAccessed: Date - 20000,
+          lastAccessed: Date.now() - 300000,
         }    
       ]
     }
   } else if (type === 'counterparty') {
     return {
       basketId: 'todo',
-      lastAccessed: Date,
+      lastAccessed: Date.now() - THREE_HOURS,
       history:[
         {
           basketId: 'tempo',
-          lastAccessed: Date - 100000,
+          lastAccessed: Date.now() - 200000,
         },
         {
           basketId: 'botcrafter',
-          lastAccessed: Date - 200000,
+          lastAccessed: Date.now() - 300000,
         }
       ] 
     }
   } else if (basket === 'DBAP') {
     return {
       basketId: 'convo',
-      lastAccessed: Date,
+      lastAccessed: Date.now() - THREE_HOURS,
       history:[
         {
           basketId: 'tempo',
-          lastAccessed: Date - 100000,
+          lastAccessed: Date.now() - 200000,
         },
         {
           basketId: 'botcrafter',
-          lastAccessed: Date - 200000,
+          lastAccessed: Date.now() - 300000,
         }
       ] 
     }
   } else if (basket === 'DCAP') {
     return {
       certType: 'AGfk/WrT1eBDXpz3mcw386Zww2HmqcIn3uY6x4Af1eo=',
-      lastAccessed: Date,
+      lastAccessed: Date.now() - THREE_HOURS,
       issuer: 'O=Government Root Certification Authority',
-      verifier: '021fd9ef7157080d3aee10aa0e342e45dae60cf1f35d31fb017d7f68033ae88822',
+      verifier: '023134563145080d3aee10aa0e342e45dae60cf1f35d31fb017d7f68033ae88822',
       history:[
         {
           certType: 'z40BOInXkI8m7f/wBrv4MJ09bZfzZbTj2fJqCtONqCY=',
-          lastAccessed: Date - 100000,
+          lastAccessed: Date.now() - 200000,
           issuer: 'CN=D-TRUST Root Class 3 CA 2 2009 O=D-Trust GmbH',
           verifier: '032e5bd6b837cfb30208bbb1d571db9ddf2fb1a7b59fb4ed2a31af632699f770a1'
         },
         {
           certType: 'AGfk/WrT1eBDXpz3mcw386Zww2HmqcIn3uY6x4Af1eo=',
-          lastAccessed: Date - 200000,
+          lastAccessed: Date.now() - 300000,
           issuer: 'CN=SecureSign RootCA11 O=Japan Certification Services, Inc.',
           verifier: '03efedf63f94ff1fa137d102cda6e6b406c8167d989a778098791da7ff6a29769b'
         }
