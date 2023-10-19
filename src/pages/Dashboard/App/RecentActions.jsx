@@ -12,7 +12,7 @@ import Transaction from '../../../components/Transaction'
  * @param {function} obj.setRefresh - setter for refresh state variable which determines if the UI should be rerendered
  * @returns
  */
-const RecentActions = ({ loading, appActions, displayLimit, setDisplayLimit, setRefresh }) => {
+const RecentActions = ({ loading, appActions }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'row', paddingTop: '1em' }}>
       <div style={{ width: '30em', paddingBottom: '2em', marginRight: '1em' }}>
@@ -20,12 +20,22 @@ const RecentActions = ({ loading, appActions, displayLimit, setDisplayLimit, set
           Recent Actions
         </Typography>
         {appActions.transactions && appActions.transactions.map((action, index) => {
+          const inputTotals = action.inputs.reduce((acc, input) => acc + input.amount, 0)
+          const outputTotals = action.outputs.reduce((acc, output) => acc + output.amount, 0)
+          const outputs = [
+            ...action.outputs,
+            {
+              amount: inputTotals - outputTotals,
+              description: 'Bitcoin Mining Fee',
+              type: 'fee'
+            }
+          ]
           const actionToDisplay = {
             txid: action.txid,
             description: action.note,
-            amount: `${action.amount} satoshis`,
+            amount: action.amount,
             inputs: action.inputs,
-            outputs: action.outputs,
+            outputs,
             timestamp: action.created_at
           }
           return (
@@ -39,13 +49,7 @@ const RecentActions = ({ loading, appActions, displayLimit, setDisplayLimit, set
         })}
         {loading && <LinearProgress paddingTop='1em' />}
         <center style={{ paddingTop: '1em' }}>
-          <Button onClick={() => {
-            // Note: Consider taking into account max number of txs available
-            setDisplayLimit(displayLimit + 10)
-            setRefresh(true)
-          }}
-          >View More Actions
-          </Button>
+          <Button onClick={() => {}}>View More Actions</Button>
         </center>
       </div>
       <div style={{ width: '30em', paddingBottom: '2em' }}>

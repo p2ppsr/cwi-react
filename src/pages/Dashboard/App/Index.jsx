@@ -14,18 +14,15 @@ const Apps = ({ match, history }) => {
   const appDomain = decodeURIComponent(match.params.app)
   const [appName, setAppName] = useState(appDomain)
   const [appIcon, setAppIcon] = useState('MetaNet App')
-  const [displayLimit, setDisplayLimit] = useState(5)
   const [appActions, setAppActions] = useState({})
   const [loading, setLoading] = useState(false)
   const [refresh, setRefresh] = useState(false)
   const recentActionParams = {
     loading,
-    appActions,
-    displayLimit,
-    setDisplayLimit,
-    setRefresh
+    appActions
   }
   const classes = useStyles()
+  const displayLimit = 5
 
   useEffect(() => {
     (async () => {
@@ -49,8 +46,10 @@ const Apps = ({ match, history }) => {
           limit: displayLimit,
           order: 'descending',
           label: `babbage_app_${appDomain}`,
-          addInputsAndOutputs: true
+          addInputsAndOutputs: true,
+          status: 'completed'
         })
+        console.log(appActions)
         setAppActions(appActions)
         setLoading(false)
         setRefresh(false)
