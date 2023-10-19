@@ -4,41 +4,25 @@ import BasketChip from '../../../components/BasketChip'
 import ProtoChip from '../../../components/ProtoChip'
 import CounterpartyChip from '../../../components/CounterpartyChip'
 import CertChip from '../../../components/CertChip'
-
-/*
-#### getTransactionOutputs
-
-Returns a set of transaction outputs that Dojo has tracked
-
-##### Parameters
-
-*   `obj` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** All parameters are given in an object (optional, default `{}`)
-
-    *   `obj.basket` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, indicates which basket the outputs should be selected from.
-    *   `obj.tracked` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If provided, only outputs with the corresponding tracked value will be returned (true/false).
-    *   `obj.includeEnvelope` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If provided, returns a structure with the SPV envelopes for the UTXOS that have not been spent. (optional, default `false`)
-    *   `obj.spendable` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** If given as true or false, only outputs that have or have not (respectively) been spent will be returned. If not given, both spent and unspent outputs will be returned.
-    *   `obj.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** If provided, only outputs of the specified type will be returned. If not provided, outputs of all types will be returned.
-    *   `obj.limit` **[Number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Provide a limit on the number of outputs that will be returned. (optional, default `25`)
-    *   `obj.offset` **[Number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Provide an offset into the list of outputs. (optional, default `0`)
-*/
+import getTransactionOutputs from '../../../components/mocking/AccessAtAGlance'
 /*
 * Calls ninja to obtain the output data to be displayed by the approriate chip components for the passed in App
 * @param {object} obj - all params given in an object.
+* @param {string} obj.basket - Only outputs with the corresponding basket label are returned, if the label is '' (empty string), then all basket outputs are returned. (optional, default '').
 * @param {string} obj.type - Type of request, only this App outputs for either the identified 'basket' label or for all 'counterparty' are returned. (optional, default 'basket')
-* @param {string} obj.basketLabel - Only outputs with the corresponding basket label are returned, if the label is '' (empty string), then all basket outputs are returned. (optional, default '').
-* @param {string} obj.originator - Only outputs from this identified App are returned.
-* @param {string} obj.sortBy - The outputs are ordered according to this label. (optional, default 'whenLastUsed', sort in chronological order)
+* @param {string} obj.order - The outputs are ordered according to this label. (optional, default 'whenLastUsed', sort in chronological order)
 * @param {number} obj.limit - Provide a limit on the number of outputs that will be returned. (optional, default `1`)
+* @param {string} obj.originator - Only outputs from this identified App are returned.
 * @returns - The result object contained the requested output data
 */
-const getAccessData = async ({ type = 'basket', basketLabel = '', originator, sortBy = 'whenLastUsed', limit = 1 }) => {
-  const results = await window.CWI.ninja.getTransactionOutputs({
+const getAccessData = async ({ basket = '', type = 'basket', order = 'whenLastUsed', limit = 1, originator }) => {
+  const results = await getTransactionOutputs({
+  //const results = await window.CWI.ninja.getTransactionOutputs({
+    basket,
     type,
-    basketLabel,
-    originator,
-    sortBy,
-    limit
+    order,
+    limit,
+    originator
   })
   if (limit === undefined) {
     limit = results.length
@@ -62,7 +46,7 @@ const getAccessData = async ({ type = 'basket', basketLabel = '', originator, so
 const AccessAtAGlance = ({ originator, loading, setRefresh }) => {
 
   const dpacpAccessData = getAccessData( {basket: 'DPACP', originator: `app_${originator}` })
-  const counterpartyAccessData = getAccessData( {originator: `app_${originator}` })
+  const counterpartyAccessData = getAccessData( {type: 'counterparty', originator: `app_${originator}` })
   const dbapAccessData = getAccessData( {basket: 'DBAP', originator: `app_${originator}` })
   const dcapAccessData = getAccessData( {basket: 'DCAP', originator: `app_${originator}` })
   const protoChipParams = {
