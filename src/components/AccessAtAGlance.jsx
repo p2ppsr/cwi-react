@@ -67,12 +67,12 @@ import getTransactionOutputs from '../../../components/mocking/AccessAtAGlance'
 * @param {object} obj - all params given in an object.
 * @param {string} obj.basket - Only outputs with the corresponding basket label are returned, if the label is '' (empty string), then all basket outputs are returned. (optional, default '').
 * @param {string} obj.type - Type of request, only the outputs for either the identified 'basket' label or for all 'counterparty' are returned. (optional, default 'basket')
-* @param {string} obj.order - The outputs are ordered according to this label. (optional, default 'whenLastUsed', sort in chronological order)
+* @param {string} obj.order - The outputs are ordered according to this label. (optional, default 'date', sort in chronological order)
 * @param {number} obj.limit - Provide a limit on the number of outputs that will be returned. (optional, default `1`)
 * @param {string} obj.originator - Only outputs from this identified App are returned.
 * @returns - The result object contains the requested output data
 */
-const getAccessData = ({ 
+const getAccessData = ({
   basket = '',
   type = 'basket',
   order = 'date',
@@ -80,7 +80,7 @@ const getAccessData = ({
   originator
 }) => {
   return getTransactionOutputs({ // Mocked
-  //return await window.CWI.ninja.getTransactionOutputs({
+  // return await window.CWI.ninja.getTransactionOutputs({
     basket,
     type,
     order,
@@ -89,59 +89,57 @@ const getAccessData = ({
   })
 }
 
-
 /**
  * Displays recent access for a particular app using chip associated components
  * @param {object} obj - all params given in an object
- * @param {string} obj.originator - app name 
+ * @param {string} obj.originator - app name
  * @param {boolean} obj.loading - the state of fetching app transactions
  * @param {function} obj.setRefresh - setter for refresh state variable which determines if the UI should be rerendered
  * @returns component chips to be displayed
  */
 const AccessAtAGlance = ({ originator, loading, setRefresh }) => {
-
-  const dpacpAccessData = getAccessData( {basket: 'DPACP', originator: `app_${originator}` })
-  const counterpartyAccessData = getAccessData( {type: 'counterparty', originator: `app_${originator}` })
-  const dbapAccessData = getAccessData( {basket: 'DBAP', originator: `app_${originator}` })
-  const dcapAccessData = getAccessData( {basket: 'DCAP', originator: `app_${originator}` })
+  const dpacpAccessData = getAccessData({ basket: 'DPACP', originator: `app_${originator}` })
+  const counterpartyAccessData = getAccessData({ type: 'counterparty', originator: `app_${originator}` })
+  const dbapAccessData = getAccessData({ basket: 'DBAP', originator: `app_${originator}` })
+  const dcapAccessData = getAccessData({ basket: 'DCAP', originator: `app_${originator}` })
   const protoChipParams = {
     securityLevel: dpacpAccessData.securityLevel,
     protocolID: dpacpAccessData.protocolID,
     counterparty: dpacpAccessData.counterparty,
     lastAccessed: dpacpAccessData.lastAccessed,
     history: dpacpAccessData.history
-    //clickable = false,
-    //size = 1.3,
-    //onClick,
-    //onCounterpartyClick
+    // clickable = false,
+    // size = 1.3,
+    // onClick,
+    // onCounterpartyClick
   }
   const counterpartyChipParams = {
     basketId: counterpartyAccessData.basketId,
     lastAccessed: counterpartyAccessData.lastAccess,
     history: counterpartyAccessData.history
-    //clickable = false,
-    //size = 1.3,
-    //onClick
+    // clickable = false,
+    // size = 1.3,
+    // onClick
   }
   const basketChipParams = {
     counterparty: dbapAccessData.counterparty,
     history: dbapAccessData.history
-    //clickable,
-    //size,
-    //onClick
+    // clickable,
+    // size,
+    // onClick
   }
   const certChipParams = {
     certType: dcapAccessData.certType,
     lastAccessed: dcapAccessData.lastAccessed,
     issuer: dcapAccessData.issuer,
-    //onIssuerClick,
+    // onIssuerClick,
     verifier: dcapAccessData.verifier
-    //onVerifierClick,
-    //onClick,
-    //fieldsToDisplay,
-    //history,
-    //clickable,
-    //size
+    // onVerifierClick,
+    // onClick,
+    // fieldsToDisplay,
+    // history,
+    // clickable,
+    // size
   }
   return (
     <div style={{ display: 'flex', flexDirection: 'row', paddingTop: '1em' }}>
@@ -152,7 +150,7 @@ const AccessAtAGlance = ({ originator, loading, setRefresh }) => {
         <div>
           <ProtoChip { ...protoChipParams }
           />
-          ({basketId !== 'self'})
+          ({counterpartyAccessData.basketId !== 'self'})
           ?
             <CounterpartyChip { ...counterpartyChipParams }
             />

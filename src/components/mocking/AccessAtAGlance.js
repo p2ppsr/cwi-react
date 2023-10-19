@@ -1,4 +1,4 @@
-/*** Current Dojo Spec ***/
+// Current Dojo Spec
 /*
 #### getTransactionOutputs
 
@@ -22,7 +22,6 @@ const THREE_HOURS = 180 * 60 * 1000
 // Assume history is just an array of similar objects
 
 const getTransactionOutputs = ({ basket, type, originator, order, limit }) => {
-
   if (basket === 'DPACP') {
     return {
       securityLevel: 1,
@@ -34,45 +33,45 @@ const getTransactionOutputs = ({ basket, type, originator, order, limit }) => {
           securityLevel: 0,
           protocolID: '[2, "3241645161d8"]',
           counterparty: '03efedf63f94ff1fa137d102cda6e6b406c8167d989a778098791da7ff6a29769b',
-          lastAccessed: Date.now() - 200000,
+          lastAccessed: Date.now() - 200000
         },
         {
           securityLevel: 2,
           protocolID: 'todo list',
           counterparty: '032e5bd6b837cfb30208bbb1d571db9ddf2fb1a7b59fb4ed2a31af632699f770a1',
-          lastAccessed: Date.now() - 300000,
-        }    
+          lastAccessed: Date.now() - 300000
+        }
       ]
     }
   } else if (type === 'counterparty') {
     return {
       basketId: 'todo',
       lastAccessed: Date.now() - THREE_HOURS,
-      history:[
+      history: [
         {
           basketId: 'tempo',
-          lastAccessed: Date.now() - 200000,
+          lastAccessed: Date.now() - 200000
         },
         {
           basketId: 'botcrafter',
-          lastAccessed: Date.now() - 300000,
+          lastAccessed: Date.now() - 300000
         }
-      ] 
+      ]
     }
   } else if (basket === 'DBAP') {
     return {
       basketId: 'convo',
       lastAccessed: Date.now() - THREE_HOURS,
-      history:[
+      history: [
         {
           basketId: 'tempo',
-          lastAccessed: Date.now() - 200000,
+          lastAccessed: Date.now() - 200000
         },
         {
           basketId: 'botcrafter',
-          lastAccessed: Date.now() - 300000,
+          lastAccessed: Date.now() - 300000
         }
-      ] 
+      ]
     }
   } else if (basket === 'DCAP') {
     return {
@@ -80,7 +79,7 @@ const getTransactionOutputs = ({ basket, type, originator, order, limit }) => {
       lastAccessed: Date.now() - THREE_HOURS,
       issuer: 'O=Government Root Certification Authority',
       verifier: '023134563145080d3aee10aa0e342e45dae60cf1f35d31fb017d7f68033ae88822',
-      history:[
+      history: [
         {
           certType: 'z40BOInXkI8m7f/wBrv4MJ09bZfzZbTj2fJqCtONqCY=',
           lastAccessed: Date.now() - 200000,
