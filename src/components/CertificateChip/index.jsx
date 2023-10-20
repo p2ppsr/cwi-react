@@ -58,6 +58,8 @@ const CertificateChip = ({
     <Chip
       style={{
         height: '100%',
+        width: '100%',
+        // maxWidth: '30em',
         paddingTop: `${4 * size}px`,
         paddingBottom: `${4 * size}px`,
         paddingLeft: `${5 * size}px`,
@@ -75,7 +77,8 @@ const CertificateChip = ({
             color: theme.palette.text.secondary,
             maxWidth: '20em',
             display: 'block'
-          }}>
+          }}
+          >
             {lastAccessed || description}
           </span>
           <span>
@@ -153,8 +156,8 @@ const CertificateChip = ({
                 )
               }}
             >
-            <Avatar
-              sx={{
+              <Avatar
+                sx={{
                 backgroundColor: 'darkgoldenrod',
                 width: 20,
                 height: 20,
@@ -166,8 +169,8 @@ const CertificateChip = ({
                 marginRight: '0.25em',
                 marginBottom: '0.3em'
               }}
-            >
-              <ArtTrack style={{ width: 16, height: 16 }} />
+              >
+                <ArtTrack style={{ width: 16, height: 16 }} />
               </Avatar>
             </Tooltip>
           }

@@ -43,6 +43,9 @@ const CounterpartyChip = ({
   return (
     <Chip
       style={{
+        height: '100%',
+        width: '100%',
+        // maxWidth: '30em',
         paddingTop: `${23 * size}px`,
         paddingBottom: `${23 * size}px`,
         paddingLeft: `${10 * size}px`,
@@ -64,7 +67,7 @@ const CounterpartyChip = ({
                 fontSize: '0.9em',
                 color: signiaIdentity.profilePhoto
                   ? theme.palette.text.secondary.main
-                  : 'red'
+                  : 'gray'
               }}
             >
               <br />
@@ -83,8 +86,7 @@ const CounterpartyChip = ({
                 ? 'https://projectbabbage.com/favicon.ico'
                 : counterparty === 'anyone'
                   ? 'https://projectbabbage.com/favicon.ico'
-                  : signiaIdentity.profilePhoto
-              }
+                  : signiaIdentity.profilePhoto}
               className={classes.table_picture}
               confederacyHost={confederacyHost()}
             />

@@ -195,7 +195,7 @@ const Actions = ({ history }) => {
                             domain={app.domain}
                           />
                       </Grid>
-                      ))}
+                    ))}
                                </Grid>
                   </>
                   )
@@ -211,7 +211,7 @@ const Actions = ({ history }) => {
                             domain={app.domain}
                           />
                       </Grid>
-                      ))}
+                    ))}
                                </Grid>
                   </>
                   )}

@@ -59,6 +59,8 @@ const BasketChip = ({
     <Chip
       style={{
         height: '100%',
+        width: '100%',
+        // maxWidth: '30em',
         paddingTop: `${8 * size}px`,
         paddingBottom: `${8 * size}px`,
         paddingLeft: `${10 * size}px`,
@@ -75,7 +77,8 @@ const BasketChip = ({
             color: theme.palette.text.secondary,
             maxWidth: '20em',
             display: 'block'
-          }}>
+          }}
+          >
             {lastAccessed || description}
           </span>
         </div>
@@ -100,8 +103,8 @@ const BasketChip = ({
                 )
               }}
             >
-            <Avatar
-              sx={{
+              <Avatar
+                sx={{
                 backgroundColor: 'darkgreen',
                 width: 20,
                 height: 20,
@@ -113,8 +116,8 @@ const BasketChip = ({
                 marginRight: '0.25em',
                 marginBottom: '0.3em'
               }}
-            >
-              <ShoppingBasket style={{ width: 16, height: 16 }} />
+              >
+                <ShoppingBasket style={{ width: 16, height: 16 }} />
               </Avatar>
             </Tooltip>
           }
