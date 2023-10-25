@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Satoshis from './Satoshis.jsx'
+import AmountDisplay from './AmountDisplay'
 import confederacyHost from '../utils/confederacyHost'
 import { makeStyles } from '@mui/styles'
 import { Typography } from '@mui/material'
@@ -58,7 +58,7 @@ const Profile = () => {
         >
           {balanceLoading
             ? '---'
-            : <Satoshis abbreviate>{accountBalance}</Satoshis>}
+            : <AmountDisplay abbreviate>{accountBalance}</AmountDisplay>}
         </Typography>
         <a href='#' className={classes.manage_link}>manage</a>
       </div>

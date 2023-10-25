@@ -10,7 +10,7 @@ import makeStyles from '@mui/styles/makeStyles'
 import AppChip from '../AppChip/index.jsx'
 import style from './style'
 import VisibilitySensor from 'react-visibility-sensor'
-import Satoshis from '../Satoshis.jsx'
+import AmountDisplay from '../AmountDisplay'
 import format from 'date-fns/format'
 import formatDistance from 'date-fns/formatDistance'
 import Refresh from '@mui/icons-material/Refresh'
@@ -109,9 +109,9 @@ const ActionList = ({ app }) => {
                     You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> permission for protocol: <b>{protocol}</b>
                   </Typography>
                   <Typography>
-                    <Satoshis showPlus>
+                    <AmountDisplay showPlus>
                       {a.amount}
-                    </Satoshis>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
+                    </AmountDisplay>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
                   </Typography>
                 </CardContent>
               </Card>
@@ -143,9 +143,9 @@ const ActionList = ({ app }) => {
                     You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> access to basket: <b>{basket}</b>
                   </Typography>
                   <Typography>
-                    <Satoshis showPlus>
+                    <AmountDisplay showPlus>
                       {a.amount}
-                    </Satoshis>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
+                    </AmountDisplay>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
                   </Typography>
                 </CardContent>
               </Card>
@@ -179,9 +179,9 @@ const ActionList = ({ app }) => {
                     <b>Verifier: </b>{verifier}
                   </Typography>
                   <Typography>
-                    <Satoshis showPlus>
+                    <AmountDisplay showPlus>
                       {a.amount}
-                    </Satoshis>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
+                    </AmountDisplay>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
                   </Typography>
                 </CardContent>
               </Card>
@@ -201,7 +201,7 @@ const ActionList = ({ app }) => {
             }
             return (
               <Typography component='span' paragraph key={i}>
-                You {authorized ? 'allowed' : 'revoked a previous authorization for'} <AppChip label={`babbage_app_${app}`} /> to spend up to <b><Satoshis>{amount}</Satoshis></b>{authorized && ` on or before ${format(new Date(parseInt(expiry) * 1000), 'MMMM do yyyy')}`}
+                You {authorized ? 'allowed' : 'revoked a previous authorization for'} <AppChip label={`babbage_app_${app}`} /> to spend up to <b><AmountDisplay>{amount}</AmountDisplay></b>{authorized && ` on or before ${format(new Date(parseInt(expiry) * 1000), 'MMMM do yyyy')}`}
               </Typography>
             )
           } else if (
@@ -231,9 +231,9 @@ const ActionList = ({ app }) => {
                     {a.txid}
                   </Typography>
                   <Typography>
-                    <Satoshis showPlus>
+                    <AmountDisplay showPlus>
                       {a.amount}
-                    </Satoshis>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
+                    </AmountDisplay>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
                   </Typography>
                   {a.labels && a.labels
                     .filter(l => l.startsWith('babbage_app_'))

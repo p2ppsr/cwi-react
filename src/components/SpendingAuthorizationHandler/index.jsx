@@ -20,7 +20,7 @@ import {
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
-import Satoshis from '../Satoshis.jsx'
+import AmountDisplay from '../AmountDisplay'
 import { Send, Cancel } from '@mui/icons-material'
 import boomerang from 'boomerang-http'
 import formatDistance from 'date-fns/formatDistance'
@@ -33,9 +33,9 @@ const useStyles = makeStyles(style, {
 })
 
 const formatNumber = (num) => {
-  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-  if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-  return num.toString();
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M'
+  if (num >= 1000) return (num / 1000).toFixed(1) + 'K'
+  return num.toString()
 }
 
 const SpendingAuthorizationHandler = () => {
@@ -165,7 +165,7 @@ const SpendingAuthorizationHandler = () => {
                 would like to spend
               </Typography>
               <Typography variant='h3' align='center' paragraph>
-                <Satoshis>{transactionAmount}</Satoshis>
+                <AmountDisplay>{transactionAmount}</AmountDisplay>
               </Typography>
 
               <Typography align='center'>
@@ -194,7 +194,7 @@ const SpendingAuthorizationHandler = () => {
                           <TableCell component='th' scope='row'>
                             {row.description}
                           </TableCell>
-                          <TableCell align='right'> <Satoshis showPlus abbreviate>{row.satoshis}</Satoshis></TableCell>
+                          <TableCell align='right'> <AmountDisplay showPlus abbreviate>{row.satoshis}</AmountDisplay></TableCell>
                         </TableRow>
                       ))}
                       <TableRow
@@ -203,7 +203,7 @@ const SpendingAuthorizationHandler = () => {
                         <TableCell component='th' scope='row'>
                           <b>Total</b>
                         </TableCell>
-                        <TableCell align='right'><Satoshis showPlus abbreviate>{transactionAmount * -1}</Satoshis></TableCell>
+                        <TableCell align='right'><AmountDisplay showPlus abbreviate>{transactionAmount * -1}</AmountDisplay></TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
@@ -247,12 +247,12 @@ const SpendingAuthorizationHandler = () => {
               {!renewal
                 ? (
                   <DialogContentText>
-                    Spend amount: <b><Satoshis>{amount}</Satoshis></b>
+                    Spend amount: <b><AmountDisplay>{amount}</AmountDisplay></b>
                   </DialogContentText>
                   )
                 : (
                   <DialogContentText>
-                    Spend another: <b><Satoshis>{amount}</Satoshis></b>
+                    Spend another: <b><AmountDisplay>{amount}</AmountDisplay></b>
                   </DialogContentText>
                   )}
               {/* <DialogContentText>

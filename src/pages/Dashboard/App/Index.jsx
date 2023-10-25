@@ -14,7 +14,7 @@ const useStyles = makeStyles(style, { name: 'apps' })
 const Apps = ({ match, history }) => {
   const appDomain = decodeURIComponent(match.params.app)
   const [appName, setAppName] = useState(appDomain)
-  const [appIcon, setAppIcon] = useState('MetaNet App')
+  const [appIcon, setAppIcon] = useState('MetaNet AppMetaNet App')
   const [displayLimit, setDisplayLimit] = useState(5)
   const [appActions, setAppActions] = useState({})
   const [loading, setLoading] = useState(false)
@@ -48,10 +48,14 @@ const Apps = ({ match, history }) => {
         // Also request input and output amounts and descriptions from Ninja
         const appActions = await window.CWI.ninja.getTransactions({
           limit: displayLimit,
+          includeBasket: true,
+          includeTags: true,
           order: 'descending',
           label: `babbage_app_${appDomain}`,
-          addInputsAndOutputs: true
+          addInputsAndOutputs: true,
+          status: 'completed'
         })
+        console.log(appActions)
         setAppActions(appActions)
         setLoading(false)
         setRefresh(false)

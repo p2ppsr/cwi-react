@@ -4,6 +4,7 @@ import { useTheme } from '@mui/styles'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
 import CheckIcon from '@mui/icons-material/Check'
+import AmountDisplay from './AmountDisplay'
 
 /**
  * Transaction Component for displaying information about an Action that happened
@@ -35,9 +36,10 @@ const Transaction = ({
   // Dynamically figure out if the amount is a credit or debit
   // Note: assumes standard amount string starting with + or -
   const determineAmountColor = (amount) => {
-    if (amount[0] !== '-' && !isNaN(amount[0])) {
+    const amountAsString = amount.toString()[0]
+    if (amountAsString !== '-' && !isNaN(amountAsString)) {
       return 'green'
-    } else if (amount[0] === '-') {
+    } else if (amountAsString === '-') {
       return 'red'
     } else {
       return 'black'
@@ -122,7 +124,9 @@ const Transaction = ({
           <Grid item>
             <Grid container justifyContent='space-between'>
               <Grid item>
-                <Typography variant='h6' style={{ color: determineAmountColor(amount) }}>{amount}</Typography>
+                <Typography variant='h6' style={{ color: determineAmountColor(amount) }}>
+                  <AmountDisplay showPlus>{amount}</AmountDisplay>
+                </Typography>
               </Grid>
               <Grid item paddingRight='1em'>
                 <Typography variant='body2' style={{ color: theme.palette.text.secondary }}>{getTimeAgo(timestamp)}</Typography>
@@ -175,7 +179,9 @@ const Transaction = ({
                     </Grid>
                   </Grid>
                   <Grid item style={{ marginLeft: '1.7em', paddingRight: '1em' }}>
-                    <Typography variant='body2' style={{ color: determineAmountColor(input.amount) }}>{input.amount}</Typography>
+                    <Typography variant='body2'>
+                      <AmountDisplay description={input.description}>{input.amount}</AmountDisplay>
+                    </Typography>
                   </Grid>
                 </div>
               ))}
@@ -197,7 +203,9 @@ const Transaction = ({
                     </Grid>
                   </Grid>
                   <Grid item style={{ marginLeft: '1.7em', paddingRight: '1em' }}>
-                    <Typography variant='body2' style={{ color: determineAmountColor(output.amount) }}>{output.amount}</Typography>
+                    <Typography variant='body2'>
+                      <AmountDisplay description={output.description}>{output.amount}</AmountDisplay>
+                    </Typography>
                   </Grid>
                 </div>
               ))}

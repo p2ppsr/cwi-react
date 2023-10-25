@@ -11,7 +11,7 @@ import ProtoChip from '../ProtoChip/index.jsx'
 import CounterpartyChip from '../CounterpartyChip/index.jsx'
 import CertificateChip from '../CertificateChip/index.jsx'
 import BasketChip from '../BasketChip/index.jsx'
-import { Satoshis } from '../Satoshis.jsx'
+import AmountDisplay from '../AmountDisplay'
 
 const useStyles = makeStyles({
   protocol_grid: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles({
     paddingLeft: '0.5em',
     borderLeft: '3px solid #bbb',
     paddingTop: '0.5em',
-    marginBottom: '1em',
+    marginBottom: '1em'
   },
   basket_grid: {
     display: 'grid',
@@ -40,7 +40,7 @@ const useStyles = makeStyles({
     paddingLeft: '0.5em',
     borderLeft: '3px solid #bbb',
     paddingTop: '0.5em',
-    marginBottom: '1em',
+    marginBottom: '1em'
   },
   certificate_grid: {
     display: 'grid',
@@ -53,7 +53,7 @@ const useStyles = makeStyles({
     marginLeft: '2.5em',
     paddingLeft: '0.5em',
     borderLeft: '3px solid #bbb',
-    marginBottom: '1em',
+    marginBottom: '1em'
   },
   certificate_attribute_wrap: {
     display: 'grid',
@@ -65,7 +65,7 @@ const useStyles = makeStyles({
     display: 'grid',
     gridTemplateRows: 'auto'
   }
-}, { name: 'GroupPermissionHandler' }) 
+}, { name: 'GroupPermissionHandler' })
 
 const GroupPermissionHandler = () => {
   const {
@@ -134,7 +134,7 @@ const GroupPermissionHandler = () => {
         async ({
           requestID,
           groupPermissions,
-          originator,
+          originator
         }) => {
           try {
             const result = await boomerang(
@@ -219,7 +219,7 @@ const GroupPermissionHandler = () => {
         <br />
         <center>
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
-          <span>app:</span>
+            <span>app:</span>
             {originator && <div>
               <AppChip
                 size={2.5}
@@ -238,20 +238,20 @@ const GroupPermissionHandler = () => {
               control={<Checkbox
                 checked={spendingAuthorization.enabled}
                 onChange={() => setSpendingAuthorization(prev => ({ ...prev, enabled: !prev.enabled }))}
-              />}
-              label={<span>Let the app spend <Satoshis abbreviate>{spendingAuthorization.amount}</Satoshis> over the next 2 months without asking.</span>}
+                       />}
+              label={<span>Let the app spend <AmountDisplay abbreviate>{spendingAuthorization.amount}</AmountDisplay> over the next 2 months without asking.</span>}
             />
             <br />
             <br />
           </>
         )}
         {protocolPermissions.length > 0 && <>
-        <Typography variant='h3'>Protocol Permissions</Typography>
-        <Typography color='textSecondary' variant='caption'>
-          Protocols let apps talk in specific languages using your information.
+          <Typography variant='h3'>Protocol Permissions</Typography>
+          <Typography color='textSecondary' variant='caption'>
+            Protocols let apps talk in specific languages using your information.
         </Typography>
-        {protocolPermissions.map((x, i) => (
-          <div key={i} className={classes.protocol_grid}>
+          {protocolPermissions.map((x, i) => (
+            <div key={i} className={classes.protocol_grid}>
             <div>
               <Checkbox
                 checked={x.enabled}
@@ -259,25 +259,25 @@ const GroupPermissionHandler = () => {
               />
             </div>
             <div>
-            <ProtoChip
-              protocolID={x.protocolID[1]}
-              securityLevel={x.protocolID[0]}
-              counterparty={x.counterparty}
-            />
-            <div className={classes.protocol_inset}>
-              <p style={{ marginBottom: '0px' }}><b>Reason:{' '}</b>{x.description}</p>
-            </div>
+              <ProtoChip
+                protocolID={x.protocolID[1]}
+                securityLevel={x.protocolID[0]}
+                counterparty={x.counterparty}
+              />
+              <div className={classes.protocol_inset}>
+                <p style={{ marginBottom: '0px' }}><b>Reason:{' '}</b>{x.description}</p>
+              </div>
             </div>
           </div>
-        ))}
+          ))}
         </>}
         {certificateAccess.length > 0 && <>
-        <Typography variant='h3'>Certificate Access</Typography>
-        <Typography color='textSecondary' variant='caption'>
-          Certificates are documents issued to you by various third parties.
+          <Typography variant='h3'>Certificate Access</Typography>
+          <Typography color='textSecondary' variant='caption'>
+            Certificates are documents issued to you by various third parties.
         </Typography>
-        {certificateAccess.map((x, i) => (
-          <div key={i} className={classes.certificate_grid}>
+          {certificateAccess.map((x, i) => (
+            <div key={i} className={classes.certificate_grid}>
             <div>
               <Checkbox
                 checked={x.enabled}
@@ -293,23 +293,23 @@ const GroupPermissionHandler = () => {
                 />
               </div>
               <div className={classes.certificate_inset}>
-              <div className={classes.certificate_attribute_wrap}>
-                <div style={{ minHeight: '0.5em' }} />
-                <div />
+                <div className={classes.certificate_attribute_wrap}>
+                  <div style={{ minHeight: '0.5em' }} />
+                  <div />
                 </div>
                 <p style={{ marginBottom: '0px' }}><b>Reason:{' '}</b>{x.description}</p>
               </div>
             </div>
           </div>
-        ))}
+          ))}
         </>}
         {basketAccess.length > 0 && <>
           <Typography variant='h3'>Basket Access</Typography>
-        <Typography color='textSecondary' variant='caption'>
-          Baskets hold various tokens or "things" you own.
+          <Typography color='textSecondary' variant='caption'>
+            Baskets hold various tokens or "things" you own.
         </Typography>
-        {basketAccess.map((x, i) => (
-          <div key={i} className={classes.basket_grid}>
+          {basketAccess.map((x, i) => (
+            <div key={i} className={classes.basket_grid}>
             <div>
               <Checkbox
                 checked={x.enabled}
@@ -325,7 +325,7 @@ const GroupPermissionHandler = () => {
               </div>
             </div>
           </div>
-        ))}
+          ))}
         </>}
       </DialogContent>
       <br />
