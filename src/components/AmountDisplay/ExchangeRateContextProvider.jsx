@@ -1,0 +1,65 @@
+import React, { createContext, useEffect, useState } from 'react'
+import Whatsonchain from 'whatsonchain'
+
+const EXCHANGE_RATE_UPDATE_INTERVAL = 5 * 60 * 1000
+
+// Create the exchange rate context and provider to use in the amount component
+export const ExchangeRateContext = createContext({
+  satoshisPerUSD: NaN,
+  whenUpdated: null,
+  isFiatPreferred: false,
+  fiatFormatIndex: 0,
+  satsFormatIndex: 0
+})
+export const ExchangeRateContextProvider = ({ children }) => {
+  const [state, setState] = useState({
+    satoshisPerUSD: NaN,
+    whenUpdated: null,
+    isFiatPreferred: false,
+    fiatFormatIndex: 0,
+    satsFormatIndex: 0
+  })
+
+  // The function instances are created here and included in the state to ensure they have stable references
+  const contextValue = {
+    ...state,
+    toggleIsFiatPreferred: () => {
+      setState(oldState => ({ ...oldState, isFiatPreferred: !oldState.isFiatPreferred }))
+    },
+    cycleFiatFormat: () => {
+      setState(oldState => ({ ...oldState, fiatFormatIndex: oldState.fiatFormatIndex + 1 }))
+    },
+    cycleSatsFormat: () => {
+      setState(oldState => ({ ...oldState, satsFormatIndex: oldState.satsFormatIndex + 1 }))
+    }
+  }
+
+  const woc = new Whatsonchain() // This could also be moved inside useEffect if it's only used there.
+
+  useEffect(() => {
+    const tick = async () => {
+      try {
+        const rate = await woc.exchangeRate()
+        const satoshisPerUSD = 100000000 / rate.rate
+        setState(oldState => ({ ...oldState, satoshisPerUSD, whenUpdated: new Date() }))
+      } catch (error) {
+        console.error('Error fetching data: ', error)
+        // You can check for error.response.status here if using a library like axios
+        // and implement specific behavior for rate limiting errors (typically 429)
+      }
+    }
+
+    tick() // Invoke the function immediately to perform the initial data fetch
+
+    const timerID = setInterval(() => tick(), EXCHANGE_RATE_UPDATE_INTERVAL)
+
+    // This is the cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(timerID)
+  }, []) // Empty dependency array means this useEffect runs once when the component mounts
+
+  return (
+    <ExchangeRateContext.Provider value={contextValue}>
+      {children}
+    </ExchangeRateContext.Provider>
+  )
+}

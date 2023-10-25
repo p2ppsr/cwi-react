@@ -25,7 +25,7 @@ const RecentActions = ({ loading, appActions }) => {
           const outputs = [
             ...action.outputs,
             {
-              amount: inputTotals - outputTotals,
+              amount: (inputTotals - outputTotals),
               description: 'Bitcoin Mining Fee',
               type: 'fee'
             }

@@ -44,6 +44,8 @@ const Apps = ({ match, history }) => {
         // Also request input and output amounts and descriptions from Ninja
         const appActions = await window.CWI.ninja.getTransactions({
           limit: displayLimit,
+          includeBasket: true,
+          includeTags: true,
           order: 'descending',
           label: `babbage_app_${appDomain}`,
           addInputsAndOutputs: true,

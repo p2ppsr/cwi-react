@@ -20,7 +20,7 @@ import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import { AttachMoney, Delete } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
-import Satoshis from '../Satoshis.jsx'
+import AmountDisplay from '../AmountDisplay'
 import { toast } from 'react-toastify'
 
 const useStyles = makeStyles(style, {
@@ -127,7 +127,7 @@ const SpendingAuthorizationList = ({ app }) => {
             </ListItemAvatar>
             {/* <h1>TODO: Fix the bug that cause an invalid timestamp with temp fix below:</h1> */}
             <ListItemText
-              primary={<Satoshis>{authorization.amount}</Satoshis>}
+              primary={<AmountDisplay>{authorization.amount}</AmountDisplay>}
               secondary={`Must be used within ${formatDistance(new Date(authorization.expiry <= 16817763900000 ? authorization.expiry * 1000 : Date.now() + 10000000), new Date(), { addSuffix: true })}`}
             />
             <ListItemSecondaryAction>
@@ -155,10 +155,10 @@ const SpendingAuthorizationList = ({ app }) => {
           <Typography variant='h5' paragraph>
             <b>
               Current Spending (since {formatDistance(new Date(earliestAuthorization * 1000), new Date(), { addSuffix: true })}):
-            </b> <Satoshis>{currentSpending}</Satoshis>
+            </b> <AmountDisplay>{currentSpending}</AmountDisplay>
           </Typography>
           <Typography variant='h5' paragraph>
-            <b>Authorized Amount:</b> <Satoshis>{authorizedAmount}</Satoshis>
+            <b>Authorized Amount:</b> <AmountDisplay>{authorizedAmount}</AmountDisplay>
           </Typography>
           <LinearProgress
             variant='determinate'

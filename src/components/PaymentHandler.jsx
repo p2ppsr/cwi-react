@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Dialog, IconButton, Button, Typography, Tooltip } from '@mui/material'
+import { Dialog, IconButton, Button, Tooltip } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import Satoshis from './Satoshis.jsx'
 import UIContext from '../UIContext'
 import { toast } from 'react-toastify'
 import Refresh from '@mui/icons-material/Refresh'
@@ -34,10 +33,9 @@ const useStyles = makeStyles({
     boxSizing: 'border-box',
     boxShadow: '0px 12px 10px 3px #555',
     overflowY: 'scroll',
-    padding: '1em',
+    padding: '1em'
   }
 }, { name: 'PaymentHandler' })
-
 
 /* <DialogContentText>
           The following action requires Bitcoin SV (BSV) tokens, which you can use throughout the entire CWI ecosystem:
@@ -58,8 +56,7 @@ const useStyles = makeStyles({
             TODO functionality — buy more — for now, cancel, and then email us at satoshis@projectabbage.com or use Ninja to top-up. Click "Payment Sent" once money is there.
           </DialogContentText> */
 
-
-          /*<div className={classes.no_support_div}>
+/* <div className={classes.no_support_div}>
             <Typography paragraph>
               Your account balance is running low, and you need to get more satohsis before you can take this Action.
             </Typography>
@@ -79,7 +76,7 @@ const useStyles = makeStyles({
             <Typography paragraph>
               <b>Satoshis Needed:</b> {amount}
             </Typography>
-        </div>*/
+        </div> */
 
 const PaymentHandler = () => {
   const {
@@ -88,7 +85,7 @@ const PaymentHandler = () => {
     isFocused,
     env
   } = useContext(UIContext)
-  const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false) 
+  const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false)
   const [open, setOpen] = useState(false)
   const [reason, setReason] = useState('')
   const [paymentID, setPaymentID] = useState('')
@@ -136,7 +133,7 @@ const PaymentHandler = () => {
           // if (e.code !== 'ERR_DOUBLE_SPEND') throw e
 
           // ...... well this is awkward.
-          /* 
+          /*
           If the transaction didn't work, do we acknowledge it anyways? Or do we try again every time, knowing it won't work?
           We need a way of saying "Hey! This didn't work! Someone needs to do something about it." and flagging it for review, or something.
           */
@@ -182,25 +179,25 @@ const PaymentHandler = () => {
     <Dialog fullScreen open={open} onClose={handleCancel}>
       <form onSubmit={handleSubmit}>
         <Tooltip title='Cancel This Action' placement='right'>
-        <IconButton
-          className={classes.close_btn}
-          onClick={handleCancel}
-        >
-          <Cancel />
+          <IconButton
+            className={classes.close_btn}
+            onClick={handleCancel}
+          >
+            <Cancel />
           </IconButton>
         </Tooltip>
         <Tooltip title='Send This Action'>
-        <Button
-          className={classes.refresh_btn}
-          startIcon={<Refresh />}
-          color='primary'
-          type='submit'
-          variant='outlined'
-        >
-          Check for payment...
+          <Button
+            className={classes.refresh_btn}
+            startIcon={<Refresh />}
+            color='primary'
+            type='submit'
+            variant='outlined'
+          >
+            Check for payment...
           </Button>
-          </Tooltip>
-          <center>
+        </Tooltip>
+        <center>
           <iframe
             seamless
             src={`https://${env === 'dev' || env === 'staging' ? 'staging-satoshiframe' : 'satoshiframe'}.babbage.systems/?minimumSatoshis=${amount}&reason=${reason}`}
@@ -208,7 +205,7 @@ const PaymentHandler = () => {
           />
         </center>
       </form>
-      </Dialog>
+    </Dialog>
   )
 }
 

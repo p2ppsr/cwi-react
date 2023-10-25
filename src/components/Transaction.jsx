@@ -4,7 +4,7 @@ import { useTheme } from '@mui/styles'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
 import CheckIcon from '@mui/icons-material/Check'
-import Satoshis from './Satoshis'
+import AmountDisplay from './AmountDisplay'
 
 /**
  * Transaction Component for displaying information about an Action that happened
@@ -125,7 +125,7 @@ const Transaction = ({
             <Grid container justifyContent='space-between'>
               <Grid item>
                 <Typography variant='h6' style={{ color: determineAmountColor(amount) }}>
-                  <Satoshis showPlus>{amount}</Satoshis>
+                  <AmountDisplay showPlus>{amount}</AmountDisplay>
                 </Typography>
               </Grid>
               <Grid item paddingRight='1em'>
@@ -179,8 +179,8 @@ const Transaction = ({
                     </Grid>
                   </Grid>
                   <Grid item style={{ marginLeft: '1.7em', paddingRight: '1em' }}>
-                    <Typography variant='body2' style={{ color: determineAmountColor(input.amount) }}>
-                      <Satoshis>{input.amount}</Satoshis>
+                    <Typography variant='body2'>
+                      <AmountDisplay description={input.description}>{input.amount}</AmountDisplay>
                     </Typography>
                   </Grid>
                 </div>
@@ -203,8 +203,8 @@ const Transaction = ({
                     </Grid>
                   </Grid>
                   <Grid item style={{ marginLeft: '1.7em', paddingRight: '1em' }}>
-                    <Typography variant='body2' style={{ color: determineAmountColor(output.amount) }}>
-                      <Satoshis>{output.amount}</Satoshis>
+                    <Typography variant='body2'>
+                      <AmountDisplay description={output.description}>{output.amount}</AmountDisplay>
                     </Typography>
                   </Grid>
                 </div>
