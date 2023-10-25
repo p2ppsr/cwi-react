@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
 import { Typography, Button, IconButton, Grid } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'

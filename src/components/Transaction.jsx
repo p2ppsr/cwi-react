@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import { Accordion, AccordionSummary, AccordionDetails, Typography, IconButton, Grid, Snackbar, Alert } from '@mui/material'
 import { useTheme } from '@mui/styles'
