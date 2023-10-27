@@ -23,7 +23,7 @@ const RecentActions = ({ loading, appActions, displayLimit, setDisplayLimit, set
         const actionToDisplay = {
           txid: action.txid,
           description: action.note,
-          amount: `${action.amount} satoshis`,
+          amount: `${action.amount}`,
           inputs: action.inputs,
           outputs: action.outputs,
           timestamp: action.created_at

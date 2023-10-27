@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect, useContext } from 'react'
 import { Tooltip, Typography } from '@mui/material'
 import { formatSatoshis, formatSatoshisAsUSD, satoshisOptions } from './amountFormatHelpers'
@@ -48,8 +49,15 @@ const AmountDisplay = ({ abbreviate, showPlus, description, children }) => {
       } else if (description === 'Spend from your MetaNet Balance') {
         setFormattedSatoshis(`-${satoshisToDisplay}`)
         setColor('red')
+      } else if (satoshisToDisplay.toString()[0] === '+') {
+        setFormattedSatoshis(satoshisToDisplay)
+        setColor('green')
+      } else if (satoshisToDisplay.toString()[0] === '-') {
+        setFormattedSatoshis(satoshisToDisplay)
+        setColor('red')
       } else {
         setFormattedSatoshis(satoshisToDisplay)
+        setColor('black')
       }
     } else {
       setSatoshis(NaN)
