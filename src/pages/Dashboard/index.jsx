@@ -25,6 +25,7 @@ import App from './App/Index.jsx'
 import Settings from './Settings/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Profile from '../../components/Profile.jsx'
+import BasketAccess from './BasketAccess'
 import TopTabs from '../../components/TopTabs/index.jsx'
 import { SettingsProvider } from '../../context/SettingsContext.js'
 import UserTheme from '../../components/UserTheme.jsx'
@@ -43,7 +44,7 @@ const Dashboard = () => {
   const [pageLoading, setPageLoading] = useState(true)
 
   useEffect(() => {
-    let isLoggedIn = redirectIfLoggedOut(history)
+    const isLoggedIn = redirectIfLoggedOut(history)
     if (isLoggedIn) {
       setPageLoading(false)
     }
@@ -203,12 +204,18 @@ const Dashboard = () => {
                 component={Trust}
               />
               <Route
+                path='/dashboard/basket/:basketId'
+                component={BasketAccess}
+              />
+              <Route
                 className={classes.full_width}
                 default
                 component={() => {
-                  return <div style={{ padding: '1em' }}>
-                    <Typography align='center'>Select a page</Typography>
+                  return (
+                    <div style={{ padding: '1em' }}>
+                      <Typography align='center'>Select a page</Typography>
                     </div>
+                  )
                 }}
               />
             </Switch>

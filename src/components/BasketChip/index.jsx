@@ -105,17 +105,17 @@ const BasketChip = ({
             >
               <Avatar
                 sx={{
-                backgroundColor: 'darkgreen',
-                width: 20,
-                height: 20,
-                borderRadius: '3px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '1.2em',
-                marginRight: '0.25em',
-                marginBottom: '0.3em'
-              }}
+                  backgroundColor: 'darkgreen',
+                  width: 20,
+                  height: 20,
+                  borderRadius: '3px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: '1.2em',
+                  marginRight: '0.25em',
+                  marginBottom: '0.3em'
+                }}
               >
                 <ShoppingBasket style={{ width: 16, height: 16 }} />
               </Avatar>
@@ -143,9 +143,16 @@ const BasketChip = ({
             onClick(e)
           } else {
             e.stopPropagation()
-            history.push(
-              `/dashboard/basket/${encodeURIComponent(basketId)}`
-            )
+            history.push({
+              pathname: `/dashboard/basket/${encodeURIComponent(basketId)}`,
+              state: {
+                id: basketId,
+                name: basketName,
+                registryOperator: basketRegistryOperator,
+                description,
+                iconURL
+              }
+            })
           }
         }
       }}

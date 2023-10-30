@@ -6,6 +6,7 @@ import ProtoChip from './ProtoChip'
 import CounterpartyChip from './CounterpartyChip'
 import CertChip from './CertificateChip'
 import getTransactionOutputs from './mocking/AccessAtAGlance'
+
 /**
 * Calls ninja to obtain the output data to be displayed by the appropriate chip components for the passed in App
 * @param {object} obj - all params given in an object.
@@ -61,7 +62,7 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
   const basketChipParams = {
     counterparty: dbapAccessData.counterparty,
     basketId: dpacpAccessData.basketId,
-    history
+    clickable: true
   }
   const certChipParams = {
     certType: dcapAccessData.certType,
@@ -84,7 +85,7 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
             <CounterpartyChip {...counterpartyChipParams} />}
         </Grid>
         <Grid item xs={12}>
-          <BasketChip {...basketChipParams} />
+          <BasketChip history={history} {...basketChipParams} />
         </Grid>
         <Grid item xs={12}>
           <CertChip {...certChipParams} />

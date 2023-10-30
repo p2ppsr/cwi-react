@@ -69,8 +69,9 @@ const AppChip = ({
             >
               {label}
             </span>
-          </div>
-          : <span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>}
+            </div>
+          : <span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>
+}
       icon={(
         <Badge
           overlap='circular'
@@ -90,7 +91,7 @@ const AppChip = ({
                 )
               }}
             >
-            <Avatar
+              <Avatar
               sx={{
                 backgroundColor: 'darkred',
                 width: 8 * size,
@@ -104,11 +105,12 @@ const AppChip = ({
                 marginBottom: `${(0.3 * 0.4) * size}em`
               }}
             >
-                <Memory style={{
+              <Memory style={{
                   width: (16 * 0.4) * size,
                   height: (16 * 0.4) * size
-                }} />
-              </Avatar>
+                }}
+                />
+            </Avatar>
             </Tooltip>
           }
         >
@@ -122,7 +124,7 @@ const AppChip = ({
               src={appIconImageUrl}
               style={{
                 width: '100%',
-                height: '100%', 
+                height: '100%',
                 maxWidth: '5em',
                 borderRadius: '3em'
               }}

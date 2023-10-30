@@ -1,3 +1,5 @@
+/* eslint-disable react/display-name */
+/* eslint-disable react/prop-types */
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { BreakpointProvider } from './utils/useBreakpoints.js'

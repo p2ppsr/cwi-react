@@ -186,39 +186,39 @@ const Actions = ({ history }) => {
                 ? (
                   <><Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
                     Popular Apps
-                    </Typography><Grid container spacing={2}>
-                    {POPULAR_APPS.map((app, index) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                        <MetaNetApp
-                            appName={app.appName}
-                            iconImageUrl={app.appIconImageUrl}
-                            domain={app.domain}
-                          />
-                      </Grid>
+                  </Typography><Grid container spacing={2}>
+                      {POPULAR_APPS.map((app, index) => (
+                      <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                          <MetaNetApp
+                          appName={app.appName}
+                          iconImageUrl={app.appIconImageUrl}
+                          domain={app.domain}
+                        />
+                        </Grid>
                     ))}
-                               </Grid>
+                                 </Grid>
                   </>
                   )
                 : (
                   <><Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
                     Recent Apps
-                    </Typography><Grid container spacing={2}>
-                    {recentApps.map((app, index) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                        <MetaNetApp
-                            appName={app.appName}
-                            iconImageUrl={app.appIconImageUrl}
-                            domain={app.domain}
-                          />
-                      </Grid>
+                  </Typography><Grid container spacing={2}>
+                      {recentApps.map((app, index) => (
+                      <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                          <MetaNetApp
+                          appName={app.appName}
+                          iconImageUrl={app.appIconImageUrl}
+                          domain={app.domain}
+                        />
+                        </Grid>
                     ))}
-                               </Grid>
+                                 </Grid>
                   </>
                   )}
               <Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
                 All Apps
               </Typography>
-            </>}
+                                </>}
 
             {filteredApps.length === 0 && <>
               <center>
@@ -230,7 +230,7 @@ const Actions = ({ history }) => {
                 <Monkey />
               </center>
 
-            </>}
+                                          </>}
 
             <Grid container spacing={2}>
               {filteredApps.map((app, index) => (
