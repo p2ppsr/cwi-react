@@ -37,6 +37,7 @@ const BasketChip = ({
   const [description, setDescription] = useState(
     'Basket description not found.'
   )
+  const [documentationURL, setDocumentationURL] = useState('https://projectbabbage.com')
 
   useEffect(() => {
     (async () => {
@@ -49,6 +50,7 @@ const BasketChip = ({
         setBasketName(results.name)
         setIconURL(results.iconURL)
         setDescription(results.description)
+        setDocumentationURL(results.documentationURL)
       } catch (error) {
         console.error(error)
       }
@@ -147,10 +149,11 @@ const BasketChip = ({
               pathname: `/dashboard/basket/${encodeURIComponent(basketId)}`,
               state: {
                 id: basketId,
-                name: basketName,
+                name: 'ToDo Items Basket',
                 registryOperator: basketRegistryOperator,
                 description,
-                iconURL
+                iconURL,
+                documentationURL
               }
             })
           }

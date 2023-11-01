@@ -1,15 +1,4 @@
 export default theme => ({
-  top_grid: {
-    display: 'grid',
-    gridTemplateColumns: 'auto auto 1fr auto',
-    alignItems: 'center',
-    gridGap: theme.spacing(2),
-    boxSizing: 'border-box'
-  },
-  app_icon: {
-    width: '5em',
-    height: '5em'
-  },
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -26,10 +15,5 @@ export default theme => ({
     margin: theme.spacing(-3),
     marginBottom: theme.spacing(4),
     zIndex: 1000
-  },
-  launch_button: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
   }
 })

@@ -69,7 +69,7 @@ const AppChip = ({
             >
               {label}
             </span>
-            </div>
+          </div>
           : <span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>
 }
       icon={(
@@ -92,25 +92,25 @@ const AppChip = ({
               }}
             >
               <Avatar
-              sx={{
-                backgroundColor: 'darkred',
-                width: 8 * size,
-                height: 8 * size,
-                borderRadius: size,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: `${(1.2 * 0.4) * size}em`,
-                marginRight: `${(0.25 * 0.4) * size}em`,
-                marginBottom: `${(0.3 * 0.4) * size}em`
-              }}
-            >
-              <Memory style={{
+                sx={{
+                  backgroundColor: 'darkred',
+                  width: 8 * size,
+                  height: 8 * size,
+                  borderRadius: size,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: `${(1.2 * 0.4) * size}em`,
+                  marginRight: `${(0.25 * 0.4) * size}em`,
+                  marginBottom: `${(0.3 * 0.4) * size}em`
+                }}
+              >
+                <Memory style={{
                   width: (16 * 0.4) * size,
                   height: (16 * 0.4) * size
                 }}
                 />
-            </Avatar>
+              </Avatar>
             </Tooltip>
           }
         >

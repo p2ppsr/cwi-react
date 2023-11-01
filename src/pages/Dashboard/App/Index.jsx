@@ -9,6 +9,7 @@ import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
 import RecentActions from '../../../components/RecentActions'
 import AccessAtAGlance from '../../../components/AccessAtAGlance'
+import PageHeader from '../../../components/PageHeader'
 
 const useStyles = makeStyles(style, { name: 'apps' })
 
@@ -71,47 +72,11 @@ const Apps = ({ match, history }) => {
 
   return (
     <div className={classes.root}>
-      <div>
-        <div className={classes.top_grid}>
-          <div>
-            <IconButton
-              className={classes.back_button}
-              onClick={() => history.go(-1)}
-              size='large'
-            >
-              <ArrowBack />
-            </IconButton>
-          </div>
-          <div>
-            <Img
-              className={classes.app_icon}
-              src={appIcon}
-              alt=''
-            />
-          </div>
-          <div>
-            <Typography variant='h1'>
-              {appName}
-            </Typography>
-            <Typography color='textSecondary'>
-              {appDomain}
-            </Typography>
-          </div>
-          <div>
-            <Button
-              className={classes.launch_button}
-              variant='contained'
-              color='primary'
-              size='large'
-              onClick={() => {
-                window.open(`https://${appDomain}`, '_blank')
-              }}
-            >
-              Launch
-            </Button>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        history={history} title={appName} subheading={appDomain} icon={appIcon} buttonTitle='Launch' onClick={() => {
+          window.open(`https://${appDomain}`, '_blank')
+        }}
+      />
       {/* <Grid container>
         <Grid item sx={12} style={{ width: '100%', height: '10em', background: 'gray' }}>
           <Typography paddingBottom='2em' align='center'>Total App Cashflow</Typography>
