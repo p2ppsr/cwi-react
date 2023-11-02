@@ -57,10 +57,9 @@ const Profile = () => {
           variant='h2'
           style={{ cursor: 'pointer' }}
         >
-          {/* {balanceLoading
+          {balanceLoading
             ? '---'
-            : <AmountDisplay abbreviate>{accountBalance}</AmountDisplay>} */}
-          $333.01
+            : <AmountDisplay abbreviate>{accountBalance}</AmountDisplay>}
         </Typography>
         <a href='#' className={classes.manage_link}>manage</a>
       </div>

@@ -30,7 +30,12 @@ const MetaNetApp = ({
         onClick(e)
       } else {
         e.stopPropagation()
-        history.push(`/dashboard/app/${encodeURIComponent(domain)}`)
+        history.push({
+          pathname: `/dashboard/app/${encodeURIComponent(domain)}`,
+          state: {
+            domain
+          }
+        })
       }
     }
   }

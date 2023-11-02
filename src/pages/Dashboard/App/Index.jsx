@@ -1,20 +1,20 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
-import { Typography, Button, IconButton, Grid } from '@mui/material'
-import { ArrowBack } from '@mui/icons-material'
+import { Grid } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import isImageUrl from '../../../utils/isImageUrl'
-import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
 import RecentActions from '../../../components/RecentActions'
 import AccessAtAGlance from '../../../components/AccessAtAGlance'
 import PageHeader from '../../../components/PageHeader'
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 
 const useStyles = makeStyles(style, { name: 'apps' })
 
-const Apps = ({ match, history }) => {
-  const appDomain = decodeURIComponent(match.params.app)
+const Apps = ({ history }) => {
+  const location = useLocation()
+  const appDomain = location.state?.domain
   const [appName, setAppName] = useState(appDomain)
   const [appIcon, setAppIcon] = useState('MetaNet AppMetaNet App')
   const [displayLimit, setDisplayLimit] = useState(5)
@@ -41,9 +41,13 @@ const Apps = ({ match, history }) => {
           setAppIcon('https://projectbabbage.com/favicon.ico')
         }
         // Try to parse the app manifest to find the app info
-        const manifest = await parseAppManifest({ domain: appDomain })
-        if (typeof manifest.name === 'string') {
-          setAppName(manifest.name)
+        try {
+          const manifest = await parseAppManifest({ domain: appDomain })
+          if (typeof manifest.name === 'string') {
+            setAppName(manifest.name)
+          }
+        } catch (error) {
+          console.error(error)
         }
 
         // Get a list of the 5 most recent actions from the app
@@ -57,13 +61,14 @@ const Apps = ({ match, history }) => {
           addInputsAndOutputs: true,
           status: 'completed'
         })
-        console.log(appActions)
+
         setAppActions(appActions)
         setLoading(false)
         setRefresh(false)
         console.log('reloaded')
       } catch (e) {
         /* do nothing */
+        console.error(e)
         setLoading(false)
         setRefresh(false)
       }

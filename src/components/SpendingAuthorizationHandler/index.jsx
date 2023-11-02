@@ -164,7 +164,7 @@ const SpendingAuthorizationHandler = () => {
               <Typography align='center'>
                 would like to spend
               </Typography>
-              <Typography variant='h3' align='center' paragraph>
+              <Typography variant='h3' align='center' paragraph color='textPrimary'>
                 <AmountDisplay>{transactionAmount}</AmountDisplay>
               </Typography>
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Typography, Grid, Container, TextField } from '@mui/material'
+import { Typography, Grid, Container, TextField, LinearProgress } from '@mui/material'
 import { makeStyles, useTheme } from '@mui/styles'
 import style from './style'
 import { useBreakpoint } from '../../../utils/useBreakpoints'
@@ -42,6 +42,7 @@ const Actions = ({ history }) => {
   const [fuseInstance, setFuseInstance] = useState(null)
   const [search, setSearch] = useState('')
   const [isExpanded, setIsExpanded] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const inputRef = useRef(null)
   const storageKeyApps = 'cached_apps'
@@ -113,6 +114,7 @@ const Actions = ({ history }) => {
     // Obtain a list of all apps ordered alphabetically
     try {
       // Check if there is storage app data for this session
+      setLoading(true)
       let parsedAppData = JSON.parse(window.sessionStorage.getItem(storageKeyApps))
       let parsedRecentAppData = JSON.parse(window.sessionStorage.getItem(storageKeyRecentApps))
 
@@ -146,6 +148,7 @@ const Actions = ({ history }) => {
     } catch (error) {
       console.error(error)
     }
+    setLoading(false)
   }, [])
 
   return (
@@ -182,11 +185,11 @@ const Actions = ({ history }) => {
             </Container>
 
             {(search === '') && <>
-              {(recentApps.length < 5)
+              {(recentApps.length < 4)
                 ? (
                   <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
                     Popular Apps
-                  </Typography>
+                    </Typography>
                     <Grid container spacing={2} alignItems='center' justifyContent='space-around' className={classes.apps_view}>
                       {POPULAR_APPS.map((app, index) => (
                         <Grid item key={index} className={classes.gridItem}>
@@ -203,25 +206,26 @@ const Actions = ({ history }) => {
                 : (
                   <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
                     Your Recent Apps
-                  </Typography><Grid container spacing={2}>
-                      {recentApps.map((app, index) => (
-                      <Grid item xs={12} sm={6} md={3} lg={3} key={index}>
-                          <MetaNetApp
-                          appName={app.appName}
-                          iconImageUrl={app.appIconImageUrl}
-                          domain={app.domain}
-                        />
-                        </Grid>
-                    ))}
-                                 </Grid>
+                    </Typography><Grid container spacing={2} alignItems='center' justifyContent='space-around' className={classes.apps_view}>
+                    {recentApps.map((app, index) => (
+                        <Grid item key={index} className={classes.gridItem}>
+                        <MetaNetApp
+                            appName={app.appName}
+                            iconImageUrl={app.appIconImageUrl}
+                            domain={app.domain}
+                          />
+                      </Grid>
+                      ))}
+                               </Grid>
                   </>
                   )}
               <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
                 All Your Apps
               </Typography>
-                                </>}
+            </>}
 
-            {filteredApps.length === 0 && <>
+            {loading ? <LinearProgress style={{ marginTop: '1em' }} /> : <></>}
+            {(filteredApps.length === 0 && !loading) && <>
               <center>
                 <Typography variant='h2' align='center' color='textSecondary' paddingTop='2em'>No apps found!</Typography>
                 {/* <img
@@ -231,7 +235,7 @@ const Actions = ({ history }) => {
                 <Monkey />
               </center>
 
-                                          </>}
+                                                        </>}
 
             <Grid container spacing={2}>
               {filteredApps.map((app, index) => (

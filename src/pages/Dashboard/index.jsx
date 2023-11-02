@@ -43,7 +43,6 @@ const Dashboard = () => {
   const history = useHistory()
   const { appName, appVersion } = useContext(UIContext)
   const [pageLoading, setPageLoading] = useState(true)
-  console.log(theme.palette)
 
   useEffect(() => {
     const isLoggedIn = redirectIfLoggedOut(history)

@@ -1,6 +1,6 @@
 export default theme => ({
   title_bg: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.background.default,
     marginBottom: theme.spacing(1),
     display: 'grid',
     gridTemplateColumns: '1fr auto',
@@ -8,7 +8,7 @@ export default theme => ({
     alignItems: 'center'
   },
   title: {
-    color: theme.palette.common.white
+    color: theme.palette.primary.main
   },
   iconButton: {
     color: theme.palette.text.secondary
