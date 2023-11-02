@@ -43,10 +43,10 @@ const Actions = ({ history }) => {
   const [search, setSearch] = useState('')
   const [isExpanded, setIsExpanded] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [loadingRecentApps, setLoadingRecentApps] = useState(false)
 
   const inputRef = useRef(null)
   const storageKeyApps = 'cached_apps'
-  const storageKeyRecentApps = 'cached_recent_apps'
 
   // Configure fuse to search by app name
   const options = {
@@ -114,33 +114,24 @@ const Actions = ({ history }) => {
     // Obtain a list of all apps ordered alphabetically
     try {
       // Check if there is storage app data for this session
-      setLoading(true)
       let parsedAppData = JSON.parse(window.sessionStorage.getItem(storageKeyApps))
-      let parsedRecentAppData = JSON.parse(window.sessionStorage.getItem(storageKeyRecentApps))
 
       // Parse out the app data from the domains
-      if (parsedAppData) {
-        setApps(parsedAppData)
-      } else {
+      if (!parsedAppData) {
+        setLoading(true)
         const appDomains = await getApps({ sortBy: 'label' })
         parsedAppData = await resolveAppDataFromDomain({ appDomains })
         // Store the current fetched apps in sessionStorage for a better UX
         window.sessionStorage.setItem(storageKeyApps, JSON.stringify(parsedAppData))
       }
-
-      // Parse out the recent app data from the domains
-      if (parsedRecentAppData) {
-        setRecentApps(parsedRecentAppData)
-      } else {
-        const recentAppsFetched = await getApps({ sortBy: 'whenLastUsed', limit: 4 })
-        parsedRecentAppData = await resolveAppDataFromDomain({ appDomains: recentAppsFetched })
-        // Store the current fetched apps in sessionStorage for a better UX
-        window.sessionStorage.setItem(storageKeyRecentApps, JSON.stringify(parsedRecentAppData))
-      }
-
       setApps(parsedAppData)
-      setRecentApps(parsedRecentAppData)
       setFilteredApps(parsedAppData)
+      setLoadingRecentApps(true)
+
+      // Always fetch recent apps to keep it updated
+      const recentAppsFetched = await getApps({ sortBy: 'whenLastUsed', limit: 4 })
+      const parsedRecentAppData = await resolveAppDataFromDomain({ appDomains: recentAppsFetched })
+      setRecentApps(parsedRecentAppData)
 
       // Initialize fuse for filtering apps
       const fuse = new Fuse(parsedAppData, options)
@@ -149,6 +140,7 @@ const Actions = ({ history }) => {
       console.error(error)
     }
     setLoading(false)
+    setLoadingRecentApps(false)
   }, [])
 
   return (
@@ -185,7 +177,7 @@ const Actions = ({ history }) => {
             </Container>
 
             {(search === '') && <>
-              {(recentApps.length < 4)
+              {(!loadingRecentApps && recentApps.length < 4)
                 ? (
                   <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
                     Popular Apps
@@ -206,8 +198,9 @@ const Actions = ({ history }) => {
                 : (
                   <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
                     Your Recent Apps
-                    </Typography><Grid container spacing={2} alignItems='center' justifyContent='space-around' className={classes.apps_view}>
-                    {recentApps.map((app, index) => (
+                    </Typography>
+                    <Grid container spacing={2} alignItems='center' justifyContent='space-around' className={classes.apps_view}>
+                      {recentApps.map((app, index) => (
                         <Grid item key={index} className={classes.gridItem}>
                         <MetaNetApp
                             appName={app.appName}
@@ -216,7 +209,7 @@ const Actions = ({ history }) => {
                           />
                       </Grid>
                       ))}
-                               </Grid>
+                    </Grid>
                   </>
                   )}
               <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
