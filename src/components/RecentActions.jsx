@@ -16,7 +16,7 @@ import Transaction from './Transaction'
 const RecentActions = ({ loading, appActions, displayLimit, setDisplayLimit, setRefresh }) => {
   return (
     <div style={{ paddingTop: '1em' }}>
-      <Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
+      <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
         Recent Actions
       </Typography>
       {appActions.transactions && appActions.transactions.map((action, index) => {

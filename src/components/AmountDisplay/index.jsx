@@ -34,7 +34,7 @@ const AmountDisplay = ({ abbreviate, showPlus, description, children }) => {
   const fiatFormat = opts.fiatFormats[fiatFormatIndex % opts.fiatFormats.length]
   const satsFormat = opts.satsFormats[satsFormatIndex % opts.satsFormats.length]
 
-  const [color, setColor] = useState('black')
+  const [color, setColor] = useState('textPrimary')
 
   // Update the satoshis and formattedSatoshis whenever the relevant props change
   useEffect(() => {
@@ -57,7 +57,7 @@ const AmountDisplay = ({ abbreviate, showPlus, description, children }) => {
         setColor('red')
       } else {
         setFormattedSatoshis(satoshisToDisplay)
-        setColor('black')
+        setColor('textPrimary')
       }
     } else {
       setSatoshis(NaN)

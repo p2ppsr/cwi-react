@@ -7,7 +7,6 @@ import { Typography } from '@mui/material'
 const useStyles = makeStyles(theme => ({
   content_wrap: {
     marginTop: '3em',
-    backgroundColor: theme.palette.grey[200],
     zIndex: 3,
     display: 'grid',
     placeItems: 'center',
@@ -52,7 +51,7 @@ const Profile = () => {
         </Typography>
         <Typography
           onClick={() => refreshBalance()}
-          color='textSecondary'
+          color='textPrimary'
           variant='h2'
           style={{ cursor: 'pointer' }}
         >

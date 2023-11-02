@@ -58,10 +58,10 @@ const PhoneSettings = ({ history }) => {
 
   return (
     <>
-      <Typography variant='h2'>
+      <Typography variant='h2' color='textPrimary' paragraph>
         Phone Number
       </Typography>
-      <Typography paragraph>
+      <Typography variant='body' color='textSecondary'>
         Your phone number is used as an extra verification step when logging in.
       </Typography>
       <Typography paragraph>

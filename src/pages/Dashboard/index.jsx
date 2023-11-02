@@ -27,10 +27,9 @@ import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Profile from '../../components/Profile.jsx'
 import BasketAccess from './BasketAccess'
 import TopTabs from '../../components/TopTabs/index.jsx'
-import { SettingsProvider } from '../../context/SettingsContext.js'
-import UserTheme from '../../components/UserTheme.jsx'
 import UIContext from '../../UIContext'
 import PageLoading from '../../components/PageLoading'
+import { useTheme } from '@emotion/react'
 
 const useStyles = makeStyles(style, {
   name: 'Dashboard'
@@ -39,9 +38,11 @@ const useStyles = makeStyles(style, {
 const Dashboard = () => {
   const breakpoints = useBreakpoint()
   const classes = useStyles({ breakpoints })
+  const theme = useTheme()
   const history = useHistory()
   const { appName, appVersion } = useContext(UIContext)
   const [pageLoading, setPageLoading] = useState(true)
+  console.log(theme.palette)
 
   useEffect(() => {
     const isLoggedIn = redirectIfLoggedOut(history)
@@ -55,174 +56,170 @@ const Dashboard = () => {
   }
 
   return (
-    <SettingsProvider>
-      <UserTheme>
-        <div className={classes.content_wrap}>
-          <div className={classes.list_wrap}>
-            <Profile />
-            <List>
-              <ListItem
-                button
-                onClick={() => history.push('/dashboard/apps')}
-                selected={
+    <div className={classes.content_wrap}>
+      <div className={classes.list_wrap}>
+        <Profile />
+        <List>
+          <ListItem
+            button
+            onClick={() => history.push('/dashboard/apps')}
+            selected={
               history.location.pathname === '/dashboard/apps'
             }
-              >
-                <ListItemIcon>
-                  <BrowseIcon
-                    color={
+          >
+            <ListItemIcon>
+              <BrowseIcon
+                color={
                   history.location.pathname === '/dashboard/apps'
                     ? 'secondary'
                     : undefined
                 }
-                  />
-                </ListItemIcon>
-                <ListItemText>
-                  Dashboard
-                </ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => history.push('/dashboard/trends')}
-                selected={
+              />
+            </ListItemIcon>
+            <ListItemText>
+              Dashboard
+            </ListItemText>
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => history.push('/dashboard/trends')}
+            selected={
               history.location.pathname === '/dashboard/trends'
             }
-              >
-                <ListItemIcon>
-                  <TrendsIcon
-                    color={
+          >
+            <ListItemIcon>
+              <TrendsIcon
+                color={
                   history.location.pathname === '/dashboard/trends'
                     ? 'secondary'
                     : undefined
                 }
-                  />
-                </ListItemIcon>
-                <ListItemText>
-                  Trends
-                </ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => history.push('/dashboard/access')}
-                selected={
+              />
+            </ListItemIcon>
+            <ListItemText>
+              Trends
+            </ListItemText>
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => history.push('/dashboard/access')}
+            selected={
               history.location.pathname === '/dashboard/access'
             }
-              >
-                <ListItemIcon>
-                  <AccessIcon
-                    color={
+          >
+            <ListItemIcon>
+              <AccessIcon
+                color={
                   history.location.pathname === '/dashboard/access'
                     ? 'secondary'
                     : undefined
                 }
-                  />
-                </ListItemIcon>
-                <ListItemText>
-                  Access
-                </ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => history.push('/dashboard/trust')}
-                selected={
+              />
+            </ListItemIcon>
+            <ListItemText>
+              Access
+            </ListItemText>
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => history.push('/dashboard/trust')}
+            selected={
               history.location.pathname === '/dashboard/trust'
             }
-              >
-                <ListItemIcon>
-                  <TrustIcon
-                    color={
+          >
+            <ListItemIcon>
+              <TrustIcon
+                color={
                   history.location.pathname === '/dashboard/trust'
                     ? 'secondary'
                     : undefined
                 }
-                  />
-                </ListItemIcon>
-                <ListItemText>
-                  Trust
-                </ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => history.push('/dashboard/settings')}
-                selected={
+              />
+            </ListItemIcon>
+            <ListItemText>
+              Trust
+            </ListItemText>
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => history.push('/dashboard/settings')}
+            selected={
               history.location.pathname === '/dashboard/settings'
             }
-              >
-                <ListItemIcon>
-                  <SettingsIcon
-                    color={
+          >
+            <ListItemIcon>
+              <SettingsIcon
+                color={
                   history.location.pathname === '/dashboard/settings'
                     ? 'secondary'
                     : undefined
                 }
-                  />
-                </ListItemIcon>
-                <ListItemText>
-                  Settings
-                </ListItemText>
-              </ListItem>
-              <a href='https://projectbabbage.com/docs' target='_blank' rel='noreferrer'>
-                <ListItem button>
-                  <ListItemIcon>
-                    <SchoolIcon />
-                  </ListItemIcon>
-                  <ListItemText>
-                    Learn MetaNet Tech
-                  </ListItemText>
-                </ListItem>
-              </a>
-            </List>
-            <center className={classes.sig_wrap}>
-              <Typography
-                variant='caption'
-                color='textSecondary'
-                className={classes.signature}
-                align='center'
-              >
-                {appName} v{appVersion}<br /><br />
-                Made with love by<br /><i>the Babbage Team</i>
-              </Typography>
-            </center>
-          </div>
-          <div className={classes.page_container}>
-            <TopTabs />
-            <Switch>
-              <Route
-                path='/dashboard/app/:app'
-                component={App}
               />
-              <Route
-                path='/dashboard/settings'
-                component={Settings}
-              />
-              <Route
-                path='/dashboard/apps'
-                component={Actions}
-              />
-              <Route
-                path='/dashboard/trust'
-                component={Trust}
-              />
-              <Route
-                path='/dashboard/basket/:basketId'
-                component={BasketAccess}
-              />
-              <Route
-                className={classes.full_width}
-                default
-                component={() => {
-                  return (
-                    <div style={{ padding: '1em' }}>
-                      <Typography align='center'>Select a page</Typography>
-                    </div>
-                  )
-                }}
-              />
-            </Switch>
-          </div>
-        </div>
-      </UserTheme>
-    </SettingsProvider>
+            </ListItemIcon>
+            <ListItemText>
+              Settings
+            </ListItemText>
+          </ListItem>
+          <a href='https://projectbabbage.com/docs' target='_blank' rel='noreferrer'>
+            <ListItem button>
+              <ListItemIcon>
+                <SchoolIcon />
+              </ListItemIcon>
+              <ListItemText>
+                Learn MetaNet Tech
+              </ListItemText>
+            </ListItem>
+          </a>
+        </List>
+        <center className={classes.sig_wrap}>
+          <Typography
+            variant='caption'
+            color='textSecondary'
+            className={classes.signature}
+            align='center'
+          >
+            {appName} v{appVersion}<br /><br />
+            Made with love by<br /><i>the Babbage Team</i>
+          </Typography>
+        </center>
+      </div>
+      <div className={classes.page_container}>
+        <TopTabs />
+        <Switch>
+          <Route
+            path='/dashboard/app/:app'
+            component={App}
+          />
+          <Route
+            path='/dashboard/settings'
+            component={Settings}
+          />
+          <Route
+            path='/dashboard/apps'
+            component={Actions}
+          />
+          <Route
+            path='/dashboard/trust'
+            component={Trust}
+          />
+          <Route
+            path='/dashboard/basket/:basketId'
+            component={BasketAccess}
+          />
+          <Route
+            className={classes.full_width}
+            default
+            component={() => {
+              return (
+                <div style={{ padding: '1em' }}>
+                  <Typography align='center'>Select a page</Typography>
+                </div>
+              )
+            }}
+          />
+        </Switch>
+      </div>
+    </div>
   )
 }
 

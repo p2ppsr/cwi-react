@@ -27,6 +27,8 @@ import Bugsnag from '@bugsnag/js'
 import BugsnagPluginReact from '@bugsnag/plugin-react'
 import UIContext from './UIContext'
 import { ExchangeRateContextProvider } from './components/AmountDisplay/ExchangeRateContextProvider.jsx'
+import UserTheme from './components/UserTheme.jsx'
+import { SettingsProvider } from './context/SettingsContext.js'
 
 const queries = {
   xs: '(max-width: 500px)',
@@ -79,62 +81,66 @@ export default ({
       }}
       >
         <div style={{
-          backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,1.0), rgba(255,255,255,0.85)), url(https://cdn.projectbabbage.com/media/pictures/mainBackground.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          // backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,1.0), rgba(255,255,255,0.85)), url(https://cdn.projectbabbage.com/media/pictures/mainBackground.jpg)',
+          // backgroundSize: 'cover',
+          // backgroundPosition: 'center',
           width: '100vw',
-          height: '100vh',
-          backgroundColor: 'rgba(255, 255, 255, 0.4)'
+          height: '100vh'
+          // backgroundColor: 'rgba(255, 255, 255, 0.4)'
         }}
         >
           <ErrorBoundary>
             <ExchangeRateContextProvider>
               <Theme>
-                <Router>
-                  <CodeHandler />
-                  <AuthenticationErrorHandler />
-                  <PasswordHandler />
-                  <RecoveryKeyHandler />
-                  <ProtocolPermissionHandler />
-                  <SpendingAuthorizationHandler />
-                  <BasketAccessHandler />
-                  <CertificateAccessHandler />
-                  <GroupPermissionHandler />
-                  <PaymentHandler />
-                  <ToastContainer
-                    position='top-center'
-                  />
-                  <Switch>
-                    <Route
-                      exact
-                      path='/'
-                      component={Greeter}
-                    />
-                    <Route
-                      exact
-                      path='/recovery/lost-phone'
-                      component={LostPhone}
-                    />
-                    <Route
-                      exact
-                      path='/recovery/lost-password'
-                      component={LostPassword}
-                    />
-                    <Route
-                      exact
-                      path='/recovery'
-                      component={Recovery}
-                    />
-                    <Route
-                      path='/dashboard'
-                      component={Dashboard}
-                    />
-                    <Route
-                      path='/welcome'
-                      component={Welcome}
-                    />
-                  </Switch>
-                </Router>
+                <SettingsProvider>
+                  <UserTheme>
+                    <Router>
+                      <CodeHandler />
+                      <AuthenticationErrorHandler />
+                      <PasswordHandler />
+                      <RecoveryKeyHandler />
+                      <ProtocolPermissionHandler />
+                      <SpendingAuthorizationHandler />
+                      <BasketAccessHandler />
+                      <CertificateAccessHandler />
+                      <GroupPermissionHandler />
+                      <PaymentHandler />
+                      <ToastContainer
+                        position='top-center'
+                      />
+                      <Switch>
+                        <Route
+                          exact
+                          path='/'
+                          component={Greeter}
+                        />
+                        <Route
+                          exact
+                          path='/recovery/lost-phone'
+                          component={LostPhone}
+                        />
+                        <Route
+                          exact
+                          path='/recovery/lost-password'
+                          component={LostPassword}
+                        />
+                        <Route
+                          exact
+                          path='/recovery'
+                          component={Recovery}
+                        />
+                        <Route
+                          path='/dashboard'
+                          component={Dashboard}
+                        />
+                        <Route
+                          path='/welcome'
+                          component={Welcome}
+                        />
+                      </Switch>
+                    </Router>
+                  </UserTheme>
+                </SettingsProvider>
               </Theme>
             </ExchangeRateContextProvider>
           </ErrorBoundary>

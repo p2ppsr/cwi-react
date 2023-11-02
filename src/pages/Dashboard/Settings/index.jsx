@@ -63,8 +63,13 @@ const Settings = ({ history }) => {
     <>
       <div className={classes.fixed_nav}>
         {(!breakpoints.sm && !breakpoints.xs) &&
-          <Typography variant='h1'>Settings</Typography>}
-        <select id='theme' value={settings.theme} onChange={handleThemeChange}>
+          <Typography variant='h1' color='textPrimary' paragraph>Settings</Typography>}
+      </div>
+      <div>
+        {/* TODO: Move the theming settings into it's own component */}
+        <Typography variant='body' color='textSecondary'>Select the default color theme</Typography>
+        <br />
+        <select style={{ margin: '1em 0 2em 0' }} id='theme' value={settings.theme} onChange={handleThemeChange}>
           <option value='light'>Light</option>
           <option value='dark'>Dark</option>
         </select>
@@ -90,12 +95,12 @@ const Settings = ({ history }) => {
           control={<Checkbox
             checked={autoLaunchEnabled}
             onChange={handleAutoLaunchChange}
-          />}
+                   />}
           label={<span>Auto-launch MetaNet Client when you log in</span>}
         />
         <br />
         <br />
-      </>}
+                         </>}
       <Logout history={history} />
     </>
   )

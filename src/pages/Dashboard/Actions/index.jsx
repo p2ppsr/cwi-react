@@ -184,7 +184,7 @@ const Actions = ({ history }) => {
             {(search === '') && <>
               {(recentApps.length < 5)
                 ? (
-                  <><Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
+                  <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
                     Popular Apps
                   </Typography><Grid container spacing={2}>
                       {POPULAR_APPS.map((app, index) => (
@@ -200,7 +200,7 @@ const Actions = ({ history }) => {
                   </>
                   )
                 : (
-                  <><Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
+                  <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
                     Recent Apps
                   </Typography><Grid container spacing={2}>
                       {recentApps.map((app, index) => (
@@ -215,7 +215,7 @@ const Actions = ({ history }) => {
                                  </Grid>
                   </>
                   )}
-              <Typography variant='h3' gutterBottom style={{ paddingBottom: '0.2em' }}>
+              <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
                 All Apps
               </Typography>
                                 </>}

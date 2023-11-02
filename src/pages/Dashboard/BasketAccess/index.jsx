@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Typography, IconButton, ListItem, ListItemText, ListItemAvatar, Avatar, List, ListItemSecondaryAction, Grid, Link, Paper, Switch } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+import { Button, Typography, IconButton, ListItemText, ListItemAvatar, Avatar, List, ListItemSecondaryAction, Grid, Link, Paper, Switch, ListItemButton } from '@mui/material'
 import ArrowBack from '@mui/icons-material/ArrowBack'
 import DeleteIcon from '@mui/icons-material/Delete'
+import makeStyles from '@mui/styles/makeStyles'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import CheckIcon from '@mui/icons-material/Check'
 import DownloadIcon from '@mui/icons-material/Download'
 import { useHistory, useLocation } from 'react-router-dom'
 import exportBasketContents from './exportBasketContents'
 import PageHeader from '../../../components/PageHeader'
+import style from './style'
+import { Img } from 'uhrp-react'
 
 /**
  * Display the access information for a particular basket
  */
 const BasketAccess = () => {
-  const theme = useTheme()
   const location = useLocation()
   const history = useHistory()
+  // const useStyles = makeStyles(style, { name: 'basketAccess' })
+  // const classes = useStyles()
 
   if (!location.state) {
     return <div>No data provided!</div>
@@ -27,7 +30,6 @@ const BasketAccess = () => {
 
   // Mock Data
   const mockBasketContents = [{ id, name, registryOperator, description, iconURL }]
-  const apps = [{ name: 'ToDo', icon: '' }, { name: 'Tempo', icon: '' }, { name: 'PeerMail', icon: '' }]
 
   // Revoke an app's basket access grant
   const revokeAppAccess = async (app) => {
@@ -76,19 +78,24 @@ const BasketAccess = () => {
       <Grid container spacing={3} direction='column' sx={{ padding: '16px' }}>
         <Grid item>
           <PageHeader
-            history={history} title={name} subheading={
+            history={history}
+            title={name}
+            subheading={
               <div>
-                <Typography>
+                <Typography color='textSecondary'>
                   Items in Basket: 23
                 </Typography>
-                <Typography variant='caption'>
+                <Typography variant='caption' color='textSecondary'>
                   Basket ID: {id}
                   <IconButton size='small' onClick={() => handleCopy(id, 'id')} disabled={copied.id}>
                     {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
                   </IconButton>
                 </Typography>
               </div>
-            } icon={iconURL} buttonTitle='Export' buttonIcon={<DownloadIcon />} onClick={() => exportBasketContents({
+            }
+            icon={iconURL} buttonTitle='Export'
+            buttonIcon={<DownloadIcon />}
+            onClick={() => exportBasketContents({
               basketContents: mockBasketContents,
               format: 'csv'
             })}
@@ -110,7 +117,7 @@ const BasketAccess = () => {
           </Typography>
           <Typography variant='body'>You can learn more about how to manipulate and use the items in this basket from the following URL:</Typography>
           <br />
-          <Link href={documentationURL} target='_blank' rel='noopener noreferrer'>{documentationURL}</Link>
+          <Link color='textPrimary' href={documentationURL} target='_blank' rel='noopener noreferrer'>{documentationURL}</Link>
         </Grid>
 
         <Grid item>
@@ -120,12 +127,17 @@ const BasketAccess = () => {
             </Typography>
             <List>
               {appsData.map((app, index) => (
-                <ListItem key={index} divider={index !== appsData.length - 1} button onClick={() => alert('Navigate to app page?')}>
+                <ListItemButton
+                // Inline styles applied here
+                  key={index} divider={index !== appsData.length - 1} onClick={() => alert('Navigate to app page?')}
+                >
+                  <Img src={iconURL} style={{ width: '3em', paddingRight: '1em' }} />
                   <ListItemText
-                    primary={app.title}
-                    secondary={app.subtitle}
+                    primary={<Typography variant='h6' style={{ fontSize: '20px' }}>{app.title}</Typography>}
+                    secondary={<Typography variant='body' style={{ fontSize: '14px' }}>{app.subtitle}</Typography>}
                   />
-                  <Typography variant='h7' color='textSecondary' sx={{ marginRight: 2 }}>
+
+                  <Typography variant='h7' color='textSecondary' sx={{ marginRight: '2em' }}>
                     {app.lastAccessed}
                   </Typography>
                   <ListItemSecondaryAction>
@@ -133,7 +145,7 @@ const BasketAccess = () => {
                       <DeleteIcon />
                     </IconButton>
                   </ListItemSecondaryAction>
-                </ListItem>
+                </ListItemButton>
               ))}
             </List>
           </Paper>

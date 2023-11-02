@@ -30,13 +30,13 @@ const PageHeader = ({ title, subheading, icon, buttonTitle, buttonIcon, onClick,
           />
         </div>
         <div>
-          <Typography variant='h1'>
+          <Typography variant='h1' color='textPrimary'>
             {title}
           </Typography>
           {typeof subheading === 'string'
             ? <Typography color='textSecondary'>
               {subheading}
-            </Typography>
+              </Typography>
             : subheading}
         </div>
         <div>

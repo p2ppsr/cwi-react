@@ -1,10 +1,11 @@
 export default theme => ({
   content_wrap: {
     ...theme.templates.page_wrap,
+    backgroundColor: theme.palette.background.default,
     maxWidth: '100%',
     overflow: 'hidden',
     display: 'grid',
-    gridTemplateColumns:  ({ breakpoints }) => (
+    gridTemplateColumns: ({ breakpoints }) => (
       (breakpoints.sm || breakpoints.xs) ? '1fr' : 'auto 1fr'
     ),
     padding: '0px !important',
@@ -22,10 +23,18 @@ export default theme => ({
     overflowY: 'scroll',
     minWidth: '16em',
     height: '100vh',
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.background.leftMenu,
     display: ({ breakpoints }) => (
       (breakpoints.sm || breakpoints.xs) ? 'none' : 'block'
-    )
+    ),
+    '& .MuiListItem-button': {
+      '&:hover': {
+        backgroundColor: theme.palette.background.leftMenuHover
+      },
+      '&.Mui-selected': {
+        backgroundColor: theme.palette.background.leftMenuSelected
+      }
+    }
   },
   page_container: {
     height: '100vh',
