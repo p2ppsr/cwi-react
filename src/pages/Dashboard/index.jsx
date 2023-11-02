@@ -14,6 +14,7 @@ import {
 import {
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Typography
@@ -77,7 +78,7 @@ const Dashboard = () => {
               />
             </ListItemIcon>
             <ListItemText>
-              Dashboard
+              Apps
             </ListItemText>
           </ListItem>
           <ListItem
@@ -160,16 +161,20 @@ const Dashboard = () => {
               Settings
             </ListItemText>
           </ListItem>
-          <a href='https://projectbabbage.com/docs' target='_blank' rel='noreferrer'>
-            <ListItem button>
-              <ListItemIcon>
-                <SchoolIcon />
-              </ListItemIcon>
-              <ListItemText>
-                Learn MetaNet Tech
-              </ListItemText>
-            </ListItem>
-          </a>
+
+          <ListItemButton
+            onClick={() => {
+              window.open('https://projectbabbage.com/docs', '_blank')
+            }}
+          >
+            <ListItemIcon>
+              <SchoolIcon />
+            </ListItemIcon>
+            <ListItemText style={{ color: theme.palette.primary.secondary }}>
+              Learn MetaNet Tech
+            </ListItemText>
+          </ListItemButton>
+
         </List>
         <center className={classes.sig_wrap}>
           <Typography
@@ -212,7 +217,7 @@ const Dashboard = () => {
             component={() => {
               return (
                 <div style={{ padding: '1em' }}>
-                  <Typography align='center'>Select a page</Typography>
+                  <Typography align='center' color='textPrimary'>Select a page</Typography>
                 </div>
               )
             }}

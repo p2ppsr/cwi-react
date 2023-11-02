@@ -76,7 +76,7 @@ const BasketChip = ({
           <br />
           <span style={{
             fontSize: `${size * 0.8}em`,
-            color: theme.palette.text.secondary,
+            color: 'textSecondary',
             maxWidth: '20em',
             display: 'block'
           }}

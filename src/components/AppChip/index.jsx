@@ -64,12 +64,12 @@ const AppChip = ({
             <span
               style={{
                 fontSize: `${size * 0.5}em`,
-                color: theme.palette.text.secondary
+                color: 'textSecondary'
               }}
             >
               {label}
             </span>
-          </div>
+            </div>
           : <span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>
 }
       icon={(

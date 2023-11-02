@@ -120,7 +120,7 @@ const Transaction = ({
       >
         <Grid container direction='column'>
           <Grid item>
-            <Typography variant='h5' style={{ color: theme.palette.text.primary }}>{description}</Typography>
+            <Typography variant='h5' style={{ color: 'textPrimary' }}>{description}</Typography>
           </Grid>
           <Grid item>
             <Grid container justifyContent='space-between'>
@@ -130,7 +130,7 @@ const Transaction = ({
                 </Typography>
               </Grid>
               <Grid item paddingRight='1em'>
-                <Typography variant='body2' style={{ color: theme.palette.text.secondary }}>{getTimeAgo(timestamp)}</Typography>
+                <Typography variant='body2' style={{ color: 'textSecondary' }}>{getTimeAgo(timestamp)}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -141,8 +141,8 @@ const Transaction = ({
           <Typography>TXID</Typography>
           <Grid container direction='row'>
             <Grid item sx={9} style={{ paddingRight: '0.5em' }}>
-              <div><Typography variant='body' style={{ fontFamily: 'monospace', color: theme.palette.text.secondary, userSelect: 'all' }}>{firstLine}</Typography></div>
-              <div><Typography variant='body' style={{ fontFamily: 'monospace', color: theme.palette.text.secondary, userSelect: 'all' }}>{secondLine}</Typography></div>
+              <div><Typography variant='body' style={{ fontFamily: 'monospace', color: 'textSecondary', userSelect: 'all' }}>{firstLine}</Typography></div>
+              <div><Typography variant='body' style={{ fontFamily: 'monospace', color: 'textSecondary', userSelect: 'all' }}>{secondLine}</Typography></div>
             </Grid>
             <Grid item sx={3}>
               <IconButton onClick={handleCopy} disabled={copied}>

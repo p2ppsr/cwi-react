@@ -1,7 +1,8 @@
 export default theme => ({
   content_wrap: {
     ...theme.templates.page_wrap,
-    backgroundColor: theme.palette.background.default,
+    // backgroundColor: theme.palette.background.default,
+    ...theme.palette.background.withImage,
     maxWidth: '100%',
     overflow: 'hidden',
     display: 'grid',
@@ -11,7 +12,7 @@ export default theme => ({
     padding: '0px !important',
     '& > :last-child': {
       maxHeight: 'inherit',
-      overflow: 'scroll',
+      'overflow-y': 'scroll',
       boxSizing: 'border-box',
       padding: theme.spacing(3),
       maxWidth: `calc(1280px + ${theme.spacing(6)})`,
@@ -20,7 +21,6 @@ export default theme => ({
     }
   },
   list_wrap: {
-    overflowY: 'scroll',
     minWidth: '16em',
     height: '100vh',
     backgroundColor: theme.palette.background.leftMenu,
@@ -32,13 +32,24 @@ export default theme => ({
         backgroundColor: theme.palette.background.leftMenuHover
       },
       '&.Mui-selected': {
-        backgroundColor: theme.palette.background.leftMenuSelected
+        backgroundColor: theme.palette.background.leftMenuSelected,
+        color: theme.palette.secondary.main
       }
     }
   },
   page_container: {
     height: '100vh',
-    overflowY: 'scroll'
+    '&::-webkit-scrollbar': {
+      width: '0.45em'
+    },
+    '&::-webkit-scrollbar-track': {
+      background: theme.palette.background.leftMenu,
+      borderRadius: '2em'
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: theme.palette.background.scrollbarThumb,
+      borderRadius: '2em'
+    }
   },
   sig_wrap: {
     bottom: '1em',

@@ -74,7 +74,7 @@ const CertificateChip = ({
           <br />
           <span style={{
             fontSize: `${size * 0.8}em`,
-            color: theme.palette.text.secondary,
+            color: 'textSecondary',
             maxWidth: '20em',
             display: 'block'
           }}
@@ -98,7 +98,7 @@ const CertificateChip = ({
                     ))}
                   </Grid>
                 </Grid>
-              </div>
+                </div>
               : ''}
           </span>
           <span>
@@ -115,7 +115,7 @@ const CertificateChip = ({
                     />
                   </Grid>
                 </Grid>
-              </div>
+                </div>
               : ''}
           </span>
           <span>
@@ -132,7 +132,7 @@ const CertificateChip = ({
                     />
                   </Grid>
                 </Grid>
-              </div>
+                </div>
               : ''}
           </span>
         </div>
@@ -158,17 +158,17 @@ const CertificateChip = ({
             >
               <Avatar
                 sx={{
-                backgroundColor: 'darkgoldenrod',
-                width: 20,
-                height: 20,
-                borderRadius: '3px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '1.2em',
-                marginRight: '0.25em',
-                marginBottom: '0.3em'
-              }}
+                  backgroundColor: 'darkgoldenrod',
+                  width: 20,
+                  height: 20,
+                  borderRadius: '3px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: '1.2em',
+                  marginRight: '0.25em',
+                  marginBottom: '0.3em'
+                }}
               >
                 <ArtTrack style={{ width: 16, height: 16 }} />
               </Avatar>
