@@ -80,15 +80,7 @@ export default ({
         isPackaged
       }}
       >
-        <div style={{
-          // backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,1.0), rgba(255,255,255,0.85)), url(https://cdn.projectbabbage.com/media/pictures/mainBackground.jpg)',
-          // backgroundSize: 'cover',
-          // backgroundPosition: 'center',
-          width: '100vw',
-          height: '100vh'
-          // backgroundColor: 'rgba(255, 255, 255, 0.4)'
-        }}
-        >
+        <div>
           <ErrorBoundary>
             <ExchangeRateContextProvider>
               <Theme>

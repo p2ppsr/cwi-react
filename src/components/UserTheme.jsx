@@ -81,7 +81,7 @@ const UserTheme = ({ children }) => {
   }
 
   // Choose the palette based on the theme mode from settings
-  // const selectedPalette = settings.themeMode === 'dark' ? darkPalette : lightPalette
+  const selectedPalette = settings.themeMode === 'dark' ? darkPalette : lightPalette
 
   return (
     <ThemeProvider

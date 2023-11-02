@@ -145,107 +145,107 @@ const Actions = ({ history }) => {
 
   return (
     <>
-      {(!breakpoints.sm && !breakpoints.xs)
-        ? (
-          <div className={classes.apps_view}>
-            <Container style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-              <TextField
-                variant='outlined'
-                fullWidth
-                value={search}
-                onChange={handleSearchChange}
-                placeholder='Search'
-                onFocus={handleSearchFocus}
-                onBlur={handleSearchBlur}
-                inputRef={inputRef}
-                InputProps={{
-                  startAdornment: (
-                    <SearchIcon onClick={handleIconClick} style={{ marginRight: '8px' }} />
-                  ),
-                  sx: {
-                    borderRadius: '25px',
-                    height: '3em'
-                  }
-                }}
-                sx={{
-                  marginTop: theme.spacing(3),
-                  marginBottom: theme.spacing(2),
-                  width: isExpanded ? 'calc(50%)' : '8em',
-                  transition: 'width 0.3s ease'
-                }}
-              />
-            </Container>
+      {/* {(!breakpoints.sm && !breakpoints.xs)
+        ? ( */}
+      <div className={classes.apps_view}>
+        <Container style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+          <TextField
+            variant='outlined'
+            fullWidth
+            value={search}
+            onChange={handleSearchChange}
+            placeholder='Search'
+            onFocus={handleSearchFocus}
+            onBlur={handleSearchBlur}
+            inputRef={inputRef}
+            InputProps={{
+              startAdornment: (
+                <SearchIcon onClick={handleIconClick} style={{ marginRight: '8px' }} />
+              ),
+              sx: {
+                borderRadius: '25px',
+                height: '3em'
+              }
+            }}
+            sx={{
+              marginTop: theme.spacing(3),
+              marginBottom: theme.spacing(2),
+              width: isExpanded ? 'calc(50%)' : '8em',
+              transition: 'width 0.3s ease'
+            }}
+          />
+        </Container>
 
-            {(search === '') && <>
-              {(!loadingRecentApps && recentApps.length < 4)
-                ? (
-                  <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
-                    Popular Apps
-                    </Typography>
-                    <Grid container spacing={2} alignItems='center' justifyContent='space-around' className={classes.apps_view}>
-                      {POPULAR_APPS.map((app, index) => (
-                        <Grid item key={index} className={classes.gridItem}>
-                          <MetaNetApp
-                            appName={app.appName}
-                            iconImageUrl={app.appIconImageUrl}
-                            domain={app.domain}
-                          />
-                        </Grid>
-                      ))}
+        {(search === '') && <>
+          {(!loadingRecentApps && recentApps.length < 4)
+            ? (
+              <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
+                Popular Apps
+                </Typography>
+                <Grid container spacing={2} alignItems='center' justifyContent='space-around' className={classes.apps_view}>
+                  {POPULAR_APPS.map((app, index) => (
+                    <Grid item key={index} className={classes.gridItem}>
+                      <MetaNetApp
+                        appName={app.appName}
+                        iconImageUrl={app.appIconImageUrl}
+                        domain={app.domain}
+                      />
                     </Grid>
-                  </>
-                  )
-                : (
-                  <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
-                    Your Recent Apps
-                    </Typography>
-                    <Grid container spacing={2} alignItems='center' justifyContent='space-around' className={classes.apps_view}>
-                      {recentApps.map((app, index) => (
-                        <Grid item key={index} className={classes.gridItem}>
-                        <MetaNetApp
-                            appName={app.appName}
-                            iconImageUrl={app.appIconImageUrl}
-                            domain={app.domain}
-                          />
-                      </Grid>
-                      ))}
+                  ))}
+                </Grid>
+              </>
+              )
+            : (
+              <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
+                Your Recent Apps
+                </Typography>
+                <Grid container spacing={2} alignItems='center' justifyContent='space-between' className={classes.apps_view}>
+                  {recentApps.map((app, index) => (
+                    <Grid item key={index} className={classes.gridItem}>
+                      <MetaNetApp
+                        appName={app.appName}
+                        iconImageUrl={app.appIconImageUrl}
+                        domain={app.domain}
+                      />
                     </Grid>
-                  </>
-                  )}
-              <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
-                All Your Apps
-              </Typography>
-            </>}
+                  ))}
+                </Grid>
+              </>
+              )}
+          <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
+            All Your Apps
+          </Typography>
+                            </>}
 
-            {loading ? <LinearProgress style={{ marginTop: '1em' }} /> : <></>}
-            {(filteredApps.length === 0 && !loading) && <>
-              <center>
-                <Typography variant='h2' align='center' color='textSecondary' paddingTop='2em'>No apps found!</Typography>
-                {/* <img
+        {loading ? <LinearProgress style={{ marginTop: '1em' }} /> : <></>}
+        {(filteredApps.length === 0 && !loading) && <>
+          <center>
+            <Typography variant='h2' align='center' color='textSecondary' paddingTop='2em'>No apps found!</Typography>
+            {/* <img
                   src=''
                   paddingTop='1em'
                 /> */}
-                <Monkey />
-              </center>
+            <Monkey />
+          </center>
 
-                                                        </>}
+                                                    </>}
 
-            <Grid container spacing={2}>
-              {filteredApps.map((app, index) => (
-                <Grid item xs={12} sm={6} md={3} lg={3} key={index} height='10em'>
-                  <MetaNetApp
-                    appName={app.appName}
-                    iconImageUrl={app.appIconImageUrl}
-                    domain={app.domain}
-                  />
-                </Grid>
-              ))}
+        <Grid container spacing={2} alignItems='center' justifyContent='space-between' className={classes.apps_view}>
+          {filteredApps.map((app, index) => (
+            <Grid item key={index} className={classes.gridItem}>
+              <MetaNetApp
+                appName={app.appName}
+                iconImageUrl={app.appIconImageUrl}
+                domain={app.domain}
+              />
             </Grid>
-          </div>
-          )
+          ))}
+        </Grid>
+      </div>
+      {/* )
         : (
           <Profile />
-          )}
+          )} */}
     </>
   )
 }
