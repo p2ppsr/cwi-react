@@ -1,9 +1,10 @@
 export default theme => ({
   content_wrap: {
     ...theme.templates.page_wrap,
-    // backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.mainSection,
     ...theme.palette.background.withImage,
-    maxWidth: '100%',
+    maxWidth: '100vw',
+    maxHeight: '100vh',
     overflow: 'hidden',
     display: 'grid',
     gridTemplateColumns: ({ breakpoints }) => (
@@ -16,7 +17,6 @@ export default theme => ({
       boxSizing: 'border-box',
       padding: theme.spacing(3),
       maxWidth: `calc(1280px + ${theme.spacing(6)})`,
-      width: '100%',
       margin: '0px auto'
     }
   },
@@ -24,9 +24,6 @@ export default theme => ({
     minWidth: '16em',
     height: '100vh',
     backgroundColor: theme.palette.background.leftMenu,
-    display: ({ breakpoints }) => (
-      (breakpoints.sm || breakpoints.xs) ? 'none' : 'block'
-    ),
     '& .MuiListItem-button': {
       '&:hover': {
         backgroundColor: theme.palette.background.leftMenuHover
@@ -43,7 +40,7 @@ export default theme => ({
       width: '0.45em'
     },
     '&::-webkit-scrollbar-track': {
-      background: theme.palette.background.leftMenu,
+      background: theme.palette.background.scrollbarTrack,
       borderRadius: '2em'
     },
     '&::-webkit-scrollbar-thumb': {

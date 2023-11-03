@@ -17,6 +17,7 @@ const UserTheme = ({ children }) => {
     },
     background: {
       default: '#FFFFFF',
+      mainSection: '#FFFFFF',
       paper: '#F6F6F6',
       leftMenu: '#EEEEEE',
       leftMenuHover: '#E0E0E0',
@@ -42,11 +43,13 @@ const UserTheme = ({ children }) => {
     },
     background: {
       default: '#1D2125',
+      mainSection: '#1D2125',
       paper: '#1D2125',
       leftMenu: '#161616',
       leftMenuHover: '#2E2E2E',
       leftMenuSelected: '#2E2E2E',
-      scrollbarThumb: '#4E4E4E',
+      scrollbarThumb: '#4E4E4E7A',
+      scrollbarTrack: '1616160F',
       app: '#161616AF',
       withImage: {
         background: `linear-gradient(to bottom, #1D2125, #1D212564), url(${backgroundImage})`,
@@ -61,6 +64,7 @@ const UserTheme = ({ children }) => {
     ...darkPalette,
     background: {
       ...darkPalette.background,
+      mainSection: 'transparent',
       withImage: {
         '&::before': {
           content: '""',
@@ -73,6 +77,7 @@ const UserTheme = ({ children }) => {
           backgroundBlendMode: 'luminosity',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          backgroundColor: 'transparent',
           filter: 'blur(8px)',
           zIndex: -1
         }

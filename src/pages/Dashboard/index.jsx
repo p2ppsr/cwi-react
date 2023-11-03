@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
+import { useTheme } from '@emotion/react'
 import { useBreakpoint } from '../../utils/useBreakpoints.js'
 import { Switch, Route, useHistory } from 'react-router-dom'
 import style from './style'
@@ -9,7 +10,8 @@ import {
   Apps as BrowseIcon,
   Settings as SettingsIcon,
   School as SchoolIcon,
-  LockPerson as AccessIcon
+  LockPerson as AccessIcon,
+  Menu as MenuIcon
 } from '@mui/icons-material'
 import {
   List,
@@ -18,8 +20,8 @@ import {
   ListItemIcon,
   ListItemText,
   Typography
+  , IconButton, Drawer, Toolbar
 } from '@mui/material'
-import Feedback from './Feedback/index.jsx'
 import Trust from './Trust/index.jsx'
 import Actions from './Actions/index.jsx'
 import App from './App/Index.jsx'
@@ -27,15 +29,16 @@ import Settings from './Settings/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Profile from '../../components/Profile.jsx'
 import BasketAccess from './BasketAccess'
-import TopTabs from '../../components/TopTabs/index.jsx'
 import UIContext from '../../UIContext'
 import PageLoading from '../../components/PageLoading'
-import { useTheme } from '@emotion/react'
 
 const useStyles = makeStyles(style, {
   name: 'Dashboard'
 })
 
+/**
+ * Renders the "dashboard" page which contains all the other pages.
+ */
 const Dashboard = () => {
   const breakpoints = useBreakpoint()
   const classes = useStyles({ breakpoints })
@@ -44,7 +47,62 @@ const Dashboard = () => {
   const { appName, appVersion } = useContext(UIContext)
   const [pageLoading, setPageLoading] = useState(true)
 
+  const [menuOpen, setMenuOpen] = useState(true)
+  const menuRef = useRef(null)
+
+  // Helper functions
+  const handleDrawerToggle = () => {
+    setMenuOpen(!menuOpen)
+  }
+  const getMargin = () => {
+    if (menuOpen && !breakpoints.sm) {
+      return '16em'
+    }
+    return '0em'
+  }
+
+  // History.push wrapper
+  const navigation = {
+    push: (path) => {
+      if (breakpoints.sm) {
+        setMenuOpen(false)
+      }
+      history.push(path)
+    }
+  }
+
+  // First useEffect to handle breakpoint changes
   useEffect(() => {
+    if (!breakpoints.sm) {
+      setMenuOpen(true)
+    } else {
+      setMenuOpen(false)
+    }
+    console.log('breakpoint')
+  }, [breakpoints])
+
+  // Second useEffect to handle outside clicks
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false)
+      }
+    }
+
+    if (menuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    // Cleanup
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [menuOpen])
+
+  useEffect(() => {
+    console.log('log')
     const isLoggedIn = redirectIfLoggedOut(history)
     if (isLoggedIn) {
       setPageLoading(false)
@@ -56,139 +114,151 @@ const Dashboard = () => {
   }
 
   return (
-    <div className={classes.content_wrap}>
-      <div className={classes.list_wrap}>
-        <Profile />
-        <List>
-          <ListItem
-            button
-            onClick={() => history.push('/dashboard/apps')}
-            selected={
+    <div className={classes.content_wrap} style={{ marginLeft: getMargin() }}>
+      <div style={{ marginLeft: 0, width: menuOpen ? 'calc(100vw - 16em)' : '100vw', transition: 'margin .3s' }}>
+        {breakpoints.sm &&
+          <div style={{ padding: '0.5em 0 0 0.5em' }} ref={menuRef}>
+            <Toolbar>
+              <IconButton edge='start' onClick={handleDrawerToggle} aria-label='menu'>
+                <MenuIcon style={{ color: 'textPrimary', height: '1.25em', width: '1.25em' }} />
+              </IconButton>
+            </Toolbar>
+          </div>}
+      </div>
+      <Drawer anchor='left' open={menuOpen} variant='persistent' onClose={handleDrawerToggle}>
+        <div className={classes.list_wrap}>
+          <Profile />
+          <List>
+            <ListItem
+              button
+              onClick={() => navigation.push('/dashboard/apps')}
+              selected={
               history.location.pathname === '/dashboard/apps'
             }
-          >
-            <ListItemIcon>
-              <BrowseIcon
-                color={
+            >
+              <ListItemIcon>
+                <BrowseIcon
+                  color={
                   history.location.pathname === '/dashboard/apps'
                     ? 'secondary'
                     : undefined
                 }
-              />
-            </ListItemIcon>
-            <ListItemText>
-              Apps
-            </ListItemText>
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => history.push('/dashboard/trends')}
-            selected={
+                />
+              </ListItemIcon>
+              <ListItemText>
+                Apps
+              </ListItemText>
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => navigation.push('/dashboard/trends')}
+              selected={
               history.location.pathname === '/dashboard/trends'
             }
-          >
-            <ListItemIcon>
-              <TrendsIcon
-                color={
+            >
+              <ListItemIcon>
+                <TrendsIcon
+                  color={
                   history.location.pathname === '/dashboard/trends'
                     ? 'secondary'
                     : undefined
                 }
-              />
-            </ListItemIcon>
-            <ListItemText>
-              Trends
-            </ListItemText>
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => history.push('/dashboard/access')}
-            selected={
+                />
+              </ListItemIcon>
+              <ListItemText>
+                Trends
+              </ListItemText>
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => navigation.push('/dashboard/access')}
+              selected={
               history.location.pathname === '/dashboard/access'
             }
-          >
-            <ListItemIcon>
-              <AccessIcon
-                color={
+            >
+              <ListItemIcon>
+                <AccessIcon
+                  color={
                   history.location.pathname === '/dashboard/access'
                     ? 'secondary'
                     : undefined
                 }
-              />
-            </ListItemIcon>
-            <ListItemText>
-              Access
-            </ListItemText>
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => history.push('/dashboard/trust')}
-            selected={
+                />
+              </ListItemIcon>
+              <ListItemText>
+                Access
+              </ListItemText>
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => navigation.push('/dashboard/trust')}
+              selected={
               history.location.pathname === '/dashboard/trust'
             }
-          >
-            <ListItemIcon>
-              <TrustIcon
-                color={
+            >
+              <ListItemIcon>
+                <TrustIcon
+                  color={
                   history.location.pathname === '/dashboard/trust'
                     ? 'secondary'
                     : undefined
                 }
-              />
-            </ListItemIcon>
-            <ListItemText>
-              Trust
-            </ListItemText>
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => history.push('/dashboard/settings')}
-            selected={
+                />
+              </ListItemIcon>
+              <ListItemText>
+                Trust
+              </ListItemText>
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => navigation.push('/dashboard/settings')}
+              selected={
               history.location.pathname === '/dashboard/settings'
             }
-          >
-            <ListItemIcon>
-              <SettingsIcon
-                color={
+            >
+              <ListItemIcon>
+                <SettingsIcon
+                  color={
                   history.location.pathname === '/dashboard/settings'
                     ? 'secondary'
                     : undefined
                 }
-              />
-            </ListItemIcon>
-            <ListItemText>
-              Settings
-            </ListItemText>
-          </ListItem>
+                />
+              </ListItemIcon>
+              <ListItemText>
+                Settings
+              </ListItemText>
+            </ListItem>
 
-          <ListItemButton
-            onClick={() => {
-              window.open('https://projectbabbage.com/docs', '_blank')
-            }}
-          >
-            <ListItemIcon>
-              <SchoolIcon />
-            </ListItemIcon>
-            <ListItemText style={{ color: theme.palette.primary.secondary }}>
-              Learn MetaNet Tech
-            </ListItemText>
-          </ListItemButton>
+            <ListItemButton
+              onClick={() => {
+                window.open('https://projectbabbage.com/docs', '_blank')
+              }}
+            >
+              <ListItemIcon>
+                <SchoolIcon />
+              </ListItemIcon>
+              <ListItemText style={{ color: theme.palette.primary.secondary }}>
+                Learn MetaNet Tech
+              </ListItemText>
+            </ListItemButton>
 
-        </List>
-        <center className={classes.sig_wrap}>
-          <Typography
-            variant='caption'
-            color='textSecondary'
-            className={classes.signature}
-            align='center'
-          >
-            {appName} v{appVersion}<br /><br />
-            Made with love by<br /><i>the Babbage Team</i>
-          </Typography>
-        </center>
-      </div>
+          </List>
+
+          <center className={classes.sig_wrap}>
+            <Typography
+              variant='caption'
+              color='textSecondary'
+              className={classes.signature}
+              align='center'
+            >
+              {appName} v{appVersion}<br /><br />
+              Made with love by<br /><i>the Babbage Team</i>
+            </Typography>
+          </center>
+        </div>
+      </Drawer>
       <div className={classes.page_container}>
-        <TopTabs />
         <Switch>
           <Route
             path='/dashboard/app/:app'
@@ -216,7 +286,7 @@ const Dashboard = () => {
             component={() => {
               return (
                 <div style={{ padding: '1em' }}>
-                  <Typography align='center' color='textPrimary'>Select a page</Typography>
+                  <Typography align='center' color='textPrimary'>Are you lost?</Typography>
                 </div>
               )
             }}
