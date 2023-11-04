@@ -23,7 +23,7 @@ import {
   , IconButton, Drawer, Toolbar
 } from '@mui/material'
 import Trust from './Trust/index.jsx'
-import Actions from './Actions/index.jsx'
+import Apps from './Apps'
 import App from './App/Index.jsx'
 import Settings from './Settings/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
@@ -37,7 +37,7 @@ const useStyles = makeStyles(style, {
 })
 
 /**
- * Renders the "dashboard" page which contains all the other pages.
+ * Renders the Apps page and menu by default
  */
 const Dashboard = () => {
   const breakpoints = useBreakpoint()
@@ -270,7 +270,7 @@ const Dashboard = () => {
           />
           <Route
             path='/dashboard/apps'
-            component={Actions}
+            component={Apps}
           />
           <Route
             path='/dashboard/trust'

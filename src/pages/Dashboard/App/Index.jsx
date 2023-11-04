@@ -61,6 +61,7 @@ const Apps = ({ history }) => {
           addInputsAndOutputs: true,
           status: 'completed'
         })
+        console.log(appActions)
 
         setAppActions(appActions)
         setLoading(false)

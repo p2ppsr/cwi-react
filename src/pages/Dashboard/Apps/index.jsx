@@ -30,7 +30,8 @@ const getApps = async ({ sortBy = 'label', limit }) => {
 const useStyles = makeStyles(style, {
   name: 'Actions'
 })
-const Actions = ({ history }) => {
+
+const Apps = ({ history }) => {
   const classes = useStyles()
   const theme = useTheme()
   const breakpoints = useBreakpoint()
@@ -238,4 +239,4 @@ const Actions = ({ history }) => {
     </div>
   )
 }
-export default Actions
+export default Apps
