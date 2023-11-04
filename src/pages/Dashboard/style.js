@@ -17,7 +17,7 @@ export default theme => ({
       boxSizing: 'border-box',
       padding: theme.spacing(3),
       maxWidth: `calc(1280px + ${theme.spacing(6)})`,
-      margin: '0px auto'
+      margin: ({ breakpoints }) => ((breakpoints.sm || breakpoints.xs) ? '0' : '0px auto')
     }
   },
   list_wrap: {
