@@ -196,9 +196,14 @@ const Apps = ({ history }) => {
             <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
               Your Recent Apps
             </Typography>
-              <Grid container spacing={2} alignItems='center' justifyContent='space-between' className={classes.apps_view}>
+              <Grid container spacing={2} className={classes.apps_view}>
                 {recentApps.map((app, index) => (
-                  <Grid item key={index} className={classes.gridItem}>
+                  <Grid
+                    item
+                    xs={6} sm={6} md={3} lg={3}
+                    key={index}
+                    className={classes.gridItem}
+                  >
                     <MetaNetApp
                       appName={app.appName}
                       iconImageUrl={app.appIconImageUrl}
@@ -224,10 +229,9 @@ const Apps = ({ history }) => {
                 /> */}
           <Monkey />
         </center>}
-
-      <Grid container spacing={2} alignItems='center' justifyContent='space-between' className={classes.apps_view}>
+      <Grid container spacing={2} alignItems='center' justifyContent='left' className={classes.apps_view}>
         {filteredApps.map((app, index) => (
-          <Grid item key={index} className={classes.gridItem}>
+          <Grid item key={index} xs={6} sm={6} md={3} lg={3} className={classes.gridItem}>
             <MetaNetApp
               appName={app.appName}
               iconImageUrl={app.appIconImageUrl}
