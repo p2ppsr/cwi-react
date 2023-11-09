@@ -1,4 +1,21 @@
 export default theme => ({
+  oracles_url_container: {
+    display: 'inline-flex',
+    alsignItems: 'flex-start',
+    gap: '16px'
+  },
+  oracles_url: {
+    display: 'flex',
+    padding: '16px 0px',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    gap: '4px',
+    '&:hover': {
+      borderRadius: '8px',
+      border: '1px solid #EEE',
+      background: '#EEE'
+    }
+  },
   content_wrap: {
     display: 'grid'
   },

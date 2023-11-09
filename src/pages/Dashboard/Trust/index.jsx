@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { Typography, Button, Slider, TextField, InputAdornment, DialogContent, DialogContentText, DialogActions, LinearProgress, Hidden, Snackbar, IconButton } from '@mui/material'
+import { ListItem, List, Link, Typography, Button, Slider, TextField, InputAdornment, DialogContent, DialogContentText, DialogActions, LinearProgress, Hidden, Snackbar, IconButton } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style.js'
 import { SettingsContext } from '../../../context/SettingsContext'
@@ -109,6 +109,122 @@ const validateTrust = async (trust, { skipNote = false } = {}) => {
     throw e
   }
   return true
+}
+
+const AddPopularSigniaCertifiersModal = ({
+  open, setOpen, classes
+}) => {
+  //const [domain, setDomain] = useState('')
+  const [iconise, setIconise] = useState(false)
+  const [name, setName] = useState('')
+  const [note, setNote] = useState('')
+  const [icon, setIcon] = useState('')
+  //const [publicKey, setPublicKey] = useState('')
+  //const [fieldsValid, setFieldsValid] = useState(false)
+  //const [loading, setLoading] = useState(false)
+  const [domainError, setDomainError] = useState(null)
+  //const [nameError, setNameError] = useState(null)
+  //const [iconError, setIconError] = useState(null)
+  //const [publicKeyError, setPublicKeyError] = useState(null)
+
+  const handleDomainSubmit = async e => {
+    e.preventDefault()
+    try {
+      if (!domain) {
+        return
+      }
+      setLoading(true)
+      const controller = new window.AbortController()
+      const id = setTimeout(() => controller.abort(), 15000)
+      const result = await window.fetch(
+        `https://${domain}/manifest.json`,
+        { signal: controller.signal }
+      )
+      clearTimeout(id)
+      const json = await result.json()
+      if (!json.babbage || !json.babbage.trust || typeof json.babbage.trust !== 'object') {
+        throw new Error('This domain does not support importing a trust relationship (it needs to follow the BRC-68 protocol)')
+      }
+      await validateTrust(json.babbage.trust)
+      setName(json.babbage.trust.name)
+      setNote(json.babbage.trust.note)
+      setIcon(json.babbage.trust.icon)
+      setPublicKey(json.babbage.trust.publicKey)
+      setFieldsValid(true)
+    } catch (e) {
+      setFieldsValid(false)
+      let msg = e.message
+      if (msg === 'The user aborted a request.') {
+        msg = 'The domain did not respond within 15 seconds'
+      }
+      if (msg === 'Failed to fetch') {
+        msg = 'Could not fetch the trust data from that domain (it needs to follow the BRC-68 protocol)'
+      }
+      setDomainError(msg)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <CustomDialog
+      title='Register Your Identity'
+      open={open}
+      onClose={() => setOpen(false)}
+      minWidth='lg'
+    >
+      <DialogContent>
+        <br />
+        {!iconise &&
+          <form onSubmit={handleDomainSubmit}>
+            <DialogContentText>Register your details to connect with the community and be easily discoverable to others!
+            </DialogContentText>
+            <br />
+            <center>
+              <List className={classes.oracles_url_container} >
+                <ListItem className={classes.oracles_url_container} >
+                  <Link 
+                    className={classes.url_link}
+                    href={'https//:government.com'}
+                    target="_blank"
+                  >
+                    <img src='https://www.projectbabbage.com/favicon.ico' className={classes.entity_icon} />
+                    <Typography>IdentiCert (Government ID)</Typography>
+                  </Link>
+                </ListItem>
+                <br />
+                <ListItem className={classes.oracles_url_container} >
+                  <Link
+                    className={classes.url_link}
+                    href={'https//google.com'}
+                    target="_blank"
+                  >
+                    <img src='https://www.projectbabbage.com/favicon.ico' className={classes.entity_icon} />
+                    <Typography>GoogleCert (Google)</Typography>
+                  </Link>
+                </ListItem>
+                <br />
+                <ListItem className={classes.oracles_url_container} >
+                  <Link
+                    className={classes.url_link}
+                    href={'https//discord.com'}
+                    target="_blank"
+                  >
+                    <img src='https://www.projectbabbage.com/favicon.ico' className={classes.entity_icon} />
+                    <Typography>DiscordCert (Discord)</Typography>
+                  </Link>
+                </ListItem>
+              </List>
+            </center>
+        </form>}
+        <br />
+        <br />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setOpen(false)}>Cancel</Button>
+      </DialogActions>
+    </CustomDialog>
+  )
 }
 
 const AddEntityModal = ({
@@ -436,13 +552,22 @@ const Trust = ({ history }) => {
   ])
 
   const [search, setSearch] = useState('')
+  const [addPopularSigniaCertifiersModalOpen, setAddPopularSigniaCertifiersModalOpen] = useState(true)
   const [addEntityModalOpen, setAddEntityModalOpen] = useState(false)
+  
   const [settingsLoading, setSettingsLoading] = useState(false)
   const classes = useStyles()
 
   const totalTrustPoints = trustedEntities.reduce((a, e) => a + e.trust, 0)
 
-  useEffect(() => {
+  useEffect(async () => {
+    if (
+      !window.localStorage.hasVisitedTrust
+      || await window.CWI.ninja.findCertificates().length === 0
+    ) {
+      setAddPopularSigniaCertifiersModalOpen(true)
+      window.localStorage.hasVisitedTrust = true      
+    }
     if (trustThreshold > totalTrustPoints) {
       setTrustThreshold(totalTrustPoints)
     }
@@ -549,7 +674,12 @@ const Trust = ({ history }) => {
       {shownTrustedEntities.length === 0 && (
           <Typography align='center' color='textSecondary' style={{ marginTop: '2em' }}>No Trusted Entities</Typography>
         )}
-      <AddEntityModal
+      <AddPopularSigniaCertifiersModal
+       open={addPopularSigniaCertifiersModalOpen}
+       setOpen={setAddPopularSigniaCertifiersModalOpen}
+       classes={classes}
+     />
+     <AddEntityModal
         open={addEntityModalOpen}
         setOpen={setAddEntityModalOpen}
         trustedEntities={trustedEntities}
