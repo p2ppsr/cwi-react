@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Typography, Button, LinearProgress, Grid, Box, List, ListItemButton, ListItem, ListItemIcon, ListItemText, ListSubheader, Divider } from '@mui/material'
 import BasketChip from './BasketChip'
 import ProtoChip from './ProtoChip'
@@ -12,6 +12,9 @@ import EventNoteIcon from '@mui/icons-material/EventNote'
 import VpnKeyIcon from '@mui/icons-material/VpnKey'
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import BasketAccessList from './BasketAccessList'
+import ProtocolPermissionList from './ProtocolPermissionList'
+import CertificateAccessList from './CertificateAccessList'
 
 /**
 * Calls ninja to obtain the output data to be displayed by the appropriate chip components for the passed in App
@@ -23,84 +26,68 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 * @param {string} obj.originator - Only outputs from this identified App are returned.
 * @returns - The result object contains the requested output data
 */
-const getAccessData = async ({
-  basket = '',
-  type = 'basket',
-  order = 'whenLastUsed',
-  limit = 1,
-  originator
-}) => {
-  // return getTransactionOutputs({ // Mocked
-  return await window.CWI.ninja.getTransactionOutputs({
-    basket,
-    type,
-    order,
-    limit,
-    originator
-  })
-}
 
-const sections = [
-  {
-    title: 'Baskets',
-    items: [
-      {
-        icon: ShoppingCartIcon,
-        primary: 'Postboard Posts',
-        secondary: '23 items',
-        lastAccessed: '2 hours ago',
-        url: '/postboard'
-      },
-      {
-        icon: EventNoteIcon,
-        primary: 'ToDo Items',
-        secondary: '23 items',
-        lastAccessed: '2 hours ago',
-        url: '/todo'
-      }
-    ]
-  },
-  {
-    title: 'Protocols',
-    items: [
-      {
-        icon: VpnKeyIcon,
-        primary: 'Authrite',
-        secondary: 'Mutual Authentication Protocol',
-        lastAccessed: '2 hours ago',
-        url: '/protocols/authrite'
-      }
-    ]
-  },
-  {
-    title: 'Certificates',
-    items: [
-      {
-        icon: VerifiedUserIcon,
-        primary: 'PostMaster Cert',
-        lastAccessed: '2 hours ago',
-        url: '/certificates/postmaster'
-      }
-    ]
-  },
-  {
-    title: 'Counterparties',
-    items: [
-      {
-        icon: AccountCircleIcon,
-        primary: 'Bob Babbage',
-        lastAccessed: '2 hours ago',
-        url: '/counterparties/bob-babbage'
-      },
-      {
-        icon: AccountCircleIcon,
-        primary: 'John Smith',
-        lastAccessed: '2 hours ago',
-        url: '/counterparties/john-smith'
-      }
-    ]
-  }
-]
+// const sections = [
+//   {
+//     title: 'Baskets',
+//     items: [
+//       {
+//         icon: ShoppingCartIcon,
+//         primary: 'Postboard Posts',
+//         secondary: '23 items',
+//         lastAccessed: '2 hours ago',
+//         url: '/postboard'
+//       },
+//       {
+//         icon: EventNoteIcon,
+//         primary: 'ToDo Items',
+//         secondary: '23 items',
+//         lastAccessed: '2 hours ago',
+//         url: '/todo'
+//       }
+//     ]
+//   },
+//   {
+//     title: 'Protocols',
+//     items: [
+//       {
+//         icon: VpnKeyIcon,
+//         primary: 'Authrite',
+//         secondary: 'Mutual Authentication Protocol',
+//         lastAccessed: '2 hours ago',
+//         url: '/protocols/authrite'
+//       }
+//     ]
+//   },
+//   {
+//     title: 'Certificates',
+//     items: [
+//       {
+//         icon: VerifiedUserIcon,
+//         primary: 'PostMaster Cert',
+//         lastAccessed: '2 hours ago',
+//         url: '/certificates/postmaster'
+//       }
+//     ]
+//   },
+//   {
+//     title: 'Counterparties',
+//     items: [
+//       {
+//         icon: AccountCircleIcon,
+//         primary: 'Bob Babbage',
+//         lastAccessed: '2 hours ago',
+//         url: '/counterparties/bob-babbage'
+//       },
+//       {
+//         icon: AccountCircleIcon,
+//         primary: 'John Smith',
+//         lastAccessed: '2 hours ago',
+//         url: '/counterparties/john-smith'
+//       }
+//     ]
+//   }
+// ]
 
 /**
  * Displays recent access for a particular app using chip associated components
@@ -112,48 +99,39 @@ const sections = [
  * @returns component chips to be displayed
  */
 const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
-  // const dpacpAccessData = getAccessData({ basket: 'DPACP', originator: `app_${originator}` })
-  // const counterpartyAccessData = getAccessData({ type: 'counterparty', originator: `app_${originator}` })
-  // const dbapAccessData = getAccessData({ basket: 'DBAP', originator: `app_${originator}` })
-  // const dcapAccessData = getAccessData({ basket: 'DCAP', originator: `app_${originator}` })
-  // const protoChipParams = {
-  //   securityLevel: dpacpAccessData.securityLevel,
-  //   protocolID: dpacpAccessData.protocolID,
-  //   counterparty: dpacpAccessData.counterparty,
-  //   lastAccessed: dpacpAccessData.lastAccessed,
-  //   history
-  // }
-  // const counterpartyChipParams = {
-  //   counterparty: counterpartyAccessData.counterparty,
-  //   history
-  // }
-  // const basketChipParams = {
-  //   counterparty: dbapAccessData.counterparty,
-  //   basketId: dpacpAccessData.basketId,
-  //   clickable: true
-  // }
-  // const certChipParams = {
-  //   certType: dcapAccessData.certType,
-  //   lastAccessed: dcapAccessData.lastAccessed,
-  //   issuer: dcapAccessData.issuer,
-  //   verifier: dcapAccessData.verifier,
-  //   history
-  // }
   const handleClick = () => { window.alert('hi') }
+  const [mostRecentAccess, setMostRecentAccess] = useState([])
+  // const [recentProtocolGrants, setRecentProtocolGrants] = useState([])
+  // const [mostRecentAccess, setMostRecentAccess] = useState([])
 
   useEffect(() => {
     (async () => {
       try {
-        const result = await window.CWI.ninja.getTransactions({
-          basket: 'todo tokens',
-          limit: 2,
-          includeBasket: true,
-          includeTags: true,
-          order: 'descending',
-          addInputsAndOutputs: true,
-          status: 'completed'
+        // const result = await window.CWI.ninja.getTransactionOutputs({
+        //   limit: 1,
+        //   includeBasket: true,
+        //   includeTags: true,
+        //   tags: [`originator ${originator}`],
+        //   order: 'descending'
+        // })
+        const result = await window.CWI.ninja.getTransactionOutputs({
+          basket: 'babbage-token-access',
+          // tags,
+          // originator: 'projectbabbage.com',
+          // spendable: true,
+          includeEnvelope: true
         })
         console.log(result)
+        setMostRecentAccess(result)
+
+        // const result = await window.CWI.ninja.getTransactionOutputs({
+        //   limit: 1,
+        //   includeBasket: true,
+        //   includeTags: true,
+        //   tags: [`originator ${originator}`],
+        //   spendable: true,
+        //   order: 'descending'
+        // })
       } catch (error) {
         console.error(error)
       }
@@ -182,29 +160,30 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
       </Grid> */}
 
       <List sx={{ bgcolor: 'background.paper', borderRadius: '0.25em', padding: '0 1em 0 1em' }}>
-        {sections.map((section, index) => (
-          <div key={index}>
-            <ListSubheader>
-              {section.title}
-            </ListSubheader>
-            <Divider />
-            {section.items.map((item, itemIndex) => (
-              <ListItemButton key={itemIndex} onClick={() => handleClick(item.url)}>
-                <ListItemIcon>
-                  <item.icon />
-                </ListItemIcon>
-                <ListItemText primary={item.primary} secondary={item.secondary} />
-                {item.lastAccessed && (
-                  <Box sx={{ flexGrow: 1, textAlign: 'right' }}>
-                    <ListItemText
-                      secondary={item.lastAccessed}
-                    />
-                  </Box>
-                )}
+        <ListSubheader>
+          Baskets
+        </ListSubheader>
+        {mostRecentAccess.map((item, itemIndex) => {
+          return (
+            <div key={itemIndex}>
+
+              <Divider />
+              <ListItemButton onClick={() => handleClick(() => { alert('hmm') })}>
+                <ListItemText primary={item.basket} secondary='test' />
               </ListItemButton>
-            ))}
-          </div>
-        ))}
+            </div>
+          )
+        })}
+        <ListSubheader>
+          Protocol Grants
+        </ListSubheader>
+        <ProtocolPermissionList />
+        <Divider />
+        <ListSubheader>
+          Certificate Grants
+        </ListSubheader>
+        <Divider />
+        <CertificateAccessList />
       </List>
 
       {loading && <LinearProgress paddingTop='1em' />}

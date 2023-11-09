@@ -174,14 +174,18 @@ const Apps = ({ history }) => {
       </Container>
 
       {(search === '') && <>
-        {(!loadingRecentApps && recentApps.length < 4)
+        {(!loadingRecentApps && recentApps.length < 1)
           ? (
             <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
               Popular Apps
-              </Typography>
-              <Grid container spacing={2} alignItems='center' justifyContent='space-around' className={classes.apps_view}>
+            </Typography>
+              <Grid container spacing={2} className={classes.apps_view}>
                 {POPULAR_APPS.map((app, index) => (
-                  <Grid item key={index} className={classes.gridItem}>
+                  <Grid
+                    item
+                    xs={6} sm={6} md={3} lg={3}
+                    key={index} className={classes.gridItem}
+                  >
                     <MetaNetApp
                       appName={app.appName}
                       iconImageUrl={app.appIconImageUrl}
@@ -195,7 +199,7 @@ const Apps = ({ history }) => {
           : (
             <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
               Your Recent Apps
-              </Typography>
+            </Typography>
               <Grid container spacing={2} className={classes.apps_view}>
                 {recentApps.map((app, index) => (
                   <Grid
@@ -217,7 +221,7 @@ const Apps = ({ history }) => {
         <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
           All Your Apps
         </Typography>
-                          </>}
+      </>}
 
       {loading ? <LinearProgress style={{ marginTop: '1em' }} /> : <></>}
       {(filteredApps.length === 0 && !loading) &&

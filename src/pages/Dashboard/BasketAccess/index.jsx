@@ -53,7 +53,7 @@ const BasketAccess = () => {
       const results = await window.CWI.listBasketAccess({
         targetBasket: id
       })
-      console.log(results)
+      // console.log(results)
     })()
   }, [])
 

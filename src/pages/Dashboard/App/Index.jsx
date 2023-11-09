@@ -9,6 +9,7 @@ import RecentActions from '../../../components/RecentActions'
 import AccessAtAGlance from '../../../components/AccessAtAGlance'
 import PageHeader from '../../../components/PageHeader'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
+import BasketAccessList from '../../../components/BasketAccessList'
 
 const useStyles = makeStyles(style, { name: 'apps' })
 
@@ -53,6 +54,7 @@ const Apps = ({ history }) => {
         // Get a list of the 5 most recent actions from the app
         // Also request input and output amounts and descriptions from Ninja
         const appActions = await window.CWI.ninja.getTransactions({
+          basket: 'todo tokens',
           limit: displayLimit,
           includeBasket: true,
           includeTags: true,
