@@ -178,7 +178,7 @@ const Apps = ({ history }) => {
           ? (
             <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
               Popular Apps
-            </Typography>
+              </Typography>
               <Grid container spacing={2} className={classes.apps_view}>
                 {POPULAR_APPS.map((app, index) => (
                   <Grid
@@ -199,7 +199,7 @@ const Apps = ({ history }) => {
           : (
             <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
               Your Recent Apps
-            </Typography>
+              </Typography>
               <Grid container spacing={2} className={classes.apps_view}>
                 {recentApps.map((app, index) => (
                   <Grid
@@ -221,7 +221,7 @@ const Apps = ({ history }) => {
         <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
           All Your Apps
         </Typography>
-      </>}
+                          </>}
 
       {loading ? <LinearProgress style={{ marginTop: '1em' }} /> : <></>}
       {(filteredApps.length === 0 && !loading) &&

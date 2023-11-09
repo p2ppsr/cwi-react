@@ -47,6 +47,7 @@ const Settings = ({ history }) => {
     const newTheme = event.target.value
 
     try {
+      window.localStorage.setItem('theme', JSON.stringify({ theme: newTheme }))
       setSettingsLoading(true)
       await updateSettings({
         theme: newTheme
@@ -100,7 +101,7 @@ const Settings = ({ history }) => {
         />
         <br />
         <br />
-                         </>}
+      </>}
       <Logout history={history} />
     </>
   )

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { SettingsContext } from '../context/SettingsContext'
 import { CssBaseline } from '@mui/material'
@@ -6,6 +6,7 @@ import { CssBaseline } from '@mui/material'
 const UserTheme = ({ children }) => {
   const { settings } = useContext(SettingsContext)
   const [backgroundImage, setBackgroundImage] = useState('https://images.pexels.com/photos/18857526/pexels-photo-18857526/free-photo-of-larch-heaven.jpeg')
+  const [selectedPalette, setSelectedPalette] = useState(settings.theme)
 
   // Define custom colors for light and dark modes
   const lightPalette = {
@@ -86,14 +87,24 @@ const UserTheme = ({ children }) => {
   }
 
   // Choose the palette based on the theme mode from settings
-  const selectedPalette = settings.themeMode === 'dark' ? darkPalette : lightPalette
+  useEffect(() => {
+    let selectedTheme
+    if (window.sessionStorage.theme) {
+      selectedTheme = JSON.parse(window.sessionStorage.theme).theme
+    } else {
+      selectedTheme = settings.theme
+    }
+    console.log(settings.theme)
+
+    setSelectedPalette(selectedTheme === 'dark' ? customDarkPalette : lightPalette)
+  }, [settings.theme])
 
   return (
     <ThemeProvider
       theme={(theme) => {
         return createTheme({
           ...theme,
-          palette: customDarkPalette
+          palette: selectedPalette
         })
       }}
     >
