@@ -15,6 +15,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import BasketAccessList from './BasketAccessList'
 import ProtocolPermissionList from './ProtocolPermissionList'
 import CertificateAccessList from './CertificateAccessList'
+import formatDistance from 'date-fns/formatDistance'
 
 /**
 * Calls ninja to obtain the output data to be displayed by the appropriate chip components for the passed in App
@@ -99,39 +100,31 @@ import CertificateAccessList from './CertificateAccessList'
  * @returns component chips to be displayed
  */
 const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
-  const handleClick = () => { window.alert('hi') }
-  const [mostRecentAccess, setMostRecentAccess] = useState([])
-  // const [recentProtocolGrants, setRecentProtocolGrants] = useState([])
+  const [recentBasketAccess, setRecentBasketAccess] = useState([])
+  // const [basketAccessGrants, setBasketAccessGrants] = useState([])
   // const [mostRecentAccess, setMostRecentAccess] = useState([])
 
   useEffect(() => {
     (async () => {
       try {
-        // const result = await window.CWI.ninja.getTransactionOutputs({
-        //   limit: 1,
-        //   includeBasket: true,
-        //   includeTags: true,
-        //   tags: [`originator ${originator}`],
-        //   order: 'descending'
-        // })
+        console.log(originator)
         const result = await window.CWI.ninja.getTransactionOutputs({
-          basket: 'babbage-token-access',
-          // tags,
-          // originator: 'projectbabbage.com',
-          // spendable: true,
-          includeEnvelope: true
+          limit: 1,
+          includeBasket: true,
+          includeTags: true,
+          tags: [`babbage_action_originator ${originator}`], // NOT WORKING?!!
+          order: 'descending'
         })
-        console.log(result)
-        setMostRecentAccess(result)
 
-        // const result = await window.CWI.ninja.getTransactionOutputs({
-        //   limit: 1,
-        //   includeBasket: true,
-        //   includeTags: true,
-        //   tags: [`originator ${originator}`],
-        //   spendable: true,
-        //   order: 'descending'
+        const filteredResults = result.filter(x => x.basket)
+        console.log('what the...', filteredResults)
+        setRecentBasketAccess(filteredResults)
+
+        // const basketAccessGrants = await window.CWI.listBasketAccess({
+        //   targetDomain: originator,
+        //   limit: 1
         // })
+        // setBasketAccessGrants(basketAccessGrants)
       } catch (error) {
         console.error(error)
       }
@@ -143,47 +136,33 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
       <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
         Access At A Glance
       </Typography>
-      {/* <Grid container spacing={2} textAlign='center' alignItems='center' justifyContent='center'>
-        <Grid item xs={12}>
-          <ProtoChip {...protoChipParams} />
-        </Grid>
-        <Grid item xs={12}>
-          {counterpartyAccessData.counterparty !== 'self' &&
-            <CounterpartyChip {...counterpartyChipParams} />}
-        </Grid>
-        <Grid item xs={12}>
-          <BasketChip history={history} {...basketChipParams} />
-        </Grid>
-        <Grid item xs={12}>
-          <CertChip {...certChipParams} />
-        </Grid>
-      </Grid> */}
+      <List sx={{ bgcolor: 'background.paper', borderRadius: '0.25em', padding: '1em' }}>
 
-      <List sx={{ bgcolor: 'background.paper', borderRadius: '0.25em', padding: '0 1em 0 1em' }}>
-        <ListSubheader>
-          Baskets
-        </ListSubheader>
-        {mostRecentAccess.map((item, itemIndex) => {
-          return (
-            <div key={itemIndex}>
+        {recentBasketAccess.length !== 0 && (
+          <>
+            <ListSubheader>
+              Baskets Recently Accessed
+            </ListSubheader>
+            {recentBasketAccess.map((item, itemIndex) => {
+              return (
+                <div key={itemIndex}>
+                  <BasketChip history={history} basketId={item.basket} clickable />
+                  <Divider />
+                </div>
+              )
+            })}
+          </>
+        )}
 
-              <Divider />
-              <ListItemButton onClick={() => handleClick(() => { alert('hmm') })}>
-                <ListItemText primary={item.basket} secondary='test' />
-              </ListItemButton>
-            </div>
-          )
-        })}
         <ListSubheader>
           Protocol Grants
         </ListSubheader>
-        <ProtocolPermissionList />
+        <ProtocolPermissionList limit={1} />
         <Divider />
         <ListSubheader>
           Certificate Grants
         </ListSubheader>
-        <Divider />
-        <CertificateAccessList />
+        <CertificateAccessList limit={1} />
       </List>
 
       {loading && <LinearProgress paddingTop='1em' />}
