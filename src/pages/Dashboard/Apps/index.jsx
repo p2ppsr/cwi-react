@@ -175,7 +175,7 @@ const Apps = ({ history }) => {
       </Container>
 
       {(search === '') && <>
-        {(!loadingRecentApps && recentApps.length < 1)
+        {(!loadingRecentApps && recentApps.length < 4)
           ? (
             <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
               Popular Apps

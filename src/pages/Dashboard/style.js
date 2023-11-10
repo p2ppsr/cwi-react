@@ -16,8 +16,13 @@ export default theme => ({
       'overflow-y': 'scroll',
       boxSizing: 'border-box',
       padding: theme.spacing(3),
-      maxWidth: `calc(1280px + ${theme.spacing(6)})`,
-      margin: ({ breakpoints }) => ((breakpoints.sm || breakpoints.xs) ? '0' : '0px auto')
+      // maxWidth: `calc(1280px + ${theme.spacing(6)})`,
+      '@media (min-width: 1500px)': {
+        margin: ({ breakpoints }) => ((breakpoints.sm || breakpoints.xs) ? '0' : 'auto')
+      },
+      '@media (max-width: 1501px) and (min-width: 100px)': {
+        margin: '0px'
+      }
     }
   },
   list_wrap: {

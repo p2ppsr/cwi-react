@@ -1,11 +1,28 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import { Accordion, AccordionSummary, AccordionDetails, Typography, IconButton, Grid, Snackbar, Alert } from '@mui/material'
-import { useTheme } from '@mui/styles'
+import { useTheme, makeStyles } from '@mui/styles'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
 import CheckIcon from '@mui/icons-material/Check'
 import AmountDisplay from './AmountDisplay'
+
+const useStyles = makeStyles({
+  txid: {
+    fontFamily: 'monospace',
+    color: 'textSecondary',
+    userSelect: 'all',
+    fontSize: '1em',
+    '@media (max-width: 1000px) and (min-width: 401px)': {
+      fontSize: '0.75em'
+    },
+    '@media (max-width: 400px) and (min-width: 0px)': {
+      fontSize: '0.7em'
+    }
+  }
+}, {
+  name: 'RecentActions'
+})
 
 /**
  * Transaction Component for displaying information about an Action that happened
@@ -33,6 +50,7 @@ const Transaction = ({
   const [expanded, setExpanded] = useState(isExpanded || false)
   const [copied, setCopied] = useState(false)
   const theme = useTheme()
+  const classes = useStyles()
 
   // Dynamically figure out if the amount is a credit or debit
   // Note: assumes standard amount string starting with + or -
@@ -141,8 +159,8 @@ const Transaction = ({
           <Typography>TXID</Typography>
           <Grid container direction='row'>
             <Grid item sx={9} style={{ paddingRight: '0.5em' }}>
-              <div><Typography variant='body' style={{ fontFamily: 'monospace', color: 'textSecondary', userSelect: 'all' }}>{firstLine}</Typography></div>
-              <div><Typography variant='body' style={{ fontFamily: 'monospace', color: 'textSecondary', userSelect: 'all' }}>{secondLine}</Typography></div>
+              <div><Typography variant='body' className={classes.txid}>{firstLine}</Typography></div>
+              <div><Typography variant='body' className={classes.txid}>{secondLine}</Typography></div>
             </Grid>
             <Grid item sx={3}>
               <IconButton onClick={handleCopy} disabled={copied}>

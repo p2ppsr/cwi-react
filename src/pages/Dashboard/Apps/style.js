@@ -6,12 +6,21 @@ export default theme => ({
     height: '14em',
     minWidth: '10em',
 
+    '@media (max-width: 4000px) and (min-width: 1401px)': {
+      height: '10em',
+      maxWidth: '16em',
+      minWidth: '15em'
+    },
     '@media (max-width: 1400px) and (min-width: 1201px)': {
       height: '10em',
       maxWidth: '16em',
       minWidth: '10em'
     },
-    '@media (max-width: 1200px) and (min-width: 900px)': {
+    '@media (max-width: 1200px) and (min-width: 1001px)': {
+      height: '10em',
+      minWidth: '10em'
+    },
+    '@media (max-width: 1000px) and (min-width: 900px)': {
       height: '10em',
       minWidth: '8em'
     },

@@ -91,10 +91,10 @@ const Apps = ({ history }) => {
         </Grid>
       </Grid> */}
       <Grid container spacing={3}>
-        <Grid item lg={6} xs={12}>
+        <Grid item lg={6} md={6} xs={12}>
           <RecentActions {...recentActionParams} />
         </Grid>
-        <Grid item lg={6} xs={12}>
+        <Grid item lg={6} md={6} xs={12}>
           <AccessAtAGlance {...{ originator: appDomain, loading, setRefresh, history }} />
         </Grid>
       </Grid>
