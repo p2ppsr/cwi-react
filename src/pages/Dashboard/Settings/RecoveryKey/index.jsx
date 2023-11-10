@@ -58,9 +58,9 @@ const RecoveryKeySettings = ({ history }) => {
 
   return (
     <>
-      <Typography variant='h2'>Recovery Key</Typography>
-      <Typography paragraph>
-        You'll need your recovery key if you ever forget your password or lose your phone.
+      <Typography variant='h2' color='textPrimary' paragraph>Recovery Key</Typography>
+      <Typography variant='body' color='textSecondary'>
+        You will need your recovery key if you ever forget your password or lose your phone.
       </Typography>
       <Typography>
         Current recovery key:{' '}

@@ -21,7 +21,7 @@ const About = () => {
 
   return (
     <div className={classes.content_wrap}>
-      <Typography variant='h2' paragraph>
+      <Typography variant='h2' paragraph color='textPrimary'>
         Software Versions
       </Typography>
       <Typography paragraph>
@@ -33,18 +33,19 @@ const About = () => {
       <br />
       <Divider />
       <br />
-      <Typography variant='h2' paragraph>
+      <Typography variant='h2' paragraph color='textPrimary'>
         Legal
       </Typography>
-      <Typography paragraph>
+      <Typography paragraph variant='body' color='textSecondary'>
         Project Babbage enables you to use new kinds of apps while keeping control over your digital identity. This software is copyright &copy; 2020-2022 Peer-to-peer Privacy Systems Research, LLC. By using this software, or any software that relies upon it it to function, you agree to be bound by the latest version of the{' '}
         Babbage Software License Agreement, which can be accessed by navigating to the below website URL:
       </Typography>
-      <Typography paragraph>
+      <Typography paragraph color='textPrimary'>
         <a
           href='https://projectbabbage.com/desktop/license'
           target='_blank'
           rel='noopener noreferrer'
+          style={{ color: 'inherit' }}
         >
           https://projectbabbage.com/desktop/license
         </a>

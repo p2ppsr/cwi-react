@@ -3,11 +3,11 @@ import AmountDisplay from './AmountDisplay'
 import confederacyHost from '../utils/confederacyHost'
 import { makeStyles } from '@mui/styles'
 import { Typography } from '@mui/material'
+import { useTheme } from '@emotion/react'
 
 const useStyles = makeStyles(theme => ({
   content_wrap: {
     marginTop: '3em',
-    backgroundColor: theme.palette.grey[200],
     zIndex: 3,
     display: 'grid',
     placeItems: 'center',
@@ -22,6 +22,7 @@ const Profile = () => {
   const [accountBalance, setAccountBalance] = useState(null)
   const [balanceLoading, setBalanceLoading] = useState(true)
   const classes = useStyles()
+  const theme = useTheme()
 
   const refreshBalance = async () => {
     try {
@@ -47,12 +48,12 @@ const Profile = () => {
   return (
     <>
       <div className={classes.content_wrap}>
-        <Typography variant='h5'>
-          Current Balance
+        <Typography variant='h5' color='textSecondary'>
+          Your Balance
         </Typography>
         <Typography
           onClick={() => refreshBalance()}
-          color='textSecondary'
+          color='textPrimary'
           variant='h2'
           style={{ cursor: 'pointer' }}
         >

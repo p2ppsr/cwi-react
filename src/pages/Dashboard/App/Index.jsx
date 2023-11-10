@@ -1,19 +1,21 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
-import { Typography, Button, IconButton, Grid } from '@mui/material'
-import { ArrowBack } from '@mui/icons-material'
+import { Grid } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import isImageUrl from '../../../utils/isImageUrl'
-import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
 import RecentActions from '../../../components/RecentActions'
 import AccessAtAGlance from '../../../components/AccessAtAGlance'
+import PageHeader from '../../../components/PageHeader'
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
+import BasketAccessList from '../../../components/BasketAccessList'
 
 const useStyles = makeStyles(style, { name: 'apps' })
 
-const Apps = ({ match, history }) => {
-  const appDomain = decodeURIComponent(match.params.app)
+const Apps = ({ history }) => {
+  const location = useLocation()
+  const appDomain = location.state?.domain
   const [appName, setAppName] = useState(appDomain)
   const [appIcon, setAppIcon] = useState('MetaNet AppMetaNet App')
   const [displayLimit, setDisplayLimit] = useState(5)
@@ -40,14 +42,19 @@ const Apps = ({ match, history }) => {
           setAppIcon('https://projectbabbage.com/favicon.ico')
         }
         // Try to parse the app manifest to find the app info
-        const manifest = await parseAppManifest({ domain: appDomain })
-        if (typeof manifest.name === 'string') {
-          setAppName(manifest.name)
+        try {
+          const manifest = await parseAppManifest({ domain: appDomain })
+          if (typeof manifest.name === 'string') {
+            setAppName(manifest.name)
+          }
+        } catch (error) {
+          console.error(error)
         }
 
         // Get a list of the 5 most recent actions from the app
         // Also request input and output amounts and descriptions from Ninja
         const appActions = await window.CWI.ninja.getTransactions({
+          basket: 'todo tokens',
           limit: displayLimit,
           includeBasket: true,
           includeTags: true,
@@ -57,12 +64,14 @@ const Apps = ({ match, history }) => {
           status: 'completed'
         })
         console.log(appActions)
+
         setAppActions(appActions)
         setLoading(false)
         setRefresh(false)
         console.log('reloaded')
       } catch (e) {
         /* do nothing */
+        console.error(e)
         setLoading(false)
         setRefresh(false)
       }
@@ -71,57 +80,21 @@ const Apps = ({ match, history }) => {
 
   return (
     <div className={classes.root}>
-      <div>
-        <div className={classes.top_grid}>
-          <div>
-            <IconButton
-              className={classes.back_button}
-              onClick={() => history.go(-1)}
-              size='large'
-            >
-              <ArrowBack />
-            </IconButton>
-          </div>
-          <div>
-            <Img
-              className={classes.app_icon}
-              src={appIcon}
-              alt=''
-            />
-          </div>
-          <div>
-            <Typography variant='h1'>
-              {appName}
-            </Typography>
-            <Typography color='textSecondary'>
-              {appDomain}
-            </Typography>
-          </div>
-          <div>
-            <Button
-              className={classes.launch_button}
-              variant='contained'
-              color='primary'
-              size='large'
-              onClick={() => {
-                window.open(`https://${appDomain}`, '_blank')
-              }}
-            >
-              Launch
-            </Button>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        history={history} title={appName} subheading={appDomain} icon={appIcon} buttonTitle='Launch' onClick={() => {
+          window.open(`https://${appDomain}`, '_blank')
+        }}
+      />
       {/* <Grid container>
         <Grid item sx={12} style={{ width: '100%', height: '10em', background: 'gray' }}>
           <Typography paddingBottom='2em' align='center'>Total App Cashflow</Typography>
         </Grid>
       </Grid> */}
       <Grid container spacing={3}>
-        <Grid item lg={6} xs={12}>
+        <Grid item lg={6} md={6} xs={12}>
           <RecentActions {...recentActionParams} />
         </Grid>
-        <Grid item lg={6} xs={12}>
+        <Grid item lg={6} md={6} xs={12}>
           <AccessAtAGlance {...{ originator: appDomain, loading, setRefresh, history }} />
         </Grid>
       </Grid>

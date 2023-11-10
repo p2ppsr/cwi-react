@@ -8,7 +8,12 @@ const PROTOCOL_ID = 'cwi settings'
 
 const SettingsProvider = ({ children }) => {
   // Theme settings
-  const [settings, setSettings] = useState({ theme: 'light' })
+  const [settings, setSettings] = useState(() => {
+    if (window.localStorage.theme) {
+      return JSON.parse(window.localStorage.theme)
+    }
+    return { theme: 'light' }
+  })
   const confederacyHostURL = confederacyHost()
 
   const updateSettings = async (newSettings = {}) => {

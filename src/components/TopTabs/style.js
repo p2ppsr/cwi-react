@@ -1,13 +1,13 @@
 export default theme => ({
   fixed_nav: {
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: theme.palette.background.default,
     position: 'fixed',
     left: '0px',
     top: '0px',
     width: '100vw',
     zIndex: 1300,
     boxSizing: 'border-box',
-    boxShadow: '10 10 10 10',
+    // boxShadow: '10 10 10 10',
     boxShadow: 'rgba(0.51, 0.51, 0.51, 35%) 0px 4px 10px'
   },
   title_close_grid: {

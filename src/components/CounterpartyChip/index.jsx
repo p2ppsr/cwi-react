@@ -66,7 +66,7 @@ const CounterpartyChip = ({
               style={{
                 fontSize: '0.9em',
                 color: signiaIdentity.profilePhoto
-                  ? theme.palette.text.secondary.main
+                  ? 'textPrimary'
                   : 'gray'
               }}
             >

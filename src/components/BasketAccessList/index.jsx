@@ -25,7 +25,7 @@ const useStyles = makeStyles(style, {
   name: 'BasketAccessList'
 })
 
-const BasketAccessList = ({ app, basket }) => {
+const BasketAccessList = ({ app, basket, limit }) => {
   const [grants, setGrants] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentAccessGrant, setCurrentAccessGrant] = useState(null)
@@ -35,7 +35,8 @@ const BasketAccessList = ({ app, basket }) => {
   const refreshGrants = useCallback(async () => {
     const result = await window.CWI.listBasketAccess({
       targetDomain: app,
-      targetBasket: basket
+      targetBasket: basket,
+      limit
     })
     setGrants(result)
   }, [app, basket])

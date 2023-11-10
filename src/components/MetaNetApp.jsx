@@ -30,7 +30,12 @@ const MetaNetApp = ({
         onClick(e)
       } else {
         e.stopPropagation()
-        history.push(`/dashboard/app/${encodeURIComponent(domain)}`)
+        history.push({
+          pathname: `/dashboard/app/${encodeURIComponent(domain)}`,
+          state: {
+            domain
+          }
+        })
       }
     }
   }
@@ -44,10 +49,8 @@ const MetaNetApp = ({
         display: 'flex',
         flexDirection: 'column', // Stack items vertically
         height: '100%', // Fill the container height
-        background: '0',
+        background: theme.palette.background.app, // Enables a background color behind each app
         justifyContent: 'center',
-        maxHeight: '10em',
-        width: '8.5em',
         transition: 'background 0.3s ease',
         '&:hover': clickable
           ? {
@@ -58,18 +61,11 @@ const MetaNetApp = ({
       onClick={handleClick}
     >
       <CardContent>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '10px'
-          }}
-        >
+        <div>
           <Img
             src={isImageUrl(iconImageUrl) ? iconImageUrl : DEFAULT_APP_ICON}
             alt={appName}
-            style={{ maxWidth: '5em', maxHeight: '5em' }}
+            style={{ height: '4.25em', paddingTop: '0.4em' }}
             confederacyHost={confederacyHost()}
           />
         </div>

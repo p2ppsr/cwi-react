@@ -1,35 +1,57 @@
 export default theme => ({
   content_wrap: {
     ...theme.templates.page_wrap,
-    maxWidth: '100%',
+    backgroundColor: theme.palette.background.mainSection,
+    ...theme.palette.background.withImage,
+    maxWidth: '100vw',
+    maxHeight: '100vh',
     overflow: 'hidden',
     display: 'grid',
-    gridTemplateColumns:  ({ breakpoints }) => (
+    gridTemplateColumns: ({ breakpoints }) => (
       (breakpoints.sm || breakpoints.xs) ? '1fr' : 'auto 1fr'
     ),
     padding: '0px !important',
     '& > :last-child': {
       maxHeight: 'inherit',
-      overflow: 'scroll',
+      'overflow-y': 'scroll',
       boxSizing: 'border-box',
       padding: theme.spacing(3),
-      maxWidth: `calc(1280px + ${theme.spacing(6)})`,
-      width: '100%',
-      margin: '0px auto'
+      // maxWidth: `calc(1280px + ${theme.spacing(6)})`,
+      '@media (min-width: 1500px)': {
+        margin: ({ breakpoints }) => ((breakpoints.sm || breakpoints.xs) ? '0' : 'auto')
+      },
+      '@media (max-width: 1501px) and (min-width: 100px)': {
+        margin: '0px'
+      }
     }
   },
   list_wrap: {
-    overflowY: 'scroll',
     minWidth: '16em',
     height: '100vh',
-    backgroundColor: theme.palette.grey[200],
-    display: ({ breakpoints }) => (
-      (breakpoints.sm || breakpoints.xs) ? 'none' : 'block'
-    )
+    backgroundColor: theme.palette.background.leftMenu,
+    '& .MuiListItem-button': {
+      '&:hover': {
+        backgroundColor: theme.palette.background.leftMenuHover
+      },
+      '&.Mui-selected': {
+        backgroundColor: theme.palette.background.leftMenuSelected,
+        color: theme.palette.secondary.main
+      }
+    }
   },
   page_container: {
     height: '100vh',
-    overflowY: 'scroll'
+    '&::-webkit-scrollbar': {
+      width: '0.45em'
+    },
+    '&::-webkit-scrollbar-track': {
+      background: theme.palette.background.scrollbarTrack,
+      borderRadius: '2em'
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: theme.palette.background.scrollbarThumb,
+      borderRadius: '2em'
+    }
   },
   sig_wrap: {
     bottom: '1em',

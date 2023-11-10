@@ -30,14 +30,18 @@ export default withRouter(({ history }) => {
         history.push('/dashboard/actions')
         break
       case 1:
-        setTitle('Apps')
-        history.push('/dashboard/browse-apps')
+        setTitle('Trends')
+        history.push('/dashboard/trends')
         break
       case 2:
-        setTitle('Feedback')
-        history.push('/dashboard/feedback')
+        setTitle('Access')
+        history.push('/dashboard/access')
         break
       case 3:
+        setTitle('Trust')
+        history.push('/dashboard/trust')
+        break
+      case 4:
         setTitle('Settings')
         history.push('/dashboard/settings')
         break
@@ -52,7 +56,7 @@ export default withRouter(({ history }) => {
     <>
       <div className={classes.fixed_nav}>
         <div className={classes.title_close_grid}>
-          <Typography variant='h1' className={classes.title_text}>
+          <Typography variant='h1' className={classes.title_text} color='textPrimary'>
             {title}
           </Typography>
           <IconButton className={classes.close_btn} onClick={handleClose}>
@@ -68,8 +72,9 @@ export default withRouter(({ history }) => {
           variant='fullWidth'
         >
           <Tab label='You' />
-          <Tab label='Apps' />
-          <Tab label='Feedback' />
+          <Tab label='Trends' />
+          <Tab label='Access' />
+          <Tab label='Trust' />
           <Tab label='Settings' />
         </Tabs>
       </div>

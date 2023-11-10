@@ -17,7 +17,7 @@ const useStyles = makeStyles(style, {
 })
 
 const BasketChip = ({
-  basketId, lastAccessed, history, clickable = false, size = 1.3, onClick
+  basketId, lastAccessed, originator, history, clickable = false, size = 1.3, onClick
 }) => {
   if (typeof basketId !== 'string') {
     throw new Error('BasketChip was initialized without a valid basketId')
@@ -37,6 +37,7 @@ const BasketChip = ({
   const [description, setDescription] = useState(
     'Basket description not found.'
   )
+  const [documentationURL, setDocumentationURL] = useState('https://projectbabbage.com')
 
   useEffect(() => {
     (async () => {
@@ -49,6 +50,7 @@ const BasketChip = ({
         setBasketName(results.name)
         setIconURL(results.iconURL)
         setDescription(results.description)
+        setDocumentationURL(results.documentationURL)
       } catch (error) {
         console.error(error)
       }
@@ -67,14 +69,14 @@ const BasketChip = ({
         paddingRight: `${10 * size}px`
       }}
       label={
-        <div style={{ marginLeft: '0.125em', textAlign: 'left' }}>
+        <div style={{ marginLeft: '1em', textAlign: 'left' }}>
           <span style={{ fontSize: `${size}em` }}>
             <b>{basketName}</b>
           </span>
           <br />
           <span style={{
             fontSize: `${size * 0.8}em`,
-            color: theme.palette.text.secondary,
+            color: 'textSecondary',
             maxWidth: '20em',
             display: 'block'
           }}
@@ -105,17 +107,18 @@ const BasketChip = ({
             >
               <Avatar
                 sx={{
-                backgroundColor: 'darkgreen',
-                width: 20,
-                height: 20,
-                borderRadius: '3px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '1.2em',
-                marginRight: '0.25em',
-                marginBottom: '0.3em'
-              }}
+                  backgroundColor: '#FFFFFF',
+                  color: 'green',
+                  width: 20,
+                  height: 20,
+                  borderRadius: '10px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: '1.2em',
+                  marginRight: '0.25em',
+                  marginBottom: '0.3em'
+                }}
               >
                 <ShoppingBasket style={{ width: 16, height: 16 }} />
               </Avatar>
@@ -123,14 +126,17 @@ const BasketChip = ({
           }
         >
           <Avatar
+            variant='square'
             sx={{
-              width: '3.2em',
-              height: '3.2em'
+              width: '2.2em',
+              height: '2.2em',
+              borderRadius: '4px',
+              backgroundColor: '#000000AF'
             }}
           >
             <Img
               src={iconURL}
-              style={{ width: '100%', height: '100%' }}
+              style={{ width: '75%', height: '75%' }}
               className={classes.table_picture}
               confederacyHost={confederacyHost()}
             />
@@ -143,9 +149,18 @@ const BasketChip = ({
             onClick(e)
           } else {
             e.stopPropagation()
-            history.push(
-              `/dashboard/basket/${encodeURIComponent(basketId)}`
-            )
+            history.push({
+              pathname: `/dashboard/basket/${encodeURIComponent(basketId)}`,
+              state: {
+                id: basketId,
+                name: 'ToDo Items Basket',
+                registryOperator: basketRegistryOperator,
+                description,
+                iconURL,
+                documentationURL,
+                originator
+              }
+            })
           }
         }
       }}

@@ -12,6 +12,7 @@ const AppChip = ({
   label, showDomain = false, history, clickable = true, size = 1, onClick
 }) => {
   const theme = useTheme()
+  console.log(label)
   if (typeof label !== 'string') {
     throw new Error('Error in AppChip: label prop must be a string!')
   }
@@ -64,13 +65,14 @@ const AppChip = ({
             <span
               style={{
                 fontSize: `${size * 0.5}em`,
-                color: theme.palette.text.secondary
+                color: 'textSecondary'
               }}
             >
               {label}
             </span>
-          </div>
-          : <span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>}
+            </div>
+          : <span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>
+}
       icon={(
         <Badge
           overlap='circular'
@@ -90,24 +92,25 @@ const AppChip = ({
                 )
               }}
             >
-            <Avatar
-              sx={{
-                backgroundColor: 'darkred',
-                width: 8 * size,
-                height: 8 * size,
-                borderRadius: size,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: `${(1.2 * 0.4) * size}em`,
-                marginRight: `${(0.25 * 0.4) * size}em`,
-                marginBottom: `${(0.3 * 0.4) * size}em`
-              }}
-            >
+              <Avatar
+                sx={{
+                  backgroundColor: 'darkred',
+                  width: 8 * size,
+                  height: 8 * size,
+                  borderRadius: size,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: `${(1.2 * 0.4) * size}em`,
+                  marginRight: `${(0.25 * 0.4) * size}em`,
+                  marginBottom: `${(0.3 * 0.4) * size}em`
+                }}
+              >
                 <Memory style={{
                   width: (16 * 0.4) * size,
                   height: (16 * 0.4) * size
-                }} />
+                }}
+                />
               </Avatar>
             </Tooltip>
           }
@@ -122,7 +125,7 @@ const AppChip = ({
               src={appIconImageUrl}
               style={{
                 width: '100%',
-                height: '100%', 
+                height: '100%',
                 maxWidth: '5em',
                 borderRadius: '3em'
               }}

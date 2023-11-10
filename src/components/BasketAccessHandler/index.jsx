@@ -106,7 +106,7 @@ const BasketAccessHandler = () => {
         <br />
         <center>
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
-          <span>app:</span>
+            <span>app:</span>
             {originator && <div>
               <AppChip
                 size={2.5}
@@ -114,11 +114,11 @@ const BasketAccessHandler = () => {
                 label={originator}
                 clickable={false}
               />
-            </div>}
+                           </div>}
           </div>
           <br />
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
-          <span>basket:</span>
+            <span>basket:</span>
             <div>
               <BasketChip
                 basketId={basket}
@@ -127,7 +127,7 @@ const BasketAccessHandler = () => {
           </div>
           <br />
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', gridGap: '2em', margin: '0px 1.5em' }}>
-          <span>reason:</span>
+            <span>reason:</span>
             <DialogContentText>
               {description}
             </DialogContentText>

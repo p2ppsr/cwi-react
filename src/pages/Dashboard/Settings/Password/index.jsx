@@ -39,12 +39,13 @@ const PasswordSettings = ({ history }) => {
 
   return (
     <div>
-      <Typography variant='h2'>Change Password</Typography>
-      <Typography paragraph>
-        You'll be prompted to enter your old password to confirm the change.
+      <Typography variant='h2' color='textPrimary' paragraph>Change Password</Typography>
+      <Typography variant='body' color='textSecondary'>
+        You will be prompted to enter your old password to confirm the change.
       </Typography>
       <form onSubmit={handleSubmitPassword}>
         <TextField
+          style={{ marginTop: '1.5em' }}
           onChange={e => setPassword(e.target.value)}
           placeholder='New password'
           fullWidth

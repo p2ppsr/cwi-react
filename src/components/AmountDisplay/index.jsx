@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { Tooltip, Typography } from '@mui/material'
 import { formatSatoshis, formatSatoshisAsUSD, satoshisOptions } from './amountFormatHelpers'
 import { ExchangeRateContext } from './ExchangeRateContextProvider'
+import { useTheme } from '@emotion/react'
 
 /**
  * AmountDisplay component shows an amount in either satoshis or fiat currency.
@@ -22,6 +23,7 @@ const AmountDisplay = ({ abbreviate, showPlus, description, children }) => {
   const [satoshis, setSatoshis] = useState(NaN)
   const [formattedSatoshis, setFormattedSatoshis] = useState('...')
   const [formattedFiatAmount, setFormattedFiatAmount] = useState('...')
+  const theme = useTheme()
 
   // Retrieve necessary values and functions from the ExchangeRateContext
   const ctx = useContext(ExchangeRateContext)
@@ -34,7 +36,7 @@ const AmountDisplay = ({ abbreviate, showPlus, description, children }) => {
   const fiatFormat = opts.fiatFormats[fiatFormatIndex % opts.fiatFormats.length]
   const satsFormat = opts.satsFormats[satsFormatIndex % opts.satsFormats.length]
 
-  const [color, setColor] = useState('black')
+  const [color, setColor] = useState('textPrimary')
 
   // Update the satoshis and formattedSatoshis whenever the relevant props change
   useEffect(() => {
@@ -48,16 +50,16 @@ const AmountDisplay = ({ abbreviate, showPlus, description, children }) => {
         setColor('green')
       } else if (description === 'Spend from your MetaNet Balance') {
         setFormattedSatoshis(`-${satoshisToDisplay}`)
-        setColor('red')
+        setColor(theme.palette.secondary.main)
       } else if (satoshisToDisplay.toString()[0] === '+') {
         setFormattedSatoshis(satoshisToDisplay)
         setColor('green')
       } else if (satoshisToDisplay.toString()[0] === '-') {
         setFormattedSatoshis(satoshisToDisplay)
-        setColor('red')
+        setColor(theme.palette.secondary.main)
       } else {
         setFormattedSatoshis(satoshisToDisplay)
-        setColor('black')
+        setColor('textPrimary')
       }
     } else {
       setSatoshis(NaN)

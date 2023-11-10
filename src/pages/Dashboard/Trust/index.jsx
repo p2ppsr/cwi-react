@@ -29,7 +29,7 @@ const TrustedEntity = ({ entity, setTrustedEntities, classes, history }) => {
   const handleTrustChange = (e, v) => {
     setTrust(v)
     setTrustedEntities(old => {
-      let newEntities = [...old]
+      const newEntities = [...old]
       newEntities[newEntities.indexOf(entity)].trust = v
       return newEntities
     })
@@ -37,51 +37,53 @@ const TrustedEntity = ({ entity, setTrustedEntities, classes, history }) => {
 
   const handleDelete = () => {
     setTrustedEntities(old => {
-      let newEntities = [...old]
+      const newEntities = [...old]
       newEntities.splice(newEntities.indexOf(entity), 1)
       return newEntities
     })
     setDeleteOpen(false)
   }
 
-  return <>
-    <div
-      className={classes.clickable_entity_icon_name_grid}
-      role='button'
-      onClick={() => history.push(`/dashboard/access/counterparty/${entity.publicKey}`)}
-    >
-      <img src={entity.icon} className={classes.entity_icon} />
+  return (
+    <>
+      <div
+        className={classes.clickable_entity_icon_name_grid}
+        role='button'
+        onClick={() => history.push(`/dashboard/access/counterparty/${entity.publicKey}`)}
+      >
+        <img src={entity.icon} className={classes.entity_icon} />
         <div>
           <Typography><b>{entity.name}</b></Typography>
           <Typography variant='caption' color='textSecondary'>{entity.note}</Typography>
         </div>
       </div>
-    <div className={classes.slider_label_delete_grid}>
-      <Typography><b>{trust}</b> / 10</Typography>
-      <Slider onChange={handleTrustChange} min={0} max={10} step={1} value={trust} />
-      <IconButton onClick={() => setDeleteOpen(true)}><Delete fontSize='small' color='textSecondary' /></IconButton>
+      <div className={classes.slider_label_delete_grid}>
+        <Typography><b>{trust}</b> / 10</Typography>
+        <Slider onChange={handleTrustChange} min={0} max={10} step={1} value={trust} />
+        <IconButton onClick={() => setDeleteOpen(true)}><Delete fontSize='small' color='textSecondary' /></IconButton>
       </div>
-    <Hidden mdUp>
-      <div style={{ minHeight: '0.1em' }} />
-      <div />
-    </Hidden>
-    <CustomDialog title='Delete Trust Relationship' open={deleteOpen} onClose={() => setDeleteOpen(false)}>
-      <DialogContent>
-        <DialogContentText>Do you want to delete this trust relationship?</DialogContentText>
-        <div className={classes.entity_icon_name_grid}>
-              <img src={entity.icon} className={classes.entity_icon} />
-              <div>
-                <Typography><b>{entity.name}</b></Typography>
-                <Typography variant='caption' color='textSecondary'>{entity.note}</Typography>
-              </div>
+      <Hidden mdUp>
+        <div style={{ minHeight: '0.1em' }} />
+        <div />
+      </Hidden>
+      <CustomDialog title='Delete Trust Relationship' open={deleteOpen} onClose={() => setDeleteOpen(false)}>
+        <DialogContent>
+          <DialogContentText>Do you want to delete this trust relationship?</DialogContentText>
+          <div className={classes.entity_icon_name_grid}>
+            <img src={entity.icon} className={classes.entity_icon} />
+            <div>
+              <Typography><b>{entity.name}</b></Typography>
+              <Typography variant='caption' color='textSecondary'>{entity.note}</Typography>
             </div>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => setDeleteOpen(false)}>Cancel</Button>
-        <Button onClick={handleDelete}>Yes, Delete</Button>
-      </DialogActions>
-    </CustomDialog>
-  </>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteOpen(false)}>Cancel</Button>
+          <Button onClick={handleDelete}>Yes, Delete</Button>
+        </DialogActions>
+      </CustomDialog>
+    </>
+  )
 }
 
 const validateTrust = async (trust, { skipNote = false } = {}) => {
@@ -228,42 +230,42 @@ const AddEntityModal = ({
             <DialogContentText>Enter the domain name for the entity you'd like to trust.</DialogContentText>
             <br />
             <center className={classes.add_trusted_main}>
-            <TextField
-              label='Domain Name'
-              placeholder='trustedentity.com'
-              value={domain}
-              onChange={e => {
-                setDomain(e.target.value)
-                setDomainError(null)
-                setFieldsValid(false)
-              }}
-              fullWidth
-              error={!!domainError}
-              helperText={domainError}
-              variant='filled'
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <DomainIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <br />
-            <br />
-            {loading ? <LinearProgress /> :
-              <Button
-                variant='contained'
-                size='large'
-                endIcon={<GetTrust />}
-                type='submit'
-                disabled={loading}
-              >
-                Get Trust Details
-              </Button>
-            }
-          </center>
-        </form>}
+              <TextField
+                label='Domain Name'
+                placeholder='trustedentity.com'
+                value={domain}
+                onChange={e => {
+                  setDomain(e.target.value)
+                  setDomainError(null)
+                  setFieldsValid(false)
+                }}
+                fullWidth
+                error={!!domainError}
+                helperText={domainError}
+                variant='filled'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <DomainIcon />
+                    </InputAdornment>
+                  )
+                }}
+              />
+              <br />
+              <br />
+              {loading
+                ? <LinearProgress />
+                : <Button
+                    variant='contained'
+                    size='large'
+                    endIcon={<GetTrust />}
+                    type='submit'
+                    disabled={loading}
+                  >
+                  Get Trust Details
+                </Button>}
+            </center>
+          </form>}
         {advanced && (
           <form onSubmit={handleDirectSubmit}>
             <DialogContentText>Directly enter the details for the entity you'd like to trust.</DialogContentText>
@@ -283,10 +285,10 @@ const AddEntityModal = ({
               variant='filled'
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment position='start'>
                     <NameIcon />
                   </InputAdornment>
-                ),
+                )
               }}
             />
             <br />
@@ -306,10 +308,10 @@ const AddEntityModal = ({
               variant='filled'
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment position='start'>
                     <PictureIcon />
                   </InputAdornment>
-                ),
+                )
               }}
             />
             <br />
@@ -329,25 +331,26 @@ const AddEntityModal = ({
               variant='filled'
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment position='start'>
                     <PublicKeyIcon />
                   </InputAdornment>
-                ),
+                )
               }}
             />
             <br />
             <br />
-            {loading ? <LinearProgress /> :
-              <center><Button
-                variant='contained'
-                size='large'
-                endIcon={<GetTrust />}
-                type='submit'
-                disabled={loading}
-              >
+            {loading
+              ? <LinearProgress />
+              : <center><Button
+                  variant='contained'
+                  size='large'
+                  endIcon={<GetTrust />}
+                  type='submit'
+                  disabled={loading}
+                        >
                 Validate Details
-              </Button></center>
-            }
+              </Button>
+              </center>}
           </form>
         )}
         <br />
@@ -394,30 +397,30 @@ const AddEntityModal = ({
   )
 }
 
-function arraysOfObjectsAreEqual(arr1, arr2) {
-    if (arr1.length !== arr2.length) {
-        return false;
+function arraysOfObjectsAreEqual (arr1, arr2) {
+  if (arr1.length !== arr2.length) {
+    return false
+  }
+
+  for (let i = 0; i < arr1.length; i++) {
+    const obj1 = arr1[i]
+    const obj2 = arr2[i]
+
+    const keys1 = Object.keys(obj1)
+    const keys2 = Object.keys(obj2)
+
+    if (keys1.length !== keys2.length) {
+      return false
     }
 
-    for (let i = 0; i < arr1.length; i++) {
-        let obj1 = arr1[i];
-        let obj2 = arr2[i];
-
-        let keys1 = Object.keys(obj1);
-        let keys2 = Object.keys(obj2);
-
-        if (keys1.length !== keys2.length) {
-            return false;
-        }
-
-        for (let key of keys1) {
-            if (obj1[key] !== obj2[key]) {
-                return false;
-            }
-        }
+    for (const key of keys1) {
+      if (obj1[key] !== obj2[key]) {
+        return false
+      }
     }
+  }
 
-    return true;
+  return true
 }
 
 const Trust = ({ history }) => {
@@ -425,15 +428,17 @@ const Trust = ({ history }) => {
 
   // These are some hard-coded defaults, if the user doesn't have any in Settings.
   const [trustThreshold, setTrustThreshold] = useState(settings.trustThreshold || 2)
-  const [trustedEntities, setTrustedEntities] = useState(settings.trustedEntities ? JSON.parse(JSON.stringify(settings.trustedEntities)) : [
-    {
-      name: 'SigniCert',
-      note: 'Certifies legal first and last name, and photos',
-      trust: 3,
-      icon: 'https://signia.babbage.systems/images/signiaIcon.png',
-      publicKey: '0295bf1c7842d14babf60daf2c733956c331f9dcb2c79e41f85fd1dda6a3fa4549'
-    }
-  ])
+  const [trustedEntities, setTrustedEntities] = useState(settings.trustedEntities
+    ? JSON.parse(JSON.stringify(settings.trustedEntities))
+    : [
+        {
+          name: 'SigniCert',
+          note: 'Certifies legal first and last name, and photos',
+          trust: 3,
+          icon: 'https://signia.babbage.systems/images/signiaIcon.png',
+          publicKey: '0295bf1c7842d14babf60daf2c733956c331f9dcb2c79e41f85fd1dda6a3fa4549'
+        }
+      ])
 
   const [search, setSearch] = useState('')
   const [addEntityModalOpen, setAddEntityModalOpen] = useState(false)
@@ -476,12 +481,12 @@ const Trust = ({ history }) => {
 
   return (
     <div className={classes.content_wrap}>
-      <Typography variant='h1'>Trust Relationships</Typography>
-      <Typography paragraph>
+      <Typography variant='h1' color='textPrimary' paddingBottom='0.5em'>Trust Relationships</Typography>
+      <Typography variant='body' color='textSecondary'>
         People, businesses, and websites you interact with will need to be certified by these organizations to be trusted automatically by your computer. Otherwise, you'll be warned when you interact with them.
       </Typography>
-      <Typography variant='h2'>Trust Threshold</Typography>
-      <Typography paragraph>
+      <Typography variant='h2' color='textPrimary' padding='0.5em 0em 0.5em 0em'>Trust Threshold</Typography>
+      <Typography paragraph variant='body' color='textSecondary'>
         You’ve given out a total of <b>{totalTrustPoints} trust {totalTrustPoints === 1 ? 'point' : 'points'}</b>. How many trust points does someone need to be considered trustworthy?
       </Typography>
       <center className={classes.trust_threshold}>
@@ -492,14 +497,14 @@ const Trust = ({ history }) => {
       </center>
       <div className={classes.master_grid}>
         <Hidden mdDown>
-        <div>
-          <Button
-            variant='outlined'
-            startIcon={<AddIcon />}
-            onClick={() => setAddEntityModalOpen(true)}
-          >
-            Add Trusted Entity
-          </Button>
+          <div>
+            <Button
+              variant='outlined'
+              startIcon={<AddIcon />}
+              onClick={() => setAddEntityModalOpen(true)}
+            >
+              Add Trusted Entity
+            </Button>
           </div>
         </Hidden>
         <Hidden mdUp>
@@ -514,23 +519,23 @@ const Trust = ({ history }) => {
         <TextField
           value={search}
           onChange={(e => setSearch(e.target.value))}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize='small' />
-                </InputAdornment>
-              ),
-            }}
-            label='Search'
-            placeholder='Trusted certifiers...'
-            fullWidth
-           sx={{
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <SearchIcon fontSize='small' />
+              </InputAdornment>
+            )
+          }}
+          label='Search'
+          placeholder='Trusted certifiers...'
+          fullWidth
+          sx={{
             '& .MuiInputLabel-root': {
-              fontSize: '0.8rem',
+              fontSize: '0.8rem'
             },
             '& .MuiOutlinedInput-root': {
               height: '36px',
-              padding: '0 10px',
+              padding: '0 10px'
             }
           }}
         />
@@ -544,11 +549,11 @@ const Trust = ({ history }) => {
           key={`${entity.name}.${entity.note}.${entity.publicKey}`}
           classes={classes}
           history={history}
-        />)}
+                                                 />)}
       </div>
       {shownTrustedEntities.length === 0 && (
-          <Typography align='center' color='textSecondary' style={{ marginTop: '2em' }}>No Trusted Entities</Typography>
-        )}
+        <Typography align='center' color='textSecondary' style={{ marginTop: '2em' }}>No Trusted Entities</Typography>
+      )}
       <AddEntityModal
         open={addEntityModalOpen}
         setOpen={setAddEntityModalOpen}
@@ -557,24 +562,24 @@ const Trust = ({ history }) => {
         classes={classes}
       />
       <Snackbar
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'center',
-      }}
-      open={settingsNeedsUpdate}
-      message="You have unsaved changes!"
-      action={
-        <>
-          <Button
-            disabled={settingsLoading}
-            color='secondary' size="small"
-            onClick={handleSave}
-          >
-            {settingsLoading ? 'Saving...' : 'Save'}
-          </Button>
-        </>
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center'
+        }}
+        open={settingsNeedsUpdate}
+        message='You have unsaved changes!'
+        action={
+          <>
+            <Button
+              disabled={settingsLoading}
+              color='secondary' size='small'
+              onClick={handleSave}
+            >
+              {settingsLoading ? 'Saving...' : 'Save'}
+            </Button>
+          </>
       }
-    />
+      />
     </div>
   )
 }

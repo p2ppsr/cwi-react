@@ -25,7 +25,7 @@ const useStyles = makeStyles(style, {
   name: 'ProtocolPermissionList'
 })
 
-const ProtocolPermissionList = ({ app, protocol }) => {
+const ProtocolPermissionList = ({ app, protocol, limit }) => {
   const [perms, setPerms] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentPerm, setCurrentPerm] = useState(null)
@@ -35,7 +35,8 @@ const ProtocolPermissionList = ({ app, protocol }) => {
   const refreshPerms = useCallback(async () => {
     const result = await window.CWI.listProtocolPermissions({
       targetDomain: app,
-      targetProtocol: protocol
+      targetProtocol: protocol,
+      limit
     })
     setPerms(result)
   }, [app, protocol])
