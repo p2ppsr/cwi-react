@@ -54,10 +54,9 @@ const BasketAccess = () => {
     (async () => {
       console.log(id)
       const results = await window.CWI.listBasketAccess({
-        // targetDomain: app,
         targetBasket: id
-        // limit
       })
+      // MOCKED DATA - TODO: REMOVE
       // const results = await window.CWI.ninja.getTransactionOutputs({
       //   includeBasket: true,
       //   includeTags: true,
@@ -95,22 +94,6 @@ const BasketAccess = () => {
       setAppsWithAccess(uniqueFilteredResults)
     })()
   }, [])
-
-  // Mock data - TODO REMOVE
-  const appsData = [
-    {
-      title: 'ToDo',
-      subtitle: 'Todo list app',
-      lastAccessed: 'Last accessed 2 hours ago',
-      isEnabled: true
-    },
-    {
-      title: 'Tempo',
-      subtitle: 'Feel the beat',
-      lastAccessed: 'Last accessed 3 days ago',
-      isEnabled: false
-    }
-  ]
 
   return (
     <div>
@@ -180,6 +163,7 @@ const BasketAccess = () => {
 
                 )
               })}
+              {/** TODO: Remove this example code once app data is retrievable from dojo */}
               {/* {appsData.map((app, index) => (
                 <ListItemButton
                 // Inline styles applied here
