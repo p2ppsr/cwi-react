@@ -17,7 +17,7 @@ const useStyles = makeStyles(style, {
 })
 
 const BasketChip = ({
-  basketId, lastAccessed, history, clickable = false, size = 1.3, onClick
+  basketId, lastAccessed, originator, history, clickable = false, size = 1.3, onClick
 }) => {
   if (typeof basketId !== 'string') {
     throw new Error('BasketChip was initialized without a valid basketId')
@@ -69,7 +69,7 @@ const BasketChip = ({
         paddingRight: `${10 * size}px`
       }}
       label={
-        <div style={{ marginLeft: '0.125em', textAlign: 'left' }}>
+        <div style={{ marginLeft: '1em', textAlign: 'left' }}>
           <span style={{ fontSize: `${size}em` }}>
             <b>{basketName}</b>
           </span>
@@ -107,10 +107,11 @@ const BasketChip = ({
             >
               <Avatar
                 sx={{
-                  backgroundColor: 'darkgreen',
+                  backgroundColor: '#FFFFFF',
+                  color: 'green',
                   width: 20,
                   height: 20,
-                  borderRadius: '3px',
+                  borderRadius: '10px',
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -125,14 +126,17 @@ const BasketChip = ({
           }
         >
           <Avatar
+            variant='square'
             sx={{
-              width: '3.2em',
-              height: '3.2em'
+              width: '2.2em',
+              height: '2.2em',
+              borderRadius: '4px',
+              backgroundColor: '#000000AF'
             }}
           >
             <Img
               src={iconURL}
-              style={{ width: '100%', height: '100%' }}
+              style={{ width: '75%', height: '75%' }}
               className={classes.table_picture}
               confederacyHost={confederacyHost()}
             />
@@ -153,7 +157,8 @@ const BasketChip = ({
                 registryOperator: basketRegistryOperator,
                 description,
                 iconURL,
-                documentationURL
+                documentationURL,
+                originator
               }
             })
           }

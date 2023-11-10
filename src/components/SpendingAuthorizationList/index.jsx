@@ -27,7 +27,7 @@ const useStyles = makeStyles(style, {
   name: 'SpendingAuthorizationList'
 })
 
-const SpendingAuthorizationList = ({ app }) => {
+const SpendingAuthorizationList = ({ app, limit }) => {
   const [authorizations, setAuthorizations] = useState([])
   const [currentSpending, setCurrentSpending] = useState(0)
   const [authorizedAmount, setAuthorizedAmount] = useState(0)
@@ -39,7 +39,8 @@ const SpendingAuthorizationList = ({ app }) => {
 
   const refreshAuthorizations = useCallback(async () => {
     const result = await window.CWI.listSpendingAuthorizations({
-      targetDomain: app
+      targetDomain: app,
+      limit
     })
     setAuthorizations(result.authorizations)
     setEarliestAuthorization(result.earliestAuthorizationTime)

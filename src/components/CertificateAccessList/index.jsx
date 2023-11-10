@@ -37,7 +37,7 @@ const useStyles = makeStyles(style, {
   name: 'CertificateAccessList'
 })
 
-const CertificateAccessList = ({ app, type }) => {
+const CertificateAccessList = ({ app, type, limit }) => {
   const [grants, setGrants] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentAccessGrant, setCurrentAccessGrant] = useState(null)
@@ -48,7 +48,8 @@ const CertificateAccessList = ({ app, type }) => {
   const refreshGrants = useCallback(async () => {
     const result = await window.CWI.listCertificateAccess({
       targetDomain: app,
-      targetCertificateType: type
+      targetCertificateType: type,
+      limit
     })
     setGrants(result)
   }, [app, type])

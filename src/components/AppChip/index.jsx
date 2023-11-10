@@ -12,6 +12,7 @@ const AppChip = ({
   label, showDomain = false, history, clickable = true, size = 1, onClick
 }) => {
   const theme = useTheme()
+  console.log(label)
   if (typeof label !== 'string') {
     throw new Error('Error in AppChip: label prop must be a string!')
   }

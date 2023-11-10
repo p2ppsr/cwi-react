@@ -20,9 +20,10 @@ const getApps = async ({ sortBy = 'label', limit }) => {
     limit = results.length
   }
   if (results && Array.isArray(results.labels)) {
-    return results.labels.map(x => {
-      return x.label.replace(/^babbage_app_/, '')
-    }).slice(0, limit)
+    return results.labels
+      .filter(x => x.label !== 'babbage_app_projectbabbage.com') // Filter out the specific label
+      .map(x => x.label.replace(/^babbage_app_/, '')) // Remove the 'babbage_app_' prefix
+      .slice(0, limit) // Limit the number of results
   }
   return []
 }
@@ -178,7 +179,7 @@ const Apps = ({ history }) => {
           ? (
             <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
               Popular Apps
-              </Typography>
+            </Typography>
               <Grid container spacing={2} className={classes.apps_view}>
                 {POPULAR_APPS.map((app, index) => (
                   <Grid
@@ -199,7 +200,7 @@ const Apps = ({ history }) => {
           : (
             <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
               Your Recent Apps
-              </Typography>
+            </Typography>
               <Grid container spacing={2} className={classes.apps_view}>
                 {recentApps.map((app, index) => (
                   <Grid
@@ -221,7 +222,7 @@ const Apps = ({ history }) => {
         <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
           All Your Apps
         </Typography>
-                          </>}
+      </>}
 
       {loading ? <LinearProgress style={{ marginTop: '1em' }} /> : <></>}
       {(filteredApps.length === 0 && !loading) &&

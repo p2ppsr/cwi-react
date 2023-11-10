@@ -9,6 +9,7 @@ import DownloadIcon from '@mui/icons-material/Download'
 import { useHistory, useLocation } from 'react-router-dom'
 import exportBasketContents from './exportBasketContents'
 import PageHeader from '../../../components/PageHeader'
+import AppChip from '../../../components/AppChip'
 import style from './style'
 import { Img } from 'uhrp-react'
 
@@ -25,8 +26,9 @@ const BasketAccess = () => {
     return <div>No data provided!</div>
   }
 
-  const { id, name, registryOperator, description, documentationURL, iconURL } = location.state
+  const { id, name, registryOperator, description, documentationURL, iconURL, originator } = location.state
   const [copied, setCopied] = useState({ id: false, registryOperator: false })
+  const [appsWithAccess, setAppsWithAccess] = useState([])
 
   // Mock Data
   const mockBasketContents = [{ id, name, registryOperator, description, iconURL }]
@@ -50,10 +52,47 @@ const BasketAccess = () => {
 
   useEffect(() => {
     (async () => {
+      console.log(id)
       const results = await window.CWI.listBasketAccess({
+        // targetDomain: app,
         targetBasket: id
+        // limit
       })
-      // console.log(results)
+      // const results = await window.CWI.ninja.getTransactionOutputs({
+      //   includeBasket: true,
+      //   includeTags: true,
+      //   tags: [`basket ${id}`],
+      //   order: 'descending'
+      // })
+      // const results = [
+      //   { tags: ['originator localhost:8080'] },
+      //   { tags: ['originator projectbabbage.com'] },
+      //   { tags: ['originator todo.babbage.systems', 'originator something'] },
+      //   { tags: ['originator Crypton'] },
+      //   { tags: ['originator Crypton'] },
+      //   { tags: ['originator localhost:8088'] },
+      //   { tags: ['basket localhost:8088'] },
+      //   { tags: [] }
+      // ]
+      // Filter the results to find unique originator tags
+      // Supports multiple originator tags per output
+      const seenTags = new Set()
+      const uniqueFilteredResults = results.filter(item => {
+        const isNew = item.tags.some(tag => {
+          if (tag.startsWith('originator') && !seenTags.has(tag)) {
+            seenTags.add(tag)
+            item.originator = tag.substring(tag.indexOf(' ') + 1)
+            return true
+          }
+          return false
+        })
+        if (isNew) {
+          return item
+        }
+        return false
+      })
+
+      setAppsWithAccess(uniqueFilteredResults)
     })()
   }, [])
 
@@ -126,7 +165,22 @@ const BasketAccess = () => {
               Apps with Access
             </Typography>
             <List>
-              {appsData.map((app, index) => (
+              {appsWithAccess.map((app, index) => {
+                return (
+                  <ListItemButton key={index}>
+                    <ListItemText>
+                      <AppChip history={history} label={app.originator} clickable={false} />
+                    </ListItemText>
+                    <ListItemSecondaryAction>
+                      <IconButton edge='end' onClick={() => { revokeAppAccess(app) }}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItemButton>
+
+                )
+              })}
+              {/* {appsData.map((app, index) => (
                 <ListItemButton
                 // Inline styles applied here
                   key={index} divider={index !== appsData.length - 1} onClick={() => alert('Navigate to app page?')}
@@ -146,7 +200,7 @@ const BasketAccess = () => {
                     </IconButton>
                   </ListItemSecondaryAction>
                 </ListItemButton>
-              ))}
+              ))} */}
             </List>
           </Paper>
         </Grid>
