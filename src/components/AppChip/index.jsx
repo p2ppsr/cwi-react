@@ -7,11 +7,18 @@ import { useTheme } from '@mui/styles'
 import confederacyHost from '../../utils/confederacyHost'
 import { Img } from 'uhrp-react'
 import Memory from '@mui/icons-material/Memory'
+import makeStyles from '@mui/styles/makeStyles'
+import style from './style'
+
+const useStyles = makeStyles(style, {
+  name: 'AppChip'
+})
 
 const AppChip = ({
   label, showDomain = false, history, clickable = true, size = 1, onClick
 }) => {
   const theme = useTheme()
+  const classes = useStyles()
   console.log(label)
   if (typeof label !== 'string') {
     throw new Error('Error in AppChip: label prop must be a string!')
@@ -51,26 +58,28 @@ const AppChip = ({
     <Chip
       style={{
         paddingTop: `${16 * size}px`,
-        paddingBottom: `${16 * size}px`
+        paddingBottom: `${16 * size}px`,
+        height: '100%',
+        paddingLeft: '0.5em'
       }}
       label={
         (showDomain && label !== parsedLabel)
           ? <div style={{
             textAlign: 'left'
           }}>
-            <span style={{ fontSize: `${size * 0.6}em`, fontWeight: 'bold' }}>
+            <span>
               {parsedLabel}
             </span>
             <br />
             <span
               style={{
-                fontSize: `${size * 0.5}em`,
+                fontSize: `${size * 0.52}em`,
                 color: 'textSecondary'
               }}
             >
               {label}
             </span>
-            </div>
+          </div>
           : <span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>
 }
       icon={(
@@ -94,41 +103,38 @@ const AppChip = ({
             >
               <Avatar
                 sx={{
-                  backgroundColor: 'darkred',
-                  width: 8 * size,
-                  height: 8 * size,
-                  borderRadius: size,
+                  backgroundColor: '#FFFFFF',
+                  color: 'darkRed',
+                  width: 20,
+                  height: 20,
+                  borderRadius: '10px',
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  fontSize: `${(1.2 * 0.4) * size}em`,
-                  marginRight: `${(0.25 * 0.4) * size}em`,
-                  marginBottom: `${(0.3 * 0.4) * size}em`
+                  fontSize: '1.2em',
+                  marginRight: '0.25em',
+                  marginBottom: '0.3em'
                 }}
               >
-                <Memory style={{
-                  width: (16 * 0.4) * size,
-                  height: (16 * 0.4) * size
-                }}
-                />
+                <Memory style={{ width: 16, height: 16 }} />
               </Avatar>
             </Tooltip>
           }
         >
           <Avatar
+            variant='square'
             sx={{
-              width: `${(3.2 * 0.4) * size}em`,
-              height: `${(3.2 * 0.4) * size}em`
+              width: '2.2em',
+              height: '2.2em',
+              borderRadius: '4px',
+              backgroundColor: '#000000AF',
+              marginRight: '0.5em'
             }}
           >
             <Img
               src={appIconImageUrl}
-              style={{
-                width: '100%',
-                height: '100%',
-                maxWidth: '5em',
-                borderRadius: '3em'
-              }}
+              style={{ width: '75%', height: '75%' }}
+              className={classes.table_picture}
               confederacyHost={confederacyHost()}
             />
           </Avatar>

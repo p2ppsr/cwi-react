@@ -10,6 +10,7 @@ import {
 import CustomDialog from './CustomDialog/index.jsx'
 import LockIcon from '@mui/icons-material/Lock'
 import DownloadIcon from '@mui/icons-material/Download'
+import exportDataToFile from '../utils/exportDataToFile.js'
 
 const RecoveryKeyHandler = () => {
   const [open, setOpen] = useState(false)
@@ -41,16 +42,12 @@ const RecoveryKeyHandler = () => {
   }
 
   const handleDownload = async () => {
-    const blobData = new Blob([`MetaNet Recovery Key:\n\n${recoveryKey}\n\nSaved: ${new Date()}`], { type: 'text/plain' })
-    const urlToBlob = window.URL.createObjectURL(blobData)
-    const a = document.createElement('a')
-    a.style.setProperty('display', 'none')
-    document.body.appendChild(a)
-    a.href = urlToBlob
-    a.download = 'MetaNet Recovery Key.txt'
-    a.click()
-    window.URL.revokeObjectURL(urlToBlob)
-    a.remove()
+    const recoveryKeyData = `MetaNet Recovery Key:\n\n${recoveryKey}\n\nSaved: ${new Date()}`
+    exportDataToFile({
+      data: recoveryKeyData,
+      filename: 'MetaNet Recovery Key.txt',
+      type: 'text/plain'
+    })
   }
 
   return (
@@ -96,16 +93,16 @@ const RecoveryKeyHandler = () => {
           control={<Checkbox
             checked={myResponsibility}
             onChange={() => setMyResponsibility(x => !x)}
-          />}
-          label="My Responsibility"
+                   />}
+          label='My Responsibility'
         />
         <br />
         <FormControlLabel
           control={<Checkbox
             checked={atLeastTwo}
             onChange={() => setAtLeastTwo(x => !x)}
-          />}
-          label="...at least two..."
+                   />}
+          label='...at least two...'
         />
       </DialogContent>
       <DialogActions>

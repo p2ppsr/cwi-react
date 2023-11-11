@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Typography, IconButton, ListItemText, ListItemAvatar, Avatar, List, ListItemSecondaryAction, Grid, Link, Paper, Switch, ListItemButton } from '@mui/material'
-import ArrowBack from '@mui/icons-material/ArrowBack'
-import DeleteIcon from '@mui/icons-material/Delete'
-import makeStyles from '@mui/styles/makeStyles'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import CheckIcon from '@mui/icons-material/Check'
 import DownloadIcon from '@mui/icons-material/Download'
 import { useHistory, useLocation } from 'react-router-dom'
-import exportBasketContents from './exportBasketContents'
+import exportDataToFile from '../../../utils/exportDataToFile'
 import PageHeader from '../../../components/PageHeader'
-import AppChip from '../../../components/AppChip'
-import style from './style'
-import { Img } from 'uhrp-react'
+import BasketAccessList from '../../../components/BasketAccessList'
 
 /**
  * Display the access information for a particular basket
@@ -26,20 +21,9 @@ const BasketAccess = () => {
     return <div>No data provided!</div>
   }
 
-  const { id, name, registryOperator, description, documentationURL, iconURL, originator } = location.state
+  const { id, name, description, documentationURL, iconURL, originator } = location.state
   const [copied, setCopied] = useState({ id: false, registryOperator: false })
-  const [appsWithAccess, setAppsWithAccess] = useState([])
-
-  // Mock Data
-  const mockBasketContents = [{ id, name, registryOperator, description, iconURL }]
-
-  // Revoke an app's basket access grant
-  const revokeAppAccess = async (app) => {
-    // TODO: Figure out the correct params
-    await window.CWI.revokeBasketAccess({
-      ...{}
-    })
-  }
+  const [itemsInBasket, setItemsInBasket] = useState([])
 
   // Copies the data and timeouts the checkmark icon
   const handleCopy = (data, type) => {
@@ -52,46 +36,15 @@ const BasketAccess = () => {
 
   useEffect(() => {
     (async () => {
-      console.log(id)
-      const results = await window.CWI.listBasketAccess({
-        targetBasket: id
+      // Get a list of items in this basket
+      const itemsInBasket = await window.CWI.ninja.getTransactionOutputs({
+        basket: id,
+        includeBasket: true,
+        includeTags: true,
+        spendable: true,
+        order: 'descending'
       })
-      // MOCKED DATA - TODO: REMOVE
-      // const results = await window.CWI.ninja.getTransactionOutputs({
-      //   includeBasket: true,
-      //   includeTags: true,
-      //   tags: [`basket ${id}`],
-      //   order: 'descending'
-      // })
-      // const results = [
-      //   { tags: ['originator localhost:8080'] },
-      //   { tags: ['originator projectbabbage.com'] },
-      //   { tags: ['originator todo.babbage.systems', 'originator something'] },
-      //   { tags: ['originator Crypton'] },
-      //   { tags: ['originator Crypton'] },
-      //   { tags: ['originator localhost:8088'] },
-      //   { tags: ['basket localhost:8088'] },
-      //   { tags: [] }
-      // ]
-      // Filter the results to find unique originator tags
-      // Supports multiple originator tags per output
-      const seenTags = new Set()
-      const uniqueFilteredResults = results.filter(item => {
-        const isNew = item.tags.some(tag => {
-          if (tag.startsWith('originator') && !seenTags.has(tag)) {
-            seenTags.add(tag)
-            item.originator = tag.substring(tag.indexOf(' ') + 1)
-            return true
-          }
-          return false
-        })
-        if (isNew) {
-          return item
-        }
-        return false
-      })
-
-      setAppsWithAccess(uniqueFilteredResults)
+      setItemsInBasket(itemsInBasket)
     })()
   }, [])
 
@@ -105,7 +58,7 @@ const BasketAccess = () => {
             subheading={
               <div>
                 <Typography color='textSecondary'>
-                  Items in Basket: 23
+                  {`Items in Basket: ${itemsInBasket.length}`}
                 </Typography>
                 <Typography variant='caption' color='textSecondary'>
                   Basket ID: {id}
@@ -117,9 +70,10 @@ const BasketAccess = () => {
             }
             icon={iconURL} buttonTitle='Export'
             buttonIcon={<DownloadIcon />}
-            onClick={() => exportBasketContents({
-              basketContents: mockBasketContents,
-              format: 'csv'
+            onClick={() => exportDataToFile({
+              data: itemsInBasket,
+              filename: 'basket_contents.json',
+              type: 'application/json'
             })}
           />
         </Grid>
@@ -129,7 +83,7 @@ const BasketAccess = () => {
             Basket Description
           </Typography>
           <Typography variant='body' gutterBottom>
-            Contains todo list items that you have created
+            {description}
           </Typography>
         </Grid>
 
@@ -147,45 +101,7 @@ const BasketAccess = () => {
             <Typography variant='h4' gutterBottom paddingLeft='0.25em'>
               Apps with Access
             </Typography>
-            <List>
-              {appsWithAccess.map((app, index) => {
-                return (
-                  <ListItemButton key={index}>
-                    <ListItemText>
-                      <AppChip history={history} label={app.originator} clickable={false} />
-                    </ListItemText>
-                    <ListItemSecondaryAction>
-                      <IconButton edge='end' onClick={() => { revokeAppAccess(app) }}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItemButton>
-
-                )
-              })}
-              {/** TODO: Remove this example code once app data is retrievable from dojo */}
-              {/* {appsData.map((app, index) => (
-                <ListItemButton
-                // Inline styles applied here
-                  key={index} divider={index !== appsData.length - 1} onClick={() => alert('Navigate to app page?')}
-                >
-                  <Img src={iconURL} style={{ width: '3em', paddingRight: '1em' }} />
-                  <ListItemText
-                    primary={<Typography variant='h6' style={{ fontSize: '20px' }}>{app.title}</Typography>}
-                    secondary={<Typography variant='body' style={{ fontSize: '14px' }}>{app.subtitle}</Typography>}
-                  />
-
-                  <Typography variant='h7' color='textSecondary' sx={{ marginRight: '2em' }}>
-                    {app.lastAccessed}
-                  </Typography>
-                  <ListItemSecondaryAction>
-                    <IconButton edge='end' onClick={() => { revokeAppAccess(app) }}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItemButton>
-              ))} */}
-            </List>
+            <BasketAccessList basket={id} itemsDisplayed='apps' canRevoke list />
           </Paper>
         </Grid>
 

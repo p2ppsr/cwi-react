@@ -13,7 +13,8 @@ import {
   DialogContentText,
   DialogActions,
   Button,
-  Typography
+  Typography,
+  ListSubheader
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
@@ -25,7 +26,7 @@ const useStyles = makeStyles(style, {
   name: 'ProtocolPermissionList'
 })
 
-const ProtocolPermissionList = ({ app, protocol, limit }) => {
+const ProtocolPermissionList = ({ app, protocol, limit, canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
   const [perms, setPerms] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentPerm, setCurrentPerm] = useState(null)
@@ -77,6 +78,10 @@ const ProtocolPermissionList = ({ app, protocol, limit }) => {
     refreshPerms()
   }, [refreshPerms])
 
+  if (perms.length === 0 && !showEmptyList) {
+    return (<></>)
+  }
+
   return (
     <>
       <Dialog
@@ -108,6 +113,10 @@ const ProtocolPermissionList = ({ app, protocol, limit }) => {
         </DialogActions>
       </Dialog>
       <List>
+        {listHeaderTitle &&
+          <ListSubheader>
+            {listHeaderTitle}
+          </ListSubheader>}
         {perms.map((perm, i) => (
           <ListItem
             key={i}
@@ -123,21 +132,24 @@ const ProtocolPermissionList = ({ app, protocol, limit }) => {
               primary={perm.protocol}
               secondary={`Expires ${formatDistance(new Date(perm.expiry * 1000), new Date(), { addSuffix: true })}`}
             />
-            <ListItemSecondaryAction>
-              <IconButton edge='end' onClick={() => revokePermission(perm)} size='large'>
-                <Delete />
-              </IconButton>
-            </ListItemSecondaryAction>
+            {canRevoke &&
+              <ListItemSecondaryAction>
+                <IconButton edge='end' onClick={() => revokePermission(perm)} size='large'>
+                  <Delete />
+                </IconButton>
+              </ListItemSecondaryAction>}
           </ListItem>
         ))}
       </List>
-      <center>
-        <Typography
-          color='textSecondary'
-        >
-          <i>Total Permissions: {perms.length}</i>
-        </Typography>
-      </center>
+      {displayCount &&
+        <center>
+          <Typography
+            color='textSecondary'
+          >
+            <i>Total Permissions: {perms.length}</i>
+          </Typography>
+        </center>}
+
     </>
   )
 }

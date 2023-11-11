@@ -4,6 +4,7 @@ import { Typography, Button, LinearProgress, List, ListSubheader, Divider } from
 import BasketChip from './BasketChip'
 import ProtocolPermissionList from './ProtocolPermissionList'
 import CertificateAccessList from './CertificateAccessList'
+import BasketAccessList from './BasketAccessList'
 // import formatDistance from 'date-fns/formatDistance'
 
 /**
@@ -26,12 +27,12 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
           limit: 1,
           includeBasket: true,
           includeTags: true,
-          tags: [`babbage_action_originator ${originator}`], // NOT WORKING?!!
+          tags: [`babbage_action_originator ${originator}`],
           order: 'descending'
         })
 
         const filteredResults = result.filter(x => x.basket)
-        console.log('what the...', filteredResults)
+        console.log('recent basket access: ', filteredResults)
         setRecentBasketAccess(filteredResults)
       } catch (error) {
         console.error(error)
@@ -64,12 +65,9 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
         <ListSubheader>
           Protocol Grants
         </ListSubheader>
-        <ProtocolPermissionList limit={1} />
+        <ProtocolPermissionList app={originator} limit={1} canRevoke={false} clickable displayCount={false} />
         <Divider />
-        <ListSubheader>
-          Certificate Grants
-        </ListSubheader>
-        <CertificateAccessList limit={1} />
+        <CertificateAccessList app={originator} limit={1} displayCount={false} listHeaderTitle='Certificate Grants' />
       </List>
 
       {loading && <LinearProgress paddingTop='1em' />}

@@ -13,19 +13,30 @@ import {
   DialogContentText,
   DialogActions,
   Button,
-  Typography
+  Typography,
+  ListSubheader
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import { Folder, Delete } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
 import { toast } from 'react-toastify'
+import AppChip from '../AppChip'
 
 const useStyles = makeStyles(style, {
   name: 'BasketAccessList'
 })
 
-const BasketAccessList = ({ app, basket, limit }) => {
+const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
+  // Validate params
+  if (itemsDisplayed === 'apps' && app) {
+    const e = new Error('Error in BasketAccessList: apps cannot be displayed when providing an app param! Please provide a valid basket instead.')
+    throw e
+  }
+  if (itemsDisplayed === 'baskets' && basket) {
+    const e = new Error('Error in BasketAccessList: baskets cannot be displayed when providing a basket param! Please provide a valid app domain instead.')
+    throw e
+  }
   const [grants, setGrants] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentAccessGrant, setCurrentAccessGrant] = useState(null)
@@ -77,12 +88,16 @@ const BasketAccessList = ({ app, basket, limit }) => {
     refreshGrants()
   }, [refreshGrants])
 
+  if (grants.length === 0 && !showEmptyList) {
+    return (<></>)
+  }
+
   return (
     <>
       <Dialog
         open={dialogOpen}
       >
-        <DialogTitle>
+        <DialogTitle color='textPrimary'>
           Revoke Access?
         </DialogTitle>
         <DialogContent>
@@ -108,36 +123,50 @@ const BasketAccessList = ({ app, basket, limit }) => {
         </DialogActions>
       </Dialog>
       <List>
+        {listHeaderTitle &&
+          <ListSubheader>
+            {listHeaderTitle}
+          </ListSubheader>}
         {grants.map((grant, i) => (
           <ListItem
             key={i}
             className={classes.action_card}
             elevation={4}
+            // style={{ backgroundColor: 'black', height: '5em' }}
           >
-            <ListItemAvatar>
-              <Avatar className={classes.icon}>
-                <Folder />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={grant.basket}
-              secondary={`Expires ${formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}`}
-            />
-            <ListItemSecondaryAction>
-              <IconButton edge='end' onClick={() => revokeAccess(grant)} size='large'>
-                <Delete />
-              </IconButton>
-            </ListItemSecondaryAction>
+
+            {itemsDisplayed === 'apps'
+              ? <AppChip label={grant.domain} showDomain clickable={false} />
+              : <>
+                <ListItemAvatar>
+                  <Avatar className={classes.icon}>
+                    <Folder />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={grant.basket}
+                  secondary={`Expires ${formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}`}
+                />
+              </>}
+
+            {canRevoke &&
+              <ListItemSecondaryAction>
+                <IconButton edge='end' onClick={() => revokeAccess(grant)} size='large'>
+                  <Delete />
+                </IconButton>
+              </ListItemSecondaryAction>}
+
           </ListItem>
         ))}
       </List>
-      <center>
-        <Typography
-          color='textSecondary'
-        >
-          <i>Total Basket Access Grants: {grants.length}</i>
-        </Typography>
-      </center>
+      {(itemsDisplayed === 'baskets' && displayCount) &&
+        <center>
+          <Typography
+            color='textSecondary'
+          >
+            <i>Total Basket Access Grants: {grants.length}</i>
+          </Typography>
+        </center>}
     </>
   )
 }

@@ -23,7 +23,8 @@ import {
   Paper,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  ListSubheader
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
@@ -37,7 +38,7 @@ const useStyles = makeStyles(style, {
   name: 'CertificateAccessList'
 })
 
-const CertificateAccessList = ({ app, type, limit }) => {
+const CertificateAccessList = ({ app, type, limit, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
   const [grants, setGrants] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentAccessGrant, setCurrentAccessGrant] = useState(null)
@@ -95,6 +96,11 @@ const CertificateAccessList = ({ app, type, limit }) => {
     refreshGrants()
   }, [refreshGrants])
 
+  // Only render the list if there is items to display
+  if (grants.length === 0 && !showEmptyList) {
+    return (<></>)
+  }
+
   return (
     <>
       <Dialog
@@ -126,6 +132,10 @@ const CertificateAccessList = ({ app, type, limit }) => {
         </DialogActions>
       </Dialog>
       <List>
+        {listHeaderTitle &&
+          <ListSubheader>
+            {listHeaderTitle}
+          </ListSubheader>}
         {grants.map((grant, i) => (
           <ListItem
             key={i}
@@ -201,13 +211,15 @@ const CertificateAccessList = ({ app, type, limit }) => {
           </ListItem>
         ))}
       </List>
-      <center>
-        <Typography
-          color='textSecondary'
-        >
-          <i>Total Certificate Access Grants: {grants.length}</i>
-        </Typography>
-      </center>
+      {displayCount &&
+        <center>
+          <Typography
+            color='textSecondary'
+          >
+            <i>Total Certificate Access Grants: {grants.length}</i>
+          </Typography>
+        </center>}
+
     </>
   )
 }
