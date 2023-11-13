@@ -35,7 +35,7 @@
     "react-image-crop": "^8.6.9",
     "react-phone-number-input": "^3.3.4",
     "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "^6.18.0",
     "react-toastify": "^9.0.8",
     "react-visibility-sensor": "^5.1.1",
     "uhrp-react": "^0.1.10",
