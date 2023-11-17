@@ -1,4 +1,37 @@
 export default theme => ({
+  oracle_link_container: {
+    display: 'flex',
+    padding: '6px 0px',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: '2px'
+  },
+  oracle_link: {
+    minWidth: '10em',
+    padding: '0.3em',
+    border: '2px solid #eeeeee',
+    borderRadius: '8px',
+    '&:hover': {
+      borderRadius: '8px',
+      border: '1px solid #eeeeee',
+      background: '#eeeeee'
+    }
+  },
+  oracle_icon: {
+    width: '2em',
+    height: '2em',
+    borderRadius: '6px'
+  },
+  oracle_title: {
+    fontSize: '0.7em'
+  },
+  oracle_button: {
+    borderRadius: '10px'
+  },
+  oracle_open_title: {
+    textDecoration: 'bold',
+    marginTop: '2em'
+  },
   content_wrap: {
     display: 'grid'
   },
