@@ -17,6 +17,9 @@ const useStyles = makeStyles(style, {
   name: 'Welcome'
 })
 
+window.localStorage.hasVisitedTrust = undefined
+window.localStorage.showDialog = undefined
+
 const Welcome = ({ history }) => {
   const { settings, updateSettings } = useContext(SettingsContext)
   const [settingsLoading, setSettingsLoading] = useState(false)

@@ -11,14 +11,17 @@ import {
   School as SchoolIcon,
   LockPerson as AccessIcon
 } from '@mui/icons-material'
+import CircleIcon from '@mui/icons-material/Circle'
 import {
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Typography
+  Typography,
+  ListItemButton
 } from '@mui/material'
-import Feedback from './Feedback/index.jsx'
+// import Feedback from './Feedback/index.jsx' not used
+// import AppView from './AppView/index.jsx'
 import Trust from './Trust/index.jsx'
 import Actions from './Actions/index.jsx'
 import App from './App/Index.jsx'
@@ -40,10 +43,23 @@ const Dashboard = () => {
   const classes = useStyles({ breakpoints })
   const history = useHistory()
   const { appName, appVersion } = useContext(UIContext)
+  const [hasCerts, setHasCerts] = useState(false)
+  const [registerIdReminder, setRegisterIdReminder] = useState(false)
   const [pageLoading, setPageLoading] = useState(true)
 
-  useEffect(() => {
-    let isLoggedIn = redirectIfLoggedOut(history)
+  useEffect(async () => {
+    if (localStorage.getItem('hasVisitedTrust') === 'true') {
+      const certs = await window.CWI.ninja.findCertificates()
+      if (typeof certs === 'undefined') {
+        console.error('ERROR:window.CWI.ninja.findCertificates() are undefined')
+      } else {
+        setHasCerts(certs.certificates.length > 0)
+      }
+    } else {
+      localStorage.setItem('showDialog', 'true')
+    }
+    setRegisterIdReminder(localStorage.getItem('hasVisitedTrust') === 'true' && !hasCerts)
+    const isLoggedIn = redirectIfLoggedOut(history)
     if (isLoggedIn) {
       setPageLoading(false)
     }
@@ -120,13 +136,19 @@ const Dashboard = () => {
                   Access
                 </ListItemText>
               </ListItem>
-              <ListItem
-                button
-                onClick={() => history.push('/dashboard/trust')}
-                selected={
-              history.location.pathname === '/dashboard/trust'
-            }
-              >
+              <ListItemButton
+                onClick={() => {
+                  history.push({
+                    pathname: '/dashboard/trust',
+                    state: {
+                      registerIdReminder,
+                      setRegisterIdReminder
+                    }
+                  })
+                }}
+                selected ={history.location.pathname === '/dashboard/trust'
+                }
+                >
                 <ListItemIcon>
                   <TrustIcon
                     color={
@@ -135,11 +157,16 @@ const Dashboard = () => {
                     : undefined
                 }
                   />
+                  { registerIdReminder === true &&
+                    <CircleIcon
+                        style={{ marginLeft: '0.7em', width: '12px', color: 'red' }}
+                    />
+                  }
                 </ListItemIcon>
                 <ListItemText>
                   Trust
                 </ListItemText>
-              </ListItem>
+              </ListItemButton>
               <ListItem
                 button
                 onClick={() => history.push('/dashboard/settings')}
@@ -206,9 +233,11 @@ const Dashboard = () => {
                 className={classes.full_width}
                 default
                 component={() => {
-                  return <div style={{ padding: '1em' }}>
-                    <Typography align='center'>Select a page</Typography>
+                  return (
+                    <div style={{ padding: '1em' }}>
+                      <Typography align='center'>Select a page</Typography>
                     </div>
+                  )
                 }}
               />
             </Switch>
