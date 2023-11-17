@@ -426,7 +426,7 @@ const AddPopularSigniaCertifiersModal = ({
                     target='_blank' rel='noopener noreferrer'
                   >
                     <center>
-                      <img src='https://www.projectbabbage.com/favicon.ico' className={classes.oracle_icon} />
+                      <img src='https://identicert.babbage.systems/images/identiCertIcon.png' className={classes.oracle_icon} />
                       <Typography className={classes.oracle_title}>IdentiCert (Government ID)</Typography>
                     </center>
                   </Link>
@@ -437,7 +437,7 @@ const AddPopularSigniaCertifiersModal = ({
                 <div className={classes.oracle_link}>
                   <Link
                     className={classes.url_link}
-                    href='https//google.com'
+                    href='https://googcert.babbage.systems'
                     target='_blank' rel='noopener noreferrer'
                   >
                     <center>
@@ -452,7 +452,7 @@ const AddPopularSigniaCertifiersModal = ({
                 <div className={classes.oracle_link}>
                   <Link
                     className={classes.url_link}
-                    href='https//discord.com'
+                    href='https://discordcert.babbage.systems'
                     target='_blank' rel='noopener noreferrer'
                   >
                     <center>

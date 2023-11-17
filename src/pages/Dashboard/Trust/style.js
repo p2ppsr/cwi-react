@@ -3,23 +3,22 @@ export default theme => ({
     display: 'flex',
     padding: '6px 0px',
     flexDirection: 'row',
-    '@media (max-width: 550px) and (min-width: 0px)': {
+    '@media (max-width: 680px) and (min-width: 0px)': {
       flexDirection: 'column',
       alignItems: 'center'
-      /** TODO: align center on mobile */
     },
     justifyContent: 'center',
     gap: '2px'
   },
   oracle_link: {
+    margin: '0 auto',
     minWidth: '10em',
-    padding: '0.3em',
-    border: '2px solid #eeeeee',
+    padding: '0.8em',
+    border: `1px solid ${theme.palette.primary.secondary}`,
     borderRadius: '8px',
     '&:hover': {
-      borderRadius: '8px',
-      border: '1px solid #eeeeee',
-      background: '#eeeeee'
+      border: '1px solid #eeeeee00',
+      background: theme.palette.background.default
     }
   },
   oracle_icon: {
