@@ -199,12 +199,12 @@ const Dashboard = () => {
                 />
               </ListItemIcon>
               <ListItemText>
-                  Access
+                Access
                 </ListItemText>
             </ListItem>
             <ListItemButton
-                onClick={() => {
-                  history.push({
+              onClick={() => {
+                  navigation.push({
                     pathname: '/dashboard/trust',
                     state: {
                       registerIdReminder,
@@ -212,9 +212,9 @@ const Dashboard = () => {
                     }
                   })
                 }}
-                selected={history.location.pathname === '/dashboard/trust'}
-              >
-                <ListItemIcon>
+              selected={history.location.pathname === '/dashboard/trust'}
+            >
+              <ListItemIcon>
                   <TrustIcon
                     color={
                   history.location.pathname === '/dashboard/trust'
@@ -227,30 +227,30 @@ const Dashboard = () => {
                       style={{ marginLeft: '0.7em', width: '12px', color: 'red' }}
                     />}
                 </ListItemIcon>
-                <ListItemText>
+              <ListItemText>
                   Trust
                 </ListItemText>
-              </ListItemButton>
+            </ListItemButton>
             <ListItem
-                button
-                onClick={() => history.push('/dashboard/settings')}
-                selected={
+              button
+              onClick={() => navigation.push('/dashboard/settings')}
+              selected={
               history.location.pathname === '/dashboard/settings'
             }
-              >
-                <ListItemIcon>
-                <SettingsIcon
+            >
+              <ListItemIcon>
+                  <SettingsIcon
                   color={
                   history.location.pathname === '/dashboard/settings'
                     ? 'secondary'
                     : undefined
                 }
                 />
-              </ListItemIcon>
-                <ListItemText>
-                Settings
+                </ListItemIcon>
+              <ListItemText>
+                  Settings
               </ListItemText>
-              </ListItem>
+            </ListItem>
 
             <ListItemButton
               onClick={() => {

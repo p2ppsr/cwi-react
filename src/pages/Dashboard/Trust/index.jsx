@@ -35,7 +35,6 @@ const TrustedEntity = ({ entity, setTrustedEntities, classes, history }) => {
     setTrust(v)
     setTrustedEntities(old => {
       const newEntities = [...old]
-      const newEntities = [...old]
       newEntities[newEntities.indexOf(entity)].trust = v
       return newEntities
     })
@@ -58,14 +57,6 @@ const TrustedEntity = ({ entity, setTrustedEntities, classes, history }) => {
         onClick={() => history.push(`/dashboard/access/counterparty/${entity.publicKey}`)}
       >
         <img src={entity.icon} className={classes.entity_icon} />
-  return (
-    <>
-      <div
-        className={classes.clickable_entity_icon_name_grid}
-        role='button'
-        onClick={() => history.push(`/dashboard/access/counterparty/${entity.publicKey}`)}
-      >
-        <img src={entity.icon} className={classes.entity_icon} />
         <div>
           <Typography><b>{entity.name}</b></Typography>
           <Typography variant='caption' color='textSecondary'>{entity.note}</Typography>
@@ -76,28 +67,6 @@ const TrustedEntity = ({ entity, setTrustedEntities, classes, history }) => {
         <Slider onChange={handleTrustChange} min={0} max={10} step={1} value={trust} />
         <IconButton onClick={() => setDeleteOpen(true)}><Delete fontSize='small' color='textSecondary' /></IconButton>
       </div>
-      <Hidden mdUp>
-        <div style={{ minHeight: '0.1em' }} />
-        <div />
-      </Hidden>
-      <CustomDialog title='Delete Trust Relationship' open={deleteOpen} onClose={() => setDeleteOpen(false)}>
-        <DialogContent>
-          <DialogContentText>Do you want to delete this trust relationship?</DialogContentText>
-          <div className={classes.entity_icon_name_grid}>
-            <img src={entity.icon} className={classes.entity_icon} />
-            <div>
-              <Typography><b>{entity.name}</b></Typography>
-              <Typography variant='caption' color='textSecondary'>{entity.note}</Typography>
-            </div>
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteOpen(false)}>Cancel</Button>
-          <Button onClick={handleDelete}>Yes, Delete</Button>
-        </DialogActions>
-      </CustomDialog>
-    </>
-  )
       <Hidden mdUp>
         <div style={{ minHeight: '0.1em' }} />
         <div />
@@ -147,103 +116,6 @@ const validateTrust = async (trust, { skipNote = false } = {}) => {
     throw e
   }
   return true
-}
-
-const AddPopularSigniaCertifiersModal = ({
-  open, setOpen, setRegisterIdReminder, hasCerts, checkboxChecked, setCheckboxChecked, classes, history
-}) => {
-  return (
-    <CustomDialog
-      open={open}
-      title='Register Your Identity'
-      onClose={() => setOpen(false)}
-      minWidth='lg'
-    >
-      <DialogContent>
-        <br />
-        <form>
-          <DialogContentText>Register your details to connect with the community and be easily discoverable to others!
-          </DialogContentText>
-          <center>
-            <List className={classes.oracle_link_container}>
-              <ListItem>
-                <div className={classes.oracle_link}>
-                  <Link
-                    href='https//:government.com'
-                    target='_blank' rel='noreferrer'
-                  >
-                    <center>
-                      <img src='https://www.projectbabbage.com/favicon.ico' className={classes.oracle_icon} />
-                      <Typography className={classes.oracle_title}>IdentiCert (Government ID)</Typography>
-                    </center>
-                  </Link>
-                </div>
-              </ListItem>
-              <br />
-              <ListItem className={classes.oracles_url_container}>
-                <div className={classes.oracle_link}>
-                  <Link
-                    className={classes.url_link}
-                    href='https//google.com'
-                    target='_blank' rel='noreferrer'
-                  >
-                    <center>
-                      <img src='https://www.projectbabbage.com/favicon.ico' className={classes.oracle_icon} />
-                      <Typography className={classes.oracle_title}>GoogleCert (Google)</Typography>
-                    </center>
-                  </Link>
-                </div>
-              </ListItem>
-              <br />
-              <ListItem className={classes.oracles_url_container}>
-                <div className={classes.oracle_link}>
-                  <Link
-                    className={classes.url_link}
-                    href='https//discord.com'
-                    target='_blank' rel='noreferrer'
-                  >
-                    <center>
-                      <img src='https://www.projectbabbage.com/favicon.ico' className={classes.oracle_icon} />
-                      <Typography className={classes.oracle_title}>DiscordCert (Discord)</Typography>
-                    </center>
-                  </Link>
-                </div>
-              </ListItem>
-            </List>
-          </center>
-        </form>
-        <br />
-        <br />
-      </DialogContent>
-      <DialogActions style={{ paddingLeft: '1.5em', justifyContent: 'space-between', paddingRight: '1em' }}>
-        <FormControlLabel
-          label="Don't remind me again"
-          control={
-            <Checkbox
-                checked={ checkboxChecked }
-                onChange={(e) => {
-                  setCheckboxChecked(e.target.checked)
-                }
-              }
-            >
-            </Checkbox>
-          }
-          >
-          </FormControlLabel>
-          <Button
-            onClick={() => {
-              setOpen(false)
-              localStorage.setItem('showDialog', !checkboxChecked)
-              if (!hasCerts) {
-                setRegisterIdReminder(!hasCerts)
-              }
-              localStorage.setItem('hasVisitedTrust', 'true')
-            }}
-          >Later
-          </Button>
-        </DialogActions>
-    </CustomDialog>
-  )
 }
 
 const AddEntityModal = ({
@@ -360,7 +232,7 @@ const AddEntityModal = ({
         <br />
         {!advanced &&
           <form onSubmit={handleDomainSubmit}>
-            <DialogContentText>Enter the domain name for the entity you&apos;d like to trust.</DialogContentText>
+            <DialogContentText>Enter the domain name for the entity you'd like to trust.</DialogContentText>
             <br />
             <center className={classes.add_trusted_main}>
               <TextField
@@ -396,48 +268,12 @@ const AddEntityModal = ({
                     disabled={loading}
                   >
                   Get Trust Details
-                </Button>}
-            </center>
-          </form>}
-              <TextField
-                label='Domain Name'
-                placeholder='trustedentity.com'
-                value={domain}
-                onChange={e => {
-                  setDomain(e.target.value)
-                  setDomainError(null)
-                  setFieldsValid(false)
-                }}
-                fullWidth
-                error={!!domainError}
-                helperText={domainError}
-                variant='filled'
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position='start'>
-                      <DomainIcon />
-                    </InputAdornment>
-                  )
-                }}
-              />
-              <br />
-              <br />
-              {loading
-                ? <LinearProgress />
-                : <Button
-                    variant='contained'
-                    size='large'
-                    endIcon={<GetTrust />}
-                    type='submit'
-                    disabled={loading}
-                  >
-                  Get Trust Details
-                </Button>}
+                  </Button>}
             </center>
           </form>}
         {advanced && (
           <form onSubmit={handleDirectSubmit}>
-            <DialogContentText>Directly enter the details for the entity you&apos;d like to trust.</DialogContentText>
+            <DialogContentText>Directly enter the details for the entity you'd like to trust.</DialogContentText>
             <br />
             <TextField
               label='Entity Name'
@@ -454,7 +290,6 @@ const AddEntityModal = ({
               variant='filled'
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position='start'>
                   <InputAdornment position='start'>
                     <NameIcon />
                   </InputAdornment>
@@ -479,7 +314,6 @@ const AddEntityModal = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position='start'>
-                  <InputAdornment position='start'>
                     <PictureIcon />
                   </InputAdornment>
                 )
@@ -503,10 +337,8 @@ const AddEntityModal = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position='start'>
-                  <InputAdornment position='start'>
                     <PublicKeyIcon />
                   </InputAdornment>
-                )
                 )
               }}
             />
@@ -521,18 +353,9 @@ const AddEntityModal = ({
                   type='submit'
                   disabled={loading}
                         >
-            {loading
-              ? <LinearProgress />
-              : <center><Button
-                  variant='contained'
-                  size='large'
-                  endIcon={<GetTrust />}
-                  type='submit'
-                  disabled={loading}
-                        >
                 Validate Details
-              </Button>
-              </center>}
+                        </Button>
+                </center>}
           </form>
         )}
         <br />
@@ -579,10 +402,100 @@ const AddEntityModal = ({
   )
 }
 
-function arraysOfObjectsAreEqual (arr1, arr2) {
-  if (arr1.length !== arr2.length) {
-    return false
-  }
+const AddPopularSigniaCertifiersModal = ({
+  open, setOpen, setRegisterIdReminder, hasCerts, checkboxChecked, setCheckboxChecked, classes, history
+}) => {
+  return (
+    <CustomDialog
+      open={open}
+      title='Register Your Identity'
+      onClose={() => setOpen(false)}
+      minWidth='lg'
+    >
+      <DialogContent>
+        <br />
+        <form>
+          <DialogContentText>Register your details to connect with the community and be easily discoverable to others!
+          </DialogContentText>
+          <center>
+            <List className={classes.oracle_link_container}>
+              <ListItem>
+                <div className={classes.oracle_link}>
+                  <Link
+                    href='http://identicert.babbage.systems'
+                    target='_blank' rel='noopener noreferrer'
+                  >
+                    <center>
+                      <img src='https://www.projectbabbage.com/favicon.ico' className={classes.oracle_icon} />
+                      <Typography className={classes.oracle_title}>IdentiCert (Government ID)</Typography>
+                    </center>
+                  </Link>
+                </div>
+              </ListItem>
+              <br />
+              <ListItem className={classes.oracles_url_container}>
+                <div className={classes.oracle_link}>
+                  <Link
+                    className={classes.url_link}
+                    href='https//google.com'
+                    target='_blank' rel='noopener noreferrer'
+                  >
+                    <center>
+                      <img src='https://www.projectbabbage.com/favicon.ico' className={classes.oracle_icon} />
+                      <Typography className={classes.oracle_title}>GoogleCert (Google)</Typography>
+                    </center>
+                  </Link>
+                </div>
+              </ListItem>
+              <br />
+              <ListItem className={classes.oracles_url_container}>
+                <div className={classes.oracle_link}>
+                  <Link
+                    className={classes.url_link}
+                    href='https//discord.com'
+                    target='_blank' rel='noopener noreferrer'
+                  >
+                    <center>
+                      <img src='https://www.projectbabbage.com/favicon.ico' className={classes.oracle_icon} />
+                      <Typography className={classes.oracle_title}>DiscordCert (Discord)</Typography>
+                    </center>
+                  </Link>
+                </div>
+              </ListItem>
+            </List>
+          </center>
+        </form>
+        <br />
+        <br />
+      </DialogContent>
+      <DialogActions style={{ paddingLeft: '1.5em', justifyContent: 'space-between', paddingRight: '1em' }}>
+        <FormControlLabel
+          label="Don't remind me again"
+          control={
+            <Checkbox
+              checked={checkboxChecked}
+              onChange={(e) => {
+                setCheckboxChecked(e.target.checked)
+              }}
+            />
+          }
+        />
+        <Button
+          onClick={() => {
+            setOpen(false)
+            window.localStorage.setItem('showDialog', !checkboxChecked)
+            if (!hasCerts) {
+              setRegisterIdReminder(!hasCerts)
+            }
+            window.localStorage.setItem('hasVisitedTrust', 'true')
+          }}
+        >Later
+        </Button>
+      </DialogActions>
+    </CustomDialog>
+  )
+}
+
 function arraysOfObjectsAreEqual (arr1, arr2) {
   if (arr1.length !== arr2.length) {
     return false
@@ -627,45 +540,32 @@ const Trust = ({ history }) => {
           publicKey: '0295bf1c7842d14babf60daf2c733956c331f9dcb2c79e41f85fd1dda6a3fa4549'
         }
       ])
-  const [trustedEntities, setTrustedEntities] = useState(settings.trustedEntities
-    ? JSON.parse(JSON.stringify(settings.trustedEntities))
-    : [
-        {
-          name: 'SigniCert',
-          note: 'Certifies legal first and last name, and photos',
-          trust: 3,
-          icon: 'https://signia.babbage.systems/images/signiaIcon.png',
-          publicKey: '0295bf1c7842d14babf60daf2c733956c331f9dcb2c79e41f85fd1dda6a3fa4549'
-        }
-      ])
 
   const [search, setSearch] = useState('')
   const [addPopularSigniaCertifiersModalOpen, setAddPopularSigniaCertifiersModalOpen] = useState(false)
   const [addEntityModalOpen, setAddEntityModalOpen] = useState(false)
-  const [checkboxChecked, setCheckboxChecked] = useState(localStorage.getItem('showDialog') === 'false')
+  const [checkboxChecked, setCheckboxChecked] = useState(window.localStorage.getItem('showDialog') === 'false')
   const [hasCerts, setHasCerts] = useState(false)
   const [settingsLoading, setSettingsLoading] = useState(false)
   const classes = useStyles()
 
   const totalTrustPoints = trustedEntities.reduce((a, e) => a + e.trust, 0)
-  const { registerIdReminder, setRegisterIdReminder } = location.state
+  const { setRegisterIdReminder } = location.state
 
   useEffect(async () => {
-    if (localStorage.getItem('hasVisitedTrust') === 'false') {
-      localStorage.setItem('showDialog', 'true')
+    if (window.localStorage.getItem('hasVisitedTrust') === 'false') {
+      window.localStorage.setItem('showDialog', 'true')
     } else {
       const certs = await window.CWI.ninja.findCertificates()
-      /* testing */
+      /* Conditions Checked */
       // 1. undefined
       // 2. {}; certs.certificates = []
       // 3. {}; certs.certificates = [0]
-      if (typeof certs === 'undefined') {
-        console.error('ERROR:window.CWI.ninja.findCertificates() is undefined')
-      } else {
-        setHasCerts(certs.certificates.length > 0)
+      if (certs && certs.certificates && certs.certificates.length > 0) {
+        setHasCerts(true)
       }
     }
-    if (localStorage.getItem('showDialog') === 'true') {
+    if (window.localStorage.getItem('showDialog') === 'true') {
       setAddPopularSigniaCertifiersModalOpen(true)
     }
     if (trustThreshold > totalTrustPoints) {
@@ -725,14 +625,6 @@ const Trust = ({ history }) => {
             >
               Add Trusted Entity
             </Button>
-          <div>
-            <Button
-              variant='outlined'
-              startIcon={<AddIcon />}
-              onClick={() => setAddEntityModalOpen(true)}
-            >
-              Add Trusted Entity
-            </Button>
           </div>
         </Hidden>
         <Hidden mdUp>
@@ -758,24 +650,11 @@ const Trust = ({ history }) => {
           placeholder='Trusted certifiers...'
           fullWidth
           sx={{
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position='start'>
-                <SearchIcon fontSize='small' />
-              </InputAdornment>
-            )
-          }}
-          label='Search'
-          placeholder='Trusted certifiers...'
-          fullWidth
-          sx={{
             '& .MuiInputLabel-root': {
-              fontSize: '0.8rem'
               fontSize: '0.8rem'
             },
             '& .MuiOutlinedInput-root': {
               height: '36px',
-              padding: '0 10px'
               padding: '0 10px'
             }
           }}
@@ -791,16 +670,14 @@ const Trust = ({ history }) => {
           classes={classes}
           history={history}
                                                  />)}
-                                                 />)}
       </div>
       {shownTrustedEntities.length === 0 && (
         <Typography align='center' color='textSecondary' style={{ marginTop: '2em' }}>No Trusted Entities</Typography>
       )}
-
       <AddPopularSigniaCertifiersModal
         open={addPopularSigniaCertifiersModalOpen}
         setOpen={setAddPopularSigniaCertifiersModalOpen}
-        setRegisterIdReminder={ setRegisterIdReminder }
+        setRegisterIdReminder={setRegisterIdReminder}
         hasCerts={hasCerts}
         checkboxChecked={checkboxChecked}
         setCheckboxChecked={setCheckboxChecked}
@@ -870,24 +747,7 @@ const Trust = ({ history }) => {
               {settingsLoading ? 'Saving...' : 'Save'}
             </Button>
           </>
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center'
-        }}
-        open={settingsNeedsUpdate}
-        message='You have unsaved changes!'
-        action={
-          <>
-            <Button
-              disabled={settingsLoading}
-              color='secondary' size='small'
-              onClick={handleSave}
-            >
-              {settingsLoading ? 'Saving...' : 'Save'}
-            </Button>
-          </>
       }
-      />
       />
     </div>
   )

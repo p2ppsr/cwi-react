@@ -3,6 +3,11 @@ export default theme => ({
     display: 'flex',
     padding: '6px 0px',
     flexDirection: 'row',
+    '@media (max-width: 550px) and (min-width: 0px)': {
+      flexDirection: 'column',
+      alignItems: 'center'
+      /** TODO: align center on mobile */
+    },
     justifyContent: 'center',
     gap: '2px'
   },
