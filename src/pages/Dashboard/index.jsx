@@ -23,6 +23,7 @@ import {
   Typography
   , IconButton, Drawer, Toolbar
 } from '@mui/material'
+import AppView from './AppView/index.jsx'
 import Trust from './Trust/index.jsx'
 import Apps from './Apps'
 import App from './App/Index.jsx'
@@ -283,6 +284,10 @@ const Dashboard = () => {
       </Drawer>
       <div className={classes.page_container}>
         <Switch>
+          <Route
+            path='/dashboard/manage-app/:originator'
+            component={AppView}
+          />
           <Route
             path='/dashboard/app/:app'
             component={App}
