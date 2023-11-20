@@ -7,21 +7,21 @@ import style from './style'
 import isImageUrl from '../../../utils/isImageUrl'
 import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
-// import RecentActions from '../../../components/RecentActions'
-// import AccessAtAGlance from '../../../components/AccessAtAGlance'
 import AppViewTabs from '../../../components/AppViewTabs'
 
 const useStyles = makeStyles(style, { name: 'appview' })
 
 const AppView = ({ match, history }) => {
-  const appDomain = decodeURIComponent(match.params.app)
+  // console.log('match=', match)
+  const appDomain = decodeURIComponent(match.params.originator)
+  console.log('appDomain=', appDomain)
   const [appName, setAppName] = useState(appDomain)
   const [appIcon, setAppIcon] = useState('MetaNet AppMetaNet App')
   // const [displayLimit, setDisplayLimit] = useState(5)
   // const [appActions, setAppActions] = useState({})
   const [loading, setLoading] = useState(false)
   const [refresh, setRefresh] = useState(false)
-  /*
+
   const recentActionParams = {
     loading,
     appActions,
@@ -29,7 +29,7 @@ const AppView = ({ match, history }) => {
     setDisplayLimit,
     setRefresh
   }
-  */
+
   const classes = useStyles()
   // alert('AppView')
   useEffect(() => {
@@ -118,21 +118,6 @@ const AppView = ({ match, history }) => {
           </div>
         </div>
       </div>
-      {/* <Grid container>
-        <Grid item sx={12} style={{ width: '100%', height: '10em', background: 'gray' }}>
-          <Typography paddingBottom='2em' align='center'>Total App Cashflow</Typography>
-        </Grid>
-      </Grid> */}
-      {/*
-      <Grid container spacing={3}>
-        <Grid item lg={6} xs={12}>
-          <RecentActions {...recentActionParams} />
-        </Grid>
-        <Grid item lg={6} xs={12}>
-          <AccessAtAGlance {...{ originator: appDomain, loading, setRefresh, history }} />
-        </Grid>
-      </Grid>
-    */}
       <AppViewTabs />
     </div>
   )

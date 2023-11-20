@@ -68,8 +68,16 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
       {loading && <LinearProgress paddingTop='1em' />}
       <center style={{ padding: '1em' }}>
         <Button onClick={() => {
-          setRefresh(true)
+          // console.log('AccessAtAGlance():{originator}=', originator)
+          history.push({
+            pathname: `/dashboard/manage-app/${encodeURIComponent(originator)}`,
+            state: {
+            }
+          })
         }}
+        selected={
+          history.location.pathname === `/dashboard/manage-app/${encodeURIComponent(originator)}`
+        }
         >
           Manage App Access
         </Button>
