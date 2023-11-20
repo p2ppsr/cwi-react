@@ -2,7 +2,7 @@ export default theme => ({
   top_grid: {
     display: 'grid',
     gridTemplateColumns: 'auto auto 1fr auto',
-    alignItems: 'center',
+    alignItems: 'start',
     gridGap: theme.spacing(2),
     boxSizing: 'border-box'
   },

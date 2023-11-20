@@ -44,13 +44,14 @@ export default withRouter(({ history }) => {
     }
   }
 
-  if (!breakpoints.sm && !breakpoints.xs) {
-    return null
-  }
-
+  // if (!breakpoints.sm && !breakpoints.xs) {
+  //  console.log('AppViewTabs:return null')
+  //  return null
+  // }
+  // className={classes.fixed_nav}
   return (
     <>
-      <div className={classes.fixed_nav}>
+      <div>
         <div className={classes.title_close_grid}>
           <Typography variant='h1' className={classes.title_text}>
             {title}
