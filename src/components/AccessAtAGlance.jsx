@@ -79,7 +79,7 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
           history.location.pathname === `/dashboard/manage-app/${encodeURIComponent(originator)}`
         }
         >
-          Manage App Access
+          View App Access
         </Button>
       </center>
     </div>

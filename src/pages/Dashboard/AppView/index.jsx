@@ -24,9 +24,9 @@ const AppView = ({ match, history }) => {
 
   const recentActionParams = {
     loading,
-    appActions,
-    displayLimit,
-    setDisplayLimit,
+    // appActions,
+    // displayLimit,
+    // setDisplayLimit,
     setRefresh
   }
 
@@ -72,6 +72,7 @@ const AppView = ({ match, history }) => {
     })()
   }, [refresh])
 
+  // *className={classes.top_grid}*/
   return (
     <div className={classes.root}>
       <div>
@@ -93,15 +94,21 @@ const AppView = ({ match, history }) => {
             />
           </div>
           <div>
-
-          </div>
-          <div>
             <Typography variant='h1'>
               {appName}
             </Typography>
-            <Typography color='textSecondary'>
-              {appDomain}
+            <Typography variant='h3'>
+              {`https://${appDomain}`}
             </Typography>
+            <br />
+            <Typography variant='h2'>
+            Mange App Access
+            </Typography>
+            <Typography variant='h4'>
+            You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identiry (certificates), or spending amounts.
+            </Typography>
+            <br />
+            <AppViewTabs />
           </div>
           <div>
             <Button
@@ -118,7 +125,6 @@ const AppView = ({ match, history }) => {
           </div>
         </div>
       </div>
-      <AppViewTabs />
     </div>
   )
 }
