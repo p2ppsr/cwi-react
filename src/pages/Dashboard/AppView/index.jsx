@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
+import { Switch, Route, useHistory } from 'react-router-dom'
 import { Typography, Button, IconButton, Grid } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'
 import makeStyles from '@mui/styles/makeStyles'
@@ -8,6 +9,10 @@ import isImageUrl from '../../../utils/isImageUrl'
 import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
 import AppViewTabs from '../../../components/AppViewTabs'
+import ProtocolList from '../../../components/ProtocolList'
+import SpendingList from '../../../components/SpendingList'
+import BasketList from '../../../components/BasketList'
+import IdList from '../../../components/IdList'
 
 const useStyles = makeStyles(style, { name: 'appview' })
 
@@ -105,7 +110,7 @@ const AppView = ({ match, history }) => {
             Mange App Access
             </Typography>
             <Typography variant='h4'>
-            You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identiry (certificates), or spending amounts.
+            You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.
             </Typography>
             <br />
             <AppViewTabs />
@@ -125,7 +130,38 @@ const AppView = ({ match, history }) => {
           </div>
         </div>
       </div>
+      <div className={classes.page_container}>
+      <Switch>
+        <Route
+          path='/dashboard/manage-app/protocol'
+          component={ProtocolList}
+        />
+        <Route
+          path='/dashboard/manage-app/spending'
+          component={SpendingList}
+        />
+        <Route
+          path='/dashboard/manage-app/basket'
+          component={BasketList}
+        />
+        <Route
+          path='/dashboard/manage-app/id'
+          component={IdList}
+        />
+        <Route
+          className={classes.full_width}
+          default
+          component={() => {
+            return (
+              <div style={{ padding: '1em' }}>
+                <Typography align='center' color='textPrimary'>Are you lost?</Typography>
+              </div>
+            )
+          }}
+        />
+      </Switch>
     </div>
+  </div>
   )
 }
 

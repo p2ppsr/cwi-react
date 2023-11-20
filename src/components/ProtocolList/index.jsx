@@ -16,30 +16,30 @@ import formatDistance from 'date-fns/formatDistance'
 import Refresh from '@mui/icons-material/Refresh'
 
 const useStyles = makeStyles(style, {
-  name: 'ActionList'
+  name: 'ProtocolList'
 })
 
-const ActionList = ({ app }) => {
-  const [actions, setActions] = useState([])
-  const [totalActions, setTotalActions] = useState(0)
-  const [actionsLoading, setActionsLoading] = useState(false)
+const ProtocolList = ({ app }) => {
+  const [actions, setProtocols] = useState([])
+  const [totalProtocols, setTotalProtocols] = useState(0)
+  const [actionsLoading, setProtocolsLoading] = useState(false)
   const classes = useStyles()
   const label = app ? `babbage_app_${app}` : undefined
 
-  const refreshActions = async l => {
+  const refreshProtocols = async l => {
     try {
-      setActionsLoading(true)
+      setProtocolsLoading(true)
       const result = await window.CWI.ninja.getTransactions({
         limit: 10,
         label,
         status: 'completed'
       })
-      setActions(result.transactions)
-      setTotalActions(result.totalTransactions)
-      setActionsLoading(false)
+      setProtocols(result.transactions)
+      setTotalProtocols(result.totalTransactions)
+      setProtocolsLoading(false)
     } catch (e) {
       console.error(e)
-      setActionsLoading(false)
+      setProtocolsLoading(false)
     }
     try {
       await window.CWI.ninja.processPendingTransactions()
@@ -49,22 +49,22 @@ const ActionList = ({ app }) => {
   }
 
   useEffect(() => {
-    refreshActions(label)
+    refreshProtocols(label)
   }, [label])
 
-  const loadMoreActions = async () => {
+  const loadMoreProtocols = async () => {
     try {
-      setActionsLoading(true)
+      setProtocolsLoading(true)
       const result = await window.CWI.ninja.getTransactions({
         limit: 25,
         offset: actions.length,
         label,
         status: 'completed'
       })
-      setActions(actions => ([...actions, ...result.transactions]))
-      setActionsLoading(false)
+      setProtocols(actions => ([...actions, ...result.transactions]))
+      setProtocolsLoading(false)
     } catch (e) {
-      setActionsLoading(false)
+      setProtocolsLoading(false)
     }
   }
 
@@ -73,7 +73,7 @@ const ActionList = ({ app }) => {
       <Button
         color='primary'
         endIcon={<Refresh color='primary' />}
-        onClick={() => refreshActions(label)}
+        onClick={() => refreshProtocols(label)}
         className={classes.refresh_btn}
         disabled={actionsLoading}
       >
@@ -92,19 +92,7 @@ const ActionList = ({ app }) => {
             if (protocol.indexOf(',') !== -1) {
               protocol = protocol.split(',')[1]
             }
-            <div>
-            Protocols list:
 
-            The Protocol name and protocol icon
-
-            Permission grant expiration date
-
-            A View More Protocol Details icon (leading to the Manage Protocol Access Page for this protocol)
-
-            An optional counterparty (with name, photo, and leading to the Manage Counterparty Access page if clicked)
-
-            An option to revoke this grant of permission.
-            </div>
             return (
               <Card
                 key={i}
@@ -112,6 +100,22 @@ const ActionList = ({ app }) => {
                 elevation={4}
               >
                 <CardContent>
+                <div>
+                  <Typography variant='h3'>
+                  A protocol is like a shared &apos;language&apos; or set of rules that apps need your permission to use so they can properly manage and display your data.
+                  Protocols list:
+                  <br />
+                  The Protocol name and protocol icon
+                  <br />
+                  Permission grant expiration date
+                  <br />
+                  A View More Protocol Details icon (leading to the Manage Protocol Access Page for this protocol)
+                  <br />
+                  An optional counterparty (with name, photo, and leading to the Manage Counterparty Access page if clicked)
+                  <br />
+                  An option to revoke this grant of permission.
+                  </Typography>
+                  </div>
                   <Typography
                     variant='h3'
                     className={classes.title_text}
@@ -266,21 +270,21 @@ const ActionList = ({ app }) => {
         {actions.length > 0 && (
           <VisibilitySensor
             onChange={v => {
-              if (actions.length < totalActions && v === true) loadMoreActions()
+              if (actions.length < totalProtocols && v === true) loadMoreProtocols()
             }}
             partialVisibility
             offset={{ bottom: -50 }}
           >
             <Typography color='textSecondary'>
-              <i>Total Actions: {actionsLoading ? '...' : totalActions}</i>
+              <i>Total Protocols: {actionsLoading ? '...' : totalProtocols}</i>
             </Typography>
           </VisibilitySensor>
         )}
-        {(actions.length < totalActions && !actionsLoading) && (
+        {(actions.length < totalProtocols && !actionsLoading) && (
           <>
             <br />
             <Button
-              onClick={() => loadMoreActions()}
+              onClick={() => loadMoreProtocols()}
             >
               Load More...
             </Button>
@@ -291,4 +295,4 @@ const ActionList = ({ app }) => {
   )
 }
 
-export default ActionList
+export default ProtocolList
