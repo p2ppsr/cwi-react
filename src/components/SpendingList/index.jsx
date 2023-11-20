@@ -16,55 +16,55 @@ import formatDistance from 'date-fns/formatDistance'
 import Refresh from '@mui/icons-material/Refresh'
 
 const useStyles = makeStyles(style, {
-  name: 'ActionList'
+  name: 'SpendingList'
 })
 
-const ActionList = ({ app }) => {
-  const [actions, setActions] = useState([])
-  const [totalActions, setTotalActions] = useState(0)
-  const [actionsLoading, setActionsLoading] = useState(false)
+const SpendingList = ({ app }) => {
+  const [Spendings, setSpendings] = useState([])
+  const [totalSpendings, setTotalSpendings] = useState(0)
+  const [SpendingsLoading, setSpendingsLoading] = useState(false)
   const classes = useStyles()
   const label = app ? `babbage_app_${app}` : undefined
 
-  const refreshActions = async l => {
+  const refreshSpendings = async l => {
     try {
-      setActionsLoading(true)
-      const result = await window.CWI.ninja.getTransactions({
+      setSpendingsLoading(true)
+      const result = await window.CWI.ninja.getTransSpendings({
         limit: 10,
         label,
         status: 'completed'
       })
-      setActions(result.transactions)
-      setTotalActions(result.totalTransactions)
-      setActionsLoading(false)
+      setSpendings(result.transSpendings)
+      setTotalSpendings(result.totalTransSpendings)
+      setSpendingsLoading(false)
     } catch (e) {
       console.error(e)
-      setActionsLoading(false)
+      setSpendingsLoading(false)
     }
     try {
-      await window.CWI.ninja.processPendingTransactions()
+      await window.CWI.ninja.processPendingTransSpendings()
     } catch (e) {
       console.error(e)
     }
   }
 
   useEffect(() => {
-    refreshActions(label)
+    refreshSpendings(label)
   }, [label])
 
-  const loadMoreActions = async () => {
+  const loadMoreSpendings = async () => {
     try {
-      setActionsLoading(true)
-      const result = await window.CWI.ninja.getTransactions({
+      setSpendingsLoading(true)
+      const result = await window.CWI.ninja.getTransSpendings({
         limit: 25,
-        offset: actions.length,
+        offset: Spendings.length,
         label,
         status: 'completed'
       })
-      setActions(actions => ([...actions, ...result.transactions]))
-      setActionsLoading(false)
+      setSpendings(Spendings => ([...Spendings, ...result.transSpendings]))
+      setSpendingsLoading(false)
     } catch (e) {
-      setActionsLoading(false)
+      setSpendingsLoading(false)
     }
   }
 
@@ -73,13 +73,13 @@ const ActionList = ({ app }) => {
       <Button
         color='primary'
         endIcon={<Refresh color='primary' />}
-        onClick={() => refreshActions(label)}
+        onClick={() => refreshSpendings(label)}
         className={classes.refresh_btn}
-        disabled={actionsLoading}
+        disabled={SpendingsLoading}
       >
         Refresh
       </Button>
-      {actions
+      {Spendings
         .filter(x => x.status === 'completed')
         .map((a, i) => {
           if (a.labels.includes('babbage_protocol_perm')) {
@@ -105,7 +105,7 @@ const ActionList = ({ app }) => {
             return (
               <Card
                 key={i}
-                className={classes.action_card}
+                className={classes.Spending_card}
                 elevation={4}
               >
                 <CardContent>
@@ -139,7 +139,7 @@ const ActionList = ({ app }) => {
             return (
               <Card
                 key={i}
-                className={classes.action_card}
+                className={classes.Spending_card}
                 elevation={4}
               >
                 <CardContent>
@@ -169,7 +169,7 @@ const ActionList = ({ app }) => {
             return (
               <Card
                 key={i}
-                className={classes.action_card}
+                className={classes.Spending_card}
                 elevation={4}
               >
                 <CardContent>
@@ -215,15 +215,15 @@ const ActionList = ({ app }) => {
               </Typography>
             )
           } else if (
-            a.labels.includes('babbage_protocol_perm_preaction') ||
-            a.labels.includes('babbage_spend_auth_preaction')
+            a.labels.includes('babbage_protocol_perm_preSpending') ||
+            a.labels.includes('babbage_spend_auth_preSpending')
           ) {
             return null
           } else {
             return (
               <Card
                 key={i}
-                className={classes.action_card}
+                className={classes.Spending_card}
                 elevation={4}
               >
                 <CardContent>
@@ -259,25 +259,25 @@ const ActionList = ({ app }) => {
           }
         })}
       <center>
-        {actionsLoading && <LinearProgress />}
-        {actions.length > 0 && (
+        {SpendingsLoading && <LinearProgress />}
+        {Spendings.length > 0 && (
           <VisibilitySensor
             onChange={v => {
-              if (actions.length < totalActions && v === true) loadMoreActions()
+              if (Spendings.length < totalSpendings && v === true) loadMoreSpendings()
             }}
             partialVisibility
             offset={{ bottom: -50 }}
           >
             <Typography color='textSecondary'>
-              <i>Total Actions: {actionsLoading ? '...' : totalActions}</i>
+              <i>Total Spendings: {SpendingsLoading ? '...' : totalSpendings}</i>
             </Typography>
           </VisibilitySensor>
         )}
-        {(actions.length < totalActions && !actionsLoading) && (
+        {(Spendings.length < totalSpendings && !SpendingsLoading) && (
           <>
             <br />
             <Button
-              onClick={() => loadMoreActions()}
+              onClick={() => loadMoreSpendings()}
             >
               Load More...
             </Button>
@@ -288,4 +288,4 @@ const ActionList = ({ app }) => {
   )
 }
 
-export default ActionList
+export default SpendingList

@@ -16,55 +16,55 @@ import formatDistance from 'date-fns/formatDistance'
 import Refresh from '@mui/icons-material/Refresh'
 
 const useStyles = makeStyles(style, {
-  name: 'ActionList'
+  name: 'BasketList'
 })
 
-const ActionList = ({ app }) => {
-  const [actions, setActions] = useState([])
-  const [totalActions, setTotalActions] = useState(0)
-  const [actionsLoading, setActionsLoading] = useState(false)
+const BasketList = ({ app }) => {
+  const [Baskets, setBaskets] = useState([])
+  const [totalBaskets, setTotalBaskets] = useState(0)
+  const [BasketsLoading, setBasketsLoading] = useState(false)
   const classes = useStyles()
   const label = app ? `babbage_app_${app}` : undefined
 
-  const refreshActions = async l => {
+  const refreshBaskets = async l => {
     try {
-      setActionsLoading(true)
-      const result = await window.CWI.ninja.getTransactions({
+      setBasketsLoading(true)
+      const result = await window.CWI.ninja.getTransBaskets({
         limit: 10,
         label,
         status: 'completed'
       })
-      setActions(result.transactions)
-      setTotalActions(result.totalTransactions)
-      setActionsLoading(false)
+      setBaskets(result.transBaskets)
+      setTotalBaskets(result.totalTransBaskets)
+      setBasketsLoading(false)
     } catch (e) {
       console.error(e)
-      setActionsLoading(false)
+      setBasketsLoading(false)
     }
     try {
-      await window.CWI.ninja.processPendingTransactions()
+      await window.CWI.ninja.processPendingTransBaskets()
     } catch (e) {
       console.error(e)
     }
   }
 
   useEffect(() => {
-    refreshActions(label)
+    refreshBaskets(label)
   }, [label])
 
-  const loadMoreActions = async () => {
+  const loadMoreBaskets = async () => {
     try {
-      setActionsLoading(true)
-      const result = await window.CWI.ninja.getTransactions({
+      setBasketsLoading(true)
+      const result = await window.CWI.ninja.getTransBaskets({
         limit: 25,
-        offset: actions.length,
+        offset: Baskets.length,
         label,
         status: 'completed'
       })
-      setActions(actions => ([...actions, ...result.transactions]))
-      setActionsLoading(false)
+      setBaskets(Baskets => ([...Baskets, ...result.transBaskets]))
+      setBasketsLoading(false)
     } catch (e) {
-      setActionsLoading(false)
+      setBasketsLoading(false)
     }
   }
 
@@ -73,13 +73,13 @@ const ActionList = ({ app }) => {
       <Button
         color='primary'
         endIcon={<Refresh color='primary' />}
-        onClick={() => refreshActions(label)}
+        onClick={() => refreshBaskets(label)}
         className={classes.refresh_btn}
-        disabled={actionsLoading}
+        disabled={BasketsLoading}
       >
         Refresh
       </Button>
-      {actions
+      {Baskets
         .filter(x => x.status === 'completed')
         .map((a, i) => {
           if (a.labels.includes('babbage_protocol_perm')) {
@@ -95,7 +95,7 @@ const ActionList = ({ app }) => {
             return (
               <Card
                 key={i}
-                className={classes.action_card}
+                className={classes.Basket_card}
                 elevation={4}
               >
                 <CardContent>
@@ -140,7 +140,7 @@ const ActionList = ({ app }) => {
             return (
               <Card
                 key={i}
-                className={classes.action_card}
+                className={classes.Basket_card}
                 elevation={4}
               >
                 <CardContent>
@@ -170,7 +170,7 @@ const ActionList = ({ app }) => {
             return (
               <Card
                 key={i}
-                className={classes.action_card}
+                className={classes.Basket_card}
                 elevation={4}
               >
                 <CardContent>
@@ -216,15 +216,15 @@ const ActionList = ({ app }) => {
               </Typography>
             )
           } else if (
-            a.labels.includes('babbage_protocol_perm_preaction') ||
-            a.labels.includes('babbage_spend_auth_preaction')
+            a.labels.includes('babbage_protocol_perm_preBasket') ||
+            a.labels.includes('babbage_spend_auth_preBasket')
           ) {
             return null
           } else {
             return (
               <Card
                 key={i}
-                className={classes.action_card}
+                className={classes.Basket_card}
                 elevation={4}
               >
                 <CardContent>
@@ -260,25 +260,25 @@ const ActionList = ({ app }) => {
           }
         })}
       <center>
-        {actionsLoading && <LinearProgress />}
-        {actions.length > 0 && (
+        {BasketsLoading && <LinearProgress />}
+        {Baskets.length > 0 && (
           <VisibilitySensor
             onChange={v => {
-              if (actions.length < totalActions && v === true) loadMoreActions()
+              if (Baskets.length < totalBaskets && v === true) loadMoreBaskets()
             }}
             partialVisibility
             offset={{ bottom: -50 }}
           >
             <Typography color='textSecondary'>
-              <i>Total Actions: {actionsLoading ? '...' : totalActions}</i>
+              <i>Total Baskets: {BasketsLoading ? '...' : totalBaskets}</i>
             </Typography>
           </VisibilitySensor>
         )}
-        {(actions.length < totalActions && !actionsLoading) && (
+        {(Baskets.length < totalBaskets && !BasketsLoading) && (
           <>
             <br />
             <Button
-              onClick={() => loadMoreActions()}
+              onClick={() => loadMoreBaskets()}
             >
               Load More...
             </Button>
@@ -289,4 +289,4 @@ const ActionList = ({ app }) => {
   )
 }
 
-export default ActionList
+export default BasketList
