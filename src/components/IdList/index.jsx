@@ -16,55 +16,55 @@ import formatDistance from 'date-fns/formatDistance'
 import Refresh from '@mui/icons-material/Refresh'
 
 const useStyles = makeStyles(style, {
-  name: 'ActionList'
+  name: 'IdList'
 })
 
-const ActionList = ({ app }) => {
-  const [actions, setActions] = useState([])
-  const [totalActions, setTotalActions] = useState(0)
-  const [actionsLoading, setActionsLoading] = useState(false)
+const IdList = ({ app }) => {
+  const [Ids, setIds] = useState([])
+  const [totalIds, setTotalIds] = useState(0)
+  const [IdsLoading, setIdsLoading] = useState(false)
   const classes = useStyles()
   const label = app ? `babbage_app_${app}` : undefined
 
-  const refreshActions = async l => {
+  const refreshIds = async l => {
     try {
-      setActionsLoading(true)
-      const result = await window.CWI.ninja.getTransactions({
+      setIdsLoading(true)
+      const result = await window.CWI.ninja.getTransIds({
         limit: 10,
         label,
         status: 'completed'
       })
-      setActions(result.transactions)
-      setTotalActions(result.totalTransactions)
-      setActionsLoading(false)
+      setIds(result.transIds)
+      setTotalIds(result.totalTransIds)
+      setIdsLoading(false)
     } catch (e) {
       console.error(e)
-      setActionsLoading(false)
+      setIdsLoading(false)
     }
     try {
-      await window.CWI.ninja.processPendingTransactions()
+      await window.CWI.ninja.processPendingTransIds()
     } catch (e) {
       console.error(e)
     }
   }
 
   useEffect(() => {
-    refreshActions(label)
+    refreshIds(label)
   }, [label])
 
-  const loadMoreActions = async () => {
+  const loadMoreIds = async () => {
     try {
-      setActionsLoading(true)
-      const result = await window.CWI.ninja.getTransactions({
+      setIdsLoading(true)
+      const result = await window.CWI.ninja.getTransIds({
         limit: 25,
-        offset: actions.length,
+        offset: Ids.length,
         label,
         status: 'completed'
       })
-      setActions(actions => ([...actions, ...result.transactions]))
-      setActionsLoading(false)
+      setIds(Ids => ([...Ids, ...result.transIds]))
+      setIdsLoading(false)
     } catch (e) {
-      setActionsLoading(false)
+      setIdsLoading(false)
     }
   }
 
@@ -73,13 +73,13 @@ const ActionList = ({ app }) => {
       <Button
         color='primary'
         endIcon={<Refresh color='primary' />}
-        onClick={() => refreshActions(label)}
+        onClick={() => refreshIds(label)}
         className={classes.refresh_btn}
-        disabled={actionsLoading}
+        disabled={IdsLoading}
       >
         Refresh
       </Button>
-      {actions
+      {Ids
         .filter(x => x.status === 'completed')
         .map((a, i) => {
           if (a.labels.includes('babbage_protocol_perm')) {
@@ -95,7 +95,7 @@ const ActionList = ({ app }) => {
             return (
               <Card
                 key={i}
-                className={classes.action_card}
+                className={classes.Id_card}
                 elevation={4}
               >
                 <CardContent>
@@ -142,7 +142,7 @@ const ActionList = ({ app }) => {
             return (
               <Card
                 key={i}
-                className={classes.action_card}
+                className={classes.Id_card}
                 elevation={4}
               >
                 <CardContent>
@@ -172,7 +172,7 @@ const ActionList = ({ app }) => {
             return (
               <Card
                 key={i}
-                className={classes.action_card}
+                className={classes.Id_card}
                 elevation={4}
               >
                 <CardContent>
@@ -218,15 +218,15 @@ const ActionList = ({ app }) => {
               </Typography>
             )
           } else if (
-            a.labels.includes('babbage_protocol_perm_preaction') ||
-            a.labels.includes('babbage_spend_auth_preaction')
+            a.labels.includes('babbage_protocol_perm_preId') ||
+            a.labels.includes('babbage_spend_auth_preId')
           ) {
             return null
           } else {
             return (
               <Card
                 key={i}
-                className={classes.action_card}
+                className={classes.Id_card}
                 elevation={4}
               >
                 <CardContent>
@@ -262,25 +262,25 @@ const ActionList = ({ app }) => {
           }
         })}
       <center>
-        {actionsLoading && <LinearProgress />}
-        {actions.length > 0 && (
+        {IdsLoading && <LinearProgress />}
+        {Ids.length > 0 && (
           <VisibilitySensor
             onChange={v => {
-              if (actions.length < totalActions && v === true) loadMoreActions()
+              if (Ids.length < totalIds && v === true) loadMoreIds()
             }}
             partialVisibility
             offset={{ bottom: -50 }}
           >
             <Typography color='textSecondary'>
-              <i>Total Actions: {actionsLoading ? '...' : totalActions}</i>
+              <i>Total Ids: {IdsLoading ? '...' : totalIds}</i>
             </Typography>
           </VisibilitySensor>
         )}
-        {(actions.length < totalActions && !actionsLoading) && (
+        {(Ids.length < totalIds && !IdsLoading) && (
           <>
             <br />
             <Button
-              onClick={() => loadMoreActions()}
+              onClick={() => loadMoreIds()}
             >
               Load More...
             </Button>
@@ -291,4 +291,4 @@ const ActionList = ({ app }) => {
   )
 }
 
-export default ActionList
+export default IdList
