@@ -20,6 +20,7 @@ const useStyles = makeStyles(style, {
 })
 
 const SpendingList = ({ app }) => {
+  console.log('SpendingList:app=', app)
   const [Spendings, setSpendings] = useState([])
   const [totalSpendings, setTotalSpendings] = useState(0)
   const [SpendingsLoading, setSpendingsLoading] = useState(false)
@@ -29,20 +30,20 @@ const SpendingList = ({ app }) => {
   const refreshSpendings = async l => {
     try {
       setSpendingsLoading(true)
-      const result = await window.CWI.ninja.getTransSpendings({
+      const result = await window.CWI.ninja.getTransactions({
         limit: 10,
         label,
         status: 'completed'
       })
-      setSpendings(result.transSpendings)
-      setTotalSpendings(result.totalTransSpendings)
+      setSpendings(result.transactions)
+      setTotalSpendings(result.totalTransactions)
       setSpendingsLoading(false)
     } catch (e) {
       console.error(e)
       setSpendingsLoading(false)
     }
     try {
-      await window.CWI.ninja.processPendingTransSpendings()
+      await window.CWI.ninja.processPendingTransactions()
     } catch (e) {
       console.error(e)
     }
@@ -55,13 +56,13 @@ const SpendingList = ({ app }) => {
   const loadMoreSpendings = async () => {
     try {
       setSpendingsLoading(true)
-      const result = await window.CWI.ninja.getTransSpendings({
+      const result = await window.CWI.ninja.getTransactions({
         limit: 25,
         offset: Spendings.length,
         label,
         status: 'completed'
       })
-      setSpendings(Spendings => ([...Spendings, ...result.transSpendings]))
+      setSpendings(Spendings => ([...Spendings, ...result.transactions]))
       setSpendingsLoading(false)
     } catch (e) {
       setSpendingsLoading(false)

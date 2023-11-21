@@ -12,14 +12,14 @@ import AppViewTabs from '../../../components/AppViewTabs'
 import ProtocolList from '../../../components/ProtocolList'
 import SpendingList from '../../../components/SpendingList'
 import BasketList from '../../../components/BasketList'
-import IdList from '../../../components/IdList'
+import CertificatesList from '../../../components/CertificatesList'
 
 const useStyles = makeStyles(style, { name: 'appview' })
 
 const AppView = ({ match, history }) => {
-  // console.log('match=', match)
+  console.log('AppView:match=', match)
   const appDomain = decodeURIComponent(match.params.originator)
-  console.log('appDomain=', appDomain)
+  console.log('AppView:appDomain=', appDomain)
   const [appName, setAppName] = useState(appDomain)
   const [appIcon, setAppIcon] = useState('MetaNet AppMetaNet App')
   // const [displayLimit, setDisplayLimit] = useState(5)
@@ -77,7 +77,8 @@ const AppView = ({ match, history }) => {
     })()
   }, [refresh])
 
-  // *className={classes.top_grid}*/
+  // * className={classes.page_container}
+  // * className={classes.top_grid}*/
   return (
     <div className={classes.root}>
       <div>
@@ -130,10 +131,10 @@ const AppView = ({ match, history }) => {
           </div>
         </div>
       </div>
-      <div className={classes.page_container}>
+      <div>
       <Switch>
         <Route
-          path='/dashboard/manage-app/protocol'
+          path='/dashboard/manage-app/protocols'
           component={ProtocolList}
         />
         <Route
@@ -141,12 +142,12 @@ const AppView = ({ match, history }) => {
           component={SpendingList}
         />
         <Route
-          path='/dashboard/manage-app/basket'
+          path='/dashboard/manage-app/baskets'
           component={BasketList}
         />
         <Route
-          path='/dashboard/manage-app/id'
-          component={IdList}
+          path='/dashboard/manage-app/certificates'
+          component={CertificatesList}
         />
         <Route
           className={classes.full_width}

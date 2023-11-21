@@ -15,7 +15,7 @@ export default withRouter(({ history }) => {
   const classes = useStyles()
   const breakpoints = useBreakpoint()
   const [tabValue, setTabValue] = useState(0)
-  const [title, setTitle] = useState('Protocol')
+  const [title, setTitle] = useState('Protocols')
   const { onFocusRelinquished } = useContext(UIContext)
 
   const handleClose = async () => {
@@ -26,20 +26,20 @@ export default withRouter(({ history }) => {
     setTabValue(v)
     switch (v) {
       case 0:
-        setTitle('Protocol')
-        history.push('/dashboard/manage-apps/protocol')
+        setTitle('Protocols')
+        history.push('/dashboard/manage-app/protocols')
         break
       case 1:
         setTitle('Spending')
-        history.push('/dashboard/manage-apps/spending')
+        history.push('/dashboard/manage-app/spending')
         break
       case 2:
-        setTitle('Basket')
-        history.push('/dashboard/manage-apps/basket')
+        setTitle('Baskets')
+        history.push('/dashboard/manage-app/baskets')
         break
       case 3:
-        setTitle('Id')
-        history.push('/dashboard/manage-apps/id')
+        setTitle('Certificates')
+        history.push('/dashboard/manage-app/certificates')
         break
     }
   }
@@ -68,10 +68,10 @@ export default withRouter(({ history }) => {
           textColor='primary'
           variant='fullWidth'
         >
-          <Tab label='Protocol' />
+          <Tab label='Protocols' />
           <Tab label='Spending' />
-          <Tab label='Basket' />
-          <Tab label='Id' />
+          <Tab label='Baskets' />
+          <Tab label='Certificates' />
         </Tabs>
       </div>
       <div className={classes.placeholder} />
