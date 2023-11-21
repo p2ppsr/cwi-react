@@ -147,7 +147,7 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
                   primary={grant.basket}
                   secondary={`Expires ${formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}`}
                 />
-              </>}
+                </>}
 
             {canRevoke &&
               <ListItemSecondaryAction>

@@ -32,6 +32,7 @@ import Profile from '../../components/Profile.jsx'
 import BasketAccess from './BasketAccess'
 import UIContext from '../../UIContext'
 import PageLoading from '../../components/PageLoading'
+import ProtocolAccess from './ProtocolAccess/index.jsx'
 
 const useStyles = makeStyles(style, {
   name: 'Dashboard'
@@ -301,6 +302,10 @@ const Dashboard = () => {
           <Route
             path='/dashboard/basket/:basketId'
             component={BasketAccess}
+          />
+          <Route
+            path='/dashboard/protocol/:protocolId'
+            component={ProtocolAccess}
           />
           <Route
             className={classes.full_width}

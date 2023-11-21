@@ -21,25 +21,51 @@ import style from './style'
 import { Folder, Delete } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
 import { toast } from 'react-toastify'
+import ProtoChip from '../ProtoChip'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import AppChip from '../AppChip'
+import CounterpartyChip from '../CounterpartyChip'
+import sortPermissions from './sortPermissions'
 
 const useStyles = makeStyles(style, {
   name: 'ProtocolPermissionList'
 })
 
-const ProtocolPermissionList = ({ app, protocol, limit, canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
+const ProtocolPermissionList = ({ app, protocol, limit, counterparty, itemsDisplayed = 'protocols', canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
+  // Validate params
+  if (itemsDisplayed === 'apps' && app) {
+    const e = new Error('Error in ProtocolPermissionList: apps cannot be displayed when providing an app param! Please provide a valid protocol instead.')
+    throw e
+  }
+  if (itemsDisplayed === 'protocols' && protocol) {
+    const e = new Error('Error in ProtocolPermissionList: protocols cannot be displayed when providing a protocol param! Please provide a valid app domain instead.')
+    throw e
+  }
+
   const [perms, setPerms] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentPerm, setCurrentPerm] = useState(null)
   const [dialogLoading, setDialogLoading] = useState(false)
   const classes = useStyles()
+  const history = useHistory()
 
   const refreshPerms = useCallback(async () => {
+
+    // Get the current permmission grants
     const result = await window.CWI.listProtocolPermissions({
       targetDomain: app,
-      targetProtocol: protocol,
+      targetProtocolName: protocol,
       limit
     })
-    setPerms(result)
+
+    // Filter permissions by counterparty and domain if items are displayed as apps
+    if (itemsDisplayed === 'apps') {
+      const results = sortPermissions(result)
+      console.log('sorting... ', results)
+      setPerms(results)
+    } else {
+      setPerms(result)
+    }
   }, [app, protocol])
 
   const revokePermission = async perm => {
@@ -123,23 +149,44 @@ const ProtocolPermissionList = ({ app, protocol, limit, canRevoke = true, displa
             className={classes.action_card}
             elevation={4}
           >
-            <ListItemAvatar>
-              <Avatar className={classes.icon}>
-                <Folder />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={perm.protocol}
-              secondary={`Expires ${formatDistance(new Date(perm.expiry * 1000), new Date(), { addSuffix: true })}`}
+            {itemsDisplayed === 'apps'
+              ? (
+                <div className='app-permission'>
+                  <ListSubheader>
+                    <AppChip label={perm.originator}/>
+                  </ListSubheader>
+                  {perm.counterparties.map((permission, idx) => {
+                    return (
+                      
+                  <div key={idx} className='additional-permission'>
+                     <ListItem
+            key={idx}
+            className={classes.action_card}
+            elevation={4}
+          >
+            <CounterpartyChip counterparty={permission.counterparty} />
+            <ListItemSecondaryAction>
+            <IconButton edge='end' onClick={() => revokePermission(permission.permissionGrant)} size='large'>
+              <Delete />
+            </IconButton>
+          </ListItemSecondaryAction>
+              </ListItem>
+            </div>
+                )
+              })}
+            </div>
+            )
+          : (
+            <ProtoChip
+              protocolID={perm.protocol}
+              counterparty={perm.counterparty}
+              originator={app}
+              clickable
             />
-            {canRevoke &&
-              <ListItemSecondaryAction>
-                <IconButton edge='end' onClick={() => revokePermission(perm)} size='large'>
-                  <Delete />
-                </IconButton>
-              </ListItemSecondaryAction>}
+            )}
           </ListItem>
         ))}
+
       </List>
       {displayCount &&
         <center>
