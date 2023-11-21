@@ -12,7 +12,7 @@ import AppViewTabs from '../../../components/AppViewTabs'
 import ProtocolList from '../../../components/ProtocolList'
 import SpendingList from '../../../components/SpendingList'
 import BasketList from '../../../components/BasketList'
-import CertificatesList from '../../../components/CertificatesList'
+import CertificateList from '../../../components/CertificateList'
 
 const useStyles = makeStyles(style, { name: 'appview' })
 
@@ -78,7 +78,6 @@ const AppView = ({ match, history }) => {
   }, [refresh])
 
   // * className={classes.page_container}
-  // * className={classes.top_grid}*/
   return (
     <div className={classes.root}>
       <div>
@@ -147,7 +146,7 @@ const AppView = ({ match, history }) => {
         />
         <Route
           path='/dashboard/manage-app/certificates'
-          component={CertificatesList}
+          component={CertificateList}
         />
         <Route
           className={classes.full_width}

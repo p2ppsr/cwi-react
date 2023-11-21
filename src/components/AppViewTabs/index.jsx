@@ -44,22 +44,24 @@ export default withRouter(({ history }) => {
     }
   }
 
+  // Removed - not needed
   // if (!breakpoints.sm && !breakpoints.xs) {
   //  console.log('AppViewTabs:return null')
   //  return null
   // }
   // className={classes.fixed_nav}
+  // <Typography variant='h1' className={classes.title_text}>
+  //  {title}
+  // </Typography>
+  // <div className={classes.title_close_grid}>
+  // <IconButton className={classes.close_btn} onClick={handleClose}>
+  // <CloseIcon />
+  // </IconButton>
+  // </div>
+
   return (
     <>
       <div>
-        <div className={classes.title_close_grid}>
-          <Typography variant='h1' className={classes.title_text}>
-            {title}
-          </Typography>
-          <IconButton className={classes.close_btn} onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </div>
         <Tabs
           className={classes.tabs}
           value={tabValue}
