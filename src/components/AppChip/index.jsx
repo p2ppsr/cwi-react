@@ -15,7 +15,7 @@ const useStyles = makeStyles(style, {
 })
 
 const AppChip = ({
-  label, showDomain = false, history, clickable = true, size = 1, onClick
+  label, showDomain = false, history, clickable = true, size = 1, onClick, backgroundColor = 'transparent'
 }) => {
   const theme = useTheme()
   const classes = useStyles()
@@ -60,20 +60,26 @@ const AppChip = ({
         paddingTop: `${16 * size}px`,
         paddingBottom: `${16 * size}px`,
         height: '100%',
-        paddingLeft: '0.5em'
+        paddingLeft: '0.5em',
+        backgroundColor: backgroundColor
       }}
       label={
         (showDomain && label !== parsedLabel)
           ? <div style={{
             textAlign: 'left'
           }}>
-            <span>
+            <span
+             style={{
+              fontSize: `${size * 1.5}em`,
+              color: 'textPrimary',
+              fontWeight: 'bold'
+            }}>
               {parsedLabel}
             </span>
             <br />
             <span
               style={{
-                fontSize: `${size * 0.52}em`,
+                fontSize: '1em',
                 color: 'textSecondary'
               }}
             >

@@ -14,11 +14,13 @@ import {
   DialogActions,
   Button,
   Typography,
-  ListSubheader
+  ListSubheader,
+  Grid
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
-import { Folder, Delete } from '@mui/icons-material'
+import { Folder, Delete, } from '@mui/icons-material'
+import CloseIcon from '@mui/icons-material/Close';
 import formatDistance from 'date-fns/formatDistance'
 import { toast } from 'react-toastify'
 import ProtoChip from '../ProtoChip'
@@ -49,14 +51,29 @@ const ProtocolPermissionList = ({ app, protocol, limit, counterparty, itemsDispl
   const classes = useStyles()
   const history = useHistory()
 
+  const revokeAllPermissions = async (app) => {
+    console.log(app.counterparties)
+    for (const counterparty of app.counterparties) {
+      await window.CWI.revokeProtocolPermission({ permission: counterparty.permissionGrant })
+      setPerms(oldPerm =>
+        oldPerm.filter(x =>
+          x.permissionGrantID !== counterparty.permissionGrant.permissionGrantID
+        )
+      )
+    }
+    refreshPerms()
+  }
+
   const refreshPerms = useCallback(async () => {
 
     // Get the current permmission grants
     const result = await window.CWI.listProtocolPermissions({
       targetDomain: app,
       targetProtocolName: protocol,
+      targetProtocolSecurityLevel: '2',
       limit
     })
+    console.log('grants ', result)
 
     // Filter permissions by counterparty and domain if items are displayed as apps
     if (itemsDisplayed === 'apps') {
@@ -139,55 +156,74 @@ const ProtocolPermissionList = ({ app, protocol, limit, counterparty, itemsDispl
         </DialogActions>
       </Dialog>
       <List>
-        {listHeaderTitle &&
-          <ListSubheader>
-            {listHeaderTitle}
-          </ListSubheader>}
-        {perms.map((perm, i) => (
-          <ListItem
-            key={i}
-            className={classes.action_card}
-            elevation={4}
-          >
-            {itemsDisplayed === 'apps'
-              ? (
-                <div className='app-permission'>
-                  <ListSubheader>
-                    <AppChip label={perm.originator}/>
-                  </ListSubheader>
-                  {perm.counterparties.map((permission, idx) => {
-                    return (
-                      
-                  <div key={idx} className='additional-permission'>
-                     <ListItem
-            key={idx}
-            className={classes.action_card}
-            elevation={4}
-          >
-            <CounterpartyChip counterparty={permission.counterparty} />
-            <ListItemSecondaryAction>
-            <IconButton edge='end' onClick={() => revokePermission(permission.permissionGrant)} size='large'>
-              <Delete />
-            </IconButton>
-          </ListItemSecondaryAction>
-              </ListItem>
-            </div>
-                )
-              })}
-            </div>
-            )
-          : (
-            <ProtoChip
-              protocolID={perm.protocol}
-              counterparty={perm.counterparty}
-              originator={app}
-              clickable
-            />
-            )}
-          </ListItem>
-        ))}
+  {listHeaderTitle && (
+    <ListSubheader>
+      {listHeaderTitle}
+    </ListSubheader>
+  )}
+  {perms.map((perm, i) => (
+    <React.Fragment key={i}>
 
-      </List>
+      {/* Counterparties listed just below the header */}
+      {itemsDisplayed === 'apps' && (
+        <div style={{backgroundColor: '#222222', padding: '1em 0 0 1em'}} >
+       
+       <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center'}}>
+       <AppChip label={perm.originator} showDomain={true} />
+        <Button onClick={() => { revokeAllPermissions(perm)}} variant="contained" color="secondary">
+          Revoke All
+        </Button>
+       </div>
+        {/* <div>
+        <AppChip label={perm.originator} showDomain={true} backgroundColor={'transparent'}/>
+          <Typography>Revoke All</Typography>
+        <IconButton edge='end' onClick={() => revokePermission(permission.permissionGrant)} size='large'>
+                    <CloseIcon />
+                  </IconButton>
+                  </div> */}
+        {/* <ListSubheader>
+        {perm.originator}
+      </ListSubheader> */}
+
+        <ListItem className={classes.action_card} elevation={4} style={{ margin: '2em'}}>
+          <Grid container spacing={1} className={classes.gridContainer} style={{ paddingBottom: '1em'}}>
+            {perm.counterparties.map((permission, idx) => (
+              <React.Fragment key={idx}>
+                {permission.counterparty && 
+                                <Grid item xs={12} sm={6} md={4} lg={3}>
+                                <CounterpartyChip counterparty={permission.counterparty} />
+                              </Grid>
+                }
+
+                <Grid item alignSelf={'center'}>
+                  <IconButton edge='end' onClick={() => revokePermission(permission.permissionGrant)} size='large'>
+                    <CloseIcon />
+                  </IconButton>
+                </Grid>
+              </React.Fragment>
+            ))}
+          </Grid>
+        </ListItem>
+        </div>
+      )}
+
+      {/* Other items displayed based on itemsDisplayed */}
+      {itemsDisplayed !== 'apps' && (
+        <ListItem className={classes.action_card} elevation={4}>
+          {/* Render ProtoChip or other components based on your application logic */}
+          <ProtoChip
+            protocolID={perm.protocol}
+            counterparty={perm.counterparty}
+            originator={perm.originator}
+            clickable
+          />
+        </ListItem>
+      )}
+    </React.Fragment>
+  ))}
+</List>
+
+
       {displayCount &&
         <center>
           <Typography

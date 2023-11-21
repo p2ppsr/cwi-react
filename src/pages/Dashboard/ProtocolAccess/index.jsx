@@ -114,13 +114,6 @@ const ProtocolAccess = () => {
             <ProtocolPermissionList protocol={protocolID} counterparty={counterparty} itemsDisplayed='apps' canRevoke displayCount={false} />
           </Paper>
         </Grid>
-
-        <Grid item alignSelf='center'>
-          <Button color='error' onClick={() => { window.alert("Are you sure you want to revoke this app's access?") }}>
-            Revoke All Access
-          </Button>
-        </Grid>
-
       </Grid>
     </div>
   )
