@@ -1,4 +1,7 @@
 export default theme => ({
+  tabs: {
+    paddingLeft: '0px'
+  },
   fixed_nav: {
     backgroundColor: theme.palette.common.white,
     position: 'fixed',
