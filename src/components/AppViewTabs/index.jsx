@@ -23,6 +23,7 @@ export default withRouter(({ history }) => {
   }
 
   const handleTabChange = (e, v) => {
+    console.log('handleTabChange():v=', v)
     setTabValue(v)
     switch (v) {
       case 0:

@@ -28,6 +28,7 @@ const useStyles = makeStyles(style, {
 })
 
 const BasketList = ({ app, basket, limit, itemsDisplayed = 'baskets', canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
+  console.log('BasketList():app=', app, ',basket=', basket, ',limit=', limit, ',itemsDisplayed=', itemsDisplayed, ',canRevoke=', canRevoke, ',displayCount=', displayCount, ',listHeaderTitle=', listHeaderTitle, ',showEmptyList=', showEmptyList)
   // Validate params
   if (itemsDisplayed === 'apps' && app) {
     const e = new Error('Error in BasketList: apps cannot be displayed when providing an app param! Please provide a valid basket instead.')
@@ -88,9 +89,9 @@ const BasketList = ({ app, basket, limit, itemsDisplayed = 'baskets', canRevoke 
     refreshGrants()
   }, [refreshGrants])
 
-  // * if (grants.length === 0 && !showEmptyList) { *
-  //  return (<></>)
-  // }
+  if (grants.length === 0 && !showEmptyList) {
+    return (<></>)
+  }
 
   return (
     <>

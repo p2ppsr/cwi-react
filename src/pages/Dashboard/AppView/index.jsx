@@ -17,10 +17,11 @@ import CertificateList from '../../../components/CertificateList'
 const useStyles = makeStyles(style, { name: 'appview' })
 
 const AppView = ({ match, history }) => {
-  console.log('AppView:match=', match)
+  // console.log('AppView:match=', match)
   const originator = decodeURIComponent(match.params.originator)
-  console.log('AppView:originator=', originator)
+  // console.log('AppView:originator=', originator)
   // const [isInit, setIsInit] = useState(true)
+  // const [selectTab, setSelectTab] = useState('protocols')
   const [appDomain, setAppDomain] = useState('')
   const [appName, setAppName] = useState('')
   const [appIcon, setAppIcon] = useState('MetaNet AppMetaNet App')
@@ -38,9 +39,11 @@ const AppView = ({ match, history }) => {
   useEffect(() => {
     (async () => {
       try {
+        // console.log('AppView:useEffect:before appDomain=', appDomain)
+        // console.log('AppView:useEffect:before originator=', originator)
         if (appDomain === '') {
           setAppDomain(originator)
-          console.log('AppView:appDomain=', appDomain)
+          // console.log('AppView:useEffect:after appDomain=', appDomain)
         }
         setLoading(true)
         // Validate that the default favicon path is actually an image
@@ -55,8 +58,8 @@ const AppView = ({ match, history }) => {
             // Try to parse the app manifest to find the app info
             try {
               const manifest = await parseAppManifest({ domain: appDomain })
-              console.log('AppView:manifest=', manifest)
-              console.log('AppView:typeof manifest.name=', typeof manifest.name)
+              // console.log('AppView:manifest=', manifest)
+              // console.log('AppView:typeof manifest.name=', typeof manifest.name)
               if (typeof manifest.name === 'string') {
                 setAppName(manifest.name)
               }
@@ -65,7 +68,7 @@ const AppView = ({ match, history }) => {
             }
             setLoading(false)
             setRefresh(false)
-            console.log('reloaded')
+            // console.log('reloaded')
           }
         } catch (e) {
         }
@@ -77,8 +80,9 @@ const AppView = ({ match, history }) => {
     })()
   }, [refresh, appDomain])
   // }, [refresh, appDomain, appName, isInit, loading, appIcon])
-  const isInit = originator === appDomain || appDomain === ''
-  console.log('AppView:isInit=', isInit)
+  // console.log('AppView:selectTab=', selectTab)
+  // console.log('AppView:appDomain=', appDomain)
+  // console.log('AppView:originator=', originator)
 
   // * className={classes.page_container}
   return (
@@ -116,8 +120,38 @@ const AppView = ({ match, history }) => {
             You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.
             </Typography>
             <br />
-            <AppViewTabs />
-            {isInit && <ProtocolList />}
+            <AppViewTabs history={history}/>
+            {originator === 'spending' && <SpendingList
+              app={appDomain}
+              limit={10}
+            />}
+            {originator === 'baskets' && <BasketList
+              app={appDomain}
+              basket={basket}
+              limit={limit}
+              itemsDisplayed={itemsDisplayed}
+              canRevoke={canRevoke}
+              displayCount={displayCount}
+              listHeaderTitle={listHeaderTitle}
+              showEmptyList={showEmptyList}
+            />}
+            {originator === 'certificates' && <CertificateList
+                app={appDomain}
+                type={type}
+                limit={limit}
+                displayCount={displayCount}
+                listHeaderTitle={listHeaderTitle}
+                showEmptyList={showEmptyList}
+              />}
+            <ProtocolList
+              app={appDomain}
+              protocol={protocol}
+              limit={limit}
+              canRevoke={canRevoke}
+              displayCount={displayCount}
+              listHeaderTitle={listHeaderTitle}
+              showEmptyList={showEmptyList}
+            />
           </div>
           <div>
             <Button

@@ -39,6 +39,7 @@ const useStyles = makeStyles(style, {
 })
 
 const CertificateList = ({ app, type, limit, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
+  console.log('CertificateList()app=', app, ',type=', type, ',limit=', limit, ',displayCount=', displayCount, ',listHeaderTitle=', listHeaderTitle, ',showEmptyList=', showEmptyList)
   const [grants, setGrants] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentAccessGrant, setCurrentAccessGrant] = useState(null)
@@ -96,10 +97,10 @@ const CertificateList = ({ app, type, limit, displayCount = true, listHeaderTitl
     refreshGrants()
   }, [refreshGrants])
 
-  // * Only render the list if there is items to display *
-  // if (grants.length === 0 && !showEmptyList) {
-  //  return (<></>)
-  // }
+  // Only render the list if there is items to display
+  if (grants.length === 0 && !showEmptyList) {
+    return (<></>)
+  }
 
   return (
     <>
