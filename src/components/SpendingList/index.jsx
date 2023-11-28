@@ -1,291 +1,174 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
-  Card,
-  CardContent,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  IconButton,
+  ListItemSecondaryAction,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
   Typography,
-  LinearProgress,
-  Button
+  LinearProgress
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
-import AppChip from '../AppChip/index.jsx'
-import style from './style.js'
-import VisibilitySensor from 'react-visibility-sensor'
-import AmountDisplay from '../AmountDisplay/index.jsx'
-import format from 'date-fns/format'
+import style from './style'
+import { AttachMoney, Delete } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
-import Refresh from '@mui/icons-material/Refresh'
+import AmountDisplay from '../AmountDisplay'
+import { toast } from 'react-toastify'
 
 const useStyles = makeStyles(style, {
   name: 'SpendingList'
 })
 
-const SpendingList = ({ app }) => {
-  console.log('SpendingList:app=', app)
-  const [Spendings, setSpendings] = useState([])
-  const [totalSpendings, setTotalSpendings] = useState(0)
-  const [SpendingsLoading, setSpendingsLoading] = useState(false)
+const SpendingList = ({ app, limit }) => {
+  console.log('SpendingList():app=', app, 'limit=', limit)
+  const [authorizations, setAuthorizations] = useState([])
+  const [currentSpending, setCurrentSpending] = useState(0)
+  const [authorizedAmount, setAuthorizedAmount] = useState(0)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [currentAuthorization, setCurrentAuthorization] = useState(null)
+  const [dialogLoading, setDialogLoading] = useState(false)
+  const [earliestAuthorization, setEarliestAuthorization] = useState(null)
   const classes = useStyles()
-  const label = app ? `babbage_app_${app}` : undefined
 
-  const refreshSpendings = async l => {
+  const refreshAuthorizations = useCallback(async () => {
+    const result = await window.CWI.listSpendingAuthorizations({
+      targetDomain: app,
+      limit
+    })
+    setAuthorizations(result.authorizations)
+    setEarliestAuthorization(result.earliestAuthorizationTime)
+    setCurrentSpending(result.currentSpending)
+    setAuthorizedAmount(result.authorizedAmount)
+  }, [app])
+
+  const revokeAuthorization = async authorization => {
+    setCurrentAuthorization(authorization)
+    setDialogOpen(true)
+  }
+
+  const handleConfirm = async () => {
     try {
-      setSpendingsLoading(true)
-      const result = await window.CWI.ninja.getTransactions({
-        limit: 10,
-        label,
-        status: 'completed'
-      })
-      setSpendings(result.transactions)
-      setTotalSpendings(result.totalTransactions)
-      setSpendingsLoading(false)
+      setDialogLoading(true)
+      await window.CWI.revokeSpendingAuthorization({ authorizationGrant: currentAuthorization })
+      setAuthorizations(oldAuth =>
+        oldAuth.filter(x =>
+          x.authorizationGrantID !== currentAuthorization.authorizationGrantID
+        )
+      )
+      setCurrentAuthorization(null)
+      setDialogOpen(false)
+      setDialogLoading(false)
+      refreshAuthorizations()
     } catch (e) {
-      console.error(e)
-      setSpendingsLoading(false)
+      refreshAuthorizations()
+      toast.error('Permission may not have been revoked: ' + e.message)
+      setCurrentAuthorization(null)
+      setDialogOpen(false)
+      setDialogLoading(false)
     }
-    try {
-      await window.CWI.ninja.processPendingTransactions()
-    } catch (e) {
-      console.error(e)
-    }
+  }
+
+  const handleDialogClose = () => {
+    setCurrentAuthorization(null)
+    setDialogOpen(false)
   }
 
   useEffect(() => {
-    refreshSpendings(label)
-  }, [label])
-
-  const loadMoreSpendings = async () => {
-    try {
-      setSpendingsLoading(true)
-      const result = await window.CWI.ninja.getTransactions({
-        limit: 25,
-        offset: Spendings.length,
-        label,
-        status: 'completed'
-      })
-      setSpendings(Spendings => ([...Spendings, ...result.transactions]))
-      setSpendingsLoading(false)
-    } catch (e) {
-      setSpendingsLoading(false)
-    }
-  }
+    refreshAuthorizations()
+  }, [refreshAuthorizations])
 
   return (
-    <div className={classes.content_wrap}>
-      <Button
-        color='primary'
-        endIcon={<Refresh color='primary' />}
-        onClick={() => refreshSpendings(label)}
-        className={classes.refresh_btn}
-        disabled={SpendingsLoading}
+    <>
+      <Dialog
+        open={dialogOpen}
       >
-        Refresh
-      </Button>
-      {Spendings
-        .filter(x => x.status === 'completed')
-        .map((a, i) => {
-          if (a.labels.includes('babbage_protocol_perm')) {
-            const fields = a.note.split(' ')
-            const granted = fields[0] === 'Grant'
-            const app = fields[1]
-            fields.shift()
-            fields.shift()
-            let protocol = fields.join(' ').split(':')[0]
-            if (protocol.indexOf(',') !== -1) {
-              protocol = protocol.split(',')[1]
-            }
-            <div>
-            Spending Authorization (current spending compared with total authorized spending = progress bar):
-
-            an amount authorized
-
-            a time by which it must be used
-
-            the option to revoke the authorization.
-
-            </div>
-            return (
-              <Card
-                key={i}
-                className={classes.Spending_card}
-                elevation={4}
-              >
-                <CardContent>
-                  <Typography
-                    variant='h3'
-                    className={classes.title_text}
-                  >
-                    Protocol Permission {granted ? 'Granted' : 'Revoked'}
-                  </Typography>
-                  <Typography component='span' paragraph key={i}>
-                    You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> permission for protocol: <b>{protocol}</b>
-                  </Typography>
-                  <Typography>
-                    <AmountDisplay showPlus>
-                      {a.amount}
-                    </AmountDisplay>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
-                  </Typography>
-                </CardContent>
-              </Card>
-            )
-          } if (a.labels.includes('babbage_basket_access')) {
-            const fields = a.note.split(' ')
-            const granted = fields[0] === 'Grant'
-            const app = fields[1]
-            fields.shift()
-            fields.shift()
-            let basket = fields.join(' ').split(':')[0]
-            if (basket.indexOf(',') !== -1) {
-              basket = basket.split(',')[1]
-            }
-            return (
-              <Card
-                key={i}
-                className={classes.Spending_card}
-                elevation={4}
-              >
-                <CardContent>
-                  <Typography
-                    variant='h3'
-                    className={classes.title_text}
-                  >
-                    Basket Access {granted ? 'Granted' : 'Revoked'}
-                  </Typography>
-                  <Typography component='span' paragraph key={i}>
-                    You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> access to basket: <b>{basket}</b>
-                  </Typography>
-                  <Typography>
-                    <AmountDisplay showPlus>
-                      {a.amount}
-                    </AmountDisplay>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
-                  </Typography>
-                </CardContent>
-              </Card>
-            )
-          } if (a.labels.includes('babbage_certificate_access')) {
-            const fields = a.note.split(' ')
-            const granted = fields[0] === 'Grant'
-            const app = fields[1]
-            const verifier = fields[2]
-            const certificateType = fields[3]
-            return (
-              <Card
-                key={i}
-                className={classes.Spending_card}
-                elevation={4}
-              >
-                <CardContent>
-                  <Typography
-                    variant='h3'
-                    className={classes.title_text}
-                  >
-                    Certificate Access {granted ? 'Granted' : 'Revoked'}
-                  </Typography>
-                  <Typography component='span' paragraph key={i}>
-                    You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> access to fields for the following certificate:<b>{'\n'}</b>
-                  </Typography>
-                  <Typography paragraph key={i}>
-                    <b>Type: </b>{certificateType}
-                  </Typography>
-                  <Typography paragraph key={i} style={{ wordWrap: 'break-word' }}>
-                    <b>Verifier: </b>{verifier}
-                  </Typography>
-                  <Typography>
-                    <AmountDisplay showPlus>
-                      {a.amount}
-                    </AmountDisplay>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
-                  </Typography>
-                </CardContent>
-              </Card>
-            )
-          } else if (a.labels.includes('babbage_spend_auth')) {
-            const fields = a.note.split(' ')
-            const authorized = fields[0] === 'Authorize'
-            const app = fields[1]
-            const amount = fields[2]
-            const expiry = fields[3]
-            if (!authorized) {
-              return ( // TODO
-                <Typography component='span' paragraph key={i}>
-                  You revoked a previous spending authorization
-                </Typography>
-              )
-            }
-            return (
-              <Typography component='span' paragraph key={i}>
-                You {authorized ? 'allowed' : 'revoked a previous authorization for'} <AppChip label={`babbage_app_${app}`} /> to spend up to <b><AmountDisplay>{amount}</AmountDisplay></b>{authorized && ` on or before ${format(new Date(parseInt(expiry) * 1000), 'MMMM do yyyy')}`}
-              </Typography>
-            )
-          } else if (
-            a.labels.includes('babbage_protocol_perm_preSpending') ||
-            a.labels.includes('babbage_spend_auth_preSpending')
-          ) {
-            return null
-          } else {
-            return (
-              <Card
-                key={i}
-                className={classes.Spending_card}
-                elevation={4}
-              >
-                <CardContent>
-                  <Typography
-                    variant='h3'
-                    className={classes.title_text}
-                  >
-                    {a.note}
-                  </Typography>
-                  <Typography
-                    className={classes.txid_text}
-                    variant='caption'
-                    color='textSecondary'
-                  >
-                    {a.txid}
-                  </Typography>
-                  <Typography>
-                    <AmountDisplay showPlus>
-                      {a.amount}
-                    </AmountDisplay>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
-                  </Typography>
-                  {a.labels && a.labels
-                    .filter(l => l.startsWith('babbage_app_'))
-                    .map((l, j) => (
-                      <AppChip
-                        key={`${a.txid}-${j}`}
-                        label={l}
-                      />
-                    ))}
-                </CardContent>
-              </Card>
-            )
-          }
-        })}
-      <center>
-        {SpendingsLoading && <LinearProgress />}
-        {Spendings.length > 0 && (
-          <VisibilitySensor
-            onChange={v => {
-              if (Spendings.length < totalSpendings && v === true) loadMoreSpendings()
-            }}
-            partialVisibility
-            offset={{ bottom: -50 }}
+        <DialogTitle>
+          Revoke Authorization?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You can re-authorize spending next time you use this app.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color='primary'
+            disabled={dialogLoading}
+            onClick={handleDialogClose}
           >
-            <Typography color='textSecondary'>
-              <i>Total Spendings: {SpendingsLoading ? '...' : totalSpendings}</i>
-            </Typography>
-          </VisibilitySensor>
-        )}
-        {(Spendings.length < totalSpendings && !SpendingsLoading) && (
-          <>
-            <br />
-            <Button
-              onClick={() => loadMoreSpendings()}
-            >
-              Load More...
-            </Button>
-          </>
-        )}
+            Cancel
+          </Button>
+          <Button
+            color='primary'
+            disabled={dialogLoading}
+            onClick={handleConfirm}
+          >
+            Revoke
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <List>
+        {authorizations.map((authorization, i) => (
+          <ListItem
+            key={i}
+            className={classes.action_card}
+            elevation={4}
+          >
+            <ListItemAvatar>
+              <Avatar className={classes.icon}>
+                <AttachMoney />
+              </Avatar>
+            </ListItemAvatar>
+            {/* <h1>TODO: Fix the bug that cause an invalid timestamp with temp fix below:</h1> */}
+            <ListItemText
+              primary={<AmountDisplay>{authorization.amount}</AmountDisplay>}
+              secondary={`Must be used within ${formatDistance(new Date(authorization.expiry <= 16817763900000 ? authorization.expiry * 1000 : Date.now() + 10000000), new Date(), { addSuffix: true })}`}
+            />
+            <ListItemSecondaryAction>
+              <IconButton
+                edge='end'
+                onClick={() => revokeAuthorization(authorization)}
+                size='large'
+              >
+                <Delete />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))}
+      </List>
+      <center>
+        <Typography
+          color='textSecondary'
+          paragraph
+        >
+          <i>Total Authorizations: {authorizations.length}</i>
+        </Typography>
       </center>
-    </div>
+      {Number.isInteger(Number(authorizedAmount)) && authorizedAmount > 0 && (
+        <div>
+          <Typography variant='h5' paragraph>
+            <b>
+              Current Spending (since {formatDistance(new Date(earliestAuthorization * 1000), new Date(), { addSuffix: true })}):
+            </b> <AmountDisplay>{currentSpending}</AmountDisplay>
+          </Typography>
+          <Typography variant='h5' paragraph>
+            <b>Authorized Amount:</b> <AmountDisplay>{authorizedAmount}</AmountDisplay>
+          </Typography>
+          <LinearProgress
+            variant='determinate'
+            value={parseInt((currentSpending / authorizedAmount) * 100)}
+          />
+        </div>
+      )}
+    </>
   )
 }
 

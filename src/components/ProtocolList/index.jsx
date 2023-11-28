@@ -1,297 +1,157 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
-  Card,
-  CardContent,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  IconButton,
+  ListItemSecondaryAction,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
   Typography,
-  LinearProgress,
-  Button
+  ListSubheader
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
-import AppChip from '../AppChip/index.jsx'
 import style from './style'
-import VisibilitySensor from 'react-visibility-sensor'
-import AmountDisplay from '../AmountDisplay'
-import format from 'date-fns/format'
+import { Folder, Delete } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
-import Refresh from '@mui/icons-material/Refresh'
+import { toast } from 'react-toastify'
 
 const useStyles = makeStyles(style, {
   name: 'ProtocolList'
 })
 
-const ProtocolList = ({ app }) => {
-  const [actions, setProtocols] = useState([])
-  const [totalProtocols, setTotalProtocols] = useState(0)
-  const [actionsLoading, setProtocolsLoading] = useState(false)
+const ProtocolList = ({ app, protocol, limit, canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
+  console.log('ProtocolList():app=', app, ',protocol=', protocol, ',limit=', limit, ',canRevoke=', canRevoke, ',displayCount=', displayCount, ',listHeaderTitle=', listHeaderTitle, ',showEmptyList=', showEmptyList)
+  const [perms, setPerms] = useState([])
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [currentPerm, setCurrentPerm] = useState(null)
+  const [dialogLoading, setDialogLoading] = useState(false)
   const classes = useStyles()
-  const label = app ? `babbage_app_${app}` : undefined
 
-  const refreshProtocols = async l => {
+  const refreshPerms = useCallback(async () => {
+    const result = await window.CWI.listProtocolPermissions({
+      targetDomain: app,
+      targetProtocol: protocol,
+      limit
+    })
+    setPerms(result)
+  }, [app, protocol])
+
+  const revokePermission = async perm => {
+    setCurrentPerm(perm)
+    setDialogOpen(true)
+  }
+
+  const handleConfirm = async () => {
     try {
-      setProtocolsLoading(true)
-      const result = await window.CWI.ninja.getTransactions({
-        limit: 10,
-        label,
-        status: 'completed'
-      })
-      setProtocols(result.transactions)
-      setTotalProtocols(result.totalTransactions)
-      setProtocolsLoading(false)
+      setDialogLoading(true)
+      await window.CWI.revokeProtocolPermission({ permission: currentPerm })
+      setPerms(oldPerm =>
+        oldPerm.filter(x =>
+          x.permissionGrantID !== currentPerm.permissionGrantID
+        )
+      )
+      setCurrentPerm(null)
+      setDialogOpen(false)
+      setDialogLoading(false)
+      refreshPerms()
     } catch (e) {
-      console.error(e)
-      setProtocolsLoading(false)
+      toast.error('Permission may not have been revoked: ' + e.message)
+      refreshPerms()
+      setCurrentPerm(null)
+      setDialogOpen(false)
+      setDialogLoading(false)
     }
-    try {
-      await window.CWI.ninja.processPendingTransactions()
-    } catch (e) {
-      console.error(e)
-    }
+  }
+
+  const handleDialogClose = () => {
+    setCurrentPerm(null)
+    setDialogOpen(false)
   }
 
   useEffect(() => {
-    refreshProtocols(label)
-  }, [label])
+    refreshPerms()
+  }, [refreshPerms])
 
-  const loadMoreProtocols = async () => {
-    try {
-      setProtocolsLoading(true)
-      const result = await window.CWI.ninja.getTransactions({
-        limit: 25,
-        offset: actions.length,
-        label,
-        status: 'completed'
-      })
-      setProtocols(actions => ([...actions, ...result.transactions]))
-      setProtocolsLoading(false)
-    } catch (e) {
-      setProtocolsLoading(false)
-    }
-  }
+  // if (perms.length === 0 && !showEmptyList) {
+  //  return (<></>)
+  // }
 
   return (
-    <div className={classes.content_wrap}>
-      <Button
-        color='primary'
-        endIcon={<Refresh color='primary' />}
-        onClick={() => refreshProtocols(label)}
-        className={classes.refresh_btn}
-        disabled={actionsLoading}
+    <>
+      <Dialog
+        open={dialogOpen}
       >
-        Refresh
-      </Button>
-      {actions
-        .filter(x => x.status === 'completed')
-        .map((a, i) => {
-          if (a.labels.includes('babbage_protocol_perm')) {
-            const fields = a.note.split(' ')
-            const granted = fields[0] === 'Grant'
-            const app = fields[1]
-            fields.shift()
-            fields.shift()
-            let protocol = fields.join(' ').split(':')[0]
-            if (protocol.indexOf(',') !== -1) {
-              protocol = protocol.split(',')[1]
-            }
-
-            return (
-              <Card
-                key={i}
-                className={classes.action_card}
-                elevation={4}
-              >
-                <CardContent>
-                <div>
-                  <Typography variant='h3'>
-                  A protocol is like a shared &apos;language&apos; or set of rules that apps need your permission to use so they can properly manage and display your data.
-                  Protocols list:
-                  <br />
-                  The Protocol name and protocol icon
-                  <br />
-                  Permission grant expiration date
-                  <br />
-                  A View More Protocol Details icon (leading to the Manage Protocol Access Page for this protocol)
-                  <br />
-                  An optional counterparty (with name, photo, and leading to the Manage Counterparty Access page if clicked)
-                  <br />
-                  An option to revoke this grant of permission.
-                  </Typography>
-                  </div>
-                  <Typography
-                    variant='h3'
-                    className={classes.title_text}
-                  >
-                    Protocol Permission {granted ? 'Granted' : 'Revoked'}
-                  </Typography>
-                  <Typography component='span' paragraph key={i}>
-                    You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> permission for protocol: <b>{protocol}</b>
-                  </Typography>
-                  <Typography>
-                    <AmountDisplay showPlus>
-                      {a.amount}
-                    </AmountDisplay>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
-                  </Typography>
-                </CardContent>
-              </Card>
-            )
-          } if (a.labels.includes('babbage_basket_access')) {
-            const fields = a.note.split(' ')
-            const granted = fields[0] === 'Grant'
-            const app = fields[1]
-            fields.shift()
-            fields.shift()
-            let basket = fields.join(' ').split(':')[0]
-            if (basket.indexOf(',') !== -1) {
-              basket = basket.split(',')[1]
-            }
-            return (
-              <Card
-                key={i}
-                className={classes.action_card}
-                elevation={4}
-              >
-                <CardContent>
-                  <Typography
-                    variant='h3'
-                    className={classes.title_text}
-                  >
-                    Basket Access {granted ? 'Granted' : 'Revoked'}
-                  </Typography>
-                  <Typography component='span' paragraph key={i}>
-                    You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> access to basket: <b>{basket}</b>
-                  </Typography>
-                  <Typography>
-                    <AmountDisplay showPlus>
-                      {a.amount}
-                    </AmountDisplay>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
-                  </Typography>
-                </CardContent>
-              </Card>
-            )
-          } if (a.labels.includes('babbage_certificate_access')) {
-            const fields = a.note.split(' ')
-            const granted = fields[0] === 'Grant'
-            const app = fields[1]
-            const verifier = fields[2]
-            const certificateType = fields[3]
-            return (
-              <Card
-                key={i}
-                className={classes.action_card}
-                elevation={4}
-              >
-                <CardContent>
-                  <Typography
-                    variant='h3'
-                    className={classes.title_text}
-                  >
-                    Certificate Access {granted ? 'Granted' : 'Revoked'}
-                  </Typography>
-                  <Typography component='span' paragraph key={i}>
-                    You {granted ? 'allowed' : 'revoked'} <AppChip label={`babbage_app_${app}`} /> access to fields for the following certificate:<b>{'\n'}</b>
-                  </Typography>
-                  <Typography paragraph key={i}>
-                    <b>Type: </b>{certificateType}
-                  </Typography>
-                  <Typography paragraph key={i} style={{ wordWrap: 'break-word' }}>
-                    <b>Verifier: </b>{verifier}
-                  </Typography>
-                  <Typography>
-                    <AmountDisplay showPlus>
-                      {a.amount}
-                    </AmountDisplay>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
-                  </Typography>
-                </CardContent>
-              </Card>
-            )
-          } else if (a.labels.includes('babbage_spend_auth')) {
-            const fields = a.note.split(' ')
-            const authorized = fields[0] === 'Authorize'
-            const app = fields[1]
-            const amount = fields[2]
-            const expiry = fields[3]
-            if (!authorized) {
-              return ( // TODO
-                <Typography component='span' paragraph key={i}>
-                  You revoked a previous spending authorization
-                </Typography>
-              )
-            }
-            return (
-              <Typography component='span' paragraph key={i}>
-                You {authorized ? 'allowed' : 'revoked a previous authorization for'} <AppChip label={`babbage_app_${app}`} /> to spend up to <b><AmountDisplay>{amount}</AmountDisplay></b>{authorized && ` on or before ${format(new Date(parseInt(expiry) * 1000), 'MMMM do yyyy')}`}
-              </Typography>
-            )
-          } else if (
-            a.labels.includes('babbage_protocol_perm_preaction') ||
-            a.labels.includes('babbage_spend_auth_preaction')
-          ) {
-            return null
-          } else {
-            return (
-              <Card
-                key={i}
-                className={classes.action_card}
-                elevation={4}
-              >
-                <CardContent>
-                  <Typography
-                    variant='h3'
-                    className={classes.title_text}
-                  >
-                    {a.note}
-                  </Typography>
-                  <Typography
-                    className={classes.txid_text}
-                    variant='caption'
-                    color='textSecondary'
-                  >
-                    {a.txid}
-                  </Typography>
-                  <Typography>
-                    <AmountDisplay showPlus>
-                      {a.amount}
-                    </AmountDisplay>{' '}{formatDistance(new Date(a.created_at), new Date(), { addSuffix: true })}
-                  </Typography>
-                  {a.labels && a.labels
-                    .filter(l => l.startsWith('babbage_app_'))
-                    .map((l, j) => (
-                      <AppChip
-                        key={`${a.txid}-${j}`}
-                        label={l}
-                      />
-                    ))}
-                </CardContent>
-              </Card>
-            )
-          }
-        })}
-      <center>
-        {actionsLoading && <LinearProgress />}
-        {actions.length > 0 && (
-          <VisibilitySensor
-            onChange={v => {
-              if (actions.length < totalProtocols && v === true) loadMoreProtocols()
-            }}
-            partialVisibility
-            offset={{ bottom: -50 }}
+        <DialogTitle>
+          Revoke Permission?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You can re-authorize this permission next time you use this app.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color='primary'
+            disabled={dialogLoading}
+            onClick={handleDialogClose}
           >
-            <Typography color='textSecondary'>
-              <i>Total Protocols: {actionsLoading ? '...' : totalProtocols}</i>
-            </Typography>
-          </VisibilitySensor>
-        )}
-        {(actions.length < totalProtocols && !actionsLoading) && (
-          <>
-            <br />
-            <Button
-              onClick={() => loadMoreProtocols()}
-            >
-              Load More...
-            </Button>
-          </>
-        )}
-      </center>
-    </div>
+            Cancel
+          </Button>
+          <Button
+            color='primary'
+            disabled={dialogLoading}
+            onClick={handleConfirm}
+          >
+            Revoke
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <List>
+        {listHeaderTitle &&
+          <ListSubheader>
+            {listHeaderTitle}
+          </ListSubheader>}
+        {perms.map((perm, i) => (
+          <ListItem
+            key={i}
+            className={classes.action_card}
+            elevation={4}
+          >
+            <ListItemAvatar>
+              <Avatar className={classes.icon}>
+                <Folder />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={perm.protocol}
+              secondary={`Expires ${formatDistance(new Date(perm.expiry * 1000), new Date(), { addSuffix: true })}`}
+            />
+            {canRevoke &&
+              <ListItemSecondaryAction>
+                <IconButton edge='end' onClick={() => revokePermission(perm)} size='large'>
+                  <Delete />
+                </IconButton>
+              </ListItemSecondaryAction>}
+          </ListItem>
+        ))}
+      </List>
+      {displayCount &&
+        <center>
+          <Typography
+            color='textSecondary'
+          >
+            <i>Total Permissions: {perms.length}</i>
+          </Typography>
+        </center>}
+
+    </>
   )
 }
 
