@@ -16,9 +16,7 @@ import {
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
-import { Folder, Delete } from '@mui/icons-material'
 import CloseIcon from '@mui/icons-material/Close'
-import formatDistance from 'date-fns/formatDistance'
 import { toast } from 'react-toastify'
 import ProtoChip from '../ProtoChip'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
@@ -30,6 +28,19 @@ const useStyles = makeStyles(style, {
   name: 'ProtocolPermissionList'
 })
 
+/**
+ * A component for displaying a list of protocol permissions as apps with access to a protocol, or protocols an app can access.
+ *
+ * @param {Object} obj - An object containing the following parameters:
+ * @param {string} obj.app - The application context or configuration.
+ * @param {string} obj.protocol - The protocol name for which permissions are being displayed.
+ * @param {number} obj.limit - The maximum number of permissions to display.
+ * @param {string} [obj.itemsDisplayed='protocols'] - The type of items to display ('protocols' or 'apps', 'protocols' by default).
+ * @param {boolean} [obj.canRevoke=true] - Indicates whether permissions can be revoked (true by default).
+ * @param {boolean} [obj.displayCount=true] - Indicates whether to display the count of permissions (true by default).
+ * @param {string} [obj.listHeaderTitle] - The title for the list header.
+ * @param {boolean} [obj.showEmptyList=false] - Indicates whether to show an empty list message or remove it (false by default).
+ */
 const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protocols', canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
   // Validate params
   if (itemsDisplayed === 'apps' && app) {
@@ -79,6 +90,7 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
     setDialogOpen(true)
   }
 
+  // Handle revoke dialog confirmation
   const handleConfirm = async () => {
     try {
       setDialogLoading(true)
@@ -121,6 +133,7 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
     refreshPerms()
   }, [refreshPerms])
 
+  // Determines if an empty list showed be shown or just removed
   if (perms.length === 0 && !showEmptyList) {
     return (<></>)
   }
@@ -169,14 +182,27 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
               <div style={{ backgroundColor: '#222222', padding: '1em 0 0 1em' }}>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
-                  <AppChip label={permObject.originator} showDomain />
-                  {permObject.permissions.length > 0 && permObject.permissions[0].counterparty
-                    ? <Button onClick={() => { revokeAllPermissions(permObject) }} variant='contained' color='secondary'>
-                      Revoke All
-                      </Button>
-                    : <IconButton edge='end' onClick={() => revokePermission(permObject.permissions[0].permissionGrant)} size='large'>
-                      <CloseIcon />
-                      </IconButton>}
+                  <AppChip
+                    label={permObject.originator} showDomain onClick={(e) => {
+                      e.stopPropagation()
+                      history.push({
+                        pathname: `/dashboard/app/${encodeURIComponent(permObject.originator)}`,
+                        state: {
+                          domain: permObject.originator
+                        }
+                      })
+                    }}
+                  />
+                  {canRevoke &&
+                    <>
+                      {permObject.permissions.length > 0 && permObject.permissions[0].counterparty
+                        ? <Button onClick={() => { revokeAllPermissions(permObject) }} variant='contained' color='secondary'>
+                          Revoke All
+                        </Button>
+                        : <IconButton edge='end' onClick={() => revokePermission(permObject.permissions[0].permissionGrant)} size='large'>
+                          <CloseIcon />
+                          </IconButton>}
+                    </>}
 
                 </div>
 
@@ -187,11 +213,14 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
                         {permission.counterparty &&
                           <><Grid item xs={12} sm={6} md={4} lg={3}>
                             <CounterpartyChip counterparty={permission.counterparty} />
-                            </Grid><Grid item alignSelf='center'>
-                            <IconButton edge='end' onClick={() => revokePermission(permission.permissionGrant)} size='large'>
-                                <CloseIcon />
-                              </IconButton>
-                                 </Grid>
+                            </Grid>
+                            {canRevoke &&
+                              <Grid item alignSelf='center'>
+
+                                <IconButton edge='end' onClick={() => revokePermission(permission.permissionGrant)} size='large'>
+                                  <CloseIcon />
+                                </IconButton>
+                              </Grid>}
                           </>}
 
                       </React.Fragment>
