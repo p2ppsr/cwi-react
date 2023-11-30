@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Typography, IconButton, ListItemText, ListItemAvatar, Avatar, List, ListItemSecondaryAction, Grid, Link, Paper, Switch, ListItemButton } from '@mui/material'
+import { Typography, IconButton, Grid, Link, Paper } from '@mui/material'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import CheckIcon from '@mui/icons-material/Check'
-import DownloadIcon from '@mui/icons-material/Download'
 import { useHistory, useLocation } from 'react-router-dom'
-import exportDataToFile from '../../../utils/exportDataToFile'
 import PageHeader from '../../../components/PageHeader'
 import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
 
@@ -14,16 +12,11 @@ import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
 const ProtocolAccess = () => {
   const location = useLocation()
   const history = useHistory()
-  // const useStyles = makeStyles(style, { name: 'basketAccess' })
+  // const useStyles = makeStyles(style, { name: 'protocolAccess' })
   // const classes = useStyles()
-
-  // if (!location.state) {
-  //   return <div>No data provided!</div>
-  // }
 
   const { protocolName, iconURL, securityLevel, protocolID, counterparty, lastAccessed, description, documentationURL, originator } = location.state
   const [copied, setCopied] = useState({ id: false, registryOperator: false })
-  const [itemsInBasket, setItemsInBasket] = useState([])
 
   // Copies the data and timeouts the checkmark icon
   const handleCopy = (data, type) => {
@@ -34,28 +27,6 @@ const ProtocolAccess = () => {
     }, 2000)
   }
 
-  useEffect(() => {
-    (async () => {
-      // Get a list of items in this basket
-      // const outputs = await getTransactionOutputs({
-      //   basket: 'babbage-protocol-permission',
-      //   tags,
-      //   originator: store.getState().settings.adminOriginator,
-      //   spendable: true,
-      //   includeEnvelope: true,
-      //   limit
-      // })
-      // const itemsInBasket = await window.CWI.ninja.getTransactionOutputs({
-      //   basket: id,
-      //   includeBasket: true,
-      //   includeTags: true,
-      //   spendable: true,
-      //   order: 'descending'
-      // })
-      // setItemsInBasket(itemsInBasket)
-    })()
-  }, [])
-
   return (
     <div>
       <Grid container spacing={3} direction='column' sx={{ padding: '16px' }}>
@@ -65,11 +36,11 @@ const ProtocolAccess = () => {
             title={protocolName}
             subheading={
               <div>
-                {/* <Typography color='textSecondary'>
-                  {`Items in Basket: ${itemsInBasket.length}`}
-                </Typography> */}
+                <Typography variant='caption' color='textSecondary' display='block'>
+                  Security Level: <Typography variant='caption' fontWeight='bold'>{securityLevel}</Typography>
+                </Typography>
                 <Typography variant='caption' color='textSecondary'>
-                  Protocol ID: {protocolID}
+                  Protocol ID: <Typography variant='caption' fontWeight='bold'>{protocolID}</Typography>
                   <IconButton size='small' onClick={() => handleCopy(protocolID, 'id')} disabled={copied.id}>
                     {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
                   </IconButton>
@@ -78,13 +49,6 @@ const ProtocolAccess = () => {
             }
             icon={iconURL}
             showButton={false}
-            // buttonTitle='Export'
-            // buttonIcon={<DownloadIcon />}
-            // onClick={() => exportDataToFile({
-            //   data: itemsInBasket,
-            //   filename: 'basket_contents.json',
-            //   type: 'application/json'
-            // })}
           />
         </Grid>
 
