@@ -1,12 +1,15 @@
 /**
- * Groups and sorts permissions by their target domains. Each domain will have a unique list of counterparties,
- * along with the original permission grant associated with each counterparty. This is useful for managing
- * permissions in a structured format where permissions are categorized by domains and counterparties are
- * uniquely identified within these categories.
+ * Sorts and groups an array of permissions by domain and counterparty.
  *
- * @param {Array} permissions - An array of permission objects to be sorted
+ * This function takes an array of permission objects and organizes them into a nested structure
+ * based on the domain and counterparty values. It groups permissions by domain and then by
+ * counterparty within each domain, ensuring that each counterparty is listed only once per domain.
  *
- * @returns {Array} An array of objects, each representing a domain with its unique counterparties
+ * This allows permissions to be revoked on a per-counterparty basis.
+ *
+ * @param {Array} permissions - An array of permission objects to be sorted and grouped.
+ *
+ * @returns {Array} An array of objects, each representing a domain with its unique permissions
  */
 const sortPermissions = (permissions) => {
   const groupedPermissions = permissions.reduce((acc, curr) => {

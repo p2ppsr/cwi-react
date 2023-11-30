@@ -143,11 +143,11 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
       <Dialog
         open={dialogOpen}
       >
-        <DialogTitle>
+        <DialogTitle color='textPrimary'>
           Revoke Permission?
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText color='textSecondary'>
             You can re-authorize this permission next time you use this app.
           </DialogContentText>
         </DialogContent>
@@ -198,10 +198,10 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
                       {permObject.permissions.length > 0 && permObject.permissions[0].counterparty
                         ? <Button onClick={() => { revokeAllPermissions(permObject) }} variant='contained' color='secondary'>
                           Revoke All
-                        </Button>
+                          </Button>
                         : <IconButton edge='end' onClick={() => revokePermission(permObject.permissions[0].permissionGrant)} size='large'>
                           <CloseIcon />
-                          </IconButton>}
+                        </IconButton>}
                     </>}
 
                 </div>
@@ -213,7 +213,7 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
                         {permission.counterparty &&
                           <><Grid item xs={12} sm={6} md={4} lg={3}>
                             <CounterpartyChip counterparty={permission.counterparty} />
-                            </Grid>
+                          </Grid>
                             {canRevoke &&
                               <Grid item alignSelf='center'>
 
