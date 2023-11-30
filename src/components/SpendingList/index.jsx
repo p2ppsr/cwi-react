@@ -43,6 +43,7 @@ const SpendingList = ({ app, limit }) => {
       targetDomain: app,
       limit
     })
+    console.log('SpendingList():result=', result)
     setAuthorizations(result.authorizations)
     setEarliestAuthorization(result.earliestAuthorizationTime)
     setCurrentSpending(result.currentSpending)

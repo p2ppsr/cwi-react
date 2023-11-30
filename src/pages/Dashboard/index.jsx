@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import { useTheme } from '@emotion/react'
 import { useBreakpoint } from '../../utils/useBreakpoints.js'
+// Change suggested by ChatGPT 3.5
+// import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Switch, Route, useHistory } from 'react-router-dom'
 import style from './style'
 import { makeStyles } from '@mui/styles'

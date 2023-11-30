@@ -1,18 +1,19 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
 import { Switch, Route, useHistory } from 'react-router-dom'
-import { Typography, Button, IconButton, Grid } from '@mui/material'
+import { Typography, Button, IconButton, Grid, Tab, Tabs } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import isImageUrl from '../../../utils/isImageUrl'
 import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
-import AppViewTabs from '../../../components/AppViewTabs'
+// import AppViewTabs from '../../../components/AppViewTabs'
 import ProtocolList from '../../../components/ProtocolList'
 import SpendingList from '../../../components/SpendingList'
 import BasketList from '../../../components/BasketList'
 import CertificateList from '../../../components/CertificateList'
+// debugger // eslint-disable-line no-debugger
 
 const useStyles = makeStyles(style, { name: 'appview' })
 
@@ -22,6 +23,15 @@ const AppView = ({ match, history }) => {
   // console.log('AppView:originator=', originator)
   // const [isInit, setIsInit] = useState(true)
   // const [selectTab, setSelectTab] = useState('protocols')
+  // const classes = useStyles()
+  const [tabValue, setTabValue] = useState('0')
+  const [title, setTitle] = useState('Protocols')
+  // const { onFocusRelinquished } = useContext(UIContext)
+
+  const handleClose = async () => {
+    await onFocusRelinquished()
+  }
+
   const [appDomain, setAppDomain] = useState('')
   const [appName, setAppName] = useState('')
   const [appIcon, setAppIcon] = useState('MetaNet AppMetaNet App')
@@ -79,10 +89,30 @@ const AppView = ({ match, history }) => {
       }
     })()
   }, [refresh, appDomain])
+
+  const handleTabChange = (e, v) => {
+    console.log('handleTabChange():e=', e, ',v=', v)
+    setTabValue(v)
+    switch (v) {
+      case 0:
+        setTitle('Protocols')
+        break
+      case 1:
+        setTitle('Spending')
+        break
+      case 2:
+        setTitle('Baskets')
+        break
+      case 3:
+        setTitle('Certificates')
+        break
+    }
+  }
   // }, [refresh, appDomain, appName, isInit, loading, appIcon])
   // console.log('AppView:selectTab=', selectTab)
-  // console.log('AppView:appDomain=', appDomain)
+  console.log('AppView:appDomain=', appDomain)
   // console.log('AppView:originator=', originator)
+  console.log('AppView:loading=', loading)
 
   // * className={classes.page_container}
   return (
@@ -120,13 +150,56 @@ const AppView = ({ match, history }) => {
             You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.
             </Typography>
             <br />
-            <AppViewTabs history={history}/>
-            {originator === 'spending' && <SpendingList
+            <Tabs
+              className={classes.tabs}
+              value={tabValue}
+              onChange={handleTabChange}
+              indicatorColor='primary'
+              textColor='primary'
+              variant='fullWidth'
+            >
+              <Tab
+                label='Protocols'
+                value='0'
+              >
+              </Tab>
+              <Tab
+                label='Spending'
+                value='1'
+              >
+              </Tab>
+              <Tab
+                label='Baskets'
+                value='2'
+              >
+              </Tab>
+              <Tab
+                label='Certificates'
+                value='3'
+              >
+              </Tab>
+            </Tabs>
+            {tabValue === '0' &&
+            <ProtocolList
+              app={appDomain}
+              /*
+              protocol={protocol}
+              limit={limit}
+              canRevoke={canRevoke}
+              displayCount={displayCount}
+              listHeaderTitle={listHeaderTitle}
+              showEmptyList={showEmptyList}
+              */
+            />}
+            {tabValue === '1' &&
+            <SpendingList
               app={appDomain}
               limit={10}
             />}
-            {originator === 'baskets' && <BasketList
+            {tabValue === '2' &&
+            <BasketList
               app={appDomain}
+              /*
               basket={basket}
               limit={limit}
               itemsDisplayed={itemsDisplayed}
@@ -134,24 +207,19 @@ const AppView = ({ match, history }) => {
               displayCount={displayCount}
               listHeaderTitle={listHeaderTitle}
               showEmptyList={showEmptyList}
+              */
             />}
-            {originator === 'certificates' && <CertificateList
-                app={appDomain}
-                type={type}
-                limit={limit}
-                displayCount={displayCount}
-                listHeaderTitle={listHeaderTitle}
-                showEmptyList={showEmptyList}
-              />}
-            <ProtocolList
+            {tabValue === '3' &&
+            <CertificateList
               app={appDomain}
-              protocol={protocol}
+              /*
+              type={type}
               limit={limit}
-              canRevoke={canRevoke}
               displayCount={displayCount}
               listHeaderTitle={listHeaderTitle}
               showEmptyList={showEmptyList}
-            />
+              */
+            />}
           </div>
           <div>
             <Button
@@ -169,36 +237,6 @@ const AppView = ({ match, history }) => {
         </div>
       </div>
       <div>
-
-      <Switch>
-        <Route
-          path='/dashboard/manage-app/protocols'
-          component={ProtocolList}
-        />
-        <Route
-          path='/dashboard/manage-app/spending'
-          component={SpendingList}
-        />
-        <Route
-          path='/dashboard/manage-app/baskets'
-          component={BasketList}
-        />
-        <Route
-          path='/dashboard/manage-app/certificates'
-          component={CertificateList}
-        />
-        <Route
-          className={classes.full_width}
-          default
-          component={() => {
-            return (
-              <div style={{ padding: '1em' }}>
-                <Typography align='center' color='textPrimary'>Are you lost?</Typography>
-              </div>
-            )
-          }}
-        />
-      </Switch>
     </div>
   </div>
   )
