@@ -18,20 +18,8 @@ import CertificateList from '../../../components/CertificateList'
 const useStyles = makeStyles(style, { name: 'appview' })
 
 const AppView = ({ match, history }) => {
-  // console.log('AppView:match=', match)
   const originator = decodeURIComponent(match.params.originator)
-  // console.log('AppView:originator=', originator)
-  // const [isInit, setIsInit] = useState(true)
-  // const [selectTab, setSelectTab] = useState('protocols')
-  // const classes = useStyles()
   const [tabValue, setTabValue] = useState('0')
-  const [title, setTitle] = useState('Protocols')
-  // const { onFocusRelinquished } = useContext(UIContext)
-
-  const handleClose = async () => {
-    await onFocusRelinquished()
-  }
-
   const [appDomain, setAppDomain] = useState('')
   const [appName, setAppName] = useState('')
   const [appIcon, setAppIcon] = useState('MetaNet AppMetaNet App')
@@ -49,11 +37,8 @@ const AppView = ({ match, history }) => {
   useEffect(() => {
     (async () => {
       try {
-        // console.log('AppView:useEffect:before appDomain=', appDomain)
-        // console.log('AppView:useEffect:before originator=', originator)
         if (appDomain === '') {
           setAppDomain(originator)
-          // console.log('AppView:useEffect:after appDomain=', appDomain)
         }
         setLoading(true)
         // Validate that the default favicon path is actually an image
@@ -68,8 +53,6 @@ const AppView = ({ match, history }) => {
             // Try to parse the app manifest to find the app info
             try {
               const manifest = await parseAppManifest({ domain: appDomain })
-              // console.log('AppView:manifest=', manifest)
-              // console.log('AppView:typeof manifest.name=', typeof manifest.name)
               if (typeof manifest.name === 'string') {
                 setAppName(manifest.name)
               }
@@ -78,7 +61,6 @@ const AppView = ({ match, history }) => {
             }
             setLoading(false)
             setRefresh(false)
-            // console.log('reloaded')
           }
         } catch (e) {
         }
@@ -90,31 +72,6 @@ const AppView = ({ match, history }) => {
     })()
   }, [refresh, appDomain])
 
-  const handleTabChange = (e, v) => {
-    console.log('handleTabChange():e=', e, ',v=', v)
-    setTabValue(v)
-    switch (v) {
-      case 0:
-        setTitle('Protocols')
-        break
-      case 1:
-        setTitle('Spending')
-        break
-      case 2:
-        setTitle('Baskets')
-        break
-      case 3:
-        setTitle('Certificates')
-        break
-    }
-  }
-  // }, [refresh, appDomain, appName, isInit, loading, appIcon])
-  // console.log('AppView:selectTab=', selectTab)
-  console.log('AppView:appDomain=', appDomain)
-  // console.log('AppView:originator=', originator)
-  console.log('AppView:loading=', loading)
-
-  // * className={classes.page_container}
   return (
     <div className={classes.root}>
       <div>
@@ -153,7 +110,7 @@ const AppView = ({ match, history }) => {
             <Tabs
               className={classes.tabs}
               value={tabValue}
-              onChange={handleTabChange}
+              onChange={(e, v) => { setTabValue(v) }}
               indicatorColor='primary'
               textColor='primary'
               variant='fullWidth'
@@ -195,6 +152,7 @@ const AppView = ({ match, history }) => {
             <SpendingList
               app={appDomain}
               limit={10}
+              appIcon={appIcon}
             />}
             {tabValue === '2' &&
             <BasketList
