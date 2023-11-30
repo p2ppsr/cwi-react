@@ -31,7 +31,6 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
         })
 
         const filteredResults = result.filter(x => x.basket)
-        console.log('recent basket access: ', filteredResults)
         setRecentBasketAccess(filteredResults)
       } catch (error) {
         console.error(error)
@@ -61,7 +60,7 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
             })}
           </>
         )}
-        <ProtocolPermissionList app={originator} limit={1} canRevoke={false} clickable displayCount={false} listHeaderTitle='Protocol Grants' />
+        <ProtocolPermissionList app={originator} limit={3} canRevoke={false} clickable displayCount={false} listHeaderTitle='Protocol Grants' />
         <Divider />
         <CertificateAccessList app={originator} limit={1} canRevoke={false} displayCount={false} listHeaderTitle='Certificate Grants' />
       </List>

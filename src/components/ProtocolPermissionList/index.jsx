@@ -34,15 +34,16 @@ const useStyles = makeStyles(style, {
  *
  * @param {Object} obj - An object containing the following parameters:
  * @param {string} obj.app - The application context or configuration.
- * @param {string} obj.protocol - The protocol name for which permissions are being displayed.
  * @param {number} obj.limit - The maximum number of permissions to display.
+ * @param {string} obj.protocol - The protocol name for which permissions are being displayed.
+ * @param {number} [obj.securityLevel] - The protocol securityLevel for which permissions are being displayed (optional).
  * @param {string} [obj.itemsDisplayed='protocols'] - The type of items to display ('protocols' or 'apps', 'protocols' by default).
  * @param {boolean} [obj.canRevoke=true] - Indicates whether permissions can be revoked (true by default).
  * @param {boolean} [obj.displayCount=true] - Indicates whether to display the count of permissions (true by default).
  * @param {string} [obj.listHeaderTitle] - The title for the list header.
  * @param {boolean} [obj.showEmptyList=false] - Indicates whether to show an empty list message or remove it (false by default).
  */
-const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protocols', canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
+const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, itemsDisplayed = 'protocols', canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
   // Validate params
   if (itemsDisplayed === 'apps' && app) {
     const e = new Error('Error in ProtocolPermissionList: apps cannot be displayed when providing an app param! Please provide a valid protocol instead.')
@@ -61,22 +62,20 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
 
   const classes = useStyles()
   const history = useHistory()
-  const theme = useTheme()
+  // const theme = useTheme()
 
   const refreshPerms = useCallback(async () => {
     // Get the current permission grants
     const result = await window.CWI.listProtocolPermissions({
       targetDomain: app,
       targetProtocolName: protocol,
-      // targetProtocolSecurityLevel: '2',
+      targetProtocolSecurityLevel: securityLevel,
       limit
     })
-    console.log('grants ', result)
 
     // Filter permissions by counterparty and domain if items are displayed as apps
     if (itemsDisplayed === 'apps') {
       const results = sortPermissions(result)
-      console.log('sorting... ', results)
       setPerms(results)
     } else {
       setPerms(result)

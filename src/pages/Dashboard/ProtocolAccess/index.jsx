@@ -79,7 +79,7 @@ const ProtocolAccess = () => {
             <Typography variant='h4' gutterBottom className={classes.typography}>
               Apps with Access
             </Typography>
-            <ProtocolPermissionList protocol={protocolID} counterparty={counterparty} itemsDisplayed='apps' canRevoke displayCount={false} />
+            <ProtocolPermissionList protocol={protocolID} securityLevel={securityLevel} counterparty={counterparty} itemsDisplayed='apps' canRevoke displayCount={false} />
           </Paper>
         </Grid>
       </Grid>
