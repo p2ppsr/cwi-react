@@ -27,7 +27,7 @@ const useStyles = makeStyles(style, {
   name: 'SpendingList'
 })
 
-const SpendingList = ({ app, limit }) => {
+const SpendingList = ({ app, limit, appIcon }) => {
   console.log('SpendingList():app=', app, 'limit=', limit)
   const [authorizations, setAuthorizations] = useState([])
   const [currentSpending, setCurrentSpending] = useState(0)
