@@ -8,7 +8,7 @@ import { Img } from 'uhrp-react'
 
 const useStyles = makeStyles(style, { name: 'pageHeader' })
 
-const PageHeader = ({ title, subheading, icon, buttonTitle, buttonIcon, onClick, history }) => {
+const PageHeader = ({ title, subheading, icon, buttonTitle, buttonIcon, onClick, history, showButton = true }) => {
   const classes = useStyles()
   return (
     <div>
@@ -40,16 +40,18 @@ const PageHeader = ({ title, subheading, icon, buttonTitle, buttonIcon, onClick,
             : subheading}
         </div>
         <div>
-          <Button
-            className={classes.action_button}
-            variant='contained'
-            color='primary'
-            size='large'
-            endIcon={buttonIcon}
-            onClick={onClick}
-          >
-            {buttonTitle}
-          </Button>
+          {showButton &&
+            <Button
+              className={classes.action_button}
+              variant='contained'
+              color='primary'
+              size='large'
+              endIcon={buttonIcon}
+              onClick={onClick}
+            >
+              {buttonTitle}
+            </Button>}
+
         </div>
       </div>
     </div>

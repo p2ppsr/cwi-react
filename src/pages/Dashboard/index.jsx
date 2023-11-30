@@ -32,6 +32,7 @@ import Profile from '../../components/Profile.jsx'
 import BasketAccess from './BasketAccess'
 import UIContext from '../../UIContext'
 import PageLoading from '../../components/PageLoading'
+import ProtocolAccess from './ProtocolAccess/index.jsx'
 
 const useStyles = makeStyles(style, {
   name: 'Dashboard'
@@ -200,36 +201,36 @@ const Dashboard = () => {
               </ListItemIcon>
               <ListItemText>
                 Access
-                </ListItemText>
+              </ListItemText>
             </ListItem>
             <ListItemButton
               onClick={() => {
-                  navigation.push({
-                    pathname: '/dashboard/trust',
-                    state: {
-                      registerIdReminder,
-                      setRegisterIdReminder
-                    }
-                  })
-                }}
+                navigation.push({
+                  pathname: '/dashboard/trust',
+                  state: {
+                    registerIdReminder,
+                    setRegisterIdReminder
+                  }
+                })
+              }}
               selected={history.location.pathname === '/dashboard/trust'}
             >
               <ListItemIcon>
-                  <TrustIcon
-                    color={
+                <TrustIcon
+                  color={
                   history.location.pathname === '/dashboard/trust'
                     ? 'secondary'
                     : undefined
                 }
-                  />
-                  {registerIdReminder === true &&
-                    <CircleIcon
+                />
+                {registerIdReminder === true &&
+                  <CircleIcon
                       style={{ marginLeft: '0.7em', width: '12px', color: 'red' }}
                     />}
-                </ListItemIcon>
+              </ListItemIcon>
               <ListItemText>
-                  Trust
-                </ListItemText>
+                Trust
+              </ListItemText>
             </ListItemButton>
             <ListItem
               button
@@ -239,16 +240,16 @@ const Dashboard = () => {
             }
             >
               <ListItemIcon>
-                  <SettingsIcon
+                <SettingsIcon
                   color={
                   history.location.pathname === '/dashboard/settings'
                     ? 'secondary'
                     : undefined
                 }
                 />
-                </ListItemIcon>
+              </ListItemIcon>
               <ListItemText>
-                  Settings
+                Settings
               </ListItemText>
             </ListItem>
 
@@ -301,6 +302,10 @@ const Dashboard = () => {
           <Route
             path='/dashboard/basket/:basketId'
             component={BasketAccess}
+          />
+          <Route
+            path='/dashboard/protocol/:protocolId'
+            component={ProtocolAccess}
           />
           <Route
             className={classes.full_width}

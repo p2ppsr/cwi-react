@@ -43,7 +43,7 @@ const CounterpartyChip = ({
   return (
     <Chip
       style={{
-        height: '100%',
+        // height: '100%',
         width: '100%',
         // maxWidth: '30em',
         paddingTop: `${23 * size}px`,

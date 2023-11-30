@@ -47,6 +47,9 @@ const BasketChip = ({
           basketId,
           basketRegistryOperator
         )
+        if (!results) {
+          return
+        }
         setBasketName(results.name)
         setIconURL(results.iconURL)
         setDescription(results.description)

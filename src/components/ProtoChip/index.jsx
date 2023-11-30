@@ -17,7 +17,7 @@ const useStyles = makeStyles(style, {
 })
 
 const ProtoChip = ({
-  securityLevel, protocolID, counterparty, lastAccessed, history, clickable = false, size = 1.3, onClick, onCounterpartyClick
+  securityLevel = 2, protocolID, counterparty, lastAccessed, originator, history, clickable = false, size = 1.3, onClick, onCounterpartyClick
 }) => {
   if (typeof protocolID !== 'string') {
     throw new Error('ProtoChip requires protocolID to be a string')
@@ -37,6 +37,7 @@ const ProtoChip = ({
   const [description, setDescription] = useState(
     'Protocol description not found.'
   )
+  const [documentationURL, setDocumentationURL] = useState('https://projectbabbage.com')
 
   useEffect(() => {
     (async () => {
@@ -46,6 +47,7 @@ const ProtoChip = ({
         setProtocolName(results.name)
         setIconURL(results.iconURL)
         setDescription(results.description)
+        setDocumentationURL(results.documentationURL)
       } catch (error) {
         console.error(error)
       }
@@ -92,7 +94,7 @@ const ProtoChip = ({
                     />
                   </Grid>
                 </Grid>
-                </div>
+              </div>
               : ''}
           </span>
         </div>
@@ -157,9 +159,20 @@ const ProtoChip = ({
             onClick(e)
           } else {
             e.stopPropagation()
-            history.push(
-              `/dashboard/protocol/${encodeURIComponent(`${securityLevel}-${protocolID}`)}`
-            )
+            history.push({
+              pathname: `/dashboard/protocol/${encodeURIComponent(`${securityLevel}-${protocolID}`)}`,
+              state: {
+                protocolName,
+                iconURL,
+                securityLevel,
+                protocolID,
+                counterparty,
+                lastAccessed,
+                description,
+                documentationURL,
+                originator
+              }
+            })
           }
         }
       }}

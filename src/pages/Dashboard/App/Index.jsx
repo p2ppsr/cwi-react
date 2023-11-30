@@ -9,7 +9,6 @@ import RecentActions from '../../../components/RecentActions'
 import AccessAtAGlance from '../../../components/AccessAtAGlance'
 import PageHeader from '../../../components/PageHeader'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
-import BasketAccessList from '../../../components/BasketAccessList'
 
 const useStyles = makeStyles(style, { name: 'apps' })
 

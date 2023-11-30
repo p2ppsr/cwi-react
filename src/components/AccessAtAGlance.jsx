@@ -22,7 +22,6 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
   useEffect(() => {
     (async () => {
       try {
-        console.log(originator)
         const result = await window.CWI.ninja.getTransactionOutputs({
           limit: 1,
           includeBasket: true,
@@ -32,7 +31,6 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
         })
 
         const filteredResults = result.filter(x => x.basket)
-        console.log('recent basket access: ', filteredResults)
         setRecentBasketAccess(filteredResults)
       } catch (error) {
         console.error(error)
@@ -62,12 +60,9 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
             })}
           </>
         )}
-        <ListSubheader>
-          Protocol Grants
-        </ListSubheader>
-        <ProtocolPermissionList app={originator} limit={1} canRevoke={false} clickable displayCount={false} />
+        <ProtocolPermissionList app={originator} limit={3} canRevoke={false} clickable displayCount={false} listHeaderTitle='Protocol Grants' />
         <Divider />
-        <CertificateAccessList app={originator} limit={1} displayCount={false} listHeaderTitle='Certificate Grants' />
+        <CertificateAccessList app={originator} limit={1} canRevoke={false} displayCount={false} listHeaderTitle='Certificate Grants' />
       </List>
 
       {loading && <LinearProgress paddingTop='1em' />}
