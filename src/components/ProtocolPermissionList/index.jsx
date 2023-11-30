@@ -182,8 +182,7 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
 
             {/* Counterparties listed just below the header */}
             {itemsDisplayed === 'apps' && (
-              <div style={{ backgroundColor: theme.palette.background.leftMenu, padding: '1em 0 0 1em' }}>
-
+              <div className={classes.appList}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
                   <AppChip
                     label={permObject.originator} showDomain onClick={(e) => {
@@ -199,37 +198,35 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
                   {canRevoke &&
                     <>
                       {permObject.permissions.length > 0 && permObject.permissions[0].counterparty
-                        ? <Button onClick={() => { revokeAllPermissions(permObject) }} variant='contained' color='secondary'>
+                        ? <Button onClick={() => { revokeAllPermissions(permObject) }} variant='contained' color='secondary' className={classes.revokeButton}>
                           Revoke All
-                        </Button>
+                          </Button>
                         : <IconButton edge='end' onClick={() => revokePermission(permObject.permissions[0].permissionGrant)} size='large'>
                           <CloseIcon />
-                          </IconButton>}
+                        </IconButton>}
                     </>}
 
                 </div>
 
-                <ListItem className={classes.action_card} elevation={4} style={{ margin: '2em' }}>
-                  <Grid container spacing={1} className={classes.gridContainer} style={{ paddingBottom: '1em' }}>
+                <ListItem elevation={4}>
+                  <Grid container spacing={1} style={{ paddingBottom: '1em' }}>
                     {permObject.permissions.map((permission, idx) => (
                       <React.Fragment key={idx}>
                         {permission.counterparty &&
-                          <><Grid item xs={12} sm={6} md={4} lg={3}>
-                            <CounterpartyChip counterparty={permission.counterparty} />
-                            </Grid>
-                            {canRevoke &&
-                              <Grid item alignSelf='center'>
-
+                          <Grid item xs={12} sm={6} md={6} lg={4}>
+                            <div className={classes.gridItem}>
+                              <CounterpartyChip counterparty={permission.counterparty} size={1.1} />
+                              {canRevoke &&
                                 <IconButton edge='end' onClick={() => revokePermission(permission.permissionGrant)} size='large'>
                                   <CloseIcon />
-                                </IconButton>
-                              </Grid>}
-                          </>}
-
+                                </IconButton>}
+                            </div>
+                          </Grid>}
                       </React.Fragment>
                     ))}
                   </Grid>
                 </ListItem>
+
               </div>
             )}
 

@@ -5,6 +5,8 @@ import CheckIcon from '@mui/icons-material/Check'
 import { useHistory, useLocation } from 'react-router-dom'
 import PageHeader from '../../../components/PageHeader'
 import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
+import style from './style'
+import { makeStyles } from '@mui/styles'
 
 /**
  * Display the access information for a particular basket
@@ -13,8 +15,8 @@ const ProtocolAccess = () => {
   const location = useLocation()
   const history = useHistory()
 
-  // const useStyles = makeStyles(style, { name: 'protocolAccess' })
-  // const classes = useStyles()
+  const useStyles = makeStyles(style, { name: 'protocolAccess' })
+  const classes = useStyles()
 
   // Pull out the protocol specific information passed in
   const { protocolName, iconURL, securityLevel, protocolID, counterparty, description, documentationURL } = location.state
@@ -31,7 +33,7 @@ const ProtocolAccess = () => {
 
   return (
     <div>
-      <Grid container spacing={3} direction='column' sx={{ padding: '16px' }}>
+      <Grid container spacing={3} direction='column' className={classes.grid}>
         <Grid item>
           <PageHeader
             history={history}
@@ -72,9 +74,9 @@ const ProtocolAccess = () => {
           <Link color='textPrimary' href={documentationURL} target='_blank' rel='noopener noreferrer'>{documentationURL}</Link>
         </Grid>
 
-        <Grid item>
-          <Paper elevation={3} sx={{ padding: '16px', borderRadius: '8px' }}>
-            <Typography variant='h4' gutterBottom paddingLeft='0.25em'>
+        <Grid item padding='1em'>
+          <Paper elevation={3} className={classes.paper}>
+            <Typography variant='h4' gutterBottom className={classes.typography}>
               Apps with Access
             </Typography>
             <ProtocolPermissionList protocol={protocolID} counterparty={counterparty} itemsDisplayed='apps' canRevoke displayCount={false} />
