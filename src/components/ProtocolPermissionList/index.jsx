@@ -15,6 +15,7 @@ import {
   Grid
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
+import { useTheme } from '@emotion/react'
 import style from './style'
 import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
@@ -57,8 +58,10 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
   const [currentPerm, setCurrentPerm] = useState(null)
   const [currentApp, setCurrentApp] = useState(null)
   const [dialogLoading, setDialogLoading] = useState(false)
+
   const classes = useStyles()
   const history = useHistory()
+  const theme = useTheme()
 
   const refreshPerms = useCallback(async () => {
     // Get the current permission grants
@@ -179,7 +182,7 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
 
             {/* Counterparties listed just below the header */}
             {itemsDisplayed === 'apps' && (
-              <div style={{ backgroundColor: '#222222', padding: '1em 0 0 1em' }}>
+              <div style={{ backgroundColor: theme.palette.background.leftMenu, padding: '1em 0 0 1em' }}>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
                   <AppChip
@@ -198,10 +201,10 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
                       {permObject.permissions.length > 0 && permObject.permissions[0].counterparty
                         ? <Button onClick={() => { revokeAllPermissions(permObject) }} variant='contained' color='secondary'>
                           Revoke All
-                          </Button>
+                        </Button>
                         : <IconButton edge='end' onClick={() => revokePermission(permObject.permissions[0].permissionGrant)} size='large'>
                           <CloseIcon />
-                        </IconButton>}
+                          </IconButton>}
                     </>}
 
                 </div>
@@ -213,7 +216,7 @@ const ProtocolPermissionList = ({ app, protocol, limit, itemsDisplayed = 'protoc
                         {permission.counterparty &&
                           <><Grid item xs={12} sm={6} md={4} lg={3}>
                             <CounterpartyChip counterparty={permission.counterparty} />
-                          </Grid>
+                            </Grid>
                             {canRevoke &&
                               <Grid item alignSelf='center'>
 

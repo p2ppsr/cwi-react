@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Typography, IconButton, Grid, Link, Paper } from '@mui/material'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import CheckIcon from '@mui/icons-material/Check'
@@ -12,10 +12,12 @@ import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
 const ProtocolAccess = () => {
   const location = useLocation()
   const history = useHistory()
+
   // const useStyles = makeStyles(style, { name: 'protocolAccess' })
   // const classes = useStyles()
 
-  const { protocolName, iconURL, securityLevel, protocolID, counterparty, lastAccessed, description, documentationURL, originator } = location.state
+  // Pull out the protocol specific information passed in
+  const { protocolName, iconURL, securityLevel, protocolID, counterparty, description, documentationURL } = location.state
   const [copied, setCopied] = useState({ id: false, registryOperator: false })
 
   // Copies the data and timeouts the checkmark icon
