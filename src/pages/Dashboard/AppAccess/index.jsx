@@ -8,16 +8,15 @@ import style from './style'
 import isImageUrl from '../../../utils/isImageUrl'
 import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
-// import AppViewTabs from '../../../components/AppViewTabs'
 import ProtocolList from '../../../components/ProtocolList'
 import SpendingList from '../../../components/SpendingList'
 import BasketList from '../../../components/BasketList'
 import CertificateList from '../../../components/CertificateList'
 // debugger // eslint-disable-line no-debugger
 
-const useStyles = makeStyles(style, { name: 'appview' })
+const useStyles = makeStyles(style, { name: 'appaccess' })
 
-const AppView = ({ match, history }) => {
+const AppAccess = ({ match, history }) => {
   const originator = decodeURIComponent(match.params.originator)
   const [tabValue, setTabValue] = useState('0')
   const [appDomain, setAppDomain] = useState('')
@@ -140,8 +139,10 @@ const AppView = ({ match, history }) => {
             <ProtocolList
               app={appDomain}
               /*
-              protocol={protocol}
               limit={limit}
+              protocol={protocol}
+              securityLevel={securityLevel}
+              itemsDisplayed={itemsDisplayed}
               canRevoke={canRevoke}
               displayCount={displayCount}
               listHeaderTitle={listHeaderTitle}
@@ -200,4 +201,4 @@ const AppView = ({ match, history }) => {
   )
 }
 
-export default AppView
+export default AppAccess
