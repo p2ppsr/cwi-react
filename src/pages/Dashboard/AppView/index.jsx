@@ -101,7 +101,7 @@ const AppView = ({ match, history }) => {
             </Typography>
             <br />
             <Typography variant='h2'>
-            Mange App Access
+            Mangage App Access
             </Typography>
             <Typography variant='h4'>
             You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.
