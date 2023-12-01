@@ -24,6 +24,7 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import AppChip from '../AppChip'
 import CounterpartyChip from '../CounterpartyChip'
 import sortPermissions from './sortPermissions'
+import formatDistance from 'date-fns/formatDistance'
 
 const useStyles = makeStyles(style, {
   name: 'ProtocolPermissionList'
@@ -215,6 +216,9 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, itemsDisp
                           <Grid item xs={12} sm={6} md={6} lg={4}>
                             <div className={classes.gridItem}>
                               <CounterpartyChip counterparty={permission.counterparty} size={1.1} />
+                              <Typography variant='h4'>
+                                Expires {formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
+                              </Typography>
                               {canRevoke &&
                                 <IconButton edge='end' onClick={() => revokePermission(permission.permissionGrant)} size='large'>
                                   <CloseIcon />
@@ -238,6 +242,9 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, itemsDisp
                   originator={permObject.originator}
                   clickable
                 />
+                <Typography variant='h4'>
+                  Expires {formatDistance(new Date(permObject.expiry * 1000), new Date(), { addSuffix: true })}
+                </Typography>
               </ListItem>
             )}
           </React.Fragment>

@@ -8,7 +8,7 @@ import style from './style'
 import isImageUrl from '../../../utils/isImageUrl'
 import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
-import ProtocolList from '../../../components/ProtocolList'
+import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
 import SpendingList from '../../../components/SpendingList'
 import BasketList from '../../../components/BasketList'
 import CertificateList from '../../../components/CertificateList'
@@ -136,7 +136,7 @@ const AppAccess = ({ match, history }) => {
               </Tab>
             </Tabs>
             {tabValue === '0' &&
-            <ProtocolList
+            <ProtocolPermissionList
               app={appDomain}
               /*
               limit={limit}
