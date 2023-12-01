@@ -205,66 +205,7 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, itemsDisp
                       {permObject.permissions.length > 0 && permObject.permissions[0].counterparty
                         ? <Button onClick={() => { revokeAllPermissions(permObject) }} variant='contained' color='secondary' className={classes.revokeButton}>
                           Revoke All
-                          </Button>
-                        : <IconButton edge='end' onClick={() => revokePermission(permObject.permissions[0].permissionGrant)} size='large'>
-                          <CloseIcon />
-                        </IconButton>}
-                    </>}
-
-                </div>
-
-                <ListItem elevation={4}>
-                  <Grid container spacing={1} style={{ paddingBottom: '1em' }}>
-                    {permObject.permissions.map((permission, idx) => (
-                      <React.Fragment key={idx}>
-                        {permission.counterparty &&
-                          <Grid item xs={12} sm={6} md={6} lg={4}>
-                            <div className={classes.gridItem}>
-                              <CounterpartyChip counterparty={permission.counterparty} size={1.1} />
-                              <Typography variant='h4'>
-                                Expires {formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
-                              </Typography>
-                              {canRevoke &&
-                                <IconButton edge='end' onClick={() => revokePermission(permission.permissionGrant)} size='large'>
-                                  <CloseIcon />
-                                </IconButton>}
-                            </div>
-                          </Grid>}
-                      </React.Fragment>
-                    ))}
-                  </Grid>
-                </ListItem>
-
-              </div>
-            )}
-
-            {itemsDisplayed !== 'apps' && (
-              <div className={classes.appList}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
-                  {/* <AppChip
-                    label={permObject.originator} showDomain onClick={(e) => {
-                      e.stopPropagation()
-                      history.push({
-                        pathname: `/dashboard/app/${encodeURIComponent(permObject.originator)}`,
-                        state: {
-                          domain: permObject.originator
-                        }
-                      })
-                    }}
-                  /> */}
-                  <ProtoChip
-                    protocolID={permObject.protocol}
-                    counterparty={permObject.counterparty}
-                    securityLevel={permObject.securityLevel}
-                    originator={permObject.originator}
-                    clickable
-                  />
-                  {canRevoke &&
-                    <>
-                      {permObject.permissions.length > 0 && permObject.permissions[0].counterparty
-                        ? <Button onClick={() => { revokeAllPermissions(permObject) }} variant='contained' color='secondary' className={classes.revokeButton}>
-                          Revoke All
-                          </Button>
+                        </Button>
                         : <IconButton edge='end' onClick={() => revokePermission(permObject.permissions[0].permissionGrant)} size='large'>
                           <CloseIcon />
                           </IconButton>}
@@ -297,20 +238,53 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, itemsDisp
               </div>
             )}
 
-            {/* {itemsDisplayed !== 'apps' && (
-              <ListItem className={classes.action_card} elevation={4}>
-                <ProtoChip
-                  protocolID={permObject.protocol}
-                  counterparty={permObject.counterparty}
-                  securityLevel={permObject.securityLevel}
-                  originator={permObject.originator}
-                  clickable
-                />
-                <Typography variant='h4'>
-                  Expires {formatDistance(new Date(permObject.expiry * 1000), new Date(), { addSuffix: true })}
-                </Typography>
-              </ListItem>
-            )} */}
+            {itemsDisplayed !== 'apps' && (
+              <div className={classes.appList}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
+                  <ProtoChip
+                    protocolID={permObject.protocol}
+                    counterparty={permObject.counterparty}
+                    securityLevel={permObject.securityLevel}
+                    originator={permObject.originator}
+                    clickable
+                  />
+                  {canRevoke &&
+                    <>
+                      {permObject.permissions.length > 0 && permObject.permissions[0].counterparty
+                        ? <Button onClick={() => { revokeAllPermissions(permObject) }} variant='contained' color='secondary' className={classes.revokeButton}>
+                          Revoke All
+                        </Button>
+                        : <IconButton edge='end' onClick={() => revokePermission(permObject.permissions[0].permissionGrant)} size='large'>
+                          <CloseIcon />
+                        </IconButton>}
+                    </>}
+
+                </div>
+
+                <ListItem elevation={4}>
+                  <Grid container spacing={1} style={{ paddingBottom: '1em' }}>
+                    {permObject.permissions.map((permission, idx) => (
+                      <React.Fragment key={idx}>
+                        {permission.counterparty &&
+                          <Grid item xs={12} sm={6} md={6} lg={4}>
+                            <div className={classes.gridItem}>
+                              <CounterpartyChip counterparty={permission.counterparty} size={1.1} />
+                              {/* <Typography variant='h4'>
+                                Expires {formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
+                              </Typography> */}
+                              {canRevoke &&
+                                <IconButton edge='end' onClick={() => revokePermission(permission.permissionGrant)} size='large'>
+                                  <CloseIcon />
+                                </IconButton>}
+                            </div>
+                          </Grid>}
+                      </React.Fragment>
+                    ))}
+                  </Grid>
+                </ListItem>
+
+              </div>
+            )}
           </React.Fragment>
         ))}
       </List>
