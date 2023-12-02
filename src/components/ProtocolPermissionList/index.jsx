@@ -241,10 +241,9 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, itemsDisp
                   securityLevel={permObject.securityLevel}
                   originator={permObject.originator}
                   clickable
+                  expires={formatDistance(new Date(permObject.expiry * 1000), new Date(), { addSuffix: true })}
+                  onCloseClick={() => revokePermission(permObject.permissionGrant)}
                 />
-                <Typography variant='h4'>
-                  Expires {formatDistance(new Date(permObject.expiry * 1000), new Date(), { addSuffix: true })}
-                </Typography>
               </ListItem>
             )}
           </React.Fragment>
