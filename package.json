@@ -23,7 +23,7 @@
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.14.5",
     "@mui/styles": "^5.10.3",
-    "babbage-kvstore": "^1.1.25",
+    "babbage-kvstore": "^1.1.26",
     "babbage-protomap": "^0.1.7",
     "babbage-signia": "^0.1.9",
     "basketmap": "^0.1.6",
