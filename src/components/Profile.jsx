@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import AmountDisplay from './AmountDisplay'
 import confederacyHost from '../utils/confederacyHost'
 import { makeStyles } from '@mui/styles'
-import { Typography } from '@mui/material'
+import { Link, Typography } from '@mui/material'
 import { useTheme } from '@emotion/react'
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
   content_wrap: {
@@ -23,6 +24,7 @@ const Profile = () => {
   const [balanceLoading, setBalanceLoading] = useState(true)
   const classes = useStyles()
   const theme = useTheme()
+  const history = useHistory()
 
   const refreshBalance = async () => {
     try {
@@ -61,7 +63,16 @@ const Profile = () => {
             ? '---'
             : <AmountDisplay abbreviate>{accountBalance}</AmountDisplay>}
         </Typography>
-        <a href='#' className={classes.manage_link}>manage</a>
+        <Typography
+          style={{ cursor: 'pointer', color: 'textSecondary' }} onClick={() => (
+            history.push({
+              pathname: '/dashboard/manage-balance',
+              state: {
+                balance: accountBalance
+              }
+            }))}
+        >Manage
+        </Typography>
       </div>
     </>
   )
