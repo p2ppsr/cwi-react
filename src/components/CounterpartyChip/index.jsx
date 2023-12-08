@@ -99,8 +99,12 @@ const CounterpartyChip = ({
             onClick(e)
           } else {
             e.stopPropagation()
-            history.push(
-              `/dashboard/counterparty/${encodeURIComponent(counterparty)}`
+            history.push({
+              pathname: `/dashboard/counterparty/${encodeURIComponent(counterparty)}`,
+              state: {
+                counterparty
+              }
+            }
             )
           }
         }
