@@ -16,6 +16,10 @@ const SettingsProvider = ({ children }) => {
   })
   const confederacyHostURL = confederacyHost()
 
+  /**
+   * theme
+   * currency = 'USD' | 'BSV' | 'SATS' | 'EUR' | 'GDP'
+   */
   const updateSettings = async (newSettings = {}) => {
     const mergedSettings = { ...settings, ...newSettings }
 
