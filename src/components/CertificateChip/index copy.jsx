@@ -80,6 +80,7 @@ const CertificateChip = ({
         paddingLeft: `${5 * size}px`,
         paddingRight: `${5 * size}px`
       }}
+      disableRipple={!clickable}
       label={
         <div style={{ marginLeft: '0.125em', textAlign: 'left' }}>
           <span style={{ fontSize: `${size}em` }}>
@@ -155,7 +156,6 @@ const CertificateChip = ({
         onCloseClick()
       }}
       deleteIcon={<CloseIcon />}
-      disableRipple={!clickable}
       icon={
         <Badge
           overlap='circular'
@@ -222,7 +222,6 @@ const CertificateChip = ({
         }
       }}
     />
-    <span className={classes.expires}>{expires}</span>
     </div>
   )
 }

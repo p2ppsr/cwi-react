@@ -53,11 +53,6 @@ const CertificateAccessList = ({ app, type, limit, displayCount = true, listHead
     setDialogOpen(true)
   }
 
-  // const handleAccordionChange = (panel) => (event, isExpanded) => {
-  //  console.log({ event, isExpanded })
-  //  setExpandedPanel(isExpanded ? panel : false)
-  // }
-
   const handleConfirm = async () => {
     try {
       setDialogLoading(true)
@@ -93,8 +88,6 @@ const CertificateAccessList = ({ app, type, limit, displayCount = true, listHead
   if (grants.length === 0 && !showEmptyList) {
     return (<></>)
   }
-
-  console.log('Certificate grants=', grants)
 
   return (
     <>

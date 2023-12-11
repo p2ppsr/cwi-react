@@ -141,9 +141,6 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, itemsDisp
     return (<></>)
   }
 
-  console.log('perm=', perms)
-  // console.log('perms[0].permission.counterparty=', perms[0].permission.counterparty)
-
   return (
     <>
       <Dialog

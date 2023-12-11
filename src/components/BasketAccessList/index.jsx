@@ -46,8 +46,6 @@ const useStyles = makeStyles(style, {
  */
 const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
   // Validate params
-  console.log('>BasketAccessList()')
-
   if (itemsDisplayed === 'apps' && app) {
     const e = new Error('Error in BasketAccessList: apps cannot be displayed when providing an app param! Please provide a valid basket instead.')
     throw e
@@ -118,9 +116,7 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
   }
 
   useEffect(() => {
-    console.log('>BasketAccessList():useEffect()')
     refreshGrants()
-    console.log('<BasketAccessList():useEffect()')
   }, [refreshGrants])
 
   if (grants.length === 0 && !showEmptyList) {
@@ -221,7 +217,7 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
               <ListItem className={classes.action_card} elevation={4}>
                 <BasketChip
 
-                  basketID={grant.basket}
+                  basketId={grant.basket}
                   counterparty={grant.counterparty}
                   // securityLevel={grant.securityLevel}
                   domain={grant.domain}
