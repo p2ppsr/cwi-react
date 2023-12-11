@@ -60,7 +60,7 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
             })}
           </>
         )}
-        <ProtocolPermissionList app={originator} limit={3} canRevoke={false} clickable displayCount={false} listHeaderTitle='Protocol Grants' />
+        <ProtocolPermissionList app={originator} limit={1} canRevoke={false} clickable displayCount={false} listHeaderTitle='Protocol Grants' />
         <Divider />
         <CertificateAccessList app={originator} limit={1} canRevoke={false} displayCount={false} listHeaderTitle='Certificate Grants' />
       </List>

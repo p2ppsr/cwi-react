@@ -141,6 +141,9 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, itemsDisp
     return (<></>)
   }
 
+  console.log('perm=', perms)
+  // console.log('perms[0].permission.counterparty=', perms[0].permission.counterparty)
+
   return (
     <>
       <Dialog
@@ -215,14 +218,12 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, itemsDisp
                         {permission.counterparty &&
                           <Grid item xs={12} sm={6} md={6} lg={4}>
                             <div className={classes.gridItem}>
-                              <CounterpartyChip counterparty={permission.counterparty} size={1.1} />
-                              <Typography variant='h4'>
-                                Expires {formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
-                              </Typography>
-                              {canRevoke &&
-                                <IconButton edge='end' onClick={() => revokePermission(permission.permissionGrant)} size='large'>
-                                  <CloseIcon />
-                                </IconButton>}
+                              <CounterpartyChip
+                                counterparty={permission.counterparty}
+                                size={1.1}
+                                expires={formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
+                                onCloseClick={() => revokePermission(permission.permissionGrant)}
+                              />
                             </div>
                           </Grid>}
                       </React.Fragment>

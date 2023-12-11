@@ -9,10 +9,9 @@ import isImageUrl from '../../../utils/isImageUrl'
 import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
 import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
-import SpendingList from '../../../components/SpendingList'
-import BasketList from '../../../components/BasketList'
-import CertificateList from '../../../components/CertificateList'
-// debugger // eslint-disable-line no-debugger
+import SpendingAuthorizationList from '../../../components/SpendingAuthorizationList'
+import BasketAccessList from '../../../components/BasketAccessList'
+import CertificateAccessList from '../../../components/CertificateAccessList'
 
 const useStyles = makeStyles(style, { name: 'appaccess' })
 
@@ -25,13 +24,6 @@ const AppAccess = ({ match, history }) => {
   const [loading, setLoading] = useState(false)
   const [refresh, setRefresh] = useState(false)
 
-  const recentActionParams = {
-    loading,
-    // appActions,
-    // displayLimit,
-    // setDisplayLimit,
-    setRefresh
-  }
   const classes = useStyles()
   useEffect(() => {
     (async () => {
@@ -138,44 +130,24 @@ const AppAccess = ({ match, history }) => {
             {tabValue === '0' &&
             <ProtocolPermissionList
               app={appDomain}
-              /*
-              limit={limit}
-              protocol={protocol}
-              securityLevel={securityLevel}
-              itemsDisplayed={itemsDisplayed}
-              canRevoke={canRevoke}
-              displayCount={displayCount}
-              listHeaderTitle={listHeaderTitle}
-              showEmptyList={showEmptyList}
-              */
+              listHeaderTitle=''
             />}
             {tabValue === '1' &&
-            <SpendingList
+            <SpendingAuthorizationList
               app={appDomain}
-              limit={10}
-              appIcon={appIcon}
             />}
             {tabValue === '2' &&
-            <BasketList
+            <BasketAccessList
               app={appDomain}
-              /*
-              basket={basket}
-              limit={limit}
-              itemsDisplayed={itemsDisplayed}
-              canRevoke={canRevoke}
-              displayCount={displayCount}
-              listHeaderTitle={listHeaderTitle}
-              showEmptyList={showEmptyList}
-              */
+              listHeaderTitle=''
             />}
             {tabValue === '3' &&
-            <CertificateList
+            <CertificateAccessList
               app={appDomain}
               /*
               type={type}
-              limit={limit}
-              displayCount={displayCount}
-              listHeaderTitle={listHeaderTitle}
+
+              listHeaderTitle=''
               showEmptyList={showEmptyList}
               */
             />}

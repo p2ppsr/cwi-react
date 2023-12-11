@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Grid, Typography, Chip, Badge, Avatar, Tooltip } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 import { withRouter } from 'react-router-dom'
 import { BasketMap } from 'basketmap'
 import { Img } from 'uhrp-react'
@@ -17,7 +18,15 @@ const useStyles = makeStyles(style, {
 })
 
 const BasketChip = ({
-  basketId, lastAccessed, originator, history, clickable = false, size = 1.3, onClick
+  basketId,
+  lastAccessed,
+  domain,
+  history,
+  clickable = false,
+  size = 1.3,
+  onClick,
+  expires,
+  onCloseClick = () => {}
 }) => {
   if (typeof basketId !== 'string') {
     throw new Error('BasketChip was initialized without a valid basketId')
@@ -61,113 +70,120 @@ const BasketChip = ({
   }, [basketId])
 
   return (
-    <Chip
-      style={{
-        height: '100%',
-        width: '100%',
-        // maxWidth: '30em',
-        paddingTop: `${8 * size}px`,
-        paddingBottom: `${8 * size}px`,
-        paddingLeft: `${10 * size}px`,
-        paddingRight: `${10 * size}px`
-      }}
-      label={
-        <div style={{ marginLeft: '1em', textAlign: 'left' }}>
-          <span style={{ fontSize: `${size}em` }}>
-            <b>{basketName}</b>
-          </span>
-          <br />
-          <span style={{
-            fontSize: `${size * 0.8}em`,
-            color: 'textSecondary',
-            maxWidth: '20em',
-            display: 'block'
-          }}
-          >
-            {lastAccessed || description}
-          </span>
-        </div>
-      }
-      disableRipple={!clickable}
-      icon={
-        <Badge
-          overlap='circular'
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}
-          badgeContent={
-            <Tooltip
-              arrow
-              title='Token Basket (click to learn more about baskets)'
-              onClick={e => {
-                e.stopPropagation()
-                window.open(
-                  'https://projectbabbage.com/docs/babbage-sdk/concepts/baskets',
-                  '_blank'
-                )
-              }}
+    <div className={classes.chipContainer}>
+      <Chip
+        style={{
+          height: '100%',
+          width: '100%',
+          // maxWidth: '30em',
+          paddingTop: `${8 * size}px`,
+          paddingBottom: `${8 * size}px`,
+          paddingLeft: `${10 * size}px`,
+          paddingRight: `${10 * size}px`
+        }}
+        label={
+          <div style={{ marginLeft: '1em', textAlign: 'left' }}>
+            <span style={{ fontSize: `${size}em` }}>
+              <b>{basketName}</b>
+            </span>
+            <br />
+            <span style={{
+              fontSize: `${size * 0.8}em`,
+              color: 'textSecondary',
+              maxWidth: '20em',
+              display: 'block'
+            }}
             >
-              <Avatar
-                sx={{
-                  backgroundColor: '#FFFFFF',
-                  color: 'green',
-                  width: 20,
-                  height: 20,
-                  borderRadius: '10px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  fontSize: '1.2em',
-                  marginRight: '0.25em',
-                  marginBottom: '0.3em'
+              {lastAccessed || description}
+            </span>
+          </div>
+        }
+        onDelete={ () => {
+          onCloseClick()
+        }}
+        deleteIcon={<CloseIcon />}
+        disableRipple={!clickable}
+        icon={
+          <Badge
+            overlap='circular'
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}
+            badgeContent={
+              <Tooltip
+                arrow
+                title='Token Basket (click to learn more about baskets)'
+                onClick={e => {
+                  e.stopPropagation()
+                  window.open(
+                    'https://projectbabbage.com/docs/babbage-sdk/concepts/baskets',
+                    '_blank'
+                  )
                 }}
               >
-                <ShoppingBasket style={{ width: 16, height: 16 }} />
-              </Avatar>
-            </Tooltip>
-          }
-        >
-          <Avatar
-            variant='square'
-            sx={{
-              width: '2.2em',
-              height: '2.2em',
-              borderRadius: '4px',
-              backgroundColor: '#000000AF'
-            }}
+                <Avatar
+                  sx={{
+                    backgroundColor: '#FFFFFF',
+                    color: 'green',
+                    width: 20,
+                    height: 20,
+                    borderRadius: '10px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    fontSize: '1.2em',
+                    marginRight: '0.25em',
+                    marginBottom: '0.3em'
+                  }}
+                >
+                  <ShoppingBasket style={{ width: 16, height: 16 }} />
+                </Avatar>
+              </Tooltip>
+            }
           >
-            <Img
-              src={iconURL}
-              style={{ width: '75%', height: '75%' }}
-              className={classes.table_picture}
-              confederacyHost={confederacyHost()}
-            />
-          </Avatar>
-        </Badge>
-      }
-      onClick={e => {
-        if (clickable) {
-          if (typeof onClick === 'function') {
-            onClick(e)
-          } else {
-            e.stopPropagation()
-            history.push({
-              pathname: `/dashboard/basket/${encodeURIComponent(basketId)}`,
-              state: {
-                id: basketId,
-                name: 'ToDo Items Basket',
-                registryOperator: basketRegistryOperator,
-                description,
-                iconURL,
-                documentationURL,
-                originator
-              }
-            })
-          }
+            <Avatar
+              variant='square'
+              sx={{
+                width: '2.2em',
+                height: '2.2em',
+                borderRadius: '4px',
+                backgroundColor: '#000000AF'
+              }}
+            >
+              <Img
+                src={iconURL}
+                style={{ width: '75%', height: '75%' }}
+                className={classes.table_picture}
+                confederacyHost={confederacyHost()}
+              />
+            </Avatar>
+          </Badge>
         }
-      }}
-    />
+        onClick={e => {
+          if (clickable) {
+            if (typeof onClick === 'function') {
+              onClick(e)
+            } else {
+              e.stopPropagation()
+              history.push({
+                pathname: `/dashboard/basket/${encodeURIComponent(basketId)}`,
+                state: {
+                  id: basketId,
+                  name: 'ToDo Items Basket',
+                  registryOperator: basketRegistryOperator,
+                  description,
+                  iconURL,
+                  documentationURL,
+                  domain
+                }
+              })
+            }
+          }
+        }}
+      />
+      <span className={classes.expires}>{expires}</span>
+    </div>
   )
 }
 

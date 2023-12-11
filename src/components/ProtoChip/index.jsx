@@ -28,8 +28,8 @@ const ProtoChip = ({
   size = 1.3,
   onClick,
   onCounterpartyClick,
-  expires = 'expires in 23 days', // default for testing
-  onCloseClick
+  expires,
+  onCloseClick = () => {}
 }) => {
   if (typeof protocolID !== 'string') {
     throw new Error('ProtoChip requires protocolID to be a string')

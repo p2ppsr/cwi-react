@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom'
 import { Signia } from 'babbage-signia'
 import { Img } from 'uhrp-react'
 import makeStyles from '@mui/styles/makeStyles'
+import CloseIcon from '@mui/icons-material/Close'
 import { useTheme } from '@mui/styles'
 import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
@@ -15,7 +16,7 @@ const useStyles = makeStyles(style, {
 })
 
 const CounterpartyChip = ({
-  counterparty, history, clickable = false, size = 1.3, onClick
+  counterparty, history, clickable = false, size = 1.3, onClick, expires, onCloseClick = () => {}
 }) => {
   const signia = new Signia(undefined, signicertHost())
   signia.config.confederacyHost = confederacyHost()
@@ -41,71 +42,78 @@ const CounterpartyChip = ({
   }, [signiaIdentity])
 
   return (
-    <Chip
-      style={{
-        // height: '100%',
-        width: '100%',
-        // maxWidth: '30em',
-        paddingTop: `${23 * size}px`,
-        paddingBottom: `${23 * size}px`,
-        paddingLeft: `${10 * size}px`,
-        paddingRight: `${10 * size}px`
-      }}
-      disableRipple={!clickable}
-      label={
-        <div>
-          <span style={{ fontSize: `${size}em` }}>
-            {counterparty === 'self'
-              ? 'Self'
-              : counterparty === 'anyone'
-                ? 'Anyone'
-                : `${signiaIdentity.firstName} ${signiaIdentity.lastName}`}
-          </span>
-          {counterparty !== 'self' && counterparty !== 'anyone' && (
-            <span
-              style={{
-                fontSize: '0.9em',
-                color: signiaIdentity.profilePhoto
-                  ? 'textPrimary'
-                  : 'gray'
-              }}
-            >
-              <br />
-              {counterparty.substring(0, 10)}...
-            </span>
-          )}
-        </div>
-      }
-      icon={
-        signiaIdentity.profilePhoto ||
-          counterparty === 'self' ||
-          counterparty === 'anyone'
-          ? (
-            <Img
-              src={counterparty === 'self'
-                ? 'https://projectbabbage.com/favicon.ico'
+    <div className={classes.chipContainer}>
+      <Chip
+        style={{
+          // height: '100%',
+          width: '100%',
+          // maxWidth: '30em',
+          paddingTop: `${23 * size}px`,
+          paddingBottom: `${23 * size}px`,
+          paddingLeft: `${10 * size}px`,
+          paddingRight: `${10 * size}px`
+        }}
+        onDelete={ () => {
+          onCloseClick()
+        }}
+        deleteIcon={<CloseIcon />}
+        disableRipple={!clickable}
+        label={
+          <div>
+            <span style={{ fontSize: `${size}em` }}>
+              {counterparty === 'self'
+                ? 'Self'
                 : counterparty === 'anyone'
-                  ? 'https://projectbabbage.com/favicon.ico'
-                  : signiaIdentity.profilePhoto}
-              className={classes.table_picture}
-              confederacyHost={confederacyHost()}
-            />
-            )
-          : <YellowCautionIcon className={classes.table_picture} />
-      }
-      onClick={e => {
-        if (clickable) {
-          if (typeof onClick === 'function') {
-            onClick(e)
-          } else {
-            e.stopPropagation()
-            history.push(
-              `/dashboard/counterparty/${encodeURIComponent(counterparty)}`
-            )
-          }
+                  ? 'Anyone'
+                  : `${signiaIdentity.firstName} ${signiaIdentity.lastName}`}
+            </span>
+            {counterparty !== 'self' && counterparty !== 'anyone' && (
+              <span
+                style={{
+                  fontSize: '0.9em',
+                  color: signiaIdentity.profilePhoto
+                    ? 'textPrimary'
+                    : 'gray'
+                }}
+              >
+                <br />
+                {counterparty.substring(0, 10)}...
+              </span>
+            )}
+          </div>
         }
-      }}
-    />
+        icon={
+          signiaIdentity.profilePhoto ||
+            counterparty === 'self' ||
+            counterparty === 'anyone'
+            ? (
+              <Img
+                src={counterparty === 'self'
+                  ? 'https://projectbabbage.com/favicon.ico'
+                  : counterparty === 'anyone'
+                    ? 'https://projectbabbage.com/favicon.ico'
+                    : signiaIdentity.profilePhoto}
+                className={classes.table_picture}
+                confederacyHost={confederacyHost()}
+              />
+              )
+            : <YellowCautionIcon className={classes.table_picture} />
+        }
+        onClick={e => {
+          if (clickable) {
+            if (typeof onClick === 'function') {
+              onClick(e)
+            } else {
+              e.stopPropagation()
+              history.push(
+                `/dashboard/counterparty/${encodeURIComponent(counterparty)}`
+              )
+            }
+          }
+        }}
+      />
+      <span className={classes.expires}>{expires}</span>
+    </div>
   )
 }
 
