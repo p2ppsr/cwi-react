@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useContext } from 'react'
 import { Tooltip, Typography } from '@mui/material'
-import { formatSatoshis, formatSatoshisAsUSD, satoshisOptions } from './amountFormatHelpers'
+import { formatSatoshis, formatSatoshisAsFiat, satoshisOptions } from './amountFormatHelpers'
 import { ExchangeRateContext } from './ExchangeRateContextProvider'
 import { useTheme } from '@emotion/react'
+import { SettingsContext } from '../../context/SettingsContext.js'
 
 /**
  * AmountDisplay component shows an amount in either satoshis or fiat currency.
@@ -25,10 +26,18 @@ const AmountDisplay = ({ abbreviate, showPlus, description, children }) => {
   const [formattedFiatAmount, setFormattedFiatAmount] = useState('...')
   const theme = useTheme()
 
+  // settings.currency : 'USD' | 'BSV' | 'SATS' | 'EUR' | 'GDP' | ''
+  const { settings } = useContext(SettingsContext)
+  const { currency: settingsCurrency } = settings
+
   // Retrieve necessary values and functions from the ExchangeRateContext
   const ctx = useContext(ExchangeRateContext)
   const {
-    isFiatPreferred, satoshisPerUSD, fiatFormatIndex, satsFormatIndex,
+    // Exchange rate context...
+    satoshisPerUSD, eurPerUSD, gbpPerUSD,
+    // Shared display format context...
+    isFiatPreferred, fiatFormatIndex, satsFormatIndex,
+    // display format update methods...
     toggleIsFiatPreferred, cycleFiatFormat, cycleSatsFormat
   } = ctx
 
@@ -44,7 +53,7 @@ const AmountDisplay = ({ abbreviate, showPlus, description, children }) => {
       const newSatoshis = Number(children)
       setSatoshis(newSatoshis)
       // Figure out the correctly formatted amount, prefix, and color
-      const satoshisToDisplay = formatSatoshis(newSatoshis, showPlus, abbreviate, satsFormat)
+      const satoshisToDisplay = formatSatoshis(newSatoshis, showPlus, abbreviate, satsFormat, settingsCurrency)
       if (description === 'Return to your MetaNet Balance') {
         setFormattedSatoshis(`+${satoshisToDisplay}`)
         setColor('green')
@@ -65,29 +74,43 @@ const AmountDisplay = ({ abbreviate, showPlus, description, children }) => {
       setSatoshis(NaN)
       setFormattedSatoshis('...')
     }
-  }, [children, showPlus, abbreviate, satsFormat]) // Update if these props change
+  }, [children, showPlus, abbreviate, satsFormat, settingsCurrency]) // Update if these props change
 
   // When satoshis or the exchange rate context changes, update the formatted fiat amount
   useEffect(() => {
     if (!isNaN(satoshis) && satoshisPerUSD) {
-      const newFormattedFiat = formatSatoshisAsUSD(satoshis, satoshisPerUSD, fiatFormat)
+      const newFormattedFiat = formatSatoshisAsFiat(satoshis, satoshisPerUSD, fiatFormat, settingsCurrency, eurPerUSD, gbpPerUSD)
       setFormattedFiatAmount(newFormattedFiat)
     } else {
       setFormattedFiatAmount('...')
     }
-  }, [satoshis, satoshisPerUSD, fiatFormat]) // Depend on satoshis and context values
+  }, [satoshis, satoshisPerUSD, fiatFormat, settingsCurrency]) // Depend on satoshis and context values
 
   // Updated component return with direct event handling
-  return isFiatPreferred
-    ? (
-      <Tooltip interactive title={<Typography onClick={toggleIsFiatPreferred} color='inherit'>{formattedSatoshis}</Typography>} arrow>
-        <span style={{ color }} onClick={cycleFiatFormat}>{formattedFiatAmount}</span>
-      </Tooltip>
-      )
-    : (
-      <Tooltip interactive title={<Typography onClick={toggleIsFiatPreferred} color='inherit'>{formattedFiatAmount}</Typography>} arrow>
-        <span style={{ color }} onClick={cycleSatsFormat}>{formattedSatoshis}</span>
-      </Tooltip>
-      )
+  if (settingsCurrency) {
+    return ['USD', 'EUR', 'GBP'].indexOf(settingsCurrency) > -1
+      ? (
+        <Tooltip disableInteractive title={<Typography color='inherit'>{formattedSatoshis}</Typography>} arrow>
+          <span style={{ color }}>{formattedFiatAmount}</span>
+        </Tooltip>
+        )
+      : (
+        <Tooltip disableInteractive title={<Typography color='inherit'>{formattedFiatAmount}</Typography>} arrow>
+          <span style={{ color }}>{formattedSatoshis}</span>
+        </Tooltip>
+        )
+  } else {
+    return isFiatPreferred
+      ? (
+        <Tooltip interactive title={<Typography onClick={toggleIsFiatPreferred} color='inherit'>{formattedSatoshis}</Typography>} arrow>
+          <span style={{ color }} onClick={cycleFiatFormat}>{formattedFiatAmount}</span>
+        </Tooltip>
+        )
+      : (
+        <Tooltip interactive title={<Typography onClick={toggleIsFiatPreferred} color='inherit'>{formattedFiatAmount}</Typography>} arrow>
+          <span style={{ color }} onClick={cycleSatsFormat}>{formattedSatoshis}</span>
+        </Tooltip>
+        )
+  }
 }
 export default AmountDisplay

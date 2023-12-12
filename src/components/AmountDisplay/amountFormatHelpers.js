@@ -5,18 +5,32 @@ const decimalDefault = Intl.NumberFormat().formatToParts(1234.56).filter(p => p.
 export const satoshisOptions = {
   fiatFormats: [
     {
+      name: 'USD',
       // value suitable as first arg for Intl.NumberFormat or null for default locale
       locale: 'en-US',
-      // value suitable as currency property of second arg for Intl.NumberFormat, currently only 'USD' is supported
+      // value suitable as currency property of second arg for Intl.NumberFormat
       currency: 'USD'
     },
     {
+      name: 'USD_locale',
       locale: null,
       currency: 'USD'
+    },
+    {
+      name: 'EUR',
+      locale: null,
+      currency: 'EUR'
+    },
+    {
+      name: 'GBP',
+      locale: null,
+      currency: 'GBP'
     }
   ],
   satsFormats: [
     {
+      // Format name for settings choice lookup
+      name: 'SATS',
       // One of: 'SATS', 'BSV', 'mBSV'
       // 100,000,000 SATS === 1000 mBSV === 1 BSV
       unit: 'SATS',
@@ -30,6 +44,7 @@ export const satoshisOptions = {
       abbrev: 'sats'
     },
     {
+      name: 'SATS_Tone',
       unit: 'SATS',
       decimal: '.',
       group: '_',
@@ -37,6 +52,7 @@ export const satoshisOptions = {
       abbrev: 'sats'
     },
     {
+      name: 'mBSV',
       unit: 'mBSV',
       decimal: null,
       group: null,
@@ -44,6 +60,7 @@ export const satoshisOptions = {
       abbrev: ''
     },
     {
+      name: 'mBSV_Tone',
       unit: 'mBSV',
       decimal: '.',
       group: '_',
@@ -51,6 +68,7 @@ export const satoshisOptions = {
       abbrev: ''
     },
     {
+      name: 'BSV',
       unit: 'BSV',
       decimal: null,
       group: null,
@@ -58,6 +76,7 @@ export const satoshisOptions = {
       abbrev: ''
     },
     {
+      name: 'BSV_Tone',
       unit: 'BSV',
       decimal: '.',
       group: '_',
@@ -68,29 +87,55 @@ export const satoshisOptions = {
   isFiatPreferred: false // If true, fiat format is preferred, else satsFormat
 }
 
-export const formatSatoshisAsUSD = (
+export const formatSatoshisAsFiat = (
   satoshis = NaN,
   satoshisPerUSD = null,
-  format = null
+  format = null,
+  settingsCurrency = 'SATS',
+  eurPerUSD = 0.93,
+  gbpPerUSD = 0.79
 ) => {
+  if (settingsCurrency) {
+    // See if requested currency matches a known fiat format, if not use 'USD'
+    let fiatFormat = satoshisOptions.fiatFormats.find(f => f.name === settingsCurrency)
+    if (!fiatFormat) fiatFormat = satoshisOptions.fiatFormats.find(f => f.name === 'USD')
+    format = fiatFormat
+  }
   format ??= satoshisOptions.fiatFormats[0]
   const locale = format.locale ?? localeDefault
 
   const usd = (satoshisPerUSD && Number.isInteger(Number(satoshis))) ? satoshis / satoshisPerUSD : NaN
-  const usdFormat = new Intl.NumberFormat(locale, { currency: 'USD', style: 'currency' })
 
-  return (isNaN(usd))
-    ? '...'
-    : (Math.abs(usd) >= 1)
-        ? usdFormat.format(usd)
-        : `${(usd * 100).toFixed(3)} ¢`
+  if (isNaN(usd)) return '...'
+
+  if (!format || format.currency === 'USD') {
+    const usdFormat = new Intl.NumberFormat(locale, { currency: 'USD', style: 'currency' })
+    return (Math.abs(usd) >= 1) ? usdFormat.format(usd) : `${(usd * 100).toFixed(3)} ¢`
+  } else if (format.currency === 'EUR') {
+    const eur = usd * eurPerUSD
+    if (isNaN(eur)) return '...'
+    const eurFormat = new Intl.NumberFormat(locale, { currency: 'EUR', style: 'currency' })
+    return eurFormat.format(eur)
+  } else if (format.currency === 'GBP') {
+    const gbp = usd * gbpPerUSD
+    if (isNaN(gbp)) return '...'
+    const gbpFormat = new Intl.NumberFormat(locale, { currency: 'GBP', style: 'currency' })
+    return gbpFormat.format(gbp)
+  }
 }
 export const formatSatoshis = (
   satoshis,
   showPlus = false,
   abbreviate = false,
-  format = null
+  format = null,
+  settingsCurrency = 'SATS'
 ) => {
+  if (settingsCurrency) {
+    // See if requested currency matches a known satoshis format, if not use 'SATS'
+    let satsFormat = satoshisOptions.satsFormats.find(f => f.name === settingsCurrency)
+    if (!satsFormat) satsFormat = satoshisOptions.satsFormats.find(f => f.name === 'SATS')
+    format = satsFormat
+  }
   format ??= satoshisOptions.satsFormats[0]
   let s = (Number.isInteger(Number(satoshis))) ? Number(satoshis) : null
   if (s === null) { return '---' }

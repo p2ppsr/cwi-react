@@ -3,22 +3,21 @@ import Whatsonchain from 'whatsonchain'
 
 const EXCHANGE_RATE_UPDATE_INTERVAL = 5 * 60 * 1000
 
-// Create the exchange rate context and provider to use in the amount component
-export const ExchangeRateContext = createContext({
+const defaultState = {
   satoshisPerUSD: NaN,
+  eurPerUSD: 0.93, // TODO: must tie to external service
+  gbpPerUSD: 0.79, // TODO: must tie to external service
   whenUpdated: null,
   isFiatPreferred: false,
   fiatFormatIndex: 0,
   satsFormatIndex: 0
-})
+}
+
+// Create the exchange rate context and provider to use in the amount component
+export const ExchangeRateContext = createContext(defaultState)
+
 export const ExchangeRateContextProvider = ({ children }) => {
-  const [state, setState] = useState({
-    satoshisPerUSD: NaN,
-    whenUpdated: null,
-    isFiatPreferred: false,
-    fiatFormatIndex: 0,
-    satsFormatIndex: 0
-  })
+  const [state, setState] = useState(defaultState)
 
   // The function instances are created here and included in the state to ensure they have stable references
   const contextValue = {

@@ -91,6 +91,7 @@ const Settings = ({ history }) => {
           <option value='light'>Light</option>
           <option value='dark'>Dark</option>
         </select>
+        <br />
         <Typography variant='body' color='textSecondary'>Select the default currency</Typography>
         <br />
         <select style={{ margin: '1em 0 2em 0' }} id='currency' value={settings.currency} onChange={handleCurrencyChange}>
@@ -98,7 +99,8 @@ const Settings = ({ history }) => {
           <option value='BSV'>0.033</option>
           <option value='SATS'>3,333,333</option>
           <option value='EUR'>€9.15</option>
-          <option value='GDP'>£7.86</option>
+          <option value='GBP'>£7.86</option>
+          <option value=''></option>
         </select>
         {settingsLoading ? <LinearProgress style={{ marginTop: '1em' }} /> : <></>}
       </div>

@@ -18,7 +18,7 @@ const SettingsProvider = ({ children }) => {
 
   /**
    * theme
-   * currency = 'USD' | 'BSV' | 'SATS' | 'EUR' | 'GDP'
+   * currency = 'USD' | 'BSV' | 'SATS' | 'EUR' | 'GBP' | ''
    */
   const updateSettings = async (newSettings = {}) => {
     const mergedSettings = { ...settings, ...newSettings }
