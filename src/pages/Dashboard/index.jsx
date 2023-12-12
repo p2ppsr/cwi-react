@@ -44,7 +44,7 @@ const useStyles = makeStyles(style, {
 /**
  * Renders the Apps page and menu by default
  */
-const Dashboard = () => {
+const Dashboard = (trendsDisabled = true, accessDisabled = true) => {
   const breakpoints = useBreakpoint()
   const classes = useStyles({ breakpoints })
   const theme = useTheme()
@@ -130,6 +130,10 @@ const Dashboard = () => {
     return <PageLoading />
   }
 
+  const trendsColor = trendsDisabled ? 'gray' : 'primary'
+  const accessColor = accessDisabled ? 'gray' : 'primary'
+  console.log('coming soon, trendsColor=', trendsColor)
+  console.log('coming soon, accessColor=', accessColor)
   return (
     <div className={classes.content_wrap} style={{ marginLeft: getMargin() }}>
       <div style={{ marginLeft: 0, width: menuOpen ? 'calc(100vw - 16em)' : '100vw', transition: 'margin .3s' }}>
@@ -168,12 +172,12 @@ const Dashboard = () => {
             </ListItem>
             <ListItem
               button
-              onClick={() => navigation.push('/dashboard/trends')}
+              onClick={() => !trendsDisabled && navigation.push('/dashboard/trends')}
               selected={
-              history.location.pathname === '/dashboard/trends'
-            }
+                !trendsDisabled && history.location.pathname === '/dashboard/trends'
+              }
             >
-              <ListItemIcon>
+                <ListItemIcon>
                 <TrendsIcon
                   color={
                   history.location.pathname === '/dashboard/trends'
@@ -182,16 +186,19 @@ const Dashboard = () => {
                 }
                 />
               </ListItemIcon>
-              <ListItemText>
+              <ListItemText
+                backgroundColor={trendsColor}
+                color={trendsColor}>
                 Trends
               </ListItemText>
             </ListItem>
             <ListItem
               button
-              onClick={() => navigation.push('/dashboard/access')}
+              onClick={() =>
+                !accessDisabled && navigation.push('/dashboard/access')}
               selected={
-              history.location.pathname === '/dashboard/access'
-            }
+                accessDisabled && history.location.pathname === '/dashboard/access'
+              }
             >
               <ListItemIcon>
                 <AccessIcon
@@ -202,7 +209,9 @@ const Dashboard = () => {
                 }
                 />
               </ListItemIcon>
-              <ListItemText>
+              <ListItemText
+                backgroundColor={trendsColor}
+                color={trendsColor}>
                 Access
               </ListItemText>
             </ListItem>

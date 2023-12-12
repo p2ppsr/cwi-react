@@ -91,7 +91,7 @@ const BasketAccessHandler = () => {
     <CustomDialog
       open={open}
       // onClose={handleCancel}
-      title={!renewal ? 'App Permission Request' : 'App Permission Renewal'}
+      title={!renewal ? 'Basket Access Request' : 'Basket Access Renewal'}
     >
       <DialogContent style={{
         textAlign: 'center',
