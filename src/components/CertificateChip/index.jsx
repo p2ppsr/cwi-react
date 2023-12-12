@@ -46,7 +46,6 @@ const CertificateChip = ({
   )
   const [description, setDescription] = useState(`${certType.substr(0, 12)}...`)
   const [documentationURL, setDocumentationURL] = useState('unknown')
-  const [fields, setFields] = useState({})
 
   useEffect(() => {
     (async () => {

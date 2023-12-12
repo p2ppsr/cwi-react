@@ -52,23 +52,33 @@ const BasketChip = ({
     (async () => {
       try {
         // Resolve a Basket info from id and operator
+        console.log('>BasketChip():useEffect()')
+        console.log(' BasketChip():useEffect():basketId=', basketId)
+        console.log(' BasketChip():useEffect():basketmap=', basketmap)
+        console.log(' BasketChip():useEffect():basketRegistryOperator=', basketRegistryOperator)
         const results = await basketmap.resolveBasketById(
           basketId,
           basketRegistryOperator
         )
-        if (!results) {
-          return
-        }
+        console.log(' BasketChip():useEffect():results=', results)
         setBasketName(results.name)
         setIconURL(results.iconURL)
         setDescription(results.description)
         setDocumentationURL(results.documentationURL)
+        console.log(' BasketChip():useEffect():results=', results)
+        console.log('<BasketChip():useEffect()')
       } catch (error) {
         console.error(error)
       }
     })()
   }, [basketId])
-
+  console.log(' BasketChip()')
+  console.log(' BasketChip():basketName=', basketName)
+  console.log(' BasketChip():size=', size)
+  console.log(' BasketChip():lastAccessed=', lastAccessed)
+  console.log(' BasketChip():description=', description)
+  console.log(' BasketChip():basketId=', basketId)
+  console.log('<BasketChip()')
   return (
     <div className={classes.chipContainer}>
       <Chip

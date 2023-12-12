@@ -33,6 +33,7 @@ import formatDistance from 'date-fns/formatDistance'
 import { toast } from 'react-toastify'
 import CounterpartyChip from '../CounterpartyChip'
 import ProtoChip from '../ProtoChip'
+import CertificateChip from '../CertificateChip'
 
 const useStyles = makeStyles(style, {
   name: 'CertificateAccessList'
@@ -137,6 +138,7 @@ const CertificateAccessList = ({ app, type, limit, displayCount = true, listHead
             {listHeaderTitle}
           </ListSubheader>}
         {grants.map((grant, i) => (
+          <>
           <ListItem
             key={i}
             className={classes.action_card}
@@ -209,7 +211,31 @@ const CertificateAccessList = ({ app, type, limit, displayCount = true, listHead
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
+          <ListItem>
+          {itemsDisplayed !== 'apps' && (
+            <ListItem className={classes.action_card} elevation={4}>
+              <CertificateChip
+
+                certType={grant.certType}
+                lastAccessed={grant.lastAccessed}
+                issuer={grant.issuer}
+                onIssuerClick={grant.onIssuerClick}
+                verifier={grant.verifier}
+                onVerifierClick={grant.onVerifierClick}
+                onClick={grant.onClick}
+                fieldsToDisplay={grant.fieldsToDisplay}
+                history
+                clickable={grant.clickable}
+                size={1.3}
+                expires={formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}
+                onCloseClick={() => revokeAccess(grant)}
+              />
+            </ListItem>
+          )}
+          </ListItem>
+          </>
         ))}
+
       </List>
       {displayCount &&
         <center>
