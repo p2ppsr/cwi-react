@@ -1,6 +1,6 @@
 {
   "name": "@cwi/react",
-  "version": "0.2.48",
+  "version": "0.2.49",
   "description": "Components for using CWI in React applications",
   "main": "src/index.js",
   "repository": "git+https://github.com/p2ppsr/cwi-react",
