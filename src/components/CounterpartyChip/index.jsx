@@ -17,7 +17,9 @@ const useStyles = makeStyles(style, {
 const CounterpartyChip = ({
   counterparty, history, clickable = false, size = 1.3, onClick
 }) => {
-  const signia = new Signia(undefined, signicertHost())
+  // TODO: Refactor to get certifier / certificate data from constants
+  const identiCertInfo = signicertHost()
+  const signia = new Signia(undefined, identiCertInfo.certifierUrl, identiCertInfo.certifierPublicKey, identiCertInfo.certificateType)
   signia.config.confederacyHost = confederacyHost()
   const theme = useTheme()
 
