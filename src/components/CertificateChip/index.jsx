@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Avatar, Badge, Grid, Chip, Typography, Tooltip } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 import { withRouter } from 'react-router-dom'
 import { CertMap } from 'certmap'
 import { Img } from 'uhrp-react'
