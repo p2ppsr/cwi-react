@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
 import { Switch, Route, useHistory } from 'react-router-dom'
-import { Typography, Button, IconButton, Grid, Tab, Tabs } from '@mui/material'
+import { Typography, Button, IconButton, Grid, Tab, Tabs, List, ListSubheader } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
@@ -84,19 +84,21 @@ const AppAccess = ({ match, history }) => {
             />
           </div>
           <div>
-            <Typography variant='h1'>
-              {appName}
-            </Typography>
-            <Typography variant='h3'>
-              {`https://${appDomain}`}
-            </Typography>
-            <br />
-            <Typography variant='h2'>
-            Mangage App Access
-            </Typography>
-            <Typography variant='h4'>
-            You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.
-            </Typography>
+            <List>
+              <Typography variant='h2' color='textPrimary'>
+                {appName}
+              </Typography>
+              <Typography variant='h3' color='textPrimary'>
+                {`https://${appDomain}`}
+              </Typography>
+              <br />
+              <Typography variant='h3' color='textPrimary'>
+              Mangage App Access
+              </Typography>
+              <Typography variant='h4' color='textPrimary'>
+              You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.
+              </Typography>
+            </List>
             <br />
             <Tabs
               className={classes.tabs}
@@ -130,7 +132,7 @@ const AppAccess = ({ match, history }) => {
             {tabValue === '0' &&
             <ProtocolPermissionList
               app={appDomain}
-              listHeaderTitle=''
+              listHeaderTitle='Protocol Grants'
             />}
             {tabValue === '1' &&
             <SpendingAuthorizationList
@@ -139,17 +141,12 @@ const AppAccess = ({ match, history }) => {
             {tabValue === '2' &&
             <BasketAccessList
               app={appDomain}
-              listHeaderTitle=''
+              listHeaderTitle='Basket Grants'
             />}
             {tabValue === '3' &&
             <CertificateAccessList
               app={appDomain}
-              /*
-              type={type}
-
-              listHeaderTitle=''
-              showEmptyList={showEmptyList}
-              */
+              listHeaderTitle='Certificate Grants'
             />}
           </div>
           <div>

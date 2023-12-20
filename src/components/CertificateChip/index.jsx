@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Avatar, Badge, Grid, Chip, Typography, Tooltip } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
 import { withRouter } from 'react-router-dom'
 import { CertMap } from 'certmap'
 import { Img } from 'uhrp-react'
@@ -28,8 +27,11 @@ const CertificateChip = ({
   history,
   clickable = false,
   size = 1.3,
+
+  onCounterpartyClick,
   expires,
   onCloseClick = () => {}
+
 }) => {
   if (typeof certType !== 'string') {
     throw new Error('The certType prop in CertificateChip is not a string')
@@ -47,6 +49,7 @@ const CertificateChip = ({
   )
   const [description, setDescription] = useState(`${certType.substr(0, 12)}...`)
   const [documentationURL, setDocumentationURL] = useState('unknown')
+  const [fields, setFields] = useState({})
 
   useEffect(() => {
     (async () => {
@@ -78,10 +81,6 @@ const CertificateChip = ({
           paddingLeft: `${5 * size}px`,
           paddingRight: `${5 * size}px`
         }}
-        onDelete={ () => {
-          onCloseClick()
-        }}
-        deleteIcon={<CloseIcon />}
         disableRipple={!clickable}
         label={
           <div style={{ marginLeft: '0.125em', textAlign: 'left' }}>

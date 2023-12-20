@@ -14,37 +14,29 @@ import {
   DialogActions,
   Button,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  Grid,
   ListSubheader
 } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
-import { Folder, Delete, ExpandMore } from '@mui/icons-material'
+// import { Folder, Delete, ExpandMore } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
 import { toast } from 'react-toastify'
+import AppChip from '../AppChip'
 import CounterpartyChip from '../CounterpartyChip'
-import ProtoChip from '../ProtoChip'
 import CertificateChip from '../CertificateChip'
 
 const useStyles = makeStyles(style, {
   name: 'CertificateAccessList'
 })
 
-const CertificateAccessList = ({ app, type, limit, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
+const CertificateAccessList = ({ app, type, limit, displayCount = true, listHeaderTitle, showEmptyList = false, canRevoke = true }) => {
   const [grants, setGrants] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentAccessGrant, setCurrentAccessGrant] = useState(null)
   const [dialogLoading, setDialogLoading] = useState(false)
-  const [expandedPanel, setExpandedPanel] = useState(false)
+  // const [expandedPanel, setExpandedPanel] = useState(false)
   const classes = useStyles()
 
   const refreshGrants = useCallback(async () => {
@@ -61,10 +53,10 @@ const CertificateAccessList = ({ app, type, limit, displayCount = true, listHead
     setDialogOpen(true)
   }
 
-  const handleAccordionChange = (panel) => (event, isExpanded) => {
-    console.log({ event, isExpanded })
-    setExpandedPanel(isExpanded ? panel : false)
-  }
+  // const handleAccordionChange = (panel) => (event, isExpanded) => {
+  //  console.log({ event, isExpanded })
+  //  setExpandedPanel(isExpanded ? panel : false)
+  // }
 
   const handleConfirm = async () => {
     try {
@@ -102,6 +94,8 @@ const CertificateAccessList = ({ app, type, limit, displayCount = true, listHead
     return (<></>)
   }
 
+  console.log('Certificate grants=', grants)
+
   return (
     <>
       <Dialog
@@ -137,106 +131,76 @@ const CertificateAccessList = ({ app, type, limit, displayCount = true, listHead
           <ListSubheader>
             {listHeaderTitle}
           </ListSubheader>}
-        {grants.map((grant, i) => (
-          <>
-          <ListItem
-            key={i}
-            className={classes.action_card}
-            elevation={4}
-          >
-            <ListItemAvatar>
-              <Avatar className={classes.icon}>
-                <Folder />
-              </Avatar>
-            </ListItemAvatar>
+          {grants.map((grant, i) => (
+          <React.Fragment key={i}>
 
-            <Accordion
-              expanded={expandedPanel === 'panel' + i} onChange={handleAccordionChange('panel' + i)}
-              style={{ maxWidth: window.outerWidth * 0.60 }} // ?
-            >
-              <AccordionSummary expandIcon={<ExpandMore />}>
-                {grant.type}
-              </AccordionSummary>
-              <AccordionDetails
-                className={classes.expansion_body}
-              >
-                <b>Verifier</b>
-                <ListItemText
-                  style={{ padding: '20px', wordWrap: 'break-word' }}
-                >{grant.verifier}
-                </ListItemText>
-                <ListItemText
-                  secondary={`Expires ${formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}`}
-                />
+            {/* Counterparties listed just below the header */}
 
-                <TableContainer component={Paper}>
-                  <Table sx={{ minWidth: 100 }} aria-label='simple table'>
-                    <TableHead>
-                      <TableRow
-                        sx={{
-                          borderBottom: '2px solid black',
-                          '& th': {
-                            fontSize: '14px',
-                            fontWeight: 'bold'
-                          }
-                        }}
-                      >
-                        <TableCell>Fields</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow
-                        key={i}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      />
-                      {grant.fields.map((field, i) => (
-                        <TableRow
-                          key={i}
-                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                          <TableCell component='th' scope='row'>
-                            {field}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </AccordionDetails>
-            </Accordion>
-
-            <ListItemSecondaryAction>
-              <IconButton edge='end' onClick={() => revokeAccess(grant)} size='large'>
-                <Delete />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem>
-          {itemsDisplayed !== 'apps' && (
-            <ListItem className={classes.action_card} elevation={4}>
+              <div className={classes.appList}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
+                  <AppChip
+                    label={grant.domain} showDomain onClick={(e) => {
+                      e.stopPropagation()
+                      history.push({
+                        pathname: `/dashboard/app/${encodeURIComponent(grant.domain)}`,
+                        state: {
+                          domain: grant.domain
+                        }
+                      })
+                    }}
+                  />
+                  {canRevoke &&
+                    <>
+                      {grant.permissions && grant.permissions.length > 0 && grant.permissions[0].counterparty
+                        ? <Button onClick={() => { revokeAllAccess(grant) }} variant='contained' color='secondary' className={classes.revokeButton}>
+                          Revoke All
+                          </Button>
+                        : <IconButton edge='end' onClick={() => revokeAccess(grant.permissions[0].permissionGrant)} size='large'>
+                          <CloseIcon />
+                        </IconButton>}
+                    </>}
+                </div>
+                <ListItem elevation={4}>
+                  <Grid container spacing={1} style={{ paddingBottom: '1em' }}>
+                    {grant.permissions && grant.permissions.map((permission, idx) => (
+                      <React.Fragment key={idx}>
+                        {permission.counterparty &&
+                          <Grid item xs={12} sm={6} md={6} lg={4}>
+                            <div className={classes.gridItem}>
+                              <CounterpartyChip
+                                counterparty={permission.counterparty}
+                                size={1.1}
+                                expires={formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
+                                onCloseClick={() => revokeAccess(permission.permissionGrant)}
+                              />
+                            </div>
+                          </Grid>}
+                      </React.Fragment>
+                    ))}
+                  </Grid>
+                </ListItem>
+              </div>
+              <ListItem className={classes.action_card} elevation={4}>
               <CertificateChip
-
-                certType={grant.certType}
+                certType={grant.type}
                 lastAccessed={grant.lastAccessed}
                 issuer={grant.issuer}
                 onIssuerClick={grant.onIssuerClick}
                 verifier={grant.verifier}
                 onVerifierClick={grant.onVerifierClick}
                 onClick={grant.onClick}
-                fieldsToDisplay={grant.fieldsToDisplay}
+                fieldsToDisplay={grant.fields}
                 history
                 clickable={grant.clickable}
                 size={1.3}
                 expires={formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}
                 onCloseClick={() => revokeAccess(grant)}
-              />
-            </ListItem>
-          )}
-          </ListItem>
-          </>
-        ))}
-
+                />
+              </ListItem>
+          </React.Fragment>
+          ))}
       </List>
+
       {displayCount &&
         <center>
           <Typography
