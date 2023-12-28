@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Chip } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import { Signia } from 'babbage-signia'
@@ -9,6 +9,7 @@ import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
 import signicertHost from '../../utils/signicertHost'
 import YellowCautionIcon from '../../images/cautionIcon'
+import { SettingsContext } from '../../context/SettingsContext'
 
 const useStyles = makeStyles(style, {
   name: 'CounterpartyChip'
@@ -17,12 +18,14 @@ const useStyles = makeStyles(style, {
 const CounterpartyChip = ({
   counterparty, history, clickable = false, size = 1.3, onClick
 }) => {
-  // TODO: Refactor to get certifier / certificate data from constants
-  const identiCertInfo = signicertHost()
-  const signia = new Signia(undefined, identiCertInfo.certifierUrl, identiCertInfo.certifierPublicKey, identiCertInfo.certificateType)
-  signia.config.confederacyHost = confederacyHost()
-  const theme = useTheme()
+  const { settings, updateSettings } = useContext(SettingsContext)
 
+  // Construct a new Signia instance for querying identity
+  const identiCertInfo = signicertHost()
+  const signia = new Signia()
+  signia.config.confederacyHost = confederacyHost()
+
+  const theme = useTheme()
   const classes = useStyles()
 
   const [signiaIdentity, setSigniaIdentity] = useState({
@@ -35,12 +38,14 @@ const CounterpartyChip = ({
     (async () => {
       try {
         // Resolve a Signia verified identity from a counterparty
-        const results = await signia.discoverByIdentityKey(counterparty)
+        const certifiers = settings.trustedEntities.map(x => x.publicKey)
+        const results = await signia.discoverByIdentityKey(counterparty, certifiers || [identiCertInfo.certifierPublicKey])
         setSigniaIdentity(results[0].decryptedFields)
       } catch (error) {
+        console.error(error)
       }
     })()
-  }, [signiaIdentity])
+  }, [])
 
   return (
     <Chip
