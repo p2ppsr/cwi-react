@@ -60,18 +60,27 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
             })}
           </>
         )}
-        <ProtocolPermissionList app={originator} limit={3} canRevoke={false} clickable displayCount={false} listHeaderTitle='Protocol Grants' />
+        <ProtocolPermissionList app={originator} limit={1} canRevoke={false} clickable displayCount={false} listHeaderTitle='Protocol Grants' />
         <Divider />
         <CertificateAccessList app={originator} limit={1} canRevoke={false} displayCount={false} listHeaderTitle='Certificate Grants' />
       </List>
 
       {loading && <LinearProgress paddingTop='1em' />}
       <center style={{ padding: '1em' }}>
-        <Button onClick={() => {
-          setRefresh(true)
+
+        <Button
+onClick={() => {
+          history.push({
+            pathname: `/dashboard/manage-app/${encodeURIComponent(originator)}`,
+            state: {
+            }
+          })
         }}
+          selected={
+          history.location.pathname === `/dashboard/manage-app/${encodeURIComponent(originator)}`
+        }
         >
-          Manage App Access
+          View App Access
         </Button>
       </center>
     </div>

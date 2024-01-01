@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import { useTheme } from '@emotion/react'
 import { useBreakpoint } from '../../utils/useBreakpoints.js'
+// Change suggested by ChatGPT 3.5
+// import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Switch, Route, useHistory } from 'react-router-dom'
 import style from './style'
 import { makeStyles } from '@mui/styles'
@@ -23,6 +25,7 @@ import {
   Typography
   , IconButton, Drawer, Toolbar
 } from '@mui/material'
+import AppAccess from './AppAccess/index.jsx'
 import Trust from './Trust/index.jsx'
 import Apps from './Apps'
 import App from './App/Index.jsx'
@@ -284,6 +287,10 @@ const Dashboard = () => {
       </Drawer>
       <div className={classes.page_container}>
         <Switch>
+          <Route
+            path='/dashboard/manage-app/:originator'
+            component={AppAccess}
+          />
           <Route
             path='/dashboard/app/:app'
             component={App}

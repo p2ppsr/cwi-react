@@ -61,7 +61,7 @@ const AppChip = ({
         paddingBottom: `${16 * size}px`,
         height: '100%',
         paddingLeft: '0.5em',
-        backgroundColor: backgroundColor
+        backgroundColor
       }}
       label={
         (showDomain && label !== parsedLabel)
@@ -69,11 +69,12 @@ const AppChip = ({
             textAlign: 'left'
           }}>
             <span
-             style={{
-              fontSize: `${size * 1.5}em`,
-              color: 'textPrimary',
-              fontWeight: 'bold'
-            }}>
+              style={{
+               fontSize: `${size * 1.5}em`,
+               color: 'textPrimary',
+               fontWeight: 'bold'
+             }}
+            >
               {parsedLabel}
             </span>
             <br />
@@ -85,7 +86,7 @@ const AppChip = ({
             >
               {label}
             </span>
-          </div>
+            </div>
           : <span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>
 }
       icon={(
