@@ -36,6 +36,7 @@ import BasketAccess from './BasketAccess'
 import UIContext from '../../UIContext'
 import PageLoading from '../../components/PageLoading'
 import ProtocolAccess from './ProtocolAccess/index.jsx'
+import CounterpartyAccess from './CounterpartyAccess/index.jsx'
 
 const useStyles = makeStyles(style, {
   name: 'Dashboard'
@@ -228,8 +229,8 @@ const Dashboard = () => {
                 />
                 {registerIdReminder === true &&
                   <CircleIcon
-                      style={{ marginLeft: '0.7em', width: '12px', color: 'red' }}
-                    />}
+                    style={{ marginLeft: '0.7em', width: '12px', color: 'red' }}
+                  />}
               </ListItemIcon>
               <ListItemText>
                 Trust
@@ -313,6 +314,10 @@ const Dashboard = () => {
           <Route
             path='/dashboard/protocol/:protocolId'
             component={ProtocolAccess}
+          />
+          <Route
+            path='/dashboard/counterparty/:counterparty'
+            component={CounterpartyAccess}
           />
           <Route
             className={classes.full_width}

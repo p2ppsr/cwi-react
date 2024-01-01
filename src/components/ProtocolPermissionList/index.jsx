@@ -45,7 +45,7 @@ const useStyles = makeStyles(style, {
  * @param {string} [obj.listHeaderTitle] - The title for the list header.
  * @param {boolean} [obj.showEmptyList=false] - Indicates whether to show an empty list message or remove it (false by default).
  */
-const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, itemsDisplayed = 'protocols', canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
+const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterparty, itemsDisplayed = 'protocols', canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
   // Validate params
   if (itemsDisplayed === 'apps' && app) {
     const e = new Error('Error in ProtocolPermissionList: apps cannot be displayed when providing an app param! Please provide a valid protocol instead.')
@@ -72,6 +72,7 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, itemsDisp
       targetDomain: app,
       targetProtocolName: protocol,
       targetProtocolSecurityLevel: securityLevel,
+      targetCounterparty: counterparty,
       limit
     })
     console.log(result)
@@ -220,7 +221,7 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, itemsDisp
                         {permission.counterparty &&
                           <Grid item xs={12} sm={6} md={6} lg={4}>
                             <div className={classes.gridItem}>
-                              <CounterpartyChip counterparty={permission.counterparty} size={1.1} />
+                              <CounterpartyChip counterparty={permission.counterparty} size={1.1} clickable />
                               <Typography variant='h4'>
                                 Expires {formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
                               </Typography>
