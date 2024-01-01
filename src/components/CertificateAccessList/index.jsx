@@ -2,11 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import {
   List,
   ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
   IconButton,
-  ListItemSecondaryAction,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -31,7 +27,15 @@ const useStyles = makeStyles(style, {
   name: 'CertificateAccessList'
 })
 
-const CertificateAccessList = ({ app, type, limit, displayCount = true, listHeaderTitle, showEmptyList = false, canRevoke = true }) => {
+const CertificateAccessList = ({
+  app,
+  type,
+  limit,
+  displayCount = true,
+  listHeaderTitle,
+  showEmptyList = false,
+  canRevoke = true
+}) => {
   const [grants, setGrants] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentAccessGrant, setCurrentAccessGrant] = useState(null)
@@ -50,6 +54,11 @@ const CertificateAccessList = ({ app, type, limit, displayCount = true, listHead
 
   const revokeAccess = async grant => {
     setCurrentAccessGrant(grant)
+    setDialogOpen(true)
+  }
+
+  const revokeAllAccess = async (app) => {
+    setCurrentAccessGrant(app)
     setDialogOpen(true)
   }
 
