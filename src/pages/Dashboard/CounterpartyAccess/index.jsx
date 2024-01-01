@@ -20,6 +20,7 @@ import PageHeader from '../../../components/PageHeader'
 import CounterpartyChip from '../../../components/CounterpartyChip'
 import style from './style'
 import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
+import YellowCautionIcon from '../../../images/cautionIcon'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -68,7 +69,7 @@ const trustEndorsementsData = [
   }
 ]
 
-const SimpleTabs = () => {
+const SimpleTabs = ({ counterparty }) => {
   const [value, setValue] = React.useState(0)
 
   const handleChange = (event, newValue) => {
@@ -94,7 +95,7 @@ const SimpleTabs = () => {
               id={`panel${index}a-header`}
             >
               <CounterpartyChip
-                counterparty='o3d98a6037da0b1075acedc1316fecc90444e0d990836055fd7a400c1d070bb4'
+                counterparty={counterparty}
                 onClick={() => {}}
               />
             </AccordionSummary>
@@ -111,7 +112,7 @@ const SimpleTabs = () => {
       </TabPanel>
       <TabPanel value={value} index={1}>
         test
-        <ProtocolPermissionList counterparty='03d98a6037da0b1075acedc1316fecc904440ed9990836055df7da400c1d070bb4' itemsDisplayed='protocols' showEmptyList />
+        <ProtocolPermissionList counterparty={counterparty} itemsDisplayed='protocols' showEmptyList />
       </TabPanel>
       <TabPanel value={value} index={2}>
         {/* TODO: Certificates Revealed Section */}
@@ -126,10 +127,10 @@ const CounterpartyAccess = () => {
   const useStyles = makeStyles(style, { name: 'protocolAccess' })
   const classes = useStyles()
 
-  const counterparty = '03d98a6037da0b1075acedc1316fecc904440ed9990836055df7da400c1d070bb4'
-  const iconURL = '' // Replace with actual image URL
-
+  const { counterparty, firstName, lastName, profilePhoto } = location.state
   const [copied, setCopied] = useState({ id: false })
+
+  // TODO Handle the case where the profilePhoto is undefined
 
   const handleCopy = (data, type) => {
     navigator.clipboard.writeText(data)
@@ -145,7 +146,7 @@ const CounterpartyAccess = () => {
         <Grid item>
           <PageHeader
             history={history}
-            title='Bob?'
+            title={`${firstName} ${lastName}`}
             subheading={
               <div>
                 <Typography variant='caption' color='textSecondary'>
@@ -156,12 +157,12 @@ const CounterpartyAccess = () => {
                 </Typography>
               </div>
             }
-            icon={iconURL}
+            icon={profilePhoto}
             showButton={false}
           />
         </Grid>
         <Grid item>
-          <SimpleTabs />
+          <SimpleTabs counterparty={counterparty} />
         </Grid>
       </Grid>
     </div>

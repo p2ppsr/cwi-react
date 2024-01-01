@@ -40,7 +40,9 @@ const CounterpartyChip = ({
         // Resolve a Signia verified identity from a counterparty
         const certifiers = settings.trustedEntities.map(x => x.publicKey)
         const results = await signia.discoverByIdentityKey(counterparty, certifiers || [identiCertInfo.certifierPublicKey])
-        setSigniaIdentity(results[0].decryptedFields)
+        if (results && results.length > 0) {
+          setSigniaIdentity(results[0].decryptedFields)
+        }
       } catch (error) {
         console.error(error)
       }
@@ -89,11 +91,7 @@ const CounterpartyChip = ({
           counterparty === 'anyone'
           ? (
             <Img
-              src={counterparty === 'self'
-                ? 'https://projectbabbage.com/favicon.ico'
-                : counterparty === 'anyone'
-                  ? 'https://projectbabbage.com/favicon.ico'
-                  : signiaIdentity.profilePhoto}
+              src={signiaIdentity.profilePhoto}
               className={classes.table_picture}
               confederacyHost={confederacyHost()}
             />
@@ -109,6 +107,7 @@ const CounterpartyChip = ({
             history.push({
               pathname: `/dashboard/counterparty/${encodeURIComponent(counterparty)}`,
               state: {
+                ...signiaIdentity,
                 counterparty
               }
             }
