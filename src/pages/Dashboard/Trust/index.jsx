@@ -22,6 +22,7 @@ import isImageUrl from '../../../utils/isImageUrl'
 import { toast } from 'react-toastify'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import UIContext from '../../../UIContext.js'
 
 const useStyles = makeStyles(style, {
   name: 'Trust'
@@ -405,6 +406,24 @@ const AddEntityModal = ({
 const AddPopularSigniaCertifiersModal = ({
   open, setOpen, setRegisterIdReminder, hasCerts, checkboxChecked, setCheckboxChecked, classes, history
 }) => {
+  const { env } = useContext(UIContext)
+  const popularCertifiers = [
+    {
+      URL: env === 'prod' ? 'https://identicert.babbage.systems' : 'https://staging-identicert.babbage.systems',
+      name: 'IdentiCert'
+    },
+    {
+      URL: env === 'prod' ? 'https://discordcert.babbage.systems' : 'https://staging-discordcert.babbage.systems',
+      name: 'DiscordCert (Discord handle)',
+      hide: true
+    },
+    {
+      URL: env === 'prod' ? 'https://googcert.babbage.systems' : 'https://staging-googcert.babbage.systems',
+      name: 'GoogCert (Google account)',
+      hide: true
+    }
+  ]
+
   return (
     <CustomDialog
       open={open}
@@ -419,49 +438,26 @@ const AddPopularSigniaCertifiersModal = ({
           </DialogContentText>
           <center>
             <List className={classes.oracle_link_container}>
-              <ListItem>
-                <div className={classes.oracle_link}>
-                  <Link
-                    href='http://identicert.babbage.systems'
-                    target='_blank' rel='noopener noreferrer'
-                  >
-                    <center>
-                      <img src='https://identicert.babbage.systems/images/identiCertIcon.png' className={classes.oracle_icon} />
-                      <Typography className={classes.oracle_title}>IdentiCert (Government ID)</Typography>
-                    </center>
-                  </Link>
-                </div>
-              </ListItem>
-              <br />
-              <ListItem className={classes.oracles_url_container}>
-                <div className={classes.oracle_link}>
-                  <Link
-                    className={classes.url_link}
-                    href='https://googcert.babbage.systems'
-                    target='_blank' rel='noopener noreferrer'
-                  >
-                    <center>
-                      <img src='https://www.projectbabbage.com/favicon.ico' className={classes.oracle_icon} />
-                      <Typography className={classes.oracle_title}>GoogleCert (Google)</Typography>
-                    </center>
-                  </Link>
-                </div>
-              </ListItem>
-              <br />
-              <ListItem className={classes.oracles_url_container}>
-                <div className={classes.oracle_link}>
-                  <Link
-                    className={classes.url_link}
-                    href='https://discordcert.babbage.systems'
-                    target='_blank' rel='noopener noreferrer'
-                  >
-                    <center>
-                      <img src='https://www.projectbabbage.com/favicon.ico' className={classes.oracle_icon} />
-                      <Typography className={classes.oracle_title}>DiscordCert (Discord)</Typography>
-                    </center>
-                  </Link>
-                </div>
-              </ListItem>
+              {popularCertifiers.map((c, i) => {
+                if (c.hide) {
+                  return null
+                }
+                return (
+                  <ListItem key={i}>
+                    <div className={classes.oracle_link}>
+                      <Link
+                        href={c.URL}
+                        target='_blank' rel='noopener noreferrer'
+                      >
+                        <center>
+                          <img src={`${c.URL}/favicon.ico`} className={classes.oracle_icon} />
+                          <Typography className={classes.oracle_title}>{c.name}</Typography>
+                        </center>
+                      </Link>
+                    </div>
+                  </ListItem>
+                )
+              })}
             </List>
           </center>
         </form>
@@ -523,8 +519,8 @@ function arraysOfObjectsAreEqual (arr1, arr2) {
 }
 
 const Trust = ({ history }) => {
+  const { env } = useContext(UIContext)
   const location = useLocation()
-
   const { settings, updateSettings } = useContext(SettingsContext)
 
   // These are some hard-coded defaults, if the user doesn't have any in Settings.
@@ -533,11 +529,18 @@ const Trust = ({ history }) => {
     ? JSON.parse(JSON.stringify(settings.trustedEntities))
     : [
         {
-          name: 'SigniCert',
+          name: 'IdentiCert',
           note: 'Certifies legal first and last name, and photos',
           trust: 3,
-          icon: 'https://signia.babbage.systems/images/signiaIcon.png',
-          publicKey: '0295bf1c7842d14babf60daf2c733956c331f9dcb2c79e41f85fd1dda6a3fa4549'
+          icon: env === 'prod' ? 'https://identicert.babbage.systems/favicon.ico' : 'https://staging-identicert.babbage.systems/favicon.ico',
+          publicKey: env === 'prod' ? '0295bf1c7842d14babf60daf2c733956c331f9dcb2c79e41f85fd1dda6a3fa4549' : '036dc48522aba1705afbb43df3c04dbd1da373b6154341a875bceaa2a3e7f21528'
+        },
+        {
+          name: 'Babbage Trust Services',
+          note: 'Resolves identity information for Babbage-run APIs and Bitcoin infrastructure.',
+          trust: 3,
+          icon: 'https://projectbabbage.com/favicon.ico',
+          publicKey: env === 'prod' ? '03c9caf5998a20f0ad3499c8c52c63ee07efc28e66d5f953d5f6ef0ebd998f3cd4' : '0285731b824ee90ba85a4dc02b7cc93f92118e812ec1cc3d038ab291fe0009d457'
         }
       ])
 

@@ -111,37 +111,46 @@ const Apps = ({ history }) => {
     return await Promise.all(dataPromises)
   }
 
-  useEffect(async () => {
-    // Obtain a list of all apps ordered alphabetically
-    try {
-      // Check if there is storage app data for this session
-      let parsedAppData = JSON.parse(window.sessionStorage.getItem(storageKeyApps))
+  useEffect(() => {
+    (async () => {
+      // Obtain a list of all apps ordered alphabetically
+      try {
+        // Check if there is storage app data for this session
+        let parsedAppData = JSON.parse(window.sessionStorage.getItem(storageKeyApps))
 
-      // Parse out the app data from the domains
-      if (!parsedAppData) {
-        setLoading(true)
+        // Parse out the app data from the domains
+        if (parsedAppData) {
+          try {
+            setApps(parsedAppData)
+            setFilteredApps(parsedAppData)
+            setLoadingRecentApps(true)
+          } catch (e) {}
+        } else {
+          setLoading(true)
+        }
         const appDomains = await getApps({ sortBy: 'label' })
         parsedAppData = await resolveAppDataFromDomain({ appDomains })
         // Store the current fetched apps in sessionStorage for a better UX
         window.sessionStorage.setItem(storageKeyApps, JSON.stringify(parsedAppData))
+
+        setApps(parsedAppData)
+        setFilteredApps(parsedAppData)
+        setLoadingRecentApps(true)
+
+        // Always fetch recent apps to keep it updated
+        const recentAppsFetched = await getApps({ sortBy: 'whenLastUsed', limit: 4 })
+        const parsedRecentAppData = await resolveAppDataFromDomain({ appDomains: recentAppsFetched })
+        setRecentApps(parsedRecentAppData)
+
+        // Initialize fuse for filtering apps
+        const fuse = new Fuse(parsedAppData, options)
+        setFuseInstance(fuse)
+      } catch (error) {
+        console.error(error)
       }
-      setApps(parsedAppData)
-      setFilteredApps(parsedAppData)
-      setLoadingRecentApps(true)
-
-      // Always fetch recent apps to keep it updated
-      const recentAppsFetched = await getApps({ sortBy: 'whenLastUsed', limit: 4 })
-      const parsedRecentAppData = await resolveAppDataFromDomain({ appDomains: recentAppsFetched })
-      setRecentApps(parsedRecentAppData)
-
-      // Initialize fuse for filtering apps
-      const fuse = new Fuse(parsedAppData, options)
-      setFuseInstance(fuse)
-    } catch (error) {
-      console.error(error)
-    }
-    setLoading(false)
-    setLoadingRecentApps(false)
+      setLoading(false)
+      setLoadingRecentApps(false)
+    })()
   }, [])
 
   return (
@@ -227,6 +236,7 @@ const Apps = ({ history }) => {
       {loading ? <LinearProgress style={{ marginTop: '1em' }} /> : <></>}
       {(filteredApps.length === 0 && !loading) &&
         <center>
+          <br />
           <Typography variant='h2' align='center' color='textSecondary' paddingTop='2em'>No apps found!</Typography>
           {/* <img
                   src=''

@@ -26,7 +26,7 @@ const UserTheme = ({ children }) => {
       scrollbarThumb: '#DCDCDC',
       app: '#FFFFFF1E',
       withImage: {
-        backgroundImage: `linear-gradient(to bottom, #FFFFFF, #FFFFFF9c), url(${backgroundImage})`,
+        backgroundImage: `linear-gradient(to bottom, #FFFFFF, #FFFFFFce), url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }

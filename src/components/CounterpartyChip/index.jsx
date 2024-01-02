@@ -8,7 +8,6 @@ import CloseIcon from '@mui/icons-material/Close'
 import { useTheme } from '@mui/styles'
 import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
-import signicertHost from '../../utils/signicertHost'
 import YellowCautionIcon from '../../images/cautionIcon'
 import { SettingsContext } from '../../context/SettingsContext'
 
@@ -19,10 +18,9 @@ const useStyles = makeStyles(style, {
 const CounterpartyChip = ({
   counterparty, history, clickable = false, size = 1.3, onClick = () => {}, expires, onCloseClick = () => {}
 }) => {
-  const { settings, updateSettings } = useContext(SettingsContext)
+  const { settings } = useContext(SettingsContext)
 
   // Construct a new Signia instance for querying identity
-  const identiCertInfo = signicertHost()
   const signia = new Signia()
   // TODO: Refactor to get certifier / certificate data from constants
   signia.config.confederacyHost = confederacyHost()
@@ -41,13 +39,11 @@ const CounterpartyChip = ({
       try {
         // Resolve a Signia verified identity from a counterparty
         const certifiers = settings.trustedEntities.map(x => x.publicKey)
-        const results = await signia.discoverByIdentityKey(counterparty, certifiers || [identiCertInfo.certifierPublicKey])
+        const results = await signia.discoverByIdentityKey(counterparty, certifiers)
         if (results && results.length > 0) {
           setSigniaIdentity(results[0].decryptedFields)
         }
-      } catch (error) {
-        console.error(error)
-      }
+      } catch (e) {}
     })()
   }, [])
 

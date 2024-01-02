@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import { useTheme } from '@emotion/react'
 import { useBreakpoint } from '../../utils/useBreakpoints.js'
-// Change suggested by ChatGPT 3.5
-// import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Switch, Route, useHistory } from 'react-router-dom'
 import style from './style'
 import { makeStyles } from '@mui/styles'
@@ -149,24 +147,16 @@ const Dashboard = () => {
             <ListItem
               button
               onClick={() => navigation.push('/dashboard/apps')}
-              selected={
-              history.location.pathname === '/dashboard/apps'
-            }
+              selected={history.location.pathname === '/dashboard/apps'}
             >
               <ListItemIcon>
-                <BrowseIcon
-                  color={
-                  history.location.pathname === '/dashboard/apps'
-                    ? 'secondary'
-                    : undefined
-                }
-                />
+                <BrowseIcon />
               </ListItemIcon>
               <ListItemText>
                 Apps
               </ListItemText>
             </ListItem>
-            <ListItem disabled={true}
+            {/* <ListItem disabled
               button
               onClick={() => navigation.push('/dashboard/trends')}
               selected={
@@ -175,18 +165,13 @@ const Dashboard = () => {
             >
               <ListItemIcon>
               <TrendsIcon
-                color={
-                history.location.pathname === '/dashboard/trends'
-                  ? 'secondary'
-                  : undefined
-              }
               />
               </ListItemIcon>
               <ListItemText>
                 Trends
               </ListItemText>
             </ListItem>
-            <ListItem disabled={true}
+            <ListItem disabled
               button
               onClick={() =>
                 navigation.push('/dashboard/access')}
@@ -196,17 +181,12 @@ const Dashboard = () => {
             >
               <ListItemIcon>
                 <AccessIcon
-                  color={
-                  history.location.pathname === '/dashboard/access'
-                    ? 'secondary'
-                    : undefined
-                }
                 />
               </ListItemIcon>
               <ListItemText>
                 Access
               </ListItemText>
-            </ListItem>
+            </ListItem> */}
             <ListItemButton
               onClick={() => {
                 navigation.push({
@@ -221,11 +201,6 @@ const Dashboard = () => {
             >
               <ListItemIcon>
                 <TrustIcon
-                  color={
-                  history.location.pathname === '/dashboard/trust'
-                    ? 'secondary'
-                    : undefined
-                }
                 />
                 {registerIdReminder === true &&
                   <CircleIcon
@@ -245,11 +220,6 @@ const Dashboard = () => {
             >
               <ListItemIcon>
                 <SettingsIcon
-                  color={
-                  history.location.pathname === '/dashboard/settings'
-                    ? 'secondary'
-                    : undefined
-                }
                 />
               </ListItemIcon>
               <ListItemText>
@@ -325,7 +295,9 @@ const Dashboard = () => {
             component={() => {
               return (
                 <div style={{ padding: '1em' }}>
-                  <Typography align='center' color='textPrimary'>Are you lost?</Typography>
+                  <br />
+                  <br />
+                  <Typography align='center' color='textPrimary'>Use the menu to select a page</Typography>
                 </div>
               )
             }}

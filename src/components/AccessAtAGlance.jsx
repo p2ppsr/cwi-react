@@ -47,21 +47,19 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
         {recentBasketAccess.length !== 0 && (
           <>
             <ListSubheader>
-              Baskets Recently Accessed
+              Most Recent Basket
             </ListSubheader>
             {recentBasketAccess.map((item, itemIndex) => {
               return (
                 <div key={itemIndex}>
                   <BasketChip history={history} basketId={item.basket} clickable />
-                  <Divider />
                 </div>
               )
             })}
           </>
         )}
-        <ProtocolPermissionList app={originator} limit={1} canRevoke={false} clickable displayCount={false} listHeaderTitle='Protocol Grants' />
-        <Divider />
-        <CertificateAccessList app={originator} limit={1} canRevoke={false} displayCount={false} listHeaderTitle='Certificate Grants' />
+        <ProtocolPermissionList app={originator} limit={1} canRevoke={false} clickable displayCount={false} listHeaderTitle='Most Recent Protocol' />
+        <CertificateAccessList app={originator} limit={1} canRevoke={false} clickable displayCount={false} listHeaderTitle='Most Recent Certificate' />
       </List>
 
       {loading && <LinearProgress paddingTop='1em' />}

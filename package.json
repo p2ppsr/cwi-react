@@ -25,7 +25,7 @@
     "@mui/styles": "^5.10.3",
     "babbage-kvstore": "^1.1.36",
     "babbage-protomap": "^0.1.9",
-    "babbage-signia": "^0.1.23",
+    "babbage-signia": "^0.1.24",
     "basketmap": "^0.1.16",
     "certmap": "^0.1.14",
     "cwi-base": "^0.3.98",

@@ -79,10 +79,8 @@ const Settings = ({ history }) => {
 
   return (
     <>
-      <div className={classes.fixed_nav}>
-        {(!breakpoints.sm && !breakpoints.xs) &&
-          <Typography variant='h1' color='textPrimary' paragraph>Settings</Typography>}
-      </div>
+      {(!breakpoints.sm && !breakpoints.xs) &&
+        <Typography variant='h1' color='textPrimary' paragraph>Settings</Typography>}
       <div>
         {/* TODO: Move the theming settings into it's own component */}
         <Typography variant='body' color='textSecondary'>Select the default color theme</Typography>

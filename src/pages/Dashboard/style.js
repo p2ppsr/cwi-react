@@ -35,12 +35,12 @@ export default theme => ({
       },
       '&.Mui-selected': {
         backgroundColor: theme.palette.background.leftMenuSelected,
-        color: theme.palette.secondary.main
       }
     }
   },
   page_container: {
     height: '100vh',
+    maxWidth: theme.maxContentWidth,
     '&::-webkit-scrollbar': {
       width: '0.45em'
     },

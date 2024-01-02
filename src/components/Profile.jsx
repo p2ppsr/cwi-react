@@ -61,7 +61,7 @@ const Profile = () => {
             ? '---'
             : <AmountDisplay abbreviate>{accountBalance}</AmountDisplay>}
         </Typography>
-        <a href='#' className={classes.manage_link}>manage</a>
+        {/* <a href='#' className={classes.manage_link}>manage</a> */}
       </div>
     </>
   )

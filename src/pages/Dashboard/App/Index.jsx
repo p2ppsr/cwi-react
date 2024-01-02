@@ -60,7 +60,7 @@ const Apps = ({ history }) => {
           order: 'descending',
           label: `babbage_app_${appDomain}`,
           addInputsAndOutputs: true,
-          status: ['completed', 'unproven']
+          status: ['completed', 'unproven', 'sending']
         })
         console.log(appActions)
 
