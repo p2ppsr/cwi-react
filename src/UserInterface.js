@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { BreakpointProvider } from './utils/useBreakpoints.js'
-import { MemoryRouter as Router, Switch, Route } from 'react-router-dom'
+import { HashRouter as Router, Switch, Route } from 'react-router-dom'
 import Greeter from './pages/Greeter/index.jsx'
 import Recovery from './pages/Recovery/index.jsx'
 import LostPhone from './pages/Recovery/LostPhone.jsx'

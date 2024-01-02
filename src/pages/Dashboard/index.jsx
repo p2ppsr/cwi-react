@@ -130,7 +130,6 @@ const Dashboard = () => {
   if (pageLoading) {
     return <PageLoading />
   }
-
   return (
     <div className={classes.content_wrap} style={{ marginLeft: getMargin() }}>
       <div style={{ marginLeft: 0, width: menuOpen ? 'calc(100vw - 16em)' : '100vw', transition: 'margin .3s' }}>
@@ -167,32 +166,33 @@ const Dashboard = () => {
                 Apps
               </ListItemText>
             </ListItem>
-            <ListItem
+            <ListItem disabled={true}
               button
               onClick={() => navigation.push('/dashboard/trends')}
               selected={
-              history.location.pathname === '/dashboard/trends'
-            }
+                history.location.pathname === '/dashboard/trends'
+              }
             >
               <ListItemIcon>
-                <TrendsIcon
-                  color={
-                  history.location.pathname === '/dashboard/trends'
-                    ? 'secondary'
-                    : undefined
-                }
-                />
+              <TrendsIcon
+                color={
+                history.location.pathname === '/dashboard/trends'
+                  ? 'secondary'
+                  : undefined
+              }
+              />
               </ListItemIcon>
               <ListItemText>
                 Trends
               </ListItemText>
             </ListItem>
-            <ListItem
+            <ListItem disabled={true}
               button
-              onClick={() => navigation.push('/dashboard/access')}
+              onClick={() =>
+                navigation.push('/dashboard/access')}
               selected={
-              history.location.pathname === '/dashboard/access'
-            }
+                history.location.pathname === '/dashboard/access'
+              }
             >
               <ListItemIcon>
                 <AccessIcon

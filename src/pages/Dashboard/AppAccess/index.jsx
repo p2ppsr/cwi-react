@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
-import { Switch, Route, useHistory } from 'react-router-dom'
-import { Typography, Button, IconButton, Grid, Tab, Tabs } from '@mui/material'
+// import { Switch, Route, useHistory } from 'react-router-dom'
+import { Typography, Button, IconButton, Grid, Tab, Tabs, List } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
@@ -9,11 +9,9 @@ import isImageUrl from '../../../utils/isImageUrl'
 import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
 import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
-import SpendingList from '../../../components/SpendingList'
-import BasketList from '../../../components/BasketList'
-import CertificateList from '../../../components/CertificateList'
-import PageHeader from '../../../components/PageHeader'
-// debugger // eslint-disable-line no-debugger
+import SpendingAuthorizationList from '../../../components/SpendingList'
+import BasketAccessList from '../../../components/BasketList'
+import CertificateAccessList from '../../../components/CertificateList'
 
 const useStyles = makeStyles(style, { name: 'appaccess' })
 
@@ -63,6 +61,7 @@ const AppAccess = ({ match, history }) => {
             setRefresh(false)
           }
         } catch (e) {
+          console.error(e)
         }
       } catch (e) {
         /* do nothing */
@@ -74,83 +73,105 @@ const AppAccess = ({ match, history }) => {
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={3} direction='column'>
-        <Grid item>
-          <PageHeader
-            history={history}
-            title={appName}
-            subheading={
-              <div>
-                <Typography variant='h3' color='textSecondary'>
-                  {`https://${appDomain}`}
-                </Typography>
-              </div>
-            }
-            icon={appIcon} buttonTitle='Launch'
-            // buttonIcon={}
-            onClick={() => {
-              window.open(`https://${appDomain}`, '_blank')
-            }}
-          />
-        </Grid>
-
-        <Grid item className={classes.body}>
-          <Typography variant='h2' color='textPrimary'>
-            Manage App Access
-          </Typography>
-
-          <Typography variant='body'>
-            You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.
-          </Typography>
-          <br />
-          <Tabs
-            className={classes.tabs}
-            value={tabValue}
-            onChange={(e, v) => { setTabValue(v) }}
-            indicatorColor='primary'
-            textColor='primary'
-            variant='fullWidth'
-          >
-            <Tab
-              label='Protocols'
-              value='0'
+      <div>
+        <div className={classes.top_grid}>
+          <div>
+            <IconButton
+              className={classes.back_button}
+              onClick={() => history.go(-1)}
+              size='large'
+            >
+              <ArrowBack />
+            </IconButton>
+          </div>
+          <div>
+            <Img
+              className={classes.app_icon}
+              src={appIcon}
+              alt=''
             />
-            <Tab
-              label='Spending'
-              value='1'
-            />
-            <Tab
-              label='Baskets'
-              value='2'
-            />
-            <Tab
-              label='Certificates'
-              value='3'
-            />
-          </Tabs>
-          {tabValue === '0' &&
+          </div>
+          <div>
+            <List>
+              <Typography variant='h2' color='textPrimary'>
+                {appName}
+              </Typography>
+              <Typography variant='h3' color='textPrimary'>
+                {`https://${appDomain}`}
+              </Typography>
+              <br />
+              <Typography variant='h3' color='textPrimary'>
+              Mangage App Access
+              </Typography>
+              <Typography variant='h4' color='textPrimary'>
+              You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.
+              </Typography>
+            </List>
+            <br />
+            <Tabs
+              className={classes.tabs}
+              value={tabValue}
+              onChange={(e, v) => { setTabValue(v) }}
+              indicatorColor='primary'
+              textColor='primary'
+              variant='fullWidth'
+            >
+              <Tab
+                label='Protocols'
+                value='0'
+              >
+              </Tab>
+              <Tab
+                label='Spending'
+                value='1'
+              >
+              </Tab>
+              <Tab
+                label='Baskets'
+                value='2'
+              >
+              </Tab>
+              <Tab
+                label='Certificates'
+                value='3'
+              >
+              </Tab>
+            </Tabs>
+            {tabValue === '0' &&
             <ProtocolPermissionList
               app={appDomain}
-              displayCount={false}
             />}
-          {tabValue === '1' &&
-            <SpendingList
-              app={appDomain}
-              limit={10}
-              appIcon={appIcon}
-            />}
-          {tabValue === '2' &&
-            <BasketList
+            {tabValue === '1' &&
+            <SpendingAuthorizationList
               app={appDomain}
             />}
-          {tabValue === '3' &&
-            <CertificateList
+            {tabValue === '2' &&
+            <BasketAccessList
               app={appDomain}
             />}
-        </Grid>
-
-      </Grid>
+            {tabValue === '3' &&
+            <CertificateAccessList
+              app={appDomain}
+            />}
+          </div>
+          <div>
+            <Button
+              className={classes.launch_button}
+              variant='contained'
+              color='primary'
+              size='large'
+              onClick={() => {
+                window.open(`https://${appDomain}`, '_blank')
+              }}
+            >
+              Launch
+            </Button>
+          </div>
+        </div>
+      </div>
+      <div>
     </div>
+  </div>
   )
 }
 

@@ -5,6 +5,7 @@ import { CertMap } from 'certmap'
 import { Img } from 'uhrp-react'
 import { useTheme, makeStyles } from '@mui/styles'
 import style from './style'
+import CloseIcon from '@mui/icons-material/Close'
 import confederacyHost from '../../utils/confederacyHost'
 import registryOperator from '../../utils/registryOperator'
 import YellowCautionIcon from '../../images/cautionIcon'
@@ -16,7 +17,20 @@ const useStyles = makeStyles(style, {
 })
 
 const CertificateChip = ({
-  certType, lastAccessed, issuer, onIssuerClick, verifier, onVerifierClick, onClick, fieldsToDisplay, history, clickable = false, size = 1.3
+  certType,
+  lastAccessed,
+  issuer,
+  onIssuerClick,
+  verifier,
+  onVerifierClick,
+  onClick,
+  fieldsToDisplay,
+  history,
+  clickable = false,
+  size = 1.3,
+  onCounterpartyClick,
+  expires,
+  onCloseClick = () => {}
 }) => {
   if (typeof certType !== 'string') {
     throw new Error('The certType prop in CertificateChip is not a string')
@@ -55,6 +69,7 @@ const CertificateChip = ({
   }, [certType])
 
   return (
+    <div className={classes.chipContainer}>
     <Chip
       style={{
         height: '100%',
@@ -65,7 +80,6 @@ const CertificateChip = ({
         paddingLeft: `${5 * size}px`,
         paddingRight: `${5 * size}px`
       }}
-      disableRipple={!clickable}
       label={
         <div style={{ marginLeft: '0.125em', textAlign: 'left' }}>
           <span style={{ fontSize: `${size}em` }}>
@@ -137,6 +151,11 @@ const CertificateChip = ({
           </span>
         </div>
       }
+      onDelete={ () => {
+        onCloseClick()
+      }}
+      deleteIcon={<CloseIcon />}
+      disableRipple={!clickable}
       icon={
         <Badge
           overlap='circular'
@@ -203,6 +222,8 @@ const CertificateChip = ({
         }
       }}
     />
+    <span className={classes.expires}>{expires}</span>
+    </div>
   )
 }
 

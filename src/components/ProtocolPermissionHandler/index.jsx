@@ -105,7 +105,7 @@ const ProtocolPermissionHandler = () => {
     <CustomDialog
       open={open}
       // onClose={handleCancel}
-      title={!renewal ? 'App Permission Request' : 'App Permission Renewal'}
+      title={!renewal ? 'Protocol Access Request' : 'Protocol Access Renewal'}
     >
       <DialogContent style={{
         textAlign: 'center',

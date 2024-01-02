@@ -5,7 +5,6 @@ import BasketChip from './BasketChip'
 import ProtocolPermissionList from './ProtocolPermissionList'
 import CertificateAccessList from './CertificateAccessList'
 import BasketAccessList from './BasketAccessList'
-// import formatDistance from 'date-fns/formatDistance'
 
 /**
  * Displays recent access for a particular app using chip associated components
@@ -68,15 +67,14 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
       {loading && <LinearProgress paddingTop='1em' />}
       <center style={{ padding: '1em' }}>
 
-        <Button
-onClick={() => {
+        <Button onClick={() => {
           history.push({
             pathname: `/dashboard/manage-app/${encodeURIComponent(originator)}`,
             state: {
             }
           })
         }}
-          selected={
+        selected={
           history.location.pathname === `/dashboard/manage-app/${encodeURIComponent(originator)}`
         }
         >

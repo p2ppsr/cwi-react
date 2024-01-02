@@ -144,7 +144,7 @@ const SpendingAuthorizationHandler = () => {
     <CustomDialog
       open={open}
       // onClose={handleCancel}
-      title='App Spending Request'
+      title={!renewal ? 'Spending Authorization Request' : 'Spending Authorization Renewal'}
     >
       <DialogContent>
         <br />
