@@ -44,7 +44,7 @@ const useStyles = makeStyles(style, {
  * @param {string} [obj.listHeaderTitle] - The title for the list header.
  * @param {boolean} [obj.showEmptyList=false] - Indicates whether to show an empty list message or remove it (false by default).
  */
-const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
+const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canRevoke = false, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
   // Validate params
   if (itemsDisplayed === 'apps' && app) {
     const e = new Error('Error in BasketAccessList: apps cannot be displayed when providing an app param! Please provide a valid basket instead.')
@@ -61,7 +61,6 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
   const [dialogLoading, setDialogLoading] = useState(false)
   const classes = useStyles()
   const history = useHistory()
-  // const theme = useTheme()
 
   const refreshGrants = useCallback(async () => {
     const result = await window.CWI.listBasketAccess({
@@ -96,6 +95,12 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
         }
         setCurrentApp(null)
       }
+
+      // setGrants(oldAccessGrant =>
+      //   oldAccessGrant.filter(x =>
+      //     x.accessGrantID !== currentAccessGrant.accessGrantID
+      //   )
+      // )
 
       setCurrentAccessGrant(null)
       setDialogOpen(false)
@@ -182,10 +187,10 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
                       {grant.permissions && grant.permissions.length > 0 && grant.permissions[0].counterparty
                         ? <Button onClick={() => { revokeAccess(grant) }} variant='contained' color='secondary' className={classes.revokeButton}>
                           Revoke All
-                          </Button>
-                        : <IconButton edge='end' onClick={() => revokeAccess(grant.permissions[0].permissionGrant)} size='large'>
+                        </Button>
+                        : <IconButton edge='end' onClick={() => revokeAccess(grant)} size='large'>
                           <CloseIcon />
-                        </IconButton>}
+                          </IconButton>}
                     </>}
 
                 </div>
@@ -216,10 +221,8 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
             {itemsDisplayed !== 'apps' && (
               <ListItem className={classes.action_card} elevation={4}>
                 <BasketChip
-
                   basketId={grant.basket}
                   counterparty={grant.counterparty}
-                  // securityLevel={grant.securityLevel}
                   domain={grant.domain}
                   clickable
                   expires={formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}
@@ -230,7 +233,7 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
           </React.Fragment>
         ))}
       </List>
-{(itemsDisplayed === 'baskets' && displayCount) &&
+      {(itemsDisplayed === 'baskets' && displayCount) &&
         <center>
           <Typography
             color='textSecondary'

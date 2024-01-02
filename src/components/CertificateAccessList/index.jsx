@@ -34,13 +34,12 @@ const CertificateAccessList = ({
   displayCount = true,
   listHeaderTitle,
   showEmptyList = false,
-  canRevoke = true
+  canRevoke = false
 }) => {
   const [grants, setGrants] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentAccessGrant, setCurrentAccessGrant] = useState(null)
   const [dialogLoading, setDialogLoading] = useState(false)
-  // const [expandedPanel, setExpandedPanel] = useState(false)
   const classes = useStyles()
 
   const refreshGrants = useCallback(async () => {
@@ -57,6 +56,7 @@ const CertificateAccessList = ({
     setDialogOpen(true)
   }
 
+  // TODO: test this!
   const revokeAllAccess = async (app) => {
     setCurrentAccessGrant(app)
     setDialogOpen(true)
@@ -133,56 +133,56 @@ const CertificateAccessList = ({
           <ListSubheader>
             {listHeaderTitle}
           </ListSubheader>}
-          {grants.map((grant, i) => (
+        {grants.map((grant, i) => (
           <React.Fragment key={i}>
 
             {/* Counterparties listed just below the header */}
 
-              <div className={classes.appList}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
-                  <AppChip
-                    label={grant.domain} showDomain onClick={(e) => {
-                      e.stopPropagation()
-                      history.push({
-                        pathname: `/dashboard/app/${encodeURIComponent(grant.domain)}`,
-                        state: {
-                          domain: grant.domain
-                        }
-                      })
-                    }}
-                  />
-                  {canRevoke &&
-                    <>
-                      {grant.permissions && grant.permissions.length > 0 && grant.permissions[0].counterparty
-                        ? <Button onClick={() => { revokeAllAccess(grant) }} variant='contained' color='secondary' className={classes.revokeButton}>
-                          Revoke All
-                          </Button>
-                        : <IconButton edge='end' onClick={() => revokeAccess(grant.permissions[0].permissionGrant)} size='large'>
-                          <CloseIcon />
-                        </IconButton>}
-                    </>}
-                </div>
-                <ListItem elevation={4}>
-                  <Grid container spacing={1} style={{ paddingBottom: '1em' }}>
-                    {grant.permissions && grant.permissions.map((permission, idx) => (
-                      <React.Fragment key={idx}>
-                        {permission.counterparty &&
-                          <Grid item xs={12} sm={6} md={6} lg={4}>
-                            <div className={classes.gridItem}>
-                              <CounterpartyChip
-                                counterparty={permission.counterparty}
-                                size={1.1}
-                                expires={formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
-                                onCloseClick={() => revokeAccess(permission.permissionGrant)}
-                              />
-                            </div>
-                          </Grid>}
-                      </React.Fragment>
-                    ))}
-                  </Grid>
-                </ListItem>
+            <div className={classes.appList}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
+                <AppChip
+                  label={grant.domain} showDomain onClick={(e) => {
+                    e.stopPropagation()
+                    history.push({
+                      pathname: `/dashboard/app/${encodeURIComponent(grant.domain)}`,
+                      state: {
+                        domain: grant.domain
+                      }
+                    })
+                  }}
+                />
+                {canRevoke &&
+                  <>
+                    {grant.permissions && grant.permissions.length > 0 && grant.permissions[0].counterparty
+                      ? <Button onClick={() => { revokeAllAccess(grant) }} variant='contained' color='secondary' className={classes.revokeButton}>
+                        Revoke All
+                        </Button>
+                      : <IconButton edge='end' onClick={() => revokeAccess(grant.permissions[0].permissionGrant)} size='large'>
+                        <CloseIcon />
+                      </IconButton>}
+                  </>}
               </div>
-              <ListItem className={classes.action_card} elevation={4}>
+              <ListItem elevation={4}>
+                <Grid container spacing={1} style={{ paddingBottom: '1em' }}>
+                  {grant.permissions && grant.permissions.map((permission, idx) => (
+                    <React.Fragment key={idx}>
+                      {permission.counterparty &&
+                        <Grid item xs={12} sm={6} md={6} lg={4}>
+                          <div className={classes.gridItem}>
+                            <CounterpartyChip
+                              counterparty={permission.counterparty}
+                              size={1.1}
+                              expires={formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
+                              onCloseClick={() => revokeAccess(permission.permissionGrant)}
+                            />
+                          </div>
+                        </Grid>}
+                    </React.Fragment>
+                  ))}
+                </Grid>
+              </ListItem>
+            </div>
+            <ListItem className={classes.action_card} elevation={4}>
               <CertificateChip
                 certType={grant.type}
                 lastAccessed={grant.lastAccessed}
@@ -197,10 +197,10 @@ const CertificateAccessList = ({
                 size={1.3}
                 expires={formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}
                 onCloseClick={() => revokeAccess(grant)}
-                />
-              </ListItem>
+              />
+            </ListItem>
           </React.Fragment>
-          ))}
+        ))}
       </List>
 
       {displayCount &&

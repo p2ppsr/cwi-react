@@ -9,9 +9,9 @@ import isImageUrl from '../../../utils/isImageUrl'
 import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
 import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
-import SpendingAuthorizationList from '../../../components/SpendingList'
-import BasketAccessList from '../../../components/BasketList'
-import CertificateAccessList from '../../../components/CertificateList'
+import SpendingAuthorizationList from '../../../components/SpendingAuthorizationList'
+import BasketAccessList from '../../../components/BasketAccessList'
+import CertificateAccessList from '../../../components/CertificateAccessList'
 
 const useStyles = makeStyles(style, { name: 'appaccess' })
 
@@ -101,10 +101,10 @@ const AppAccess = ({ match, history }) => {
               </Typography>
               <br />
               <Typography variant='h3' color='textPrimary'>
-              Mangage App Access
+                Mangage App Access
               </Typography>
               <Typography variant='h4' color='textPrimary'>
-              You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.
+                You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.
               </Typography>
             </List>
             <br />
@@ -119,40 +119,36 @@ const AppAccess = ({ match, history }) => {
               <Tab
                 label='Protocols'
                 value='0'
-              >
-              </Tab>
+              />
               <Tab
                 label='Spending'
                 value='1'
-              >
-              </Tab>
+              />
               <Tab
                 label='Baskets'
                 value='2'
-              >
-              </Tab>
+              />
               <Tab
                 label='Certificates'
                 value='3'
-              >
-              </Tab>
+              />
             </Tabs>
             {tabValue === '0' &&
-            <ProtocolPermissionList
-              app={appDomain}
-            />}
+              <ProtocolPermissionList
+                app={appDomain}
+              />}
             {tabValue === '1' &&
-            <SpendingAuthorizationList
-              app={appDomain}
-            />}
+              <SpendingAuthorizationList
+                app={appDomain}
+              />}
             {tabValue === '2' &&
-            <BasketAccessList
-              app={appDomain}
-            />}
+              <BasketAccessList
+                app={appDomain}
+              />}
             {tabValue === '3' &&
-            <CertificateAccessList
-              app={appDomain}
-            />}
+              <CertificateAccessList
+                app={appDomain}
+              />}
           </div>
           <div>
             <Button
@@ -169,9 +165,8 @@ const AppAccess = ({ match, history }) => {
           </div>
         </div>
       </div>
-      <div>
+      <div />
     </div>
-  </div>
   )
 }
 
