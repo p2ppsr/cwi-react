@@ -9,9 +9,9 @@ import isImageUrl from '../../../utils/isImageUrl'
 import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
 import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
-import SpendingAuthorizationList from '../../../components/SpendingAuthorizationList'
-import BasketAccessList from '../../../components/BasketAccessList'
-import CertificateAccessList from '../../../components/CertificateAccessList'
+import SpendingAuthorizationList from '../../../components/SpendingList'
+import BasketAccessList from '../../../components/BasketList'
+import CertificateAccessList from '../../../components/CertificateList'
 
 const useStyles = makeStyles(style, { name: 'appaccess' })
 
@@ -24,6 +24,13 @@ const AppAccess = ({ match, history }) => {
   const [loading, setLoading] = useState(false)
   const [refresh, setRefresh] = useState(false)
 
+  const recentActionParams = {
+    loading,
+    // appActions,
+    // displayLimit,
+    // setDisplayLimit,
+    setRefresh
+  }
   const classes = useStyles()
   useEffect(() => {
     (async () => {

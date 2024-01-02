@@ -5,7 +5,6 @@ import BasketChip from './BasketChip'
 import ProtocolPermissionList from './ProtocolPermissionList'
 import CertificateAccessList from './CertificateAccessList'
 import BasketAccessList from './BasketAccessList'
-// import formatDistance from 'date-fns/formatDistance'
 
 /**
  * Displays recent access for a particular app using chip associated components

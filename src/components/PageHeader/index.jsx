@@ -8,20 +8,21 @@ import { Img } from 'uhrp-react'
 
 const useStyles = makeStyles(style, { name: 'pageHeader' })
 
-const PageHeader = ({ title, subheading, icon, buttonTitle, buttonIcon, onClick, history, showButton = true }) => {
+const PageHeader = ({ title, subheading, icon, buttonTitle, buttonIcon, onClick, history, showButton = true, showBackButton = true }) => {
   const classes = useStyles()
   return (
     <div>
       <div className={classes.top_grid}>
-        <div>
-          <IconButton
-            className={classes.back_button}
-            onClick={() => history.go(-1)}
-            size='large'
-          >
-            <ArrowBack />
-          </IconButton>
-        </div>
+        {showBackButton &&
+          <div>
+            <IconButton
+              className={classes.back_button}
+              onClick={() => history.go(-1)}
+              size='large'
+            >
+              <ArrowBack />
+            </IconButton>
+          </div>}
         <div>
           <Img
             className={classes.app_icon}
