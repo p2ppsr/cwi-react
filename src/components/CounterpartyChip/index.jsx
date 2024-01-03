@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect, useContext } from 'react'
 import { Chip } from '@mui/material'
 import { withRouter } from 'react-router-dom'
@@ -16,7 +17,14 @@ const useStyles = makeStyles(style, {
 })
 
 const CounterpartyChip = ({
-  counterparty, history, clickable = false, size = 1.3, onClick = () => {}, expires, onCloseClick = () => {}
+  counterparty,
+  history,
+  clickable = false,
+  size = 1.3,
+  onClick = () => {},
+  expires,
+  onCloseClick = () => {},
+  canRevoke = false
 }) => {
   const { settings } = useContext(SettingsContext)
 
@@ -50,23 +58,15 @@ const CounterpartyChip = ({
   return (
     <div className={classes.chipContainer}>
       <Chip
-        style={{
-          // height: '100%',
-          width: '100%',
-          // maxWidth: '30em',
-          paddingTop: `${23 * size}px`,
-          paddingBottom: `${23 * size}px`,
-          paddingLeft: `${10 * size}px`,
-          paddingRight: `${10 * size}px`
-        }}
-        onDelete={ () => {
+        style={theme.templates.chip({ size })}
+        onDelete={() => {
           onCloseClick()
         }}
-        deleteIcon={<CloseIcon />}
+        deleteIcon={canRevoke ? <CloseIcon /> : <></>}
         disableRipple={!clickable}
         label={
-          <div>
-            <span style={{ fontSize: `${size}em` }}>
+          <div style={theme.templates.chipLabel}>
+            <span style={theme.templates.chipLabelTitle({ size })}>
               {counterparty === 'self'
                 ? 'Self'
                 : counterparty === 'anyone'
@@ -74,14 +74,7 @@ const CounterpartyChip = ({
                   : `${signiaIdentity.firstName} ${signiaIdentity.lastName}`}
             </span>
             {counterparty !== 'self' && counterparty !== 'anyone' && (
-              <span
-                style={{
-                  fontSize: '0.9em',
-                  color: signiaIdentity.profilePhoto
-                    ? 'textPrimary'
-                    : 'gray'
-                }}
-              >
+              <span style={theme.templates.chipLabelSubtitle}>
                 <br />
                 {counterparty.substring(0, 10)}...
               </span>
@@ -118,7 +111,7 @@ const CounterpartyChip = ({
           }
         }}
       />
-      <span className={classes.expires}>{expires}</span>
+      <span className={classes.expiryHoverText}>{expires}</span>
     </div>
   )
 }

@@ -7,7 +7,7 @@ export default theme => ({
     size: 0.2
   },
   revokeButton: {
-    marginRight: '2em',
+    marginRight: '1em',
     '@media (max-width: 400px)': {
       marginRight: '4em'
     }
@@ -16,6 +16,9 @@ export default theme => ({
     backgroundColor: theme.palette.primary.main
   },
   gridItem: {
-    display: 'flex', alignItems: 'center', marginRight: '3em'
+    marginRight: '0.4em'
+  },
+  counterpartyContainer: {
+    ...theme.templates.boxOfChips
   }
 })

@@ -19,6 +19,7 @@ import {
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import { AttachMoney, Delete } from '@mui/icons-material'
+import CloseIcon from '@mui/icons-material/Close'
 import formatDistance from 'date-fns/formatDistance'
 import AmountDisplay from '../AmountDisplay'
 import { toast } from 'react-toastify'
@@ -132,13 +133,9 @@ const SpendingAuthorizationList = ({ app, limit }) => {
               secondary={`Must be used within ${formatDistance(new Date(authorization.expiry <= 16817763900000 ? authorization.expiry * 1000 : Date.now() + 10000000), new Date(), { addSuffix: true })}`}
             />
             <ListItemSecondaryAction>
-              <IconButton
-                edge='end'
-                onClick={() => revokeAuthorization(authorization)}
-                size='large'
-              >
-                <Delete />
-              </IconButton>
+              <Button onClick={() => { revokeAuthorization(authorization) }} className={classes.revokeButton}>
+                Revoke
+              </Button>
             </ListItemSecondaryAction>
           </ListItem>
         ))}

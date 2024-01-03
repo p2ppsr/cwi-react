@@ -8,6 +8,7 @@ import confederacyHost from '../../utils/confederacyHost'
 import { Img } from 'uhrp-react'
 import Memory from '@mui/icons-material/Memory'
 import makeStyles from '@mui/styles/makeStyles'
+import CloseIcon from '@mui/icons-material/Close'
 import style from './style'
 
 const useStyles = makeStyles(style, {
@@ -15,7 +16,15 @@ const useStyles = makeStyles(style, {
 })
 
 const AppChip = ({
-  label, showDomain = false, history, clickable = true, size = 1, onClick, backgroundColor = 'transparent'
+  label,
+  showDomain = false,
+  history,
+  clickable = true,
+  size = 1,
+  onClick,
+  backgroundColor = 'transparent',
+  expires,
+  onCloseClick = () => {}
 }) => {
   const theme = useTheme()
   const classes = useStyles()
@@ -55,112 +64,106 @@ const AppChip = ({
   }, [label])
 
   return (
-    <Chip
-      style={{
-        paddingTop: `${16 * size}px`,
-        paddingBottom: `${16 * size}px`,
-        height: '100%',
-        paddingLeft: '0.5em',
-        backgroundColor
-      }}
-      label={
+    <div className={classes.chipContainer}>
+      <Chip
+        style={theme.templates.chip({ size, backgroundColor })}
+        label={
         (showDomain && label !== parsedLabel)
           ? <div style={{
             textAlign: 'left'
           }}>
             <span
-              style={{
-               fontSize: `${size * 1.5}em`,
-               color: 'textPrimary',
-               fontWeight: 'bold'
-             }}
+              style={theme.templates.chipLabelTitle({ size })}
             >
               {parsedLabel}
             </span>
             <br />
             <span
-              style={{
-                fontSize: '1em',
-                color: 'textSecondary'
-              }}
+              style={theme.templates.chipLabelSubtitle}
             >
               {label}
             </span>
             </div>
           : <span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>
 }
-      icon={(
-        <Badge
-          overlap='circular'
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}
-          badgeContent={
-            <Tooltip
-              arrow
-              title='App (click to learn more about apps)'
-              onClick={e => {
-                e.stopPropagation()
-                window.open(
-                  'https://projectbabbage.com/docs/babbage-sdk/concepts/apps',
-                  '_blank'
-                )
-              }}
-            >
-              <Avatar
-                sx={{
-                  backgroundColor: '#FFFFFF',
-                  color: 'darkRed',
-                  width: 20,
-                  height: 20,
-                  borderRadius: '10px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  fontSize: '1.2em',
-                  marginRight: '0.25em',
-                  marginBottom: '0.3em'
+        onDelete={() => {
+          onCloseClick()
+        }}
+        deleteIcon={<CloseIcon />}
+        icon={(
+          <Badge
+            overlap='circular'
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}
+            badgeContent={
+              <Tooltip
+                arrow
+                title='App (click to learn more about apps)'
+                onClick={e => {
+                  e.stopPropagation()
+                  window.open(
+                    'https://projectbabbage.com/docs/babbage-sdk/concepts/apps',
+                    '_blank'
+                  )
                 }}
               >
-                <Memory style={{ width: 16, height: 16 }} />
-              </Avatar>
-            </Tooltip>
+                <Avatar
+                  sx={{
+                    backgroundColor: '#FFFFFF',
+                    color: 'darkRed',
+                    width: 20,
+                    height: 20,
+                    borderRadius: '10px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    fontSize: '1.2em',
+                    marginRight: '0.25em',
+                    marginBottom: '0.3em'
+                  }}
+                >
+                  <Memory style={{ width: 16, height: 16 }} />
+                </Avatar>
+              </Tooltip>
           }
-        >
-          <Avatar
-            variant='square'
-            sx={{
-              width: '2.2em',
-              height: '2.2em',
-              borderRadius: '4px',
-              backgroundColor: '#000000AF',
-              marginRight: '0.5em'
-            }}
           >
-            <Img
-              src={appIconImageUrl}
-              style={{ width: '75%', height: '75%' }}
-              className={classes.table_picture}
-              confederacyHost={confederacyHost()}
-            />
-          </Avatar>
-        </Badge>
+            <Avatar
+              variant='square'
+              sx={{
+                width: '2.2em',
+                height: '2.2em',
+                borderRadius: '4px',
+                backgroundColor: '#000000AF',
+                marginRight: '0.5em'
+              }}
+            >
+              <Img
+                src={appIconImageUrl}
+                style={{ width: '75%', height: '75%' }}
+                className={classes.table_picture}
+                confederacyHost={confederacyHost()}
+              />
+            </Avatar>
+          </Badge>
       )}
-      disableRipple={!clickable}
-      onClick={e => {
-        if (clickable) {
-          if (typeof onClick === 'function') {
-            onClick(e)
-          } else {
-            e.stopPropagation()
-            history.push(
+        disableRipple={!clickable}
+        onClick={e => {
+          if (clickable) {
+            if (typeof onClick === 'function') {
+              onClick(e)
+            } else {
+              e.stopPropagation()
+              history.push(
               `/dashboard/app/${encodeURIComponent(label)}`
-            )
+              )
+            }
           }
-        }
-      }}
-    />
+        }}
+      />
+      <span className={classes.expiryHoverText}>{expires}</span>
+    </div>
   )
 }
 

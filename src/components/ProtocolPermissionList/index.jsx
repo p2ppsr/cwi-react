@@ -12,7 +12,8 @@ import {
   Button,
   Typography,
   ListSubheader,
-  Grid
+  Grid,
+  Divider
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import { useTheme } from '@emotion/react'
@@ -45,7 +46,7 @@ const useStyles = makeStyles(style, {
  * @param {string} [obj.listHeaderTitle] - The title for the list header.
  * @param {boolean} [obj.showEmptyList=false] - Indicates whether to show an empty list message or remove it (false by default).
  */
-const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterparty, itemsDisplayed = 'protocols', canRevoke = true, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
+const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterparty, itemsDisplayed = 'protocols', canRevoke = false, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
   // Validate params
   if (itemsDisplayed === 'apps' && app) {
     const e = new Error('Error in ProtocolPermissionList: apps cannot be displayed when providing an app param! Please provide a valid protocol instead.')
@@ -204,35 +205,30 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
                   {canRevoke &&
                     <>
                       {permObject.permissions.length > 0 && permObject.permissions[0].counterparty
-                        ? <Button onClick={() => { revokeAllPermissions(permObject) }} variant='contained' color='secondary' className={classes.revokeButton}>
+                        ? <Button onClick={() => { revokeAllPermissions(permObject) }} color='secondary' className={classes.revokeButton}>
                           Revoke All
                         </Button>
                         : <IconButton edge='end' onClick={() => revokePermission(permObject.permissions[0].permissionGrant)} size='large'>
                           <CloseIcon />
                           </IconButton>}
                     </>}
-
                 </div>
 
                 <ListItem elevation={4}>
-                  <Grid container spacing={1} style={{ paddingBottom: '1em' }}>
-                    {permObject.permissions.map((permission, idx) => (
-                      <React.Fragment key={idx}>
-                        {permission.counterparty &&
-                          <Grid item xs={12} sm={6} md={6} lg={4}>
-                            <div className={classes.gridItem}>
-                              <CounterpartyChip
-                                counterparty={permission.counterparty}
-                                size={1.1}
-                                expires={formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
-                                onCloseClick={() => revokePermission(permission.permissionGrant)}
-                                clickable
-                              />
-                            </div>
-                          </Grid>}
-                      </React.Fragment>
+                  <div className={classes.counterpartyContainer}>
+                    {permObject.permissions.filter(x => x.counterparty).map((permission, idx) => (
+                      <div className={classes.gridItem} key={idx}>
+                        <CounterpartyChip
+                          counterparty={permission.counterparty}
+                          size={1.1}
+                          expires={formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
+                          onCloseClick={() => revokePermission(permission.permissionGrant)}
+                          clickable
+                          canRevoke={canRevoke}
+                        />
+                      </div>
                     ))}
-                  </Grid>
+                  </div>
                 </ListItem>
 
               </div>
@@ -247,43 +243,37 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
                     securityLevel={permObject.securityLevel}
                     originator={permObject.originator}
                     clickable
-                    // expires={formatDistance(new Date(permObject.expiry * 1000), new Date(), { addSuffix: true })}
-                    onCloseClick={() => revokePermission(permObject.permissionGrant)}
+                    canRevoke={false}
+                    // onCloseClick={() => revokePermission(permObject.permissionGrant)}
                   />
                   {canRevoke &&
                     <>
                       {permObject.permissions.length > 0 && permObject.permissions[0].counterparty
-                        ? <Button onClick={() => { revokeAllPermissions(permObject) }} variant='contained' color='secondary' className={classes.revokeButton}>
+                        ? <Button onClick={() => { revokeAllPermissions(permObject) }} color='secondary' className={classes.revokeButton}>
                           Revoke All
-                        </Button>
-                        : <IconButton edge='end' onClick={() => revokePermission(permObject.permissions[0].permissionGrant)} size='large'>
-                          <CloseIcon />
-                        </IconButton>}
+                          </Button>
+                        : <Button onClick={() => { revokePermission(permObject.permissions[0].permissionGrant) }} className={classes.revokeButton}>
+                          Revoke
+                        </Button>}
                     </>}
-
                 </div>
 
                 <ListItem elevation={4}>
-                  <Grid container spacing={1} style={{ paddingBottom: '1em' }}>
-                    {permObject.permissions.map((permission, idx) => (
-                      <React.Fragment key={idx}>
-                        {permission.counterparty &&
-                          <Grid item xs={12} sm={6} md={6} lg={4}>
-                            <div className={classes.gridItem}>
-                              <CounterpartyChip counterparty={permission.counterparty} size={1.1} />
-                              {/* <Typography variant='h4'>
-                                Expires {formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
-                              </Typography> */}
-                              {canRevoke &&
-                                <IconButton edge='end' onClick={() => revokePermission(permission.permissionGrant)} size='large'>
-                                  <CloseIcon />
-                                </IconButton>}
-                            </div>
-                          </Grid>}
-                      </React.Fragment>
+                  <div className={classes.counterpartyContainer}>
+                    {permObject.permissions.filter(x => x.counterparty).map((permission, idx) => (
+                      <div className={classes.gridItem} key={idx}>
+                        <CounterpartyChip
+                          counterparty={permission.counterparty}
+                          size={1.1}
+                          expires={formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
+                          onCloseClick={() => revokePermission(permission.permissionGrant)}
+                          canRevoke={canRevoke}
+                        />
+                      </div>
                     ))}
-                  </Grid>
+                  </div>
                 </ListItem>
+                <Divider />
 
               </div>
             )}

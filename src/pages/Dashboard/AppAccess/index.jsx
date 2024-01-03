@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
 // import { Switch, Route, useHistory } from 'react-router-dom'
-import { Typography, Button, IconButton, Grid, Tab, Tabs, List } from '@mui/material'
+import { Typography, Button, IconButton, Grid, Tab, Tabs, List, Link } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
@@ -12,6 +12,9 @@ import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
 import SpendingAuthorizationList from '../../../components/SpendingAuthorizationList'
 import BasketAccessList from '../../../components/BasketAccessList'
 import CertificateAccessList from '../../../components/CertificateAccessList'
+import PageHeader from '../../../components/PageHeader'
+import CheckIcon from '@mui/icons-material/Check'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 
 const useStyles = makeStyles(style, { name: 'appaccess' })
 
@@ -23,6 +26,7 @@ const AppAccess = ({ match, history }) => {
   const [appIcon, setAppIcon] = useState('MetaNet AppMetaNet App')
   const [loading, setLoading] = useState(false)
   const [refresh, setRefresh] = useState(false)
+  const [copied, setCopied] = useState({ id: false, registryOperator: false })
 
   const recentActionParams = {
     loading,
@@ -31,6 +35,16 @@ const AppAccess = ({ match, history }) => {
     // setDisplayLimit,
     setRefresh
   }
+
+  // Copies the data and timeouts the checkmark icon
+  const handleCopy = (data, type) => {
+    navigator.clipboard.writeText(data)
+    setCopied({ ...copied, [type]: true })
+    setTimeout(() => {
+      setCopied({ ...copied, [type]: false })
+    }, 2000)
+  }
+
   const classes = useStyles()
   useEffect(() => {
     (async () => {
@@ -73,98 +87,76 @@ const AppAccess = ({ match, history }) => {
 
   return (
     <div className={classes.root}>
-      <div>
-        <div className={classes.top_grid}>
-          <div>
-            <IconButton
-              className={classes.back_button}
-              onClick={() => history.go(-1)}
-              size='large'
-            >
-              <ArrowBack />
-            </IconButton>
-          </div>
-          <div>
-            <Img
-              className={classes.app_icon}
-              src={appIcon}
-              alt=''
-            />
-          </div>
-          <div>
-            <List>
-              <Typography variant='h2' color='textPrimary'>
-                {appName}
-              </Typography>
-              <Typography variant='h3' color='textPrimary'>
-                {`https://${appDomain}`}
-              </Typography>
-              <br />
-              <Typography variant='h3' color='textPrimary'>
-                Mangage App Access
-              </Typography>
-              <Typography variant='h4' color='textPrimary'>
-                You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.
-              </Typography>
-            </List>
-            <br />
-            <Tabs
-              className={classes.tabs}
-              value={tabValue}
-              onChange={(e, v) => { setTabValue(v) }}
-              indicatorColor='primary'
-              textColor='primary'
-              variant='fullWidth'
-            >
-              <Tab
-                label='Protocols'
-                value='0'
-              />
-              <Tab
-                label='Spending'
-                value='1'
-              />
-              <Tab
-                label='Baskets'
-                value='2'
-              />
-              <Tab
-                label='Certificates'
-                value='3'
-              />
-            </Tabs>
-            {tabValue === '0' &&
-              <ProtocolPermissionList
-                app={appDomain}
-              />}
-            {tabValue === '1' &&
-              <SpendingAuthorizationList
-                app={appDomain}
-              />}
-            {tabValue === '2' &&
-              <BasketAccessList
-                app={appDomain}
-              />}
-            {tabValue === '3' &&
-              <CertificateAccessList
-                app={appDomain}
-              />}
-          </div>
-          <div>
-            <Button
-              className={classes.launch_button}
-              variant='contained'
-              color='primary'
-              size='large'
-              onClick={() => {
-                window.open(`https://${appDomain}`, '_blank')
-              }}
-            >
-              Launch
-            </Button>
-          </div>
-        </div>
-      </div>
+      <Grid container spacing={3} direction='column' sx={{ padding: '16px' }}>
+        <Grid item>
+          <PageHeader
+            history={history} title={appName}
+            subheading={
+              <div>
+                <Typography variant='caption' color='textSecondary'>
+                  {`https://${appDomain}`}
+                  <IconButton size='small' onClick={() => handleCopy(appDomain, 'id')} disabled={copied.id}>
+                    {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
+                  </IconButton>
+                </Typography>
+              </div>
+        } icon={appIcon} buttonTitle='Launch' onClick={() => {
+          window.open(`https://${appDomain}`, '_blank')
+        }}
+          />
+        </Grid>
+        <Grid item>
+          <Typography variant='body' gutterBottom>
+            You have the power to decide what each app can do, whether it&apos;s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.
+          </Typography>
+        </Grid>
+      </Grid>
+      <br />
+      <Tabs
+        className={classes.tabs}
+        value={tabValue}
+        onChange={(e, v) => { setTabValue(v) }}
+        indicatorColor='primary'
+        textColor='primary'
+        variant='fullWidth'
+      >
+        <Tab
+          label='Protocols'
+          value='0'
+        />
+        <Tab
+          label='Spending'
+          value='1'
+        />
+        <Tab
+          label='Baskets'
+          value='2'
+        />
+        <Tab
+          label='Certificates'
+          value='3'
+        />
+      </Tabs>
+      {tabValue === '0' &&
+        <ProtocolPermissionList
+          app={appDomain}
+          canRevoke
+        />}
+      {tabValue === '1' &&
+        <SpendingAuthorizationList
+          app={appDomain}
+        />}
+      {tabValue === '2' &&
+        <BasketAccessList
+          app={appDomain}
+          canRevoke
+        />}
+      {tabValue === '3' &&
+        <CertificateAccessList
+          app={appDomain}
+          canRevoke
+        />}
+      {/* </div> */}
       <div />
     </div>
   )

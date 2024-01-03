@@ -22,7 +22,6 @@ import { toast } from 'react-toastify'
 import BasketChip from '../BasketChip'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import AppChip from '../AppChip'
-import CounterpartyChip from '../CounterpartyChip'
 // import sortGrants from './sortGrants'
 import formatDistance from 'date-fns/formatDistance'
 
@@ -158,68 +157,37 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
           </Button>
         </DialogActions>
       </Dialog>
-      <List>
-        {listHeaderTitle && (
-          <ListSubheader>
-            {listHeaderTitle}
-          </ListSubheader>
-        )}
+      {/* <List> */}
+      {listHeaderTitle && (
+        <ListSubheader>
+          {listHeaderTitle}
+        </ListSubheader>
+      )}
+      <div className={classes.basketContainer}>
         {grants.map((grant, i) => (
           <React.Fragment key={i}>
-
-            {/* Counterparties listed just below the header */}
             {itemsDisplayed === 'apps' && (
-              <div className={classes.appList}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
-                  <AppChip
-                    label={grant.domain} showDomain onClick={(e) => {
-                      e.stopPropagation()
-                      history.push({
-                        pathname: `/dashboard/app/${encodeURIComponent(grant.domain)}`,
-                        state: {
-                          domain: grant.domain
-                        }
-                      })
-                    }}
-                  />
-                  {canRevoke &&
-                    <>
-                      {grant.permissions && grant.permissions.length > 0 && grant.permissions[0].counterparty
-                        ? <Button onClick={() => { revokeAccess(grant) }} variant='contained' color='secondary' className={classes.revokeButton}>
-                          Revoke All
-                        </Button>
-                        : <IconButton edge='end' onClick={() => revokeAccess(grant)} size='large'>
-                          <CloseIcon />
-                          </IconButton>}
-                    </>}
-
-                </div>
-
-                <ListItem elevation={4}>
-                  <Grid container spacing={1} style={{ paddingBottom: '1em' }}>
-                    {grant.permissions && grant.permissions.map((permission, idx) => (
-                      <React.Fragment key={idx}>
-                        {permission.counterparty &&
-                          <Grid item xs={12} sm={6} md={6} lg={4}>
-                            <div className={classes.gridItem}>
-                              <CounterpartyChip
-                                counterparty={permission.counterparty}
-                                size={1.1}
-                                expires={formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
-                                onCloseClick={() => revokeAccess(permission.permissionGrant)}
-                              />
-                            </div>
-                          </Grid>}
-                      </React.Fragment>
-                    ))}
-                  </Grid>
-                </ListItem>
-
+              <div className={classes.basketContainer}>
+                <AppChip
+                  label={grant.domain} showDomain onClick={(e) => {
+                    e.stopPropagation()
+                    history.push({
+                      pathname: `/dashboard/app/${encodeURIComponent(grant.domain)}`,
+                      state: {
+                        domain: grant.domain
+                      }
+                    })
+                  }}
+                  canRevoke={canRevoke}
+                  onCloseClick={() => { revokeAccess(grant) }}
+                  backgroundColor='default'
+                  expires={formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}
+                />
               </div>
             )}
 
             {itemsDisplayed !== 'apps' && (
-              <ListItem className={classes.action_card} elevation={4}>
+              <div style={{ marginRight: '0.4em' }}>
                 <BasketChip
                   basketId={grant.basket}
                   counterparty={grant.counterparty}
@@ -227,12 +195,13 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
                   clickable
                   expires={formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}
                   onCloseClick={() => revokeAccess(grant.accessGrantID)}
+                  canRevoke={canRevoke}
                 />
-              </ListItem>
+              </div>
             )}
           </React.Fragment>
         ))}
-      </List>
+      </div>
       {(itemsDisplayed === 'baskets' && displayCount) &&
         <center>
           <Typography

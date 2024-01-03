@@ -29,6 +29,8 @@ const ProtoChip = ({
   onClick,
   onCounterpartyClick,
   expires,
+  backgroundColor = 'transparent',
+  canRevoke = true,
   onCloseClick = () => {}
 }) => {
   if (typeof protocolID !== 'string') {
@@ -69,28 +71,19 @@ const ProtoChip = ({
   return (
     <div className={classes.chipContainer}>
       <Chip
-        style={{
-          height: '100%',
-          width: '100%',
-          // maxWidth: '30em',
-          paddingTop: `${10 * size}px`,
-          paddingBottom: `${10 * size}px`,
-          paddingLeft: `${10 * size}px`,
-          paddingRight: `${5 * size}px`
+        style={theme.templates.chip({ size, backgroundColor })}
+        sx={{
+          '& .MuiChip-label': {
+            width: '100% !important'
+          }
         }}
         label={
-          <div style={{ marginLeft: '0.125em', textAlign: 'left' }}>
-            <span style={{ fontSize: `${size}em` }}>
+          <div style={theme.templates.chipLabel}>
+            <span style={theme.templates.chipLabelTitle({ size })}>
               <b>{protocolName}</b>
             </span>
             <br />
-            <span style={{
-              fontSize: `${size * 0.8}em`,
-              color: 'textSecondary',
-              maxWidth: '20em',
-              display: 'block'
-            }}
-            >
+            <span style={theme.templates.chipLabelSubtitle}>
               {lastAccessed || description}
             </span>
             <span>
@@ -107,7 +100,7 @@ const ProtoChip = ({
                       />
                     </Grid>
                   </Grid>
-                </div>
+                  </div>
                 : ''}
             </span>
           </div>
@@ -136,7 +129,7 @@ const ProtoChip = ({
                     backgroundColor: 'darkblue',
                     width: 20,
                     height: 20,
-                    borderRadius: '3px',
+                    borderRadius: '10px',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -151,24 +144,32 @@ const ProtoChip = ({
             }
           >
             <Avatar
+              variant='square'
               sx={{
-                width: '3.2em',
-                height: '3.2em'
+                width: '2.2em',
+                height: '2.2em',
+                borderRadius: '4px',
+                backgroundColor: '#000000AF',
+                marginRight: '0.5em'
               }}
             >
               <Img
                 src={iconURL}
-                style={{ width: '100%', height: '100%' }}
+                style={{ width: '75%', height: '75%' }}
                 className={classes.table_picture}
                 confederacyHost={confederacyHost()}
               />
             </Avatar>
           </Badge>
         }
-        onDelete={ () => {
-          onCloseClick()
+        onDelete={() => {
+          if (canRevoke) {
+            onCloseClick()
+          }
         }}
-        deleteIcon={<CloseIcon />}
+        deleteIcon={
+          canRevoke ? <CloseIcon /> : <></>
+        }
         disableRipple={!clickable}
         onClick={e => {
           if (clickable) {

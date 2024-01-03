@@ -22,5 +22,8 @@ export default theme => ({
       visibility: 'visible',
       opacity: 1
     }
+  },
+  chipLabel: {
+    width: '100% !important'
   }
 })

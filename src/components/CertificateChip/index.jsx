@@ -30,7 +30,8 @@ const CertificateChip = ({
   size = 1.3,
   onCounterpartyClick,
   expires,
-  onCloseClick = () => {}
+  onCloseClick = () => {},
+  canRevoke = false
 }) => {
   if (typeof certType !== 'string') {
     throw new Error('The certType prop in CertificateChip is not a string')
@@ -70,159 +71,145 @@ const CertificateChip = ({
 
   return (
     <div className={classes.chipContainer}>
-    <Chip
-      style={{
-        height: '100%',
-        width: '100%',
-        // maxWidth: '30em',
-        paddingTop: `${4 * size}px`,
-        paddingBottom: `${4 * size}px`,
-        paddingLeft: `${5 * size}px`,
-        paddingRight: `${5 * size}px`
-      }}
-      label={
-        <div style={{ marginLeft: '0.125em', textAlign: 'left' }}>
-          <span style={{ fontSize: `${size}em` }}>
-            <b>{certName}</b>
-          </span>
-          <br />
-          <span style={{
-            fontSize: `${size * 0.8}em`,
-            color: 'textSecondary',
-            maxWidth: '20em',
-            display: 'block'
-          }}
-          >
-            {lastAccessed || description}
-          </span>
-          <span>
-            {Array.isArray(fieldsToDisplay) && fieldsToDisplay.length > 0
-              ? <div>
-                <Grid container alignContent='center' style={{ alignItems: 'center' }}>
-                  <Grid item>
-                    <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>fields:</p>
+      <Chip
+        style={theme.templates.chip({ size })}
+        label={
+          <div style={{ marginLeft: '0.125em', textAlign: 'left' }}>
+            <span style={theme.templates.chipLabelTitle({ size })}>
+              <b>{certName}</b>
+            </span>
+            <br />
+            <span style={theme.templates.chipLabelSubtitle}>
+              {lastAccessed || description}
+            </span>
+            <span>
+              {Array.isArray(fieldsToDisplay) && fieldsToDisplay.length > 0
+                ? <div>
+                  <Grid container alignContent='center' style={{ alignItems: 'center' }}>
+                    <Grid item>
+                      <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>fields:</p>
+                    </Grid>
+                    <Grid item>
+                      {fieldsToDisplay.map((y, j) => (
+                        <Chip
+                          style={{ margin: '0px 0.25em' }}
+                          key={j}
+                          label={y}
+                        />
+                      ))}
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    {fieldsToDisplay.map((y, j) => (
-                      <Chip
-                        style={{ margin: '0px 0.25em' }}
-                        key={j}
-                        label={y}
+                  </div>
+                : ''}
+            </span>
+            <span>
+              {issuer
+                ? <div>
+                  <Grid container alignContent='center' style={{ alignItems: 'center' }}>
+                    <Grid item>
+                      <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>issuer:</p>
+                    </Grid>
+                    <Grid item>
+                      <CounterpartyChip
+                        counterparty={issuer}
+                        onClick={onIssuerClick}
                       />
-                    ))}
+                    </Grid>
                   </Grid>
-                </Grid>
-                </div>
-              : ''}
-          </span>
-          <span>
-            {issuer
-              ? <div>
-                <Grid container alignContent='center' style={{ alignItems: 'center' }}>
-                  <Grid item>
-                    <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>issuer:</p>
+                  </div>
+                : ''}
+            </span>
+            <span>
+              {verifier
+                ? <div>
+                  <Grid container alignContent='center' style={{ alignItems: 'center' }}>
+                    <Grid item>
+                      <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>verifier:</p>
+                    </Grid>
+                    <Grid item>
+                      <CounterpartyChip
+                        counterparty={verifier}
+                        onClick={onVerifierClick}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <CounterpartyChip
-                      counterparty={issuer}
-                      onClick={onIssuerClick}
-                    />
-                  </Grid>
-                </Grid>
-                </div>
-              : ''}
-          </span>
-          <span>
-            {verifier
-              ? <div>
-                <Grid container alignContent='center' style={{ alignItems: 'center' }}>
-                  <Grid item>
-                    <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>verifier:</p>
-                  </Grid>
-                  <Grid item>
-                    <CounterpartyChip
-                      counterparty={verifier}
-                      onClick={onVerifierClick}
-                    />
-                  </Grid>
-                </Grid>
-                </div>
-              : ''}
-          </span>
-        </div>
+                  </div>
+                : ''}
+            </span>
+          </div>
       }
-      onDelete={ () => {
-        onCloseClick()
-      }}
-      deleteIcon={<CloseIcon />}
-      disableRipple={!clickable}
-      icon={
-        <Badge
-          overlap='circular'
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}
-          badgeContent={
-            <Tooltip
-              arrow
-              title='Digital Certificate (click to learn more about certificates)'
-              onClick={e => {
-                e.stopPropagation()
-                window.open(
-                  'https://projectbabbage.com/docs/babbage-sdk/concepts/certificates',
-                  '_blank'
-                )
-              }}
-            >
-              <Avatar
-                sx={{
-                  backgroundColor: 'darkgoldenrod',
-                  width: 20,
-                  height: 20,
-                  borderRadius: '3px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  fontSize: '1.2em',
-                  marginRight: '0.25em',
-                  marginBottom: '0.3em'
+        onDelete={() => {
+          onCloseClick()
+        }}
+        deleteIcon={canRevoke ? <CloseIcon /> : <></>}
+        disableRipple={!clickable}
+        icon={
+          <Badge
+            overlap='circular'
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}
+            badgeContent={
+              <Tooltip
+                arrow
+                title='Digital Certificate (click to learn more about certificates)'
+                onClick={e => {
+                  e.stopPropagation()
+                  window.open(
+                    'https://projectbabbage.com/docs/babbage-sdk/concepts/certificates',
+                    '_blank'
+                  )
                 }}
               >
-                <ArtTrack style={{ width: 16, height: 16 }} />
-              </Avatar>
-            </Tooltip>
+                <Avatar
+                  sx={{
+                    backgroundColor: 'darkgoldenrod',
+                    width: 20,
+                    height: 20,
+                    borderRadius: '3px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    fontSize: '1.2em',
+                    marginRight: '0.25em',
+                    marginBottom: '0.3em'
+                  }}
+                >
+                  <ArtTrack style={{ width: 16, height: 16 }} />
+                </Avatar>
+              </Tooltip>
           }
-        >
-          <Avatar
-            sx={{
-              width: '3.2em',
-              height: '3.2em'
-            }}
           >
-            <Img
-              src={iconURL}
-              style={{ width: '100%', height: '100%' }}
-              className={classes.table_picture}
-              confederacyHost={confederacyHost()}
-            />
-          </Avatar>
-        </Badge>
+            <Avatar
+              sx={{
+                width: '3.2em',
+                height: '3.2em'
+              }}
+            >
+              <Img
+                src={iconURL}
+                style={{ width: '100%', height: '100%' }}
+                className={classes.table_picture}
+                confederacyHost={confederacyHost()}
+              />
+            </Avatar>
+          </Badge>
       }
-      onClick={e => {
-        if (clickable) {
-          if (typeof onClick === 'function') {
-            onClick(e)
-          } else {
-            e.stopPropagation()
-            history.push(
+        onClick={e => {
+          if (clickable) {
+            if (typeof onClick === 'function') {
+              onClick(e)
+            } else {
+              e.stopPropagation()
+              history.push(
               `/dashboard/certificate/${encodeURIComponent(certType)}`
-            )
+              )
+            }
           }
-        }
-      }}
-    />
-    <span className={classes.expires}>{expires}</span>
+        }}
+      />
+      <span className={classes.expires}>{expires}</span>
     </div>
   )
 }

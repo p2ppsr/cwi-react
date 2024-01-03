@@ -43,7 +43,6 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
         Access At A Glance
       </Typography>
       <List sx={{ bgcolor: 'background.paper', borderRadius: '0.25em', padding: '1em' }}>
-
         {recentBasketAccess.length !== 0 && (
           <>
             <ListSubheader>
@@ -65,14 +64,15 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
       {loading && <LinearProgress paddingTop='1em' />}
       <center style={{ padding: '1em' }}>
 
-        <Button onClick={() => {
-          history.push({
-            pathname: `/dashboard/manage-app/${encodeURIComponent(originator)}`,
-            state: {
-            }
-          })
-        }}
-        selected={
+        <Button
+          onClick={() => {
+            history.push({
+              pathname: `/dashboard/manage-app/${encodeURIComponent(originator)}`,
+              state: {
+              }
+            })
+          }}
+          selected={
           history.location.pathname === `/dashboard/manage-app/${encodeURIComponent(originator)}`
         }
         >

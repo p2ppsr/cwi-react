@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, history } from 'react'
 import {
   List,
   ListItem,
@@ -139,7 +139,8 @@ const CertificateAccessList = ({
             {/* Counterparties listed just below the header */}
 
             <div className={classes.appList}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
+              {/** TODO: Determine when apps should be displayed in this context */}
+              {/* <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
                 <AppChip
                   label={grant.domain} showDomain onClick={(e) => {
                     e.stopPropagation()
@@ -156,12 +157,12 @@ const CertificateAccessList = ({
                     {grant.permissions && grant.permissions.length > 0 && grant.permissions[0].counterparty
                       ? <Button onClick={() => { revokeAllAccess(grant) }} variant='contained' color='secondary' className={classes.revokeButton}>
                         Revoke All
-                        </Button>
+                      </Button>
                       : <IconButton edge='end' onClick={() => revokeAccess(grant.permissions[0].permissionGrant)} size='large'>
                         <CloseIcon />
-                      </IconButton>}
+                        </IconButton>}
                   </>}
-              </div>
+              </div> */}
               <ListItem elevation={4}>
                 <Grid container spacing={1} style={{ paddingBottom: '1em' }}>
                   {grant.permissions && grant.permissions.map((permission, idx) => (
@@ -174,6 +175,7 @@ const CertificateAccessList = ({
                               size={1.1}
                               expires={formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
                               onCloseClick={() => revokeAccess(permission.permissionGrant)}
+                              canRevoke={canRevoke}
                             />
                           </div>
                         </Grid>}

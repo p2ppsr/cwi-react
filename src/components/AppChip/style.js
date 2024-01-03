@@ -4,8 +4,11 @@ export default theme => ({
     maxWidth: '5em'
     // borderRadius: '3em'
   },
+  expiryHoverText: {
+    ...theme.templates.expiryHoverText
+  },
+  // Show expires on hover
   chipContainer: {
-    display: 'flex',
-    alignItems: 'center'
+    ...theme.templates.chipContainer
   }
 })

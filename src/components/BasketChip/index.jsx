@@ -26,7 +26,8 @@ const BasketChip = ({
   size = 1.3,
   onClick,
   expires,
-  onCloseClick = () => {}
+  onCloseClick = () => {},
+  canRevoke = false
 }) => {
   if (typeof basketId !== 'string') {
     throw new Error('BasketChip was initialized without a valid basketId')
@@ -66,38 +67,29 @@ const BasketChip = ({
     })()
   }, [basketId])
   return (
-    <div className={classes.chipContainer}>
+    <div style={theme.templates.chipContainer}>
       <Chip
-        style={{
-          height: '100%',
-          width: '100%',
-          // maxWidth: '30em',
-          paddingTop: `${8 * size}px`,
-          paddingBottom: `${8 * size}px`,
-          paddingLeft: `${10 * size}px`,
-          paddingRight: `${10 * size}px`
+        style={theme.templates.chip({ size })}
+        sx={{
+          '& .MuiChip-label': {
+            width: '100% !important'
+          }
         }}
         label={
-          <div style={{ marginLeft: '1em', textAlign: 'left' }}>
+          <div style={theme.templates.chipLabel}>
             <span style={{ fontSize: `${size}em` }}>
               <b>{basketName}</b>
             </span>
             <br />
-            <span style={{
-              fontSize: `${size * 0.8}em`,
-              color: 'textSecondary',
-              maxWidth: '20em',
-              display: 'block'
-            }}
-            >
+            <span style={theme.templates.chipLabelSubtitle}>
               {lastAccessed || description}
             </span>
           </div>
         }
-        onDelete={ () => {
+        onDelete={() => {
           onCloseClick()
         }}
-        deleteIcon={<CloseIcon />}
+        deleteIcon={canRevoke ? <CloseIcon /> : <></>}
         disableRipple={!clickable}
         icon={
           <Badge
@@ -166,7 +158,7 @@ const BasketChip = ({
                 pathname: `/dashboard/basket/${encodeURIComponent(basketId)}`,
                 state: {
                   id: basketId,
-                  name: 'ToDo Items Basket',
+                  name: basketName,
                   registryOperator: basketRegistryOperator,
                   description,
                   iconURL,

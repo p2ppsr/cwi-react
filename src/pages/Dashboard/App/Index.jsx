@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
-import { Grid } from '@mui/material'
+import { Grid, IconButton, Typography } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import isImageUrl from '../../../utils/isImageUrl'
@@ -9,6 +9,8 @@ import RecentActions from '../../../components/RecentActions'
 import AccessAtAGlance from '../../../components/AccessAtAGlance'
 import PageHeader from '../../../components/PageHeader'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
+import CheckIcon from '@mui/icons-material/Check'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 
 const useStyles = makeStyles(style, { name: 'apps' })
 
@@ -29,6 +31,16 @@ const Apps = ({ history }) => {
     setRefresh
   }
   const classes = useStyles()
+  const [copied, setCopied] = useState({ id: false, registryOperator: false })
+
+  // Copies the data and timeouts the checkmark icon
+  const handleCopy = (data, type) => {
+    navigator.clipboard.writeText(data)
+    setCopied({ ...copied, [type]: true })
+    setTimeout(() => {
+      setCopied({ ...copied, [type]: false })
+    }, 2000)
+  }
 
   useEffect(() => {
     (async () => {
@@ -80,9 +92,20 @@ const Apps = ({ history }) => {
   return (
     <div className={classes.root}>
       <PageHeader
-        history={history} title={appName} subheading={appDomain} icon={appIcon} buttonTitle='Launch' onClick={() => {
-          window.open(`https://${appDomain}`, '_blank')
-        }}
+        history={history}
+        title={appName}
+        subheading={
+          <div>
+            <Typography variant='caption' color='textSecondary'>
+              {`https://${appDomain}`}
+              <IconButton size='small' onClick={() => handleCopy(appDomain, 'id')} disabled={copied.id}>
+                {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
+              </IconButton>
+            </Typography>
+          </div>
+    } icon={appIcon} buttonTitle='Launch' onClick={() => {
+      window.open(`https://${appDomain}`, '_blank')
+    }}
       />
       {/* <Grid container>
         <Grid item sx={12} style={{ width: '100%', height: '10em', background: 'gray' }}>

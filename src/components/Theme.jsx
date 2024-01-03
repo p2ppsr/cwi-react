@@ -73,6 +73,58 @@ const extendedTheme = theme => ({
       textTransform: 'uppercase',
       letterSpacing: '6px',
       fontWeight: '700'
+    },
+    boxOfChips: {
+      display: 'flex',
+      justifyContent: 'left',
+      flexWrap: 'wrap'
+    },
+    chipContainer: {
+      fontSize: '0.95em',
+      display: 'flex',
+      flexDirection: 'column',
+      alignContent: 'center',
+      alignItems: 'center',
+      '&:hover $expiryHoverText': {
+        visibility: 'visible',
+        opacity: 1
+      },
+      marginLeft: '0.4em'
+    },
+    expiryHoverText: {
+      fontSize: '0.95em',
+      color: theme.palette.text.secondary,
+      textAlign: 'center',
+      visibility: 'hidden',
+      opacity: 0,
+      transition: 'all 0.8s'
+    },
+    chip: ({ size = 1, backgroundColor } = {}) => {
+      const base = {
+        height: '100%',
+        width: '100%',
+        paddingTop: `${8 * size}px`,
+        paddingBottom: `${8 * size}px`,
+        paddingLeft: `${10 * size}px`,
+        paddingRight: `${10 * size}px`
+      }
+      if (typeof backgroundColor === 'string') {
+        base.backgroundColor = backgroundColor
+      }
+      return base
+    },
+    chipLabel: {
+      // marginLeft: '0.125em',
+      // textAlign: 'left'
+    },
+    chipLabelTitle: ({ size = 1 } = {}) => {
+      return {
+        fontSize: `${size}em`
+      }
+    },
+    chipLabelSubtitle: {
+      fontSize: '0.9em',
+      color: theme.palette.text.secondary
     }
   }
 })
