@@ -27,7 +27,8 @@ const PageHeader = ({ title, subheading, icon, buttonTitle, buttonIcon, onClick,
           <Img
             className={classes.app_icon}
             src={icon}
-            alt=''
+            alt={title}
+            poster={title}
           />
         </div>
         <div>

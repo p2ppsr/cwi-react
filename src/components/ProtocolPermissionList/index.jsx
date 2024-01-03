@@ -286,7 +286,7 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
           <Typography
             color='textSecondary'
           >
-            <i>Total Permissions: {perms.length}</i>
+            <i>Total Protocol Grants: {perms.length}</i>
           </Typography>
         </center>}
 

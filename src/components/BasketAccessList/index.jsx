@@ -1,9 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useCallback } from 'react'
 import {
-  List,
-  ListItem,
-  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -11,18 +8,15 @@ import {
   DialogActions,
   Button,
   Typography,
-  ListSubheader,
-  Grid
+  ListSubheader
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 // import { useTheme } from '@emotion/react'
 import style from './style'
-import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
 import BasketChip from '../BasketChip'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import AppChip from '../AppChip'
-// import sortGrants from './sortGrants'
 import formatDistance from 'date-fns/formatDistance'
 
 const useStyles = makeStyles(style, {

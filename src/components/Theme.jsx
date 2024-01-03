@@ -97,7 +97,7 @@ const extendedTheme = theme => ({
       textAlign: 'center',
       visibility: 'hidden',
       opacity: 0,
-      transition: 'all 0.8s'
+      transition: 'all 0.3301s'
     },
     chip: ({ size = 1, backgroundColor } = {}) => {
       const base = {

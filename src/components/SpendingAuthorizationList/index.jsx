@@ -145,7 +145,7 @@ const SpendingAuthorizationList = ({ app, limit }) => {
           color='textSecondary'
           paragraph
         >
-          <i>Total Authorizations: {authorizations.length}</i>
+          <i>Total Spending Authorizations: {authorizations.length}</i>
         </Typography>
       </center>
       {Number.isInteger(Number(authorizedAmount)) && authorizedAmount > 0 && (

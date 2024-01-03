@@ -40,10 +40,10 @@ const ProtocolAccess = () => {
             title={protocolName}
             subheading={
               <div>
-                <Typography variant='caption' color='textSecondary' display='block'>
+                <Typography variant='caption' color='textSecondary' display='block' style={{ paddingTop: '1em' }}>
                   Security Level: <Typography variant='caption' fontWeight='bold'>{securityLevel}</Typography>
                 </Typography>
-                <Typography variant='caption' color='textSecondary'>
+                <Typography variant='caption' color='textSecondary' style={{ display: 'block', marginTop: '-0.444em' }}>
                   Protocol ID: <Typography variant='caption' fontWeight='bold'>{protocolID}</Typography>
                   <IconButton size='small' onClick={() => handleCopy(protocolID, 'id')} disabled={copied.id}>
                     {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
@@ -79,7 +79,7 @@ const ProtocolAccess = () => {
             <Typography variant='h4' gutterBottom className={classes.typography}>
               Apps with Access
             </Typography>
-            <ProtocolPermissionList protocol={protocolID} securityLevel={securityLevel} counterparty={counterparty} itemsDisplayed='apps' canRevoke displayCount={false} />
+            <ProtocolPermissionList protocol={protocolID} securityLevel={securityLevel} counterparty={counterparty} itemsDisplayed='apps' canRevoke showEmptyList />
           </Paper>
         </Grid>
       </Grid>

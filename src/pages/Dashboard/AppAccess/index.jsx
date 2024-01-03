@@ -1,12 +1,9 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
-// import { Switch, Route, useHistory } from 'react-router-dom'
-import { Typography, Button, IconButton, Grid, Tab, Tabs, List, Link } from '@mui/material'
-import { ArrowBack } from '@mui/icons-material'
+import { Typography, IconButton, Grid, Tab, Tabs, List, Link } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import isImageUrl from '../../../utils/isImageUrl'
-import { Img } from 'uhrp-react'
 import parseAppManifest from '../../../utils/parseAppManifest'
 import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
 import SpendingAuthorizationList from '../../../components/SpendingAuthorizationList'
@@ -27,14 +24,6 @@ const AppAccess = ({ match, history }) => {
   const [loading, setLoading] = useState(false)
   const [refresh, setRefresh] = useState(false)
   const [copied, setCopied] = useState({ id: false, registryOperator: false })
-
-  const recentActionParams = {
-    loading,
-    // appActions,
-    // displayLimit,
-    // setDisplayLimit,
-    setRefresh
-  }
 
   // Copies the data and timeouts the checkmark icon
   const handleCopy = (data, type) => {
@@ -141,6 +130,7 @@ const AppAccess = ({ match, history }) => {
         <ProtocolPermissionList
           app={appDomain}
           canRevoke
+          showEmptyList
         />}
       {tabValue === '1' &&
         <SpendingAuthorizationList
@@ -149,12 +139,14 @@ const AppAccess = ({ match, history }) => {
       {tabValue === '2' &&
         <BasketAccessList
           app={appDomain}
+          showEmptyList
           canRevoke
         />}
       {tabValue === '3' &&
         <CertificateAccessList
           app={appDomain}
           canRevoke
+          showEmptyList
         />}
       {/* </div> */}
       <div />
