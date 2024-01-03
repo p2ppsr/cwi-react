@@ -200,8 +200,7 @@ const Dashboard = () => {
               selected={history.location.pathname === '/dashboard/trust'}
             >
               <ListItemIcon>
-                <TrustIcon
-                />
+                <TrustIcon />
                 {registerIdReminder === true &&
                   <CircleIcon
                     style={{ marginLeft: '0.7em', width: '12px', color: 'red' }}
@@ -219,8 +218,7 @@ const Dashboard = () => {
             }
             >
               <ListItemIcon>
-                <SettingsIcon
-                />
+                <SettingsIcon />
               </ListItemIcon>
               <ListItemText>
                 Settings

@@ -32,58 +32,56 @@ const ProtocolAccess = () => {
   }
 
   return (
-    <div>
-      <Grid container spacing={3} direction='column' className={classes.grid}>
-        <Grid item>
-          <PageHeader
-            history={history}
-            title={protocolName}
-            subheading={
-              <div>
-                <Typography variant='caption' color='textSecondary' display='block' style={{ paddingTop: '1em' }}>
-                  Security Level: <Typography variant='caption' fontWeight='bold'>{securityLevel}</Typography>
-                </Typography>
-                <Typography variant='caption' color='textSecondary' style={{ display: 'block', marginTop: '-0.444em' }}>
-                  Protocol ID: <Typography variant='caption' fontWeight='bold'>{protocolID}</Typography>
-                  <IconButton size='small' onClick={() => handleCopy(protocolID, 'id')} disabled={copied.id}>
-                    {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
-                  </IconButton>
-                </Typography>
-              </div>
+    <Grid container spacing={3} direction='column' className={classes.grid}>
+      <Grid item>
+        <PageHeader
+          history={history}
+          title={protocolName}
+          subheading={
+            <div>
+              <Typography variant='caption' color='textSecondary' display='block'>
+                Security Level: <Typography variant='caption' fontWeight='bold'>{securityLevel}</Typography>
+              </Typography>
+              <Typography variant='caption' color='textSecondary' style={{ display: 'block', marginTop: '-0.444em' }}>
+                Protocol ID: <Typography variant='caption' fontWeight='bold'>{protocolID}</Typography>
+                <IconButton size='small' onClick={() => handleCopy(protocolID, 'id')} disabled={copied.id}>
+                  {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
+                </IconButton>
+              </Typography>
+            </div>
             }
-            icon={iconURL}
-            showButton={false}
-          />
-        </Grid>
-
-        <Grid item>
-          <Typography variant='h5' fontWeight='bold' gutterBottom>
-            Protocol Description
-          </Typography>
-          <Typography variant='body' gutterBottom>
-            {description}
-          </Typography>
-        </Grid>
-
-        <Grid item>
-          <Typography variant='h5' fontWeight='bold' gutterBottom>
-            Learn More
-          </Typography>
-          <Typography variant='body'>You can learn more about how to manipulate and use the items in this basket from the following URL:</Typography>
-          <br />
-          <Link color='textPrimary' href={documentationURL} target='_blank' rel='noopener noreferrer'>{documentationURL}</Link>
-        </Grid>
-
-        <Grid item padding='1em'>
-          <Paper elevation={3} className={classes.paper}>
-            <Typography variant='h4' gutterBottom className={classes.typography}>
-              Apps with Access
-            </Typography>
-            <ProtocolPermissionList protocol={protocolID} securityLevel={securityLevel} counterparty={counterparty} itemsDisplayed='apps' canRevoke showEmptyList />
-          </Paper>
-        </Grid>
+          icon={iconURL}
+          showButton={false}
+        />
       </Grid>
-    </div>
+
+      <Grid item>
+        <Typography variant='h5' fontWeight='bold' gutterBottom>
+          Protocol Description
+        </Typography>
+        <Typography variant='body' gutterBottom>
+          {description}
+        </Typography>
+      </Grid>
+
+      <Grid item>
+        <Typography variant='h5' fontWeight='bold' gutterBottom>
+          Learn More
+        </Typography>
+        <Typography variant='body'>You can learn more about how to manipulate and use the items in this basket from the following URL:</Typography>
+        <br />
+        <Link color='textPrimary' href={documentationURL} target='_blank' rel='noopener noreferrer'>{documentationURL}</Link>
+      </Grid>
+
+      <Grid item padding='1em'>
+        <Paper elevation={3} className={classes.paper}>
+          <Typography variant='h4' gutterBottom className={classes.typography}>
+            Apps with Access
+          </Typography>
+          <ProtocolPermissionList protocol={protocolID} securityLevel={securityLevel} counterparty={counterparty} itemsDisplayed='apps' canRevoke showEmptyList />
+        </Paper>
+      </Grid>
+    </Grid>
   )
 }
 

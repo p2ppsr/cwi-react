@@ -90,29 +90,29 @@ const Apps = ({ history }) => {
   }, [refresh])
 
   return (
-    <div className={classes.root}>
-      <PageHeader
-        history={history}
-        title={appName}
-        subheading={
-          <div>
-            <Typography variant='caption' color='textSecondary'>
-              {`https://${appDomain}`}
-              <IconButton size='small' onClick={() => handleCopy(appDomain, 'id')} disabled={copied.id}>
-                {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
-              </IconButton>
-            </Typography>
-          </div>
-    } icon={appIcon} buttonTitle='Launch' onClick={() => {
-      window.open(`https://${appDomain}`, '_blank')
-    }}
-      />
-      {/* <Grid container>
-        <Grid item sx={12} style={{ width: '100%', height: '10em', background: 'gray' }}>
+    <Grid container spacing={3} direction='column'>
+      <Grid item xs={12}>
+        <PageHeader
+          history={history}
+          title={appName}
+          subheading={
+            <div>
+              <Typography variant='caption' color='textSecondary'>
+                {`https://${appDomain}`}
+                <IconButton size='small' onClick={() => handleCopy(appDomain, 'id')} disabled={copied.id}>
+                  {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
+                </IconButton>
+              </Typography>
+            </div>
+          } icon={appIcon} buttonTitle='Launch' onClick={() => {
+            window.open(`https://${appDomain}`, '_blank')
+          }}
+        />
+      </Grid>
+      {/* <Grid item sx={12} style={{ width: '100%', height: '10em', background: 'gray' }}>
           <Typography paddingBottom='2em' align='center'>Total App Cashflow</Typography>
-        </Grid>
-      </Grid> */}
-      <Grid container spacing={3}>
+        </Grid> */}
+      <Grid container item spacing={3} direction='row'>
         <Grid item lg={6} md={6} xs={12}>
           <RecentActions {...recentActionParams} />
         </Grid>
@@ -120,7 +120,7 @@ const Apps = ({ history }) => {
           <AccessAtAGlance {...{ originator: appDomain, loading, setRefresh, history }} />
         </Grid>
       </Grid>
-    </div>
+    </Grid>
   )
 }
 

@@ -49,7 +49,7 @@ const CertificateChip = ({
   )
   const [description, setDescription] = useState(`${certType.substr(0, 12)}...`)
   const [documentationURL, setDocumentationURL] = useState('unknown')
-  const [fields, setFields] = useState({})
+  // const [fields, setFields] = useState({})
 
   useEffect(() => {
     (async () => {
@@ -63,6 +63,7 @@ const CertificateChip = ({
         setIconURL(results.iconURL)
         setDescription(results.description)
         setDocumentationURL(results.documentationURL)
+        console.log('results', results)
       } catch (error) {
         console.error(error)
       }
@@ -70,11 +71,11 @@ const CertificateChip = ({
   }, [certType])
 
   return (
-    <div className={classes.chipContainer}>
+    <div>
       <Chip
         style={theme.templates.chip({ size })}
         label={
-          <div style={{ marginLeft: '0.125em', textAlign: 'left' }}>
+          <div>
             <span style={theme.templates.chipLabelTitle({ size })}>
               <b>{certName}</b>
             </span>
@@ -84,21 +85,15 @@ const CertificateChip = ({
             </span>
             <span>
               {Array.isArray(fieldsToDisplay) && fieldsToDisplay.length > 0
-                ? <div>
-                  <Grid container alignContent='center' style={{ alignItems: 'center' }}>
-                    <Grid item>
-                      <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>fields:</p>
-                    </Grid>
-                    <Grid item>
-                      {fieldsToDisplay.map((y, j) => (
-                        <Chip
-                          style={{ margin: '0px 0.25em' }}
-                          key={j}
-                          label={y}
-                        />
-                      ))}
-                    </Grid>
-                  </Grid>
+                ? <div style={theme.templates.boxOfChips}>
+                  <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>fields:</p>
+                  {fieldsToDisplay.map((y, j) => (
+                    <Chip
+                      style={{ margin: '0.4em 0.25em' }}
+                      key={j}
+                      label={y}
+                    />
+                  ))}
                   </div>
                 : ''}
             </span>
@@ -121,18 +116,16 @@ const CertificateChip = ({
             </span>
             <span>
               {verifier
-                ? <div>
-                  <Grid container alignContent='center' style={{ alignItems: 'center' }}>
-                    <Grid item>
-                      <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>verifier:</p>
-                    </Grid>
-                    <Grid item>
-                      <CounterpartyChip
-                        counterparty={verifier}
-                        onClick={onVerifierClick}
-                      />
-                    </Grid>
-                  </Grid>
+                ? <div style={theme.templates.boxOfChips}>
+                  <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>verifier:</p>
+
+                  <CounterpartyChip
+                    counterparty={verifier}
+                    onClick={onVerifierClick}
+                    clickable
+                    size={0.85}
+                  />
+
                   </div>
                 : ''}
             </span>
@@ -165,9 +158,10 @@ const CertificateChip = ({
                 <Avatar
                   sx={{
                     backgroundColor: 'darkgoldenrod',
+                    color: 'white',
                     width: 20,
                     height: 20,
-                    borderRadius: '3px',
+                    borderRadius: '10px',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -182,14 +176,17 @@ const CertificateChip = ({
           }
           >
             <Avatar
+              variant='square'
               sx={{
-                width: '3.2em',
-                height: '3.2em'
+                width: '2.2em',
+                height: '2.2em',
+                borderRadius: '4px',
+                backgroundColor: '#000000AF'
               }}
             >
               <Img
                 src={iconURL}
-                style={{ width: '100%', height: '100%' }}
+                style={{ width: '75%', height: '75%' }}
                 className={classes.table_picture}
                 confederacyHost={confederacyHost()}
               />

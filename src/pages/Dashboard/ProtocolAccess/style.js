@@ -5,7 +5,7 @@ export default theme => ({
   paper: {
     padding: '16px',
     paddingRight: '16px',
-    borderRadius: '8px',
+    borderRadius: '8px'
     // '@media (max-width: 400px)': {
     // }
   },

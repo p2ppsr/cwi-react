@@ -38,8 +38,8 @@ const PageHeader = ({ title, subheading, icon, buttonTitle, buttonIcon, onClick,
           {typeof subheading === 'string'
             ? <Typography color='textSecondary'>
               {subheading}
-              </Typography>
-            : subheading}
+            </Typography>
+            : <div style={{ height: '3em' }}>{subheading}</div>}
         </div>
         <div>
           {showButton &&

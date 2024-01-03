@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, history } from 'react'
 import {
   List,
   ListItem,
-  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -13,13 +12,10 @@ import {
   Grid,
   ListSubheader
 } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
-// import { Folder, Delete, ExpandMore } from '@mui/icons-material'
 import formatDistance from 'date-fns/formatDistance'
 import { toast } from 'react-toastify'
-import AppChip from '../AppChip'
 import CounterpartyChip from '../CounterpartyChip'
 import CertificateChip from '../CertificateChip'
 

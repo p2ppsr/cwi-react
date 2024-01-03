@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Typography, IconButton, ListItemText, ListItemAvatar, Avatar, List, ListItemSecondaryAction, Grid, Link, Paper, Switch, ListItemButton } from '@mui/material'
+import { Button, Typography, IconButton, Grid, Link, Paper } from '@mui/material'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import CheckIcon from '@mui/icons-material/Check'
 import DownloadIcon from '@mui/icons-material/Download'
@@ -49,70 +49,68 @@ const BasketAccess = () => {
   }, [])
 
   return (
-    <div>
-      <Grid container spacing={3} direction='column' sx={{ padding: '16px' }}>
-        <Grid item>
-          <PageHeader
-            history={history}
-            title={name}
-            subheading={
-              <div>
-                <Typography color='textSecondary'>
-                  {`Items in Basket: ${itemsInBasket.length}`}
-                </Typography>
-                <Typography variant='caption' color='textSecondary'>
-                  Basket ID: {id}
-                  <IconButton size='small' onClick={() => handleCopy(id, 'id')} disabled={copied.id}>
-                    {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
-                  </IconButton>
-                </Typography>
-              </div>
+    <Grid container spacing={3} direction='column'>
+      <Grid item>
+        <PageHeader
+          history={history}
+          title={name}
+          subheading={
+            <div>
+              <Typography variant='caption' color='textSecondary' display='block'>
+                {`Items in Basket: ${itemsInBasket.length}`}
+              </Typography>
+              <Typography variant='caption' color='textSecondary' style={{ display: 'block', marginTop: '-0.444em' }}>
+                Basket ID: {id}
+                <IconButton size='small' onClick={() => handleCopy(id, 'id')} disabled={copied.id}>
+                  {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
+                </IconButton>
+              </Typography>
+            </div>
             }
-            icon={iconURL} buttonTitle='Export'
-            buttonIcon={<DownloadIcon />}
-            onClick={() => exportDataToFile({
-              data: itemsInBasket,
-              filename: 'basket_contents.json',
-              type: 'application/json'
-            })}
-          />
-        </Grid>
-
-        <Grid item>
-          <Typography variant='h5' gutterBottom>
-            Basket Description
-          </Typography>
-          <Typography variant='body' gutterBottom>
-            {description}
-          </Typography>
-        </Grid>
-
-        <Grid item>
-          <Typography variant='h5' gutterBottom>
-            Learn More
-          </Typography>
-          <Typography variant='body'>You can learn more about how to manipulate and use the items in this basket from the following URL:</Typography>
-          <br />
-          <Link color='textPrimary' href={documentationURL} target='_blank' rel='noopener noreferrer'>{documentationURL}</Link>
-        </Grid>
-
-        <Grid item>
-          <Paper elevation={3} sx={{ padding: '16px', borderRadius: '8px' }}>
-            <Typography variant='h4' gutterBottom paddingLeft='0.25em'>
-              Apps with Access
-            </Typography>
-            <BasketAccessList basket={id} itemsDisplayed='apps' canRevoke list />
-          </Paper>
-        </Grid>
-
-        <Grid item alignSelf='center'>
-          <Button color='error' onClick={() => { window.alert("Are you sure you want to revoke this app's access?") }}>
-            Revoke All Access
-          </Button>
-        </Grid>
-
+          icon={iconURL} buttonTitle='Export'
+          buttonIcon={<DownloadIcon />}
+          onClick={() => exportDataToFile({
+            data: itemsInBasket,
+            filename: 'basket_contents.json',
+            type: 'application/json'
+          })}
+        />
       </Grid>
-    </div>
+
+      <Grid item>
+        <Typography variant='h5' gutterBottom>
+          Basket Description
+        </Typography>
+        <Typography variant='body' gutterBottom>
+          {description}
+        </Typography>
+      </Grid>
+
+      <Grid item>
+        <Typography variant='h5' gutterBottom>
+          Learn More
+        </Typography>
+        <Typography variant='body'>You can learn more about how to manipulate and use the items in this basket from the following URL:</Typography>
+        <br />
+        <Link color='textPrimary' href={documentationURL} target='_blank' rel='noopener noreferrer'>{documentationURL}</Link>
+      </Grid>
+
+      <Grid item>
+        <Paper elevation={3} sx={{ padding: '16px', borderRadius: '8px' }}>
+          <Typography variant='h4' gutterBottom paddingLeft='0.25em'>
+            Apps with Access
+          </Typography>
+          <BasketAccessList basket={id} itemsDisplayed='apps' canRevoke list />
+        </Paper>
+      </Grid>
+
+      <Grid item alignSelf='center'>
+        <Button color='error' onClick={() => { window.alert("Are you sure you want to revoke this app's access?") }}>
+          Revoke All Access
+        </Button>
+      </Grid>
+
+    </Grid>
   )
 }
 

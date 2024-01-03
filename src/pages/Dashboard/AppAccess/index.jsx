@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
-import { Typography, IconButton, Grid, Tab, Tabs, List, Link } from '@mui/material'
+import { Typography, IconButton, Grid, Tab, Tabs } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import isImageUrl from '../../../utils/isImageUrl'
@@ -75,7 +75,7 @@ const AppAccess = ({ match, history }) => {
   }, [refresh, appDomain])
 
   return (
-    <div className={classes.root}>
+    <div>
       <Grid container spacing={3} direction='column' sx={{ padding: '16px' }}>
         <Grid item>
           <PageHeader
@@ -148,8 +148,6 @@ const AppAccess = ({ match, history }) => {
           canRevoke
           showEmptyList
         />}
-      {/* </div> */}
-      <div />
     </div>
   )
 }

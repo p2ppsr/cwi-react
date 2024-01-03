@@ -4,23 +4,10 @@ export default theme => ({
     borderRadius: '3em'
   },
   expires: {
-    fontSize: '0.95em',
-    color: theme.palette.text.secondary,
-    textAlign: 'center',
-    visibility: 'hidden',
-    opacity: 0,
-    transition: 'all 0.8s'
+    ...theme.templates.expiryHoverText
   },
   // Show expires on hover
   chipContainer: {
-    fontSize: '0.95em',
-    display: 'flex',
-    flexDirection: 'column',
-    alignContent: 'center',
-    alignItems: 'center',
-    '&:hover $expires': {
-      visibility: 'visible',
-      opacity: 1
-    }
+    ...theme.templates.chipContainer
   }
 })
