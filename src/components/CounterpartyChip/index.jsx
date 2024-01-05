@@ -21,9 +21,9 @@ const CounterpartyChip = ({
   history,
   clickable = false,
   size = 1.3,
-  onClick = () => {},
+  onClick = () => { },
   expires,
-  onCloseClick = () => {},
+  onCloseClick = () => { },
   canRevoke = false
 }) => {
   const { settings } = useContext(SettingsContext)
@@ -49,9 +49,20 @@ const CounterpartyChip = ({
         const certifiers = settings.trustedEntities.map(x => x.publicKey)
         const results = await signia.discoverByIdentityKey(counterparty, certifiers)
         if (results && results.length > 0) {
-          setSigniaIdentity(results[0].decryptedFields)
+          console.log(results)
+          // Compute the most trusted of the results
+          let mostTrustedIndex = 0
+          let maxTrustPoints = 0
+          for (let i = 0; i < results.length; i++) {
+            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].certifier).trust
+            if (resultTrustLevel > maxTrustPoints) {
+              mostTrustedIndex = i
+              maxTrustPoints = resultTrustLevel
+            }
+          }
+          setSigniaIdentity(results[mostTrustedIndex].decryptedFields)
         }
-      } catch (e) {}
+      } catch (e) { }
     })()
   }, [])
 
@@ -95,7 +106,7 @@ const CounterpartyChip = ({
                 className={classes.table_picture}
                 confederacyHost={confederacyHost()}
               />
-              )
+            )
             : <YellowCautionIcon className={classes.table_picture} />
         }
         onClick={e => {

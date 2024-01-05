@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Grid, Chip, Badge, Avatar, Tooltip, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { withRouter } from 'react-router-dom'
@@ -8,10 +8,9 @@ import makeStyles from '@mui/styles/makeStyles'
 import { useTheme } from '@mui/styles'
 import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
-import YellowCautionIcon from '../../images/cautionIcon'
 import CounterpartyChip from '../CounterpartyChip'
-import registryOperator from '../../utils/registryOperator'
 import DataObject from '@mui/icons-material/DataObject'
+import { SettingsContext } from '../../context/SettingsContext'
 
 const useStyles = makeStyles(style, {
   name: 'ProtoChip'
@@ -31,14 +30,14 @@ const ProtoChip = ({
   expires,
   backgroundColor = 'transparent',
   canRevoke = true,
-  onCloseClick = () => {}
+  onCloseClick = () => { }
 }) => {
   if (typeof protocolID !== 'string') {
     throw new Error('ProtoChip requires protocolID to be a string')
   }
   const classes = useStyles()
   const theme = useTheme()
-  const registry = registryOperator()
+  const { settings } = useContext(SettingsContext)
 
   // Initialize ProtoMap
   const protomap = new ProtoMap()
@@ -57,11 +56,23 @@ const ProtoChip = ({
     (async () => {
       try {
         // Resolve a Protocol info from id and operator
-        const results = await protomap.resolveProtocol(registry, securityLevel, protocolID)
-        setProtocolName(results.name)
-        setIconURL(results.iconURL)
-        setDescription(results.description)
-        setDocumentationURL(results.documentationURL)
+        const certifiers = settings.trustedEntities.map(x => x.publicKey)
+        const results = await protomap.resolveProtocol(certifiers, securityLevel, protocolID)
+        // Compute the most trusted of the results
+        let mostTrustedIndex = 0
+        let maxTrustPoints = 0
+        for (let i = 0; i < results.length; i++) {
+          const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator).trust
+          if (resultTrustLevel > maxTrustPoints) {
+            mostTrustedIndex = i
+            maxTrustPoints = resultTrustLevel
+          }
+        }
+        const trusted = results[mostTrustedIndex]
+        setProtocolName(trusted.name)
+        setIconURL(trusted.iconURL)
+        setDescription(trusted.description)
+        setDocumentationURL(trusted.documentationURL)
       } catch (error) {
         console.error(error)
       }
@@ -100,7 +111,7 @@ const ProtoChip = ({
                       />
                     </Grid>
                   </Grid>
-                  </div>
+                </div>
                 : ''}
             </span>
           </div>

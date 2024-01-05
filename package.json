@@ -24,7 +24,7 @@
     "@mui/material": "^5.14.5",
     "@mui/styles": "^5.10.3",
     "babbage-kvstore": "^1.1.36",
-    "babbage-protomap": "^0.1.9",
+    "babbage-protomap": "^0.1.21",
     "babbage-signia": "^0.1.24",
     "basketmap": "^0.1.16",
     "certmap": "^0.1.14",

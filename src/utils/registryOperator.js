@@ -6,6 +6,6 @@ import UIContext from '../UIContext'
 export default () => {
   const { env } = useContext(UIContext)
   return env === 'dev' || env === 'staging'
-    ? '02bc91718b3572462a471de6193f357b6e85ee0f8636cb87db456cb1590f913bea'
+    ? '0294c479f762f6baa97fbcd4393564c1d7bd8336ebd15928135bbcf575cd1a71a1'
     : '022a70d2862aeb01ecf3014395cec93a2390e3e9d80aecc9bbbbde5ddbd2a3d283'
 }
