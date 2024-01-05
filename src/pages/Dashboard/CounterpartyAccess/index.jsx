@@ -115,6 +115,7 @@ const SimpleTabs = ({ counterparty }) => {
             <CounterpartyChip
               counterparty={endorsement.certifier}
               key={index}
+              clickable
             />
           ))}
         </div>
@@ -125,7 +126,7 @@ const SimpleTabs = ({ counterparty }) => {
       </TabPanel>
       <TabPanel value={value} index={2}>
         The certificate fields that you have revealed to this counterparty within specific apps.
-        <CertificateAccessList counterparty={counterparty} />
+        <CertificateAccessList counterparty={counterparty} itemsDisplayed='apps' canRevoke />
       </TabPanel>
     </Box>
   )
@@ -152,31 +153,29 @@ const CounterpartyAccess = () => {
   }
 
   return (
-    <div>
-      <Grid container spacing={3} direction='column' className={classes.grid}>
-        <Grid item>
-          <PageHeader
-            history={history}
-            title={`${firstName} ${lastName}`}
-            subheading={
-              <div>
-                <Typography variant='caption' color='textSecondary'>
-                  Public Key: <Typography variant='caption' fontWeight='bold'>{counterparty}</Typography>
-                  <IconButton size='small' onClick={() => handleCopy(counterparty, 'id')} disabled={copied.id}>
-                    {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
-                  </IconButton>
-                </Typography>
-              </div>
+    <Grid container spacing={3} direction='column' className={classes.grid}>
+      <Grid item>
+        <PageHeader
+          history={history}
+          title={`${firstName} ${lastName}`}
+          subheading={
+            <div>
+              <Typography variant='caption' color='textSecondary'>
+                Public Key: <Typography variant='caption' fontWeight='bold'>{counterparty}</Typography>
+                <IconButton size='small' onClick={() => handleCopy(counterparty, 'id')} disabled={copied.id}>
+                  {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
+                </IconButton>
+              </Typography>
+            </div>
             }
-            icon={profilePhoto}
-            showButton={false}
-          />
-        </Grid>
-        <Grid item>
-          <SimpleTabs counterparty={counterparty} />
-        </Grid>
+          icon={profilePhoto}
+          showButton={false}
+        />
       </Grid>
-    </div>
+      <Grid item>
+        <SimpleTabs counterparty={counterparty} />
+      </Grid>
+    </Grid>
   )
 }
 

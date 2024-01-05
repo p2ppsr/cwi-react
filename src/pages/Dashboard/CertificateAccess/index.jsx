@@ -69,40 +69,38 @@ const CertificateAccess = ({ match }) => {
   }
 
   return (
-    <div>
-      <Grid container spacing={3} direction='column' className={classes.grid}>
-        <Grid item>
-          <PageHeader
-            history={history}
-            title={documentTitle}
-            subheading={
-              <div>
-                <Typography variant='caption' color='textSecondary'>
-                  Certificate Type: <Typography variant='caption' fontWeight='bold'>{certType}</Typography>
-                  <IconButton size='small' onClick={() => handleCopy(certType, 'id')} disabled={copied.id}>
-                    {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
-                  </IconButton>
-                </Typography>
-              </div>
+    <Grid container spacing={3} direction='column'>
+      <Grid item>
+        <PageHeader
+          history={history}
+          title={documentTitle}
+          subheading={
+            <div>
+              <Typography variant='caption' color='textSecondary'>
+                Certificate Type: <Typography variant='caption' fontWeight='bold'>{certType}</Typography>
+                <IconButton size='small' onClick={() => handleCopy(certType, 'id')} disabled={copied.id}>
+                  {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
+                </IconButton>
+              </Typography>
+            </div>
             }
-            icon={documentIcon}
-            showButton={false} // TODO: download cert
-          />
-        </Grid>
-        <Grid item>
-          <Typography>{description}</Typography>
-          <Typography>
-            <b>Documentation: </b>
-            <a href={documentationURL} target='_blank'>
-              {documentationURL}
-            </a>
-          </Typography>
-          <ul>
-            {Object.entries(fields).map(([field, description], i) => (
-              <li key={i}><b>{field}</b>: {description}</li>
-            ))}
-          </ul>
-        </Grid>
+          icon={documentIcon}
+          showButton={false}
+        />
+      </Grid>
+      <Grid item>
+        <Typography>{description}</Typography>
+        <Typography>
+          <b>Documentation: </b>
+          <a href={documentationURL} target='_blank' rel='noreferrer'>
+            {documentationURL}
+          </a>
+        </Typography>
+        <ul>
+          {Object.entries(fields).map(([field, description], i) => (
+            <li key={i}><b>{field}</b>: {description}</li>
+          ))}
+        </ul>
       </Grid>
       <Grid item>
         <CertificateAccessList
@@ -110,7 +108,7 @@ const CertificateAccess = ({ match }) => {
           type={certType}
         />
       </Grid>
-    </div>
+    </Grid>
   )
 }
 
