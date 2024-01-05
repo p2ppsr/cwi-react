@@ -28,7 +28,7 @@ const useStyles = makeStyles(style, {
   name: 'SpendingAuthorizationList'
 })
 
-const SpendingAuthorizationList = ({ app, limit }) => {
+const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
   const [authorizations, setAuthorizations] = useState([])
   const [currentSpending, setCurrentSpending] = useState(0)
   const [authorizedAmount, setAuthorizedAmount] = useState(0)
@@ -44,6 +44,9 @@ const SpendingAuthorizationList = ({ app, limit }) => {
       limit
     })
     setAuthorizations(result.authorizations)
+    if (result.authorizations.length === 0) {
+      onEmptyList()
+    }
     setEarliestAuthorization(result.earliestAuthorizationTime)
     setCurrentSpending(result.currentSpending)
     setAuthorizedAmount(result.authorizedAmount)

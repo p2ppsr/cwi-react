@@ -37,7 +37,7 @@ const useStyles = makeStyles(style, {
  * @param {string} [obj.listHeaderTitle] - The title for the list header.
  * @param {boolean} [obj.showEmptyList=false] - Indicates whether to show an empty list message or remove it (false by default).
  */
-const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canRevoke = false, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
+const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canRevoke = false, displayCount = true, listHeaderTitle, showEmptyList = false, onEmptyList = () => { } }) => {
   // Validate params
   if (itemsDisplayed === 'apps' && app) {
     const e = new Error('Error in BasketAccessList: apps cannot be displayed when providing an app param! Please provide a valid basket instead.')
@@ -62,6 +62,9 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
       limit
     })
     setGrants(result)
+    if (result.length === 0) {
+      onEmptyList()
+    }
   }, [app, basket])
 
   const revokeAccess = async grant => {

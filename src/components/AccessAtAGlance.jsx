@@ -17,6 +17,8 @@ import BasketAccessList from './BasketAccessList'
  */
 const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
   const [recentBasketAccess, setRecentBasketAccess] = useState([])
+  const [protocolIsEmpty, setProtocolIsEmpty] = useState(false)
+  const [certificateIsEmpty, setCertificateIsEmpty] = useState(false)
 
   useEffect(() => {
     (async () => {
@@ -42,7 +44,7 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
       <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
         Access At A Glance
       </Typography>
-      <List sx={{ bgcolor: 'background.paper', borderRadius: '0.25em', padding: '1em' }}>
+      <List sx={{ bgcolor: 'background.paper', borderRadius: '0.25em', padding: '1em', minHeight: '13em' }}>
         {recentBasketAccess.length !== 0 && (
           <>
             <ListSubheader>
@@ -57,8 +59,11 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
             })}
           </>
         )}
-        <ProtocolPermissionList app={originator} limit={1} canRevoke={false} clickable displayCount={false} listHeaderTitle='Most Recent Protocol' />
-        <CertificateAccessList app={originator} limit={1} canRevoke={false} clickable displayCount={false} listHeaderTitle='Most Recent Certificate' />
+        <ProtocolPermissionList app={originator} limit={1} canRevoke={false} clickable displayCount={false} listHeaderTitle='Most Recent Protocol' onEmptyList={() => setProtocolIsEmpty(true)} />
+        <CertificateAccessList app={originator} limit={1} canRevoke={false} clickable displayCount={false} listHeaderTitle='Most Recent Certificate' onEmptyList={() => setCertificateIsEmpty(true)} />
+        {recentBasketAccess.length === 0 && certificateIsEmpty && protocolIsEmpty && <Typography color='textSecondary' align='center' style={{ paddingTop: '5em' }}>
+          No recent access
+        </Typography>}
       </List>
 
       {loading && <LinearProgress paddingTop='1em' />}
@@ -73,8 +78,8 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
             })
           }}
           selected={
-          history.location.pathname === `/dashboard/manage-app/${encodeURIComponent(originator)}`
-        }
+            history.location.pathname === `/dashboard/manage-app/${encodeURIComponent(originator)}`
+          }
         >
           View App Access
         </Button>

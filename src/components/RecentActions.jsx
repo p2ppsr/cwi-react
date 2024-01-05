@@ -32,13 +32,16 @@ const RecentActions = ({ loading, appActions, displayLimit, setDisplayLimit, set
           <Transaction
             key={index}
             {
-                  ...actionToDisplay
-                  }
+            ...actionToDisplay
+            }
           />
         )
       })}
+      {appActions.transactions && appActions.transactions.length === 0 && <Typography color='textSecondary' align='center' style={{ paddingTop: '6em' }}>
+        No Actions yet...
+      </Typography>}
       {loading && <LinearProgress paddingTop='1em' />}
-      <center style={{ paddingTop: '1em' }}>
+      {appActions.transactions && appActions.transactions.length !== 0 && <center style={{ paddingTop: '1em' }}>
         <Button onClick={() => {
           // Note: Consider taking into account max number of txs available
           setDisplayLimit(displayLimit + 10)
@@ -46,7 +49,7 @@ const RecentActions = ({ loading, appActions, displayLimit, setDisplayLimit, set
         }}
         >View More Actions
         </Button>
-      </center>
+      </center>}
     </div>
   )
 }

@@ -46,7 +46,7 @@ const useStyles = makeStyles(style, {
  * @param {string} [obj.listHeaderTitle] - The title for the list header.
  * @param {boolean} [obj.showEmptyList=false] - Indicates whether to show an empty list message or remove it (false by default).
  */
-const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterparty, itemsDisplayed = 'protocols', canRevoke = false, displayCount = true, listHeaderTitle, showEmptyList = false }) => {
+const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterparty, itemsDisplayed = 'protocols', canRevoke = false, displayCount = true, listHeaderTitle, showEmptyList = false, onEmptyList = () => { } }) => {
   // Validate params
   if (itemsDisplayed === 'apps' && app) {
     const e = new Error('Error in ProtocolPermissionList: apps cannot be displayed when providing an app param! Please provide a valid protocol instead.')
@@ -76,17 +76,20 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
       targetCounterparty: counterparty,
       limit
     })
-    console.log(result)
 
     // Filter permissions by counterparty and domain if items are displayed as apps
     if (itemsDisplayed === 'apps') {
       const results = sortPermissions(result)
-      console.log('sorted... ', results)
       setPerms(results)
+      if (results.length === 0) {
+        onEmptyList()
+      }
     } else {
       const results = sortPermissionsForProtocols(result)
-      console.log('sorted for protocols... ', results)
       setPerms(results)
+      if (results.length === 0) {
+        onEmptyList()
+      }
     }
   }, [app, protocol])
 
@@ -210,7 +213,7 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
                         </Button>
                         : <IconButton edge='end' onClick={() => revokePermission(permObject.permissions[0].permissionGrant)} size='large'>
                           <CloseIcon />
-                          </IconButton>}
+                        </IconButton>}
                     </>}
                 </div>
 
@@ -244,14 +247,14 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
                     originator={permObject.originator}
                     clickable
                     canRevoke={false}
-                    // onCloseClick={() => revokePermission(permObject.permissionGrant)}
+                  // onCloseClick={() => revokePermission(permObject.permissionGrant)}
                   />
                   {canRevoke &&
                     <>
                       {permObject.permissions.length > 0 && permObject.permissions[0].counterparty
                         ? <Button onClick={() => { revokeAllPermissions(permObject) }} color='secondary' className={classes.revokeButton}>
                           Revoke All
-                          </Button>
+                        </Button>
                         : <Button onClick={() => { revokePermission(permObject.permissions[0].permissionGrant) }} className={classes.revokeButton}>
                           Revoke
                         </Button>}

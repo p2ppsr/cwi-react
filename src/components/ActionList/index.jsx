@@ -263,7 +263,7 @@ const ActionList = ({ app }) => {
             </Typography>
           </VisibilitySensor>
         )}
-        {(actions.length < totalActions && !actionsLoading) && (
+        {(actions.length !== 0 && actions.length < totalActions && !actionsLoading) && (
           <>
             <br />
             <Button

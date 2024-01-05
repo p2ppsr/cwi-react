@@ -30,7 +30,8 @@ const CertificateAccessList = ({
   displayCount = true,
   listHeaderTitle,
   showEmptyList = false,
-  canRevoke = false
+  canRevoke = false,
+  onEmptyList = () => { }
 }) => {
   const [grants, setGrants] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -45,6 +46,9 @@ const CertificateAccessList = ({
       limit
     })
     setGrants(result)
+    if (result.length === 0) {
+      onEmptyList()
+    }
   }, [app, type])
 
   const revokeAccess = async grant => {
