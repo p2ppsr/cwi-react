@@ -119,11 +119,17 @@ const extendedTheme = theme => ({
     },
     chipLabelTitle: ({ size = 1 } = {}) => {
       return {
-        fontSize: `${size}em`
+        fontSize: `${size}em`,
+        maxWidth: '10em',
+        wordWrap: 'break-word',
+        whiteSpace: 'pre-line'
       }
     },
     chipLabelSubtitle: {
       fontSize: '0.9em',
+      maxWidth: '10em',
+      wordWrap: 'break-word',
+      whiteSpace: 'pre-line',
       color: theme.palette.text.secondary
     }
   }

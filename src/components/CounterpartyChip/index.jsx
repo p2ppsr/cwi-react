@@ -70,21 +70,19 @@ const CounterpartyChip = ({
     <div className={classes.chipContainer}>
       <Chip
         style={theme.templates.chip({ size })}
-        onDelete={() => {
-          onCloseClick()
-        }}
+        onDelete={onCloseClick}
         deleteIcon={canRevoke ? <CloseIcon /> : <></>}
         disableRipple={!clickable}
         label={
           <div style={theme.templates.chipLabel}>
             <span style={theme.templates.chipLabelTitle({ size })}>
               {counterparty === 'self'
-                ? 'Self'
-                : counterparty === 'anyone'
+                ? 'Only You'
+                : counterparty === 'anyone' || counterparty === '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
                   ? 'Anyone'
                   : `${signiaIdentity.firstName} ${signiaIdentity.lastName}`}
             </span>
-            {counterparty !== 'self' && counterparty !== 'anyone' && (
+            {counterparty !== 'self' && counterparty !== 'anyone' && counterparty !== '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798' && (
               <span style={theme.templates.chipLabelSubtitle}>
                 <br />
                 {counterparty.substring(0, 10)}...
@@ -95,13 +93,14 @@ const CounterpartyChip = ({
         icon={
           signiaIdentity.profilePhoto ||
             counterparty === 'self' ||
-            counterparty === 'anyone'
+            counterparty === 'anyone' ||
+            counterparty === '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
             ? (
               <Img
                 src={counterparty === 'self'
-                  ? 'https://projectbabbage.com/favicon.ico'
-                  : counterparty === 'anyone'
-                    ? 'https://projectbabbage.com/favicon.ico'
+                  ? 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvectorified.com%2Fimages%2Fself-icon-29.png&f=1&nofb=1&ipt=8b514768118498339147259078b173359ccaaa09a3249cce1cf176e53af306aa&ipo=images'
+                  : counterparty === 'anyone' || counterparty === '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
+                    ? 'https://cdn-icons-png.flaticon.com/512/3369/3369157.png'
                     : signiaIdentity.profilePhoto}
                 className={classes.table_picture}
                 confederacyHost={confederacyHost()}

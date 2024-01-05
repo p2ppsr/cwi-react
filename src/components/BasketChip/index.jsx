@@ -27,7 +27,7 @@ const BasketChip = ({
   size = 1.3,
   onClick,
   expires,
-  onCloseClick = () => {},
+  onCloseClick = () => { },
   canRevoke = false
 }) => {
   if (typeof basketId !== 'string') {
