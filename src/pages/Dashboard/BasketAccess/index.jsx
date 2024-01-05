@@ -66,7 +66,7 @@ const BasketAccess = () => {
                 </IconButton>
               </Typography>
             </div>
-            }
+          }
           icon={iconURL} buttonTitle='Export'
           buttonIcon={<DownloadIcon />}
           onClick={() => exportDataToFile({
@@ -100,7 +100,14 @@ const BasketAccess = () => {
           <Typography variant='h4' gutterBottom paddingLeft='0.25em'>
             Apps with Access
           </Typography>
-          <BasketAccessList basket={id} itemsDisplayed='apps' canRevoke list />
+          <BasketAccessList
+            basket={id}
+            itemsDisplayed='apps'
+            canRevoke
+            list
+            displayCount
+            showEmptyList
+          />
         </Paper>
       </Grid>
 

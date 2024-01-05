@@ -24,7 +24,7 @@ const AppChip = ({
   onClick,
   backgroundColor = 'transparent',
   expires,
-  onCloseClick = () => {}
+  onCloseClick
 }) => {
   const theme = useTheme()
   const classes = useStyles()
@@ -68,28 +68,26 @@ const AppChip = ({
       <Chip
         style={theme.templates.chip({ size, backgroundColor })}
         label={
-        (showDomain && label !== parsedLabel)
-          ? <div style={{
-            textAlign: 'left'
-          }}>
-            <span
-              style={theme.templates.chipLabelTitle({ size })}
-            >
-              {parsedLabel}
-            </span>
-            <br />
-            <span
-              style={theme.templates.chipLabelSubtitle}
-            >
-              {label}
-            </span>
+          (showDomain && label !== parsedLabel)
+            ? <div style={{
+              textAlign: 'left'
+            }}>
+              <span
+                style={theme.templates.chipLabelTitle({ size })}
+              >
+                {parsedLabel}
+              </span>
+              <br />
+              <span
+                style={theme.templates.chipLabelSubtitle}
+              >
+                {label}
+              </span>
             </div>
-          : <span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>
-}
-        onDelete={() => {
-          onCloseClick()
-        }}
-        deleteIcon={<CloseIcon />}
+            : <span style={{ fontSize: `${size}em` }}>{parsedLabel}</span>
+        }
+        onDelete={onCloseClick}
+        deleteIcon={typeof onCloseClick === 'function' ? <CloseIcon /> : null}
         icon={(
           <Badge
             overlap='circular'
@@ -127,7 +125,7 @@ const AppChip = ({
                   <Memory style={{ width: 16, height: 16 }} />
                 </Avatar>
               </Tooltip>
-          }
+            }
           >
             <Avatar
               variant='square'
@@ -147,7 +145,7 @@ const AppChip = ({
               />
             </Avatar>
           </Badge>
-      )}
+        )}
         disableRipple={!clickable}
         onClick={e => {
           if (clickable) {
@@ -156,7 +154,7 @@ const AppChip = ({
             } else {
               e.stopPropagation()
               history.push(
-              `/dashboard/app/${encodeURIComponent(label)}`
+                `/dashboard/app/${encodeURIComponent(label)}`
               )
             }
           }

@@ -199,15 +199,14 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
           </React.Fragment>
         ))}
       </div>
-      {(itemsDisplayed === 'baskets' && displayCount) &&
+      {displayCount &&
         <center>
           <Typography
             color='textSecondary'
           >
-            <i>Total Basket Access Grants: {grants.length}</i>
+            <i>{itemsDisplayed === 'baskets' ? 'Total Basket Access Grants' : 'Total Apps with Access'}: {grants.length}</i>
           </Typography>
         </center>}
-
     </>
   )
 }
