@@ -21,7 +21,7 @@ const CounterpartyChip = ({
   history,
   clickable = false,
   size = 1.3,
-  onClick = () => { },
+  onClick,
   expires,
   onCloseClick = () => { },
   canRevoke = false
@@ -105,7 +105,7 @@ const CounterpartyChip = ({
                 className={classes.table_picture}
                 confederacyHost={confederacyHost()}
               />
-            )
+              )
             : <YellowCautionIcon className={classes.table_picture} />
         }
         onClick={e => {
@@ -114,9 +114,14 @@ const CounterpartyChip = ({
               onClick(e)
             } else {
               e.stopPropagation()
-              history.push(
-                `/dashboard/counterparty/${encodeURIComponent(counterparty)}`
-              )
+              console.log('counterparty', counterparty)
+              history.push({
+                pathname: `/dashboard/counterparty/${encodeURIComponent(counterparty)}`,
+                state: {
+                  ...signiaIdentity,
+                  counterparty
+                }
+              })
             }
           }
         }}

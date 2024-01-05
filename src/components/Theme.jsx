@@ -114,14 +114,15 @@ const extendedTheme = theme => ({
       return base
     },
     chipLabel: {
-      // marginLeft: '0.125em',
-      // textAlign: 'left'
+      maxWidth: '15em',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap'
     },
     chipLabelTitle: ({ size = 1 } = {}) => {
       return {
         fontSize: `${size}em`,
         maxWidth: '10em',
-        wordWrap: 'break-word',
         whiteSpace: 'pre-line'
       }
     },

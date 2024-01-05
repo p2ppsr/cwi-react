@@ -47,15 +47,15 @@ const useStyles = makeStyles(style, {
  * @param {boolean} [obj.showEmptyList=false] - Indicates whether to show an empty list message or remove it (false by default).
  */
 const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterparty, itemsDisplayed = 'protocols', canRevoke = false, displayCount = true, listHeaderTitle, showEmptyList = false, onEmptyList = () => { } }) => {
-  // Validate params
-  if (itemsDisplayed === 'apps' && app) {
-    const e = new Error('Error in ProtocolPermissionList: apps cannot be displayed when providing an app param! Please provide a valid protocol instead.')
-    throw e
-  }
-  if (itemsDisplayed === 'protocols' && protocol) {
-    const e = new Error('Error in ProtocolPermissionList: protocols cannot be displayed when providing a protocol param! Please provide a valid app domain instead.')
-    throw e
-  }
+  // TODO: determine if this is necessary! Validate params
+  // if (itemsDisplayed === 'apps' && app) {
+  //   const e = new Error('Error in ProtocolPermissionList: apps cannot be displayed when providing an app param! Please provide a valid protocol instead.')
+  //   throw e
+  // }
+  // if (itemsDisplayed === 'protocols' && protocol) {
+  //   const e = new Error('Error in ProtocolPermissionList: protocols cannot be displayed when providing a protocol param! Please provide a valid app domain instead.')
+  //   throw e
+  // }
 
   const [perms, setPerms] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -228,6 +228,7 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
                           onCloseClick={() => revokePermission(permission.permissionGrant)}
                           clickable
                           canRevoke={canRevoke}
+                          history
                         />
                       </div>
                     ))}
@@ -247,7 +248,8 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
                     originator={permObject.originator}
                     clickable
                     canRevoke={false}
-                  // onCloseClick={() => revokePermission(permObject.permissionGrant)}
+                    history
+                    // onCloseClick={() => revokePermission(permObject.permissionGrant)}
                   />
                   {canRevoke &&
                     <>
@@ -265,13 +267,28 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
                   <div className={classes.counterpartyContainer}>
                     {permObject.permissions.filter(x => x.counterparty).map((permission, idx) => (
                       <div className={classes.gridItem} key={idx}>
-                        <CounterpartyChip
-                          counterparty={permission.counterparty}
-                          size={1.1}
-                          expires={formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
-                          onCloseClick={() => revokePermission(permission.permissionGrant)}
-                          canRevoke={canRevoke}
-                        />
+                        {!counterparty &&
+                          <CounterpartyChip
+                            counterparty={permission.counterparty}
+                            size={1.1}
+                            expires={formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
+                            onCloseClick={() => revokePermission(permission.permissionGrant)}
+                            canRevoke={canRevoke}
+                            clickable
+                          />}
+                        {counterparty &&
+                          <AppChip
+                            label={permission.permissionGrant.domain} showDomain onClick={(e) => {
+                              e.stopPropagation()
+                              history.push({
+                                pathname: `/dashboard/app/${encodeURIComponent(permission.permissionGrant.domain)}`,
+                                state: {
+                                  domain: permission.permissionGrant.domain
+                                }
+                              })
+                            }}
+                            onCloseClick={() => revokePermission(permission.permissionGrant)}
+                          />}
                       </div>
                     ))}
                   </div>

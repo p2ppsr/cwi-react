@@ -95,7 +95,7 @@ const BasketChip = ({
         }}
         label={
           <div style={theme.templates.chipLabel}>
-            <span style={{ fontSize: `${size}em` }}>
+            <span style={theme.templates.chipLabelTitle({ size })}>
               <b>{basketName}</b>
             </span>
             <br />

@@ -1,8 +1,5 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Typography,
   Box,
   Tabs,
@@ -11,16 +8,18 @@ import {
   IconButton,
   Button
 } from '@mui/material'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import { makeStyles } from '@mui/styles'
+import { makeStyles, useTheme } from '@mui/styles'
 import { useLocation, useHistory } from 'react-router-dom'
 import PageHeader from '../../../components/PageHeader'
 import CounterpartyChip from '../../../components/CounterpartyChip'
 import style from './style'
 import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
-import YellowCautionIcon from '../../../images/cautionIcon'
+import CertificateAccessList from '../../../components/CertificateAccessList'
+import { SettingsContext } from '../../../context/SettingsContext'
+import { Signia } from 'babbage-signia'
+import confederacyHost from '../../../utils/confederacyHost'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -42,39 +41,63 @@ const TabPanel = (props) => {
   )
 }
 
-const trustEndorsementsData = [
-  {
-    name: 'Bob Babbage',
-    statement: 'This endorsement certifies that the following public key belongs to John Smith.',
-    publicKey: 'o3d98a6037da0b1075acedc1316fecc90444e0d990836055fd7a400c1d070bb4',
-    date: '12/06/23',
-    issuer: 'Bob Babbage with PeerCert',
-    expires: 'Never'
-  },
-  {
-    name: 'John Doe',
-    statement: 'This endorsement certifies that the following public key belongs to John Smith.',
-    publicKey: 'o3d98a6037da0b1075acedc1316fecc90444e0d990836055fd7a400c1d070bb4',
-    date: '12/06/23',
-    issuer: 'Bob Babbage with PeerCert',
-    expires: 'Never'
-  },
-  {
-    name: 'Brayden Langley',
-    statement: 'This endorsement certifies that the following public key belongs to John Smith.',
-    publicKey: 'o3d98a6037da0b1075acedc1316fecc90444e0d990836055fd7a400c1d070bb4',
-    date: '12/06/23',
-    issuer: 'Bob Babbage with PeerCert',
-    expires: 'Never'
-  }
-]
+// const trustEndorsementsData = [
+//   {
+//     name: 'Bob Babbage',
+//     statement: 'This endorsement certifies that the following public key belongs to John Smith.',
+//     publicKey: 'o3d98a6037da0b1075acedc1316fecc90444e0d990836055fd7a400c1d070bb4',
+//     date: '12/06/23',
+//     issuer: 'Bob Babbage with PeerCert',
+//     expires: 'Never'
+//   },
+//   {
+//     name: 'John Doe',
+//     statement: 'This endorsement certifies that the following public key belongs to John Smith.',
+//     publicKey: 'o3d98a6037da0b1075acedc1316fecc90444e0d990836055fd7a400c1d070bb4',
+//     date: '12/06/23',
+//     issuer: 'Bob Babbage with PeerCert',
+//     expires: 'Never'
+//   },
+//   {
+//     name: 'Brayden Langley',
+//     statement: 'This endorsement certifies that the following public key belongs to John Smith.',
+//     publicKey: 'o3d98a6037da0b1075acedc1316fecc90444e0d990836055fd7a400c1d070bb4',
+//     date: '12/06/23',
+//     issuer: 'Bob Babbage with PeerCert',
+//     expires: 'Never'
+//   }
+// ]
 
 const SimpleTabs = ({ counterparty }) => {
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = useState(0)
+  const { settings } = useContext(SettingsContext)
+  const [trustEndorsements, setTrustEndorsements] = useState([])
+  const theme = useTheme()
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
+
+  // Construct a new Signia instance for querying identity
+  const signia = new Signia()
+  signia.config.confederacyHost = confederacyHost()
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const certifiers = settings.trustedEntities.map(x => x.publicKey)
+        const results = await signia.discoverByIdentityKey(counterparty, certifiers)
+
+        if (!results || results.length === 0) {
+          // No results! TODO: Handle case
+        }
+        console.log('hmmmm', results)
+        setTrustEndorsements(results)
+      } catch (e) {
+        console.error(e)
+      }
+    })()
+  }, [])
 
   return (
     <Box>
@@ -87,35 +110,22 @@ const SimpleTabs = ({ counterparty }) => {
         <Typography variant='body'>
           Trust endorsements given to this counterparty by other people.
         </Typography>
-        {trustEndorsementsData.map((endorsement, index) => (
-          <Accordion key={index}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls={`panel${index}a-content`}
-              id={`panel${index}a-header`}
-            >
-              <CounterpartyChip
-                counterparty={counterparty}
-                onClick={() => {}}
-              />
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                {endorsement.statement}
-                {endorsement.date}
-                {endorsement.issuer}
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-        ))}
-        <Button>Revoke All Access</Button>
+        <div style={{ ...theme.templates.boxOfChips, paddingTop: '1em' }}>
+          {trustEndorsements.map((endorsement, index) => (
+            <CounterpartyChip
+              counterparty={endorsement.certifier}
+              key={index}
+            />
+          ))}
+        </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        test
-        <ProtocolPermissionList counterparty={counterparty} itemsDisplayed='protocols' showEmptyList />
+        Apps that can be used within specific protocols to interact with this counterparty.
+        <ProtocolPermissionList counterparty={counterparty} itemsDisplayed='protocols' showEmptyList canRevoke />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        {/* TODO: Certificates Revealed Section */}
+        The certificate fields that you have revealed to this counterparty within specific apps.
+        <CertificateAccessList counterparty={counterparty} />
       </TabPanel>
     </Box>
   )

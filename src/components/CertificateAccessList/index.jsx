@@ -25,6 +25,7 @@ const useStyles = makeStyles(style, {
 
 const CertificateAccessList = ({
   app,
+  counterparty,
   type,
   limit,
   displayCount = true,
@@ -42,6 +43,7 @@ const CertificateAccessList = ({
   const refreshGrants = useCallback(async () => {
     const result = await window.CWI.listCertificateAccess({
       targetDomain: app,
+      verifierPublicKey: counterparty,
       targetCertificateType: type,
       limit
     })

@@ -107,11 +107,11 @@ const ProtoChip = ({
                     <Grid item>
                       <CounterpartyChip
                         counterparty={counterparty}
-                        onClick={onCounterpartyClick}
+                        // onClick={onCounterpartyClick}
                       />
                     </Grid>
                   </Grid>
-                </div>
+                  </div>
                 : ''}
             </span>
           </div>
