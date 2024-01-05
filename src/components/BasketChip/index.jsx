@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Grid, Typography, Chip, Badge, Avatar, Tooltip } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { withRouter } from 'react-router-dom'
@@ -12,6 +12,7 @@ import CounterpartyChip from '../CounterpartyChip'
 import registryOperator from '../../utils/registryOperator'
 import { useTheme } from '@mui/styles'
 import ShoppingBasket from '@mui/icons-material/ShoppingBasket'
+import { SettingsContext } from '../../context/SettingsContext'
 
 const useStyles = makeStyles(style, {
   name: 'BasketChip'
@@ -35,6 +36,7 @@ const BasketChip = ({
   const basketRegistryOperator = registryOperator()
   const classes = useStyles()
   const theme = useTheme()
+  const { settings } = useContext(SettingsContext)
 
   // Initialize BasketMap
   const basketmap = new BasketMap()
@@ -53,14 +55,30 @@ const BasketChip = ({
     (async () => {
       try {
         // Resolve a Basket info from id and operator
+        const trustedEntities = settings.trustedEntities.map(x => x.publicKey)
+        console.log('tsd', settings.trustedEntities)
         const results = await basketmap.resolveBasketById(
           basketId,
-          basketRegistryOperator
+          trustedEntities
         )
-        setBasketName(results.name)
-        setIconURL(results.iconURL)
-        setDescription(results.description)
-        setDocumentationURL(results.documentationURL)
+        if (results && results.length > 0) {
+          console.log(results)
+          // Compute the most trusted of the results
+          let mostTrustedIndex = 0
+          let maxTrustPoints = 0
+          for (let i = 0; i < results.length; i++) {
+            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator).trust
+            if (resultTrustLevel > maxTrustPoints) {
+              mostTrustedIndex = i
+              maxTrustPoints = resultTrustLevel
+            }
+          }
+          const basket = results[mostTrustedIndex]
+          setBasketName(basket.name)
+          setIconURL(basket.iconURL)
+          setDescription(basket.description)
+          setDocumentationURL(basket.documentationURL)
+        }
       } catch (error) {
         console.error(error)
       }
