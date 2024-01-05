@@ -131,10 +131,11 @@ const SimpleTabs = ({ counterparty }) => {
   )
 }
 
+const useStyles = makeStyles(style, { name: 'counterpartyAccess' })
+
 const CounterpartyAccess = () => {
   const location = useLocation()
   const history = useHistory()
-  const useStyles = makeStyles(style, { name: 'protocolAccess' })
   const classes = useStyles()
 
   const { counterparty, firstName, lastName, profilePhoto } = location.state

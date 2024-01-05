@@ -49,7 +49,6 @@ const CounterpartyChip = ({
         const certifiers = settings.trustedEntities.map(x => x.publicKey)
         const results = await signia.discoverByIdentityKey(counterparty, certifiers)
         if (results && results.length > 0) {
-          console.log(results)
           // Compute the most trusted of the results
           let mostTrustedIndex = 0
           let maxTrustPoints = 0
@@ -105,7 +104,7 @@ const CounterpartyChip = ({
                 className={classes.table_picture}
                 confederacyHost={confederacyHost()}
               />
-              )
+            )
             : <YellowCautionIcon className={classes.table_picture} />
         }
         onClick={e => {

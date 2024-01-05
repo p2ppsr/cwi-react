@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Avatar, Badge, Grid, Chip, Typography, Tooltip } from '@mui/material'
+import React, { useState, useEffect, useContext } from 'react'
+import { Avatar, Badge, Grid, Chip, Tooltip } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import { CertMap } from 'certmap'
 import { Img } from 'uhrp-react'
@@ -11,6 +11,7 @@ import registryOperator from '../../utils/registryOperator'
 import YellowCautionIcon from '../../images/cautionIcon'
 import CounterpartyChip from '../CounterpartyChip'
 import ArtTrack from '@mui/icons-material/ArtTrack'
+import { SettingsContext } from '../../context/SettingsContext'
 
 const useStyles = makeStyles(style, {
   name: 'CertificateChip'
@@ -26,19 +27,19 @@ const CertificateChip = ({
   onClick,
   fieldsToDisplay,
   history,
-  clickable = false,
+  clickable = true,
   size = 1.3,
   onCounterpartyClick,
   expires,
-  onCloseClick = () => {},
+  onCloseClick = () => { },
   canRevoke = false
 }) => {
   if (typeof certType !== 'string') {
     throw new Error('The certType prop in CertificateChip is not a string')
   }
-  const certificateRegistryOperator = registryOperator()
   const certmap = new CertMap()
   certmap.config.confederacyHost = confederacyHost()
+  const { settings } = useContext(SettingsContext)
 
   const classes = useStyles()
   const theme = useTheme()
@@ -54,15 +55,28 @@ const CertificateChip = ({
   useEffect(() => {
     (async () => {
       try {
+        const registryOperators = settings.trustedEntities.map(x => x.publicKey)
         // Resolve a certificate by type
         const results = await certmap.resolveCertificateByType(
           certType,
-          certificateRegistryOperator
+          registryOperators
         )
-        setCertName(results.name)
-        setIconURL(results.iconURL)
-        setDescription(results.description)
-        setDocumentationURL(results.documentationURL)
+        if (results && results.length > 0) {
+          // Compute the most trusted of the results
+          let mostTrustedIndex = 0
+          let maxTrustPoints = 0
+          for (let i = 0; i < results.length; i++) {
+            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator).trust
+            if (resultTrustLevel > maxTrustPoints) {
+              mostTrustedIndex = i
+              maxTrustPoints = resultTrustLevel
+            }
+          }
+          setCertName(results[mostTrustedIndex].name)
+          setIconURL(results[mostTrustedIndex].iconURL)
+          setDescription(results[mostTrustedIndex].description)
+          setDocumentationURL(results[mostTrustedIndex].documentationURL)
+        }
         console.log('results', results)
       } catch (error) {
         console.error(error)
@@ -94,7 +108,7 @@ const CertificateChip = ({
                       label={y}
                     />
                   ))}
-                  </div>
+                </div>
                 : ''}
             </span>
             <span>
@@ -111,7 +125,7 @@ const CertificateChip = ({
                       />
                     </Grid>
                   </Grid>
-                  </div>
+                </div>
                 : ''}
             </span>
             <span>
@@ -126,11 +140,11 @@ const CertificateChip = ({
                     size={0.85}
                   />
 
-                  </div>
+                </div>
                 : ''}
             </span>
           </div>
-      }
+        }
         onDelete={() => {
           onCloseClick()
         }}
@@ -173,7 +187,7 @@ const CertificateChip = ({
                   <ArtTrack style={{ width: 16, height: 16 }} />
                 </Avatar>
               </Tooltip>
-          }
+            }
           >
             <Avatar
               variant='square'
@@ -192,7 +206,7 @@ const CertificateChip = ({
               />
             </Avatar>
           </Badge>
-      }
+        }
         onClick={e => {
           if (clickable) {
             if (typeof onClick === 'function') {
@@ -200,7 +214,7 @@ const CertificateChip = ({
             } else {
               e.stopPropagation()
               history.push(
-              `/dashboard/certificate/${encodeURIComponent(certType)}`
+                `/dashboard/certificate/${encodeURIComponent(certType)}`
               )
             }
           }

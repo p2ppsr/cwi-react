@@ -31,6 +31,7 @@ import Settings from './Settings/index.jsx'
 import redirectIfLoggedOut from '../../utils/redirectIfLoggedOut'
 import Profile from '../../components/Profile.jsx'
 import BasketAccess from './BasketAccess'
+import CertificateAccess from './CertificateAccess'
 import UIContext from '../../UIContext'
 import PageLoading from '../../components/PageLoading'
 import ProtocolAccess from './ProtocolAccess/index.jsx'
@@ -214,8 +215,8 @@ const Dashboard = () => {
               button
               onClick={() => navigation.push('/dashboard/settings')}
               selected={
-              history.location.pathname === '/dashboard/settings'
-            }
+                history.location.pathname === '/dashboard/settings'
+              }
             >
               <ListItemIcon>
                 <SettingsIcon />
@@ -286,6 +287,10 @@ const Dashboard = () => {
           <Route
             path='/dashboard/counterparty/:counterparty'
             component={CounterpartyAccess}
+          />
+          <Route
+            path='/dashboard/certificate/:certType'
+            component={CertificateAccess}
           />
           <Route
             className={classes.full_width}
