@@ -5,10 +5,12 @@ import { ArrowBack } from '@mui/icons-material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import { Img } from 'uhrp-react'
+import confederacyHost from '../../utils/confederacyHost'
 
 const useStyles = makeStyles(style, { name: 'pageHeader' })
 
 const PageHeader = ({ title, subheading, icon, buttonTitle, buttonIcon, onClick, history, showButton = true, showBackButton = true }) => {
+  const NSConfederacyHost = confederacyHost()
   const classes = useStyles()
   return (
     <div>
@@ -29,6 +31,7 @@ const PageHeader = ({ title, subheading, icon, buttonTitle, buttonIcon, onClick,
             src={icon}
             alt={title}
             poster={title}
+            confederacyHost={NSConfederacyHost}
           />
         </div>
         <div>

@@ -28,7 +28,6 @@ const AppChip = ({
 }) => {
   const theme = useTheme()
   const classes = useStyles()
-  console.log(label)
   if (typeof label !== 'string') {
     throw new Error('Error in AppChip: label prop must be a string!')
   }

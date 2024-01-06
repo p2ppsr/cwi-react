@@ -91,7 +91,6 @@ const SimpleTabs = ({ counterparty }) => {
         if (!results || results.length === 0) {
           // No results! TODO: Handle case
         }
-        console.log('hmmmm', results)
         setTrustEndorsements(results)
       } catch (e) {
         console.error(e)
@@ -134,12 +133,17 @@ const SimpleTabs = ({ counterparty }) => {
 
 const useStyles = makeStyles(style, { name: 'counterpartyAccess' })
 
-const CounterpartyAccess = () => {
-  const location = useLocation()
+const CounterpartyAccess = ({ match }) => {
+  const { settings } = useContext(SettingsContext)
+  const signia = new Signia()
+  signia.config.confederacyHost = confederacyHost()
   const history = useHistory()
   const classes = useStyles()
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [profilePhoto, setProfilePhoto] = useState('')
 
-  const { counterparty, firstName, lastName, profilePhoto } = location.state
+  const { counterparty } = match.params
   const [copied, setCopied] = useState({ id: false })
 
   // TODO Handle the case where the profilePhoto is undefined
@@ -151,6 +155,40 @@ const CounterpartyAccess = () => {
       setCopied({ ...copied, [type]: false })
     }, 2000)
   }
+
+  useEffect(() => {
+    (async () => {
+      try {
+        // Resolve a Signia verified identity from a counterparty
+        const certifiers = settings.trustedEntities.map(x => x.publicKey)
+        const results = await signia.discoverByIdentityKey(counterparty, certifiers)
+        if (results && results.length > 0) {
+          // Compute the most trusted of the results
+          let mostTrustedIndex = 0
+          let maxTrustPoints = 0
+          for (let i = 0; i < results.length; i++) {
+            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].certifier).trust
+            if (resultTrustLevel > maxTrustPoints) {
+              mostTrustedIndex = i
+              maxTrustPoints = resultTrustLevel
+            }
+          }
+          const { firstName, lastName, profilePhoto } = results[mostTrustedIndex].decryptedFields
+          setFirstName(firstName)
+          setLastName(lastName)
+          setProfilePhoto(profilePhoto)
+        } else {
+          setFirstName('Untrusted')
+          setLastName('Counterparty')
+          setProfilePhoto('uhrp:XUUk5v8eQTsWW7GpTLUF9daXa8efierA56RmFobmTw69XAq2EEde')
+        }
+      } catch (e) {
+        setFirstName('Untrusted')
+        setLastName('Counterparty')
+        setProfilePhoto('uhrp:XUUk5v8eQTsWW7GpTLUF9daXa8efierA56RmFobmTw69XAq2EEde')
+      }
+    })()
+  }, [counterparty])
 
   return (
     <Grid container spacing={3} direction='column' className={classes.grid}>
@@ -167,7 +205,7 @@ const CounterpartyAccess = () => {
                 </IconButton>
               </Typography>
             </div>
-            }
+          }
           icon={profilePhoto}
           showButton={false}
         />

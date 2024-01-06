@@ -56,13 +56,11 @@ const BasketChip = ({
       try {
         // Resolve a Basket info from id and operator
         const trustedEntities = settings.trustedEntities.map(x => x.publicKey)
-        console.log('tsd', settings.trustedEntities)
         const results = await basketmap.resolveBasketById(
           basketId,
           trustedEntities
         )
         if (results && results.length > 0) {
-          console.log(results)
           // Compute the most trusted of the results
           let mostTrustedIndex = 0
           let maxTrustPoints = 0

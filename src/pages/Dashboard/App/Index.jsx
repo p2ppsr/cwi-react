@@ -74,12 +74,10 @@ const Apps = ({ history }) => {
           addInputsAndOutputs: true,
           status: ['completed', 'unproven', 'sending']
         })
-        console.log(appActions)
 
         setAppActions(appActions)
         setLoading(false)
         setRefresh(false)
-        console.log('reloaded')
       } catch (e) {
         /* do nothing */
         console.error(e)

@@ -94,7 +94,6 @@ const UserTheme = ({ children }) => {
     } else {
       selectedTheme = settings.theme
     }
-    console.log(settings.theme)
 
     setSelectedPalette(selectedTheme === 'dark' ? customDarkPalette : lightPalette)
   }, [settings.theme])

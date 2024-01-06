@@ -77,7 +77,6 @@ const CertificateChip = ({
           setDescription(results[mostTrustedIndex].description)
           setDocumentationURL(results[mostTrustedIndex].documentationURL)
         }
-        console.log('results', results)
       } catch (error) {
         console.error(error)
       }

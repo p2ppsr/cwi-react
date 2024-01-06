@@ -83,7 +83,7 @@ const CertificateAccess = ({ match }) => {
                 </IconButton>
               </Typography>
             </div>
-            }
+          }
           icon={documentIcon}
           showButton={false}
         />
@@ -105,6 +105,8 @@ const CertificateAccess = ({ match }) => {
       <Grid item>
         <CertificateAccessList
           itemsDisplayed='apps'
+          canRevoke
+          clickable={false}
           type={certType}
         />
       </Grid>

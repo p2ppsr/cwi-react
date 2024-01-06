@@ -27,10 +27,7 @@ const CounterpartyChip = ({
   canRevoke = false
 }) => {
   const { settings } = useContext(SettingsContext)
-
-  // Construct a new Signia instance for querying identity
   const signia = new Signia()
-  // TODO: Refactor to get certifier / certificate data from constants
   signia.config.confederacyHost = confederacyHost()
 
   const theme = useTheme()
@@ -113,7 +110,6 @@ const CounterpartyChip = ({
               onClick(e)
             } else {
               e.stopPropagation()
-              console.log('counterparty', counterparty)
               history.push({
                 pathname: `/dashboard/counterparty/${encodeURIComponent(counterparty)}`,
                 state: {

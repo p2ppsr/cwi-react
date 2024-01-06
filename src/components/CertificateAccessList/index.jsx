@@ -58,7 +58,6 @@ const CertificateAccessList = ({
     // Filter permissions by counterparty and domain if items are displayed as apps
     if (itemsDisplayed === 'apps') {
       const results = sortPermissions(result)
-      console.log('perms', results)
       setGrants(results)
     } else {
       // const results = sortPermissionsForProtocols(result)

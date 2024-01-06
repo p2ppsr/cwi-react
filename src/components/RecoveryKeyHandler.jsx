@@ -93,7 +93,7 @@ const RecoveryKeyHandler = () => {
           control={<Checkbox
             checked={myResponsibility}
             onChange={() => setMyResponsibility(x => !x)}
-                   />}
+          />}
           label='My Responsibility'
         />
         <br />
@@ -101,7 +101,7 @@ const RecoveryKeyHandler = () => {
           control={<Checkbox
             checked={atLeastTwo}
             onChange={() => setAtLeastTwo(x => !x)}
-                   />}
+          />}
           label='...at least two...'
         />
       </DialogContent>
@@ -116,7 +116,6 @@ const RecoveryKeyHandler = () => {
         >
           Abort & Cancel
         </Button>
-        {console.log(`(!${myResponsibility}) || (!${atLeastTwo})`)}
         <Button
           onClick={onKeySaved}
           color='primary'

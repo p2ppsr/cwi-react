@@ -85,7 +85,6 @@ const Dashboard = () => {
     } else {
       setMenuOpen(false)
     }
-    console.log('breakpoint')
   }, [breakpoints])
 
   // Second useEffect to handle outside clicks
