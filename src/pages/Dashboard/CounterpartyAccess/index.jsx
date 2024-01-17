@@ -178,14 +178,14 @@ const CounterpartyAccess = ({ match }) => {
           setLastName(lastName)
           setProfilePhoto(profilePhoto)
         } else {
-          setFirstName('Untrusted')
-          setLastName('Counterparty')
-          setProfilePhoto('uhrp:XUUk5v8eQTsWW7GpTLUF9daXa8efierA56RmFobmTw69XAq2EEde')
+          setFirstName('Stranger')
+          setLastName('')
+          setProfilePhoto('https://cdn4.iconfinder.com/data/icons/political-elections/50/48-512.png')
         }
       } catch (e) {
-        setFirstName('Untrusted')
-        setLastName('Counterparty')
-        setProfilePhoto('uhrp:XUUk5v8eQTsWW7GpTLUF9daXa8efierA56RmFobmTw69XAq2EEde')
+        setFirstName('Stranger')
+        setLastName('')
+        setProfilePhoto('https://cdn4.iconfinder.com/data/icons/political-elections/50/48-512.png')
       }
     })()
   }, [counterparty])
