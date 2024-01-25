@@ -62,12 +62,14 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
       limit
     })
     setGrants(result)
+    console.log('grants', result)
     if (result.length === 0) {
       onEmptyList()
     }
   }, [app, basket])
 
   const revokeAccess = async grant => {
+    console.log('grant in revoke', grant)
     setCurrentAccessGrant(grant)
     setDialogOpen(true)
   }
@@ -75,6 +77,7 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
   const handleConfirm = async () => {
     try {
       setDialogLoading(true)
+      console.log('current g', currentAccessGrant)
       if (currentAccessGrant) {
         await window.CWI.revokeBasketAccess({ grant: currentAccessGrant })
       } else {
@@ -191,7 +194,7 @@ const BasketAccessList = ({ app, basket, limit, itemsDisplayed = 'baskets', canR
                   domain={grant.domain}
                   clickable
                   expires={formatDistance(new Date(grant.expiry * 1000), new Date(), { addSuffix: true })}
-                  onCloseClick={() => revokeAccess(grant.accessGrantID)}
+                  onCloseClick={() => revokeAccess(grant)}
                   canRevoke={canRevoke}
                 />
               </div>

@@ -174,10 +174,10 @@ const CertificateAccessList = ({
                       {grant.permissions.length > 0 && grant.originator
                         ? <Button onClick={() => { revokeAllAccess(grant) }} color='secondary' className={classes.revokeButton}>
                           Revoke All
-                          </Button>
+                        </Button>
                         : <IconButton edge='end' onClick={() => revokeAccess(grant.permissions[0].permissionGrant)} size='large'>
                           <CloseIcon />
-                          </IconButton>}
+                        </IconButton>}
                     </>}
                 </div>
                 <ListItem elevation={4}>

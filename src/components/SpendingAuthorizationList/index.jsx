@@ -43,6 +43,7 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
       targetDomain: app,
       limit
     })
+    console.log('spending list', result)
     setAuthorizations(result.authorizations)
     if (result.authorizations.length === 0) {
       onEmptyList()

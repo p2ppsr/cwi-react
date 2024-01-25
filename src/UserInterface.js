@@ -21,6 +21,7 @@ import RecoveryKeyHandler from 'components/RecoveryKeyHandler.jsx'
 import ProtocolPermissionHandler from 'components/ProtocolPermissionHandler/index.jsx'
 import SpendingAuthorizationHandler from 'components/SpendingAuthorizationHandler/index.jsx'
 import BasketAccessHandler from 'components/BasketAccessHandler/index.jsx'
+import TrustedEntitiesAccessHandler from 'components/TrustedEntitiesAccessHandler/index.jsx'
 import CertificateAccessHandler from 'components/CertificateAccessHandler/index.jsx'
 import GroupPermissionHandler from 'components/GroupPermissionHandler/index.jsx'
 import Bugsnag from '@bugsnag/js'
@@ -94,6 +95,7 @@ export default ({
                       <ProtocolPermissionHandler />
                       <SpendingAuthorizationHandler />
                       <BasketAccessHandler />
+                      <TrustedEntitiesAccessHandler />
                       <CertificateAccessHandler />
                       <GroupPermissionHandler />
                       <PaymentHandler />
