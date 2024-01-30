@@ -113,9 +113,10 @@ const ProtocolPermissionHandler = () => {
         flex: 'none'
       }}
       >
+
         <DialogContentText>
           <br />
-          An app is requesting to talk in a specific language (protocol) using your information.
+          {protocolID === 'identity resolution' ? 'An app is requesting access to lookup identity information using the entities you trust.' : 'An app is requesting to talk in a specific language (protocol) using your information.'}
         </DialogContentText>
         <br />
         <center>
