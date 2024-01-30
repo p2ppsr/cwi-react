@@ -35,8 +35,8 @@ const CounterpartyChip = ({
 
   const [signiaIdentity, setSigniaIdentity] = useState({
     profilePhoto: undefined,
-    firstName: 'Untrusted',
-    lastName: 'Counterparty'
+    firstName: 'Stranger',
+    lastName: ''
   })
 
   useEffect(() => {
@@ -102,7 +102,11 @@ const CounterpartyChip = ({
                 confederacyHost={confederacyHost()}
               />
             )
-            : <YellowCautionIcon className={classes.table_picture} />
+            : <img
+              className={classes.table_picture}
+              src='https://cdn4.iconfinder.com/data/icons/political-elections/50/48-512.png'
+              alt='Unknown person'
+            />
         }
         onClick={e => {
           if (clickable) {

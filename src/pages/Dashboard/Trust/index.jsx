@@ -262,14 +262,14 @@ const AddEntityModal = ({
               {loading
                 ? <LinearProgress />
                 : <Button
-                  variant='contained'
-                  size='large'
-                  endIcon={<GetTrust />}
-                  type='submit'
-                  disabled={loading}
-                >
+                    variant='contained'
+                    size='large'
+                    endIcon={<GetTrust />}
+                    type='submit'
+                    disabled={loading}
+                  >
                   Get Trust Details
-                </Button>}
+                  </Button>}
             </center>
           </form>}
         {advanced && (
@@ -348,15 +348,15 @@ const AddEntityModal = ({
             {loading
               ? <LinearProgress />
               : <center><Button
-                variant='contained'
-                size='large'
-                endIcon={<GetTrust />}
-                type='submit'
-                disabled={loading}
-              >
+                  variant='contained'
+                  size='large'
+                  endIcon={<GetTrust />}
+                  type='submit'
+                  disabled={loading}
+                        >
                 Validate Details
-              </Button>
-              </center>}
+                        </Button>
+                </center>}
           </form>
         )}
         <br />
@@ -492,7 +492,7 @@ const AddPopularSigniaCertifiersModal = ({
   )
 }
 
-function arraysOfObjectsAreEqual(arr1, arr2) {
+function arraysOfObjectsAreEqual (arr1, arr2) {
   if (arr1.length !== arr2.length) {
     return false
   }
@@ -528,21 +528,21 @@ const Trust = ({ history }) => {
   const [trustedEntities, setTrustedEntities] = useState(settings.trustedEntities
     ? JSON.parse(JSON.stringify(settings.trustedEntities))
     : [
-      {
-        name: 'IdentiCert',
-        note: 'Certifies legal first and last name, and photos',
-        trust: 3,
-        icon: env === 'prod' ? 'https://identicert.babbage.systems/favicon.ico' : 'https://staging-identicert.babbage.systems/favicon.ico',
-        publicKey: env === 'prod' ? '0295bf1c7842d14babf60daf2c733956c331f9dcb2c79e41f85fd1dda6a3fa4549' : '036dc48522aba1705afbb43df3c04dbd1da373b6154341a875bceaa2a3e7f21528'
-      },
-      {
-        name: 'Babbage Trust Services',
-        note: 'Resolves identity information for Babbage-run APIs and Bitcoin infrastructure.',
-        trust: 3,
-        icon: 'https://projectbabbage.com/favicon.ico',
-        publicKey: env === 'prod' ? '03c9caf5998a20f0ad3499c8c52c63ee07efc28e66d5f953d5f6ef0ebd998f3cd4' : '0285731b824ee90ba85a4dc02b7cc93f92118e812ec1cc3d038ab291fe0009d457'
-      }
-    ])
+        {
+          name: 'IdentiCert',
+          note: 'Certifies legal first and last name, and photos',
+          trust: 3,
+          icon: env === 'prod' ? 'https://identicert.babbage.systems/favicon.ico' : 'https://staging-identicert.babbage.systems/favicon.ico',
+          publicKey: env === 'prod' ? '0295bf1c7842d14babf60daf2c733956c331f9dcb2c79e41f85fd1dda6a3fa4549' : '036dc48522aba1705afbb43df3c04dbd1da373b6154341a875bceaa2a3e7f21528'
+        },
+        {
+          name: 'Babbage Trust Services',
+          note: 'Resolves identity information for Babbage-run APIs and Bitcoin infrastructure.',
+          trust: 3,
+          icon: 'https://projectbabbage.com/favicon.ico',
+          publicKey: env === 'prod' ? '028703956178067ea7ca405111f1ca698290a0112a3d7cf3d843e195bf58a7cfa6' : '03d0b36b5c98b000ec9ffed9a2cf005e279244edf6a19cf90545cdebe873162761'
+        }
+      ])
 
   const [search, setSearch] = useState('')
   const [addPopularSigniaCertifiersModalOpen, setAddPopularSigniaCertifiersModalOpen] = useState(false)
@@ -672,7 +672,7 @@ const Trust = ({ history }) => {
           key={`${entity.name}.${entity.note}.${entity.publicKey}`}
           classes={classes}
           history={history}
-        />)}
+                                                 />)}
       </div>
       {shownTrustedEntities.length === 0 && (
         <Typography align='center' color='textSecondary' style={{ marginTop: '2em' }}>No Trusted Entities</Typography>

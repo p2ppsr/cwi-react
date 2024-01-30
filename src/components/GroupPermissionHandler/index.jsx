@@ -102,23 +102,28 @@ const GroupPermissionHandler = () => {
       typeof spendingAuthorization === 'object' &&
       spendingAuthorization.enabled
     ) {
+      delete spendingAuthorization.enabled
       granted.spendingAuthorization = spendingAuthorization
     }
     for (const x of protocolPermissions) {
       if (x.enabled) {
+        delete x.enabled
         granted.protocolPermissions.push(x)
       }
     }
     for (const x of basketAccess) {
       if (x.enabled) {
+        delete x.enabled
         granted.basketAccess.push(x)
       }
     }
     for (const x of certificateAccess) {
       if (x.enabled) {
+        delete x.enabled
         granted.certificateAccess.push(x)
       }
     }
+    console.log('granted', granted)
     window.CWI.grantGroupPermission({ requestID, granted })
     setOpen(false)
     if (!wasOriginallyFocused) {
@@ -161,16 +166,23 @@ const GroupPermissionHandler = () => {
           }
           setProtocolPermissions(
             groupPermissions.protocolPermissions
-              .map(x => ({ ...x, enabled: true }))
+              ? groupPermissions.protocolPermissions
+                .map(x => ({ ...x, enabled: true }))
+              : []
           )
           setBasketAccess(
             groupPermissions.basketAccess
-              .map(x => ({ ...x, enabled: true }))
+              ? groupPermissions.basketAccess
+                .map(x => ({ ...x, enabled: true }))
+              : []
           )
           setCertificateAccess(
             groupPermissions.certificateAccess
-              .map(x => ({ ...x, enabled: true }))
+              ? groupPermissions.certificateAccess
+                .map(x => ({ ...x, enabled: true }))
+              : []
           )
+          console.log('what?', groupPermissions)
           setOriginator(originator)
           setOpen(true)
           setWasOriginallyFocused(wasOriginallyFocused)
@@ -227,7 +239,7 @@ const GroupPermissionHandler = () => {
                 label={originator}
                 clickable={false}
               />
-            </div>}
+                           </div>}
           </div>
         </center>
         <br />
@@ -245,88 +257,88 @@ const GroupPermissionHandler = () => {
             <br />
           </>
         )}
-        {protocolPermissions.length > 0 && <>
+        {protocolPermissions && protocolPermissions.length > 0 && <>
           <Typography variant='h3'>Protocol Permissions</Typography>
           <Typography color='textSecondary' variant='caption'>
             Protocols let apps talk in specific languages using your information.
-        </Typography>
+          </Typography>
           {protocolPermissions.map((x, i) => (
             <div key={i} className={classes.protocol_grid}>
-            <div>
-              <Checkbox
-                checked={x.enabled}
-                onChange={() => toggleProtocolPermission(i)}
-              />
-            </div>
-            <div>
-              <ProtoChip
-                protocolID={x.protocolID[1]}
-                securityLevel={x.protocolID[0]}
-                counterparty={x.counterparty}
-              />
-              <div className={classes.protocol_inset}>
-                <p style={{ marginBottom: '0px' }}><b>Reason:{' '}</b>{x.description}</p>
+              <div>
+                <Checkbox
+                  checked={x.enabled}
+                  onChange={() => toggleProtocolPermission(i)}
+                />
+              </div>
+              <div>
+                <ProtoChip
+                  protocolID={x.protocolID[1]}
+                  securityLevel={x.protocolID[0]}
+                  counterparty={x.counterparty}
+                />
+                <div className={classes.protocol_inset}>
+                  <p style={{ marginBottom: '0px' }}><b>Reason:{' '}</b>{x.description}</p>
+                </div>
               </div>
             </div>
-          </div>
           ))}
-        </>}
-        {certificateAccess.length > 0 && <>
+                                                                  </>}
+        {certificateAccess && certificateAccess.length > 0 && <>
           <Typography variant='h3'>Certificate Access</Typography>
           <Typography color='textSecondary' variant='caption'>
             Certificates are documents issued to you by various third parties.
-        </Typography>
+          </Typography>
           {certificateAccess.map((x, i) => (
             <div key={i} className={classes.certificate_grid}>
-            <div>
-              <Checkbox
-                checked={x.enabled}
-                onChange={() => toggleCertificateAccess(i)}
-              />
-            </div>
-            <div className={classes.certificate_display}>
               <div>
-                <CertificateChip
-                  certType={x.type}
-                  verifier={x.verifierPublicKey}
-                  fieldsToDisplay={x.fields}
+                <Checkbox
+                  checked={x.enabled}
+                  onChange={() => toggleCertificateAccess(i)}
                 />
               </div>
-              <div className={classes.certificate_inset}>
-                <div className={classes.certificate_attribute_wrap}>
-                  <div style={{ minHeight: '0.5em' }} />
-                  <div />
+              <div className={classes.certificate_display}>
+                <div>
+                  <CertificateChip
+                    certType={x.type}
+                    verifier={x.verifierPublicKey}
+                    fieldsToDisplay={x.fields}
+                  />
                 </div>
-                <p style={{ marginBottom: '0px' }}><b>Reason:{' '}</b>{x.description}</p>
+                <div className={classes.certificate_inset}>
+                  <div className={classes.certificate_attribute_wrap}>
+                    <div style={{ minHeight: '0.5em' }} />
+                    <div />
+                  </div>
+                  <p style={{ marginBottom: '0px' }}><b>Reason:{' '}</b>{x.description}</p>
+                </div>
               </div>
             </div>
-          </div>
           ))}
-        </>}
-        {basketAccess.length > 0 && <>
+                                                              </>}
+        {basketAccess && basketAccess.length > 0 && <>
           <Typography variant='h3'>Basket Access</Typography>
           <Typography color='textSecondary' variant='caption'>
             Baskets hold various tokens or "things" you own.
-        </Typography>
+          </Typography>
           {basketAccess.map((x, i) => (
             <div key={i} className={classes.basket_grid}>
-            <div>
-              <Checkbox
-                checked={x.enabled}
-                onChange={() => toggleBasketAccess(i)}
-              />
-            </div>
-            <div>
-              <BasketChip
-                basketId={x.name}
-              />
-              <div className={classes.basket_inset}>
-                <p style={{ marginBottom: '0px' }}><b>Reason:{' '}</b>{x.description}</p>
+              <div>
+                <Checkbox
+                  checked={x.enabled}
+                  onChange={() => toggleBasketAccess(i)}
+                />
+              </div>
+              <div>
+                <BasketChip
+                  basketId={x.basket}
+                />
+                <div className={classes.basket_inset}>
+                  <p style={{ marginBottom: '0px' }}><b>Reason:{' '}</b>{x.description}</p>
+                </div>
               </div>
             </div>
-          </div>
           ))}
-        </>}
+                                                    </>}
       </DialogContent>
       <br />
       <DialogActions style={{
