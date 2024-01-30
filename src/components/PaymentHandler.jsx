@@ -121,6 +121,7 @@ const PaymentHandler = () => {
         console.error(e.data)
       } else {
         const result = e.data.result
+        let submitted = false
         try {
           await window.CWI.ninja.submitDirectTransaction({
             protocol: '3241645161d8',
@@ -128,24 +129,26 @@ const PaymentHandler = () => {
             senderIdentityKey: result.transaction.senderIdentityKey,
             note: 'Buy from Satoshi Shop'
           })
+          submitted = true
         } catch (e) {
-          // Double-spends were already processed
-          // if (e.code !== 'ERR_DOUBLE_SPEND') throw e
-
-          // ...... well this is awkward.
+          console.error(`Error submitting purchase transaction: ${JSON.stringify(e)}`)
+          toast.error('Error submitting purchase transaction.')
+          handleCancel()
           /*
-          If the transaction didn't work, do we acknowledge it anyways? Or do we try again every time, knowing it won't work?
-          We need a way of saying "Hey! This didn't work! Someone needs to do something about it." and flagging it for review, or something.
+            handleCancel should turn into handleSubmitError which should invoke window.CWI.submitPaymentError
+            The shop should then set the payment status to "stuck" and tech support needs to assist.
           */
         }
-        toast.success(`${result.transaction.amount} satoshis deposited!`)
-        // Acknowledge receipt
-        e.source.postMessage({
-          type: 'satoshiframe',
-          id: result.id,
-          acknowledge: true
-        }, e.origin)
-        handleSubmit()
+        if (submitted) {
+          toast.success(`${result.transaction.amount} satoshis deposited!`)
+          // Acknowledge receipt
+          e.source.postMessage({
+            type: 'satoshiframe',
+            id: result.id,
+            acknowledge: true
+          }, e.origin)
+          handleSubmit()
+        }
       }
     }
     window.addEventListener('message', iframeMessageHandler)
