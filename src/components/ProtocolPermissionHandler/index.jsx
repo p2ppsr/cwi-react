@@ -105,7 +105,7 @@ const ProtocolPermissionHandler = () => {
     <CustomDialog
       open={open}
       // onClose={handleCancel}
-      title={!renewal ? 'Protocol Access Request' : 'Protocol Access Renewal'}
+      title={protocolID === 'identity resolution' ? 'Trusted Entities Access Request' : (!renewal ? 'Protocol Access Request' : 'Protocol Access Renewal')}
     >
       <DialogContent style={{
         textAlign: 'center',
@@ -120,7 +120,7 @@ const ProtocolPermissionHandler = () => {
         <br />
         <center>
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
-          <span>app:</span>
+            <span>app:</span>
             {originator && <div>
               <AppChip
                 size={2.5}
@@ -128,11 +128,11 @@ const ProtocolPermissionHandler = () => {
                 label={originator}
                 clickable={false}
               />
-            </div>}
+                           </div>}
           </div>
           <br />
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
-          <span>protocol:</span>
+            <span>protocol:</span>
             <div>
               <ProtoChip
                 securityLevel={protocolSecurityLevel}
@@ -143,7 +143,7 @@ const ProtocolPermissionHandler = () => {
           </div>
           <br />
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', gridGap: '2em', margin: '0px 1.5em' }}>
-          <span>reason:</span>
+            <span>reason:</span>
             <DialogContentText>
               {description}
             </DialogContentText>
