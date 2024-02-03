@@ -15,7 +15,7 @@
     "registry": "https://npm-registry.babbage.systems/"
   },
   "dependencies": {
-    "@babbage/sdk": "^0.4.41",
+    "@babbage/sdk": "^0.4.42",
     "@bugsnag/js": "^7.17.4",
     "@bugsnag/plugin-react": "^7.17.4",
     "@emotion/react": "^11.10.4",
@@ -23,16 +23,16 @@
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.14.5",
     "@mui/styles": "^5.10.3",
-    "babbage-kvstore": "^1.1.42",
+    "babbage-kvstore": "^1.1.43",
     "babbage-protomap": "^0.1.21",
-    "babbage-signia": "^0.1.37",
-    "basketmap": "^0.1.25",
-    "certmap": "^0.1.25",
-    "cwi-base": "^0.3.106",
-    "cwi-external-services": "^0.3.91",
+    "babbage-signia": "^0.1.39",
+    "basketmap": "^0.1.26",
+    "certmap": "^0.1.26",
+    "cwi-base": "^0.3.108",
+    "cwi-external-services": "^0.3.93",
     "date-fns": "^2.29.2",
     "fuse.js": "^6.6.2",
-    "nanostore-publisher": "^0.1.50",
+    "nanostore-publisher": "^0.1.52",
     "react-country-region-selector": "^3.6.1",
     "react-image-crop": "^8.6.9",
     "react-phone-number-input": "^3.3.4",
@@ -40,7 +40,7 @@
     "react-router-dom": "^5.2.0",
     "react-toastify": "^9.0.8",
     "react-visibility-sensor": "^5.1.1",
-    "uhrp-react": "^0.1.31"
+    "uhrp-react": "^0.1.34"
   },
   "peerDependencies": {
     "@cwi/core": "^0.3.164",
