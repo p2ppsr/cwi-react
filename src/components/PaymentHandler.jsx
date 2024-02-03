@@ -123,17 +123,17 @@ const PaymentHandler = () => {
         const result = e.data.result
         let submitted = false
         try {
-          if (window.confirm('submit payment transaction?')) {
-            await window.CWI.ninja.submitDirectTransaction({
-              protocol: '3241645161d8',
-              transaction: result.transaction,
-              senderIdentityKey: result.transaction.senderIdentityKey,
-              note: 'Buy from Satoshi Shop'
-            })
-            submitted = true
-          } else {
-            throw new Error('submit payment transaction failure requested')
-          }
+          await window.CWI.ninja.submitDirectTransaction({
+            protocol: '3241645161d8',
+            transaction: result.transaction,
+            senderIdentityKey: result.transaction.senderIdentityKey,
+            note: 'Buy from Satoshi Shop'
+          })
+          submitted = true
+          // if (window.confirm('submit payment transaction?')) {
+          // } else {
+          //   throw new Error('submit payment transaction failure requested')
+          // }
         } catch (e) {
           console.error(`Error submitting purchase transaction: ${JSON.stringify(e)}`)
           toast.error('Error submitting purchase transaction.')
