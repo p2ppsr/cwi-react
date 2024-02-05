@@ -110,7 +110,8 @@ export const formatSatoshisAsFiat = (
 
   if (!format || format.currency === 'USD') {
     const usdFormat = new Intl.NumberFormat(locale, { currency: 'USD', style: 'currency' })
-    return (Math.abs(usd) >= 1) ? usdFormat.format(usd) : `${(usd * 100).toFixed(3)} ¢`
+    return usdFormat.format(usd)
+    // return (Math.abs(usd) >= 1) ? usdFormat.format(usd) : `${(usd * 100).toFixed(3)} ¢`
   } else if (format.currency === 'EUR') {
     const eur = usd * eurPerUSD
     if (isNaN(eur)) return '...'
