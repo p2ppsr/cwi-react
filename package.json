@@ -32,7 +32,7 @@
     "cwi-external-services": "^0.3.99",
     "date-fns": "^2.29.2",
     "fuse.js": "^6.6.2",
-    "nanostore-publisher": "^0.1.57",
+    "nanostore-publisher": "^0.1.58",
     "react-country-region-selector": "^3.6.1",
     "react-image-crop": "^8.6.9",
     "react-phone-number-input": "^3.3.4",
@@ -40,7 +40,7 @@
     "react-router-dom": "^5.2.0",
     "react-toastify": "^9.0.8",
     "react-visibility-sensor": "^5.1.1",
-    "uhrp-react": "^0.1.40"
+    "uhrp-react": "^0.1.41"
   },
   "peerDependencies": {
     "@cwi/core": "^0.3.164",
