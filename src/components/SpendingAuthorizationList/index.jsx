@@ -29,26 +29,26 @@ const useStyles = makeStyles(style, {
 })
 
 const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
-  const [authorizations, setAuthorizations] = useState([])
+  const [authorization, setAuthorization] = useState([])
   const [currentSpending, setCurrentSpending] = useState(0)
   const [authorizedAmount, setAuthorizedAmount] = useState(0)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentAuthorization, setCurrentAuthorization] = useState(null)
   const [dialogLoading, setDialogLoading] = useState(false)
-  const [earliestAuthorization, setEarliestAuthorization] = useState(null)
+  // const [earliestAuthorization, setEarliestAuthorization] = useState(null)
   const classes = useStyles()
 
   const refreshAuthorizations = useCallback(async () => {
-    const result = await window.CWI.listSpendingAuthorizations({
+    const result = await window.CWI.getSpendingAuthorization({
       targetDomain: app,
       limit
     })
     console.log('spending list', result)
-    setAuthorizations(result.authorizations)
-    if (result.authorizations.length === 0) {
+    setAuthorization(result.authorization)
+    if (result.authorization === undefined) {
       onEmptyList()
     }
-    setEarliestAuthorization(result.earliestAuthorizationTime)
+    // setEarliestAuthorization(result.earliestAuthorizationTime)
     setCurrentSpending(result.currentSpending)
     setAuthorizedAmount(result.authorizedAmount)
   }, [app])
@@ -62,11 +62,7 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
     try {
       setDialogLoading(true)
       await window.CWI.revokeSpendingAuthorization({ authorizationGrant: currentAuthorization })
-      setAuthorizations(oldAuth =>
-        oldAuth.filter(x =>
-          x.authorizationGrantID !== currentAuthorization.authorizationGrantID
-        )
-      )
+      setAuthorization({})
       setCurrentAuthorization(null)
       setDialogOpen(false)
       setDialogLoading(false)
@@ -120,43 +116,34 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
         </DialogActions>
       </Dialog>
       <List>
-        {authorizations.map((authorization, i) => (
-          <ListItem
-            key={i}
-            className={classes.action_card}
-            elevation={4}
-          >
-            <ListItemAvatar>
-              <Avatar className={classes.icon}>
-                <AttachMoney />
-              </Avatar>
-            </ListItemAvatar>
-            {/* <h1>TODO: Fix the bug that cause an invalid timestamp with temp fix below:</h1> */}
+        <ListItem
+          className={classes.action_card}
+          elevation={4}
+        >
+          <ListItemAvatar>
+            <Avatar className={classes.icon}>
+              <AttachMoney />
+            </Avatar>
+          </ListItemAvatar>
+          {/* <h1>TODO: Fix the bug that cause an invalid timestamp with temp fix below:</h1> */}
+          {authorization &&
             <ListItemText
               primary={<AmountDisplay>{authorization.amount}</AmountDisplay>}
               secondary={`Must be used within ${formatDistance(new Date(authorization.expiry <= 16817763900000 ? authorization.expiry * 1000 : Date.now() + 10000000), new Date(), { addSuffix: true })}`}
             />
-            <ListItemSecondaryAction>
-              <Button onClick={() => { revokeAuthorization(authorization) }} className={classes.revokeButton}>
-                Revoke
-              </Button>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
+          }
+          <ListItemSecondaryAction>
+            <Button onClick={() => { revokeAuthorization(authorization) }} className={classes.revokeButton}>
+              Revoke
+            </Button>
+          </ListItemSecondaryAction>
+        </ListItem>
       </List>
-      <center>
-        <Typography
-          color='textSecondary'
-          paragraph
-        >
-          <i>Total Spending Authorizations: {authorizations.length}</i>
-        </Typography>
-      </center>
       {Number.isInteger(Number(authorizedAmount)) && authorizedAmount > 0 && (
         <div>
           <Typography variant='h5' paragraph>
             <b>
-              Current Spending (since {formatDistance(new Date(earliestAuthorization * 1000), new Date(), { addSuffix: true })}):
+              Current Spending (since {formatDistance((new Date()).setDate(1), new Date(), { addSuffix: true })}):
             </b> <AmountDisplay>{currentSpending}</AmountDisplay>
           </Typography>
           <Typography variant='h5' paragraph>
