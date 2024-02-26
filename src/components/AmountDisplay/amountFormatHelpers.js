@@ -108,19 +108,26 @@ export const formatSatoshisAsFiat = (
 
   if (isNaN(usd)) return '...'
 
+  let minDigits = 2
+  const v = Math.abs(usd)
+  if (v < 0.001) minDigits = 6
+  else if (v < 0.01) minDigits = 5
+  else if (v < 0.1) minDigits = 4
+  else if (v < 1) minDigits = 3
+
   if (!format || format.currency === 'USD') {
-    const usdFormat = new Intl.NumberFormat(locale, { currency: 'USD', style: 'currency' })
+    const usdFormat = new Intl.NumberFormat(locale, { currency: 'USD', style: 'currency', minimumFractionDigits: minDigits })
     return usdFormat.format(usd)
     // return (Math.abs(usd) >= 1) ? usdFormat.format(usd) : `${(usd * 100).toFixed(3)} ¢`
   } else if (format.currency === 'EUR') {
     const eur = usd * eurPerUSD
     if (isNaN(eur)) return '...'
-    const eurFormat = new Intl.NumberFormat(locale, { currency: 'EUR', style: 'currency' })
+    const eurFormat = new Intl.NumberFormat(locale, { currency: 'EUR', style: 'currency', minimumFractionDigits: minDigits })
     return eurFormat.format(eur)
   } else if (format.currency === 'GBP') {
     const gbp = usd * gbpPerUSD
     if (isNaN(gbp)) return '...'
-    const gbpFormat = new Intl.NumberFormat(locale, { currency: 'GBP', style: 'currency' })
+    const gbpFormat = new Intl.NumberFormat(locale, { currency: 'GBP', style: 'currency', minimumFractionDigits: minDigits })
     return gbpFormat.format(gbp)
   }
 }

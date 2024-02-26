@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useContext } from 'react'
-import { Chip } from '@mui/material'
+import { Avatar, Badge, Chip, Icon, Tooltip } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import { Signia } from 'babbage-signia'
 import { Img } from 'uhrp-react'
@@ -11,10 +11,16 @@ import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
 import YellowCautionIcon from '../../images/cautionIcon'
 import { SettingsContext } from '../../context/SettingsContext'
+import { discoverByIdentityKey } from '@babbage/sdk'
 
 const useStyles = makeStyles(style, {
   name: 'CounterpartyChip'
 })
+
+const knownCertificateTypes = {
+  identiCert: 'z40BOInXkI8m7f/wBrv4MJ09bZfzZbTj2fJqCtONqCY=',
+  socialCert: '2TgqRC35B1zehGmB21xveZNc7i5iqHc0uxMb+1NMPW4='
+}
 
 const CounterpartyChip = ({
   counterparty,
@@ -34,31 +40,46 @@ const CounterpartyChip = ({
   const classes = useStyles()
 
   const [signiaIdentity, setSigniaIdentity] = useState({
-    profilePhoto: undefined,
-    firstName: 'Stranger',
-    lastName: ''
+    profilePhoto: 'https://cdn4.iconfinder.com/data/icons/political-elections/50/48-512.png',
+    name: 'Stranger'
   })
 
   useEffect(() => {
     (async () => {
       try {
         // Resolve a Signia verified identity from a counterparty
-        const certifiers = settings.trustedEntities.map(x => x.publicKey)
-        const results = await signia.discoverByIdentityKey(counterparty, certifiers)
+        const results = await discoverByIdentityKey({ identityKey: counterparty })
+
         if (results && results.length > 0) {
-          // Compute the most trusted of the results
-          let mostTrustedIndex = 0
-          let maxTrustPoints = 0
-          for (let i = 0; i < results.length; i++) {
-            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].certifier).trust
-            if (resultTrustLevel > maxTrustPoints) {
-              mostTrustedIndex = i
-              maxTrustPoints = resultTrustLevel
+          const resolvedIdentity = results[0]
+
+          let name = 'Unsupported Name'
+          switch (resolvedIdentity.type) {
+            case knownCertificateTypes.identiCert: {
+              const { firstName, lastName } = resolvedIdentity.decryptedFields
+              name = `${firstName} ${lastName}`
+              break
             }
+            case knownCertificateTypes.socialCert: {
+              const { userName, email, phoneNumber } = resolvedIdentity.decryptedFields
+              name = userName || email || phoneNumber || name
+              break
+            }
+            default:
+              break
           }
-          setSigniaIdentity(results[mostTrustedIndex].decryptedFields)
+
+          setSigniaIdentity({
+            name,
+            profilePhoto: resolvedIdentity.decryptedFields.profilePhoto,
+            identityKey: resolvedIdentity.subject,
+            certifier: resolvedIdentity.certifier
+          })
         }
-      } catch (e) { }
+      } catch (e) {
+        window.Bugsnag.notify(e)
+        console.error(e)
+      }
     })()
   }, [])
 
@@ -76,7 +97,7 @@ const CounterpartyChip = ({
                 ? 'Only You'
                 : counterparty === 'anyone' || counterparty === '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
                   ? 'Anyone'
-                  : `${signiaIdentity.firstName} ${signiaIdentity.lastName}`}
+                  : signiaIdentity.name}
             </span>
             {counterparty !== 'self' && counterparty !== 'anyone' && counterparty !== '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798' && (
               <span style={theme.templates.chipLabelSubtitle}>
@@ -92,15 +113,34 @@ const CounterpartyChip = ({
             counterparty === 'anyone' ||
             counterparty === '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
             ? (
-              <Img
-                src={counterparty === 'self'
-                  ? 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvectorified.com%2Fimages%2Fself-icon-29.png&f=1&nofb=1&ipt=8b514768118498339147259078b173359ccaaa09a3249cce1cf176e53af306aa&ipo=images'
-                  : counterparty === 'anyone' || counterparty === '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
-                    ? 'https://cdn-icons-png.flaticon.com/512/3369/3369157.png'
-                    : signiaIdentity.profilePhoto}
-                className={classes.table_picture}
-                confederacyHost={confederacyHost()}
-              />
+              <Tooltip title={signiaIdentity.certifier ? `Certified by ${signiaIdentity.certifier.name}` : 'Unknown Certifier!'} placement="right">
+                <Badge
+                  overlap="circular"
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  badgeContent={
+                    <Icon style={{ width: '20px', height: '20px', backgroundColor: 'white', borderRadius: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Img
+                        style={{ width: '95%', height: '95%', objectFit: 'cover', borderRadius: '20%' }}
+                        src={signiaIdentity.certifier ? signiaIdentity.certifier.icon : 'https://cdn4.iconfinder.com/data/icons/political-elections/50/48-512.png'}
+                        confederacyHost={confederacyHost}
+                        loading={undefined}
+                      />
+                    </Icon>
+                  }
+                >
+                  <Avatar alt={signiaIdentity.name} sx={{ width: '2.5em', height: '2.5em' }}>
+                    <Img
+                      src={counterparty === 'self'
+                        ? 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvectorified.com%2Fimages%2Fself-icon-29.png&f=1&nofb=1&ipt=8b514768118498339147259078b173359ccaaa09a3249cce1cf176e53af306aa&ipo=images'
+                        : counterparty === 'anyone' || counterparty === '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
+                          ? 'https://cdn-icons-png.flaticon.com/512/3369/3369157.png'
+                          : signiaIdentity.profilePhoto}
+                      className={classes.table_picture}
+                      confederacyHost={confederacyHost()}
+                    />
+                  </Avatar>
+                </Badge>
+              </Tooltip>
             )
             : <img
               className={classes.table_picture}
