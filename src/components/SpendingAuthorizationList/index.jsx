@@ -40,44 +40,43 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
 
   const refreshAuthorizations = useCallback(async () => {
     const result = await window.CWI.getSpendingAuthorization({
-      targetDomain: app,
-      limit
+      targetDomain: app
     })
     console.log('spending list', result)
-    setAuthorization(result.authorization)
-    if (result.authorization === undefined) {
+    if (!result || result.authorization === undefined) {
       onEmptyList()
+    } else {
+      setAuthorization(result.authorization)
+      setCurrentSpending(result.currentSpending)
+      setAuthorizedAmount(result.authorizedAmount)
     }
-    // setEarliestAuthorization(result.earliestAuthorizationTime)
-    setCurrentSpending(result.currentSpending)
-    setAuthorizedAmount(result.authorizedAmount)
   }, [app])
 
   const revokeAuthorization = async authorization => {
-    setCurrentAuthorization(authorization)
+    // setCurrentAuthorization(authorization)
     setDialogOpen(true)
   }
 
   const handleConfirm = async () => {
     try {
       setDialogLoading(true)
-      await window.CWI.revokeSpendingAuthorization({ authorizationGrant: currentAuthorization })
+      await window.CWI.revokeSpendingAuthorization({ authorizationGrant: authorization })
       setAuthorization({})
-      setCurrentAuthorization(null)
+      // setCurrentAuthorization(null)
       setDialogOpen(false)
       setDialogLoading(false)
       refreshAuthorizations()
     } catch (e) {
       refreshAuthorizations()
       toast.error('Permission may not have been revoked: ' + e.message)
-      setCurrentAuthorization(null)
+      // setCurrentAuthorization(null)
       setDialogOpen(false)
       setDialogLoading(false)
     }
   }
 
   const handleDialogClose = () => {
-    setCurrentAuthorization(null)
+    // setCurrentAuthorization(null)
     setDialogOpen(false)
   }
 
@@ -126,12 +125,12 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
             </Avatar>
           </ListItemAvatar>
           {/* <h1>TODO: Fix the bug that cause an invalid timestamp with temp fix below:</h1> */}
-          {authorization &&
+          {/* {authorization &&
             <ListItemText
               primary={<AmountDisplay>{authorization.amount}</AmountDisplay>}
               secondary={`Must be used within ${formatDistance(new Date(authorization.expiry <= 16817763900000 ? authorization.expiry * 1000 : Date.now() + 10000000), new Date(), { addSuffix: true })}`}
             />
-          }
+          } */}
           <ListItemSecondaryAction>
             <Button onClick={() => { revokeAuthorization(authorization) }} className={classes.revokeButton}>
               Revoke
