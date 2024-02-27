@@ -242,14 +242,14 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
               <div className={classes.appList}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
                   <ProtoChip
-                    protocolID={permObject.protocol}
-                    counterparty={permObject.counterparty}
-                    securityLevel={permObject.securityLevel}
-                    originator={permObject.originator}
+                    protocolID={permObject.permissions[0].permissionGrant.protocol}
+                    counterparty={permObject.permissions[0].permissionGrant.counterparty}
+                    securityLevel={permObject.permissions[0].permissionGrant.securityLevel}
+                    originator={permObject.permissions[0].permissionGrant.originator}
                     clickable
                     canRevoke={false}
                     history
-                    // onCloseClick={() => revokePermission(permObject.permissionGrant)}
+                  // onCloseClick={() => revokePermission(permObject.permissionGrant)}
                   />
                   {canRevoke &&
                     <>

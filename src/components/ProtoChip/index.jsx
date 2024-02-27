@@ -18,7 +18,7 @@ const useStyles = makeStyles(style, {
 })
 
 const ProtoChip = ({
-  securityLevel = 2,
+  securityLevel,
   protocolID,
   counterparty,
   lastAccessed,
@@ -108,11 +108,11 @@ const ProtoChip = ({
                     <Grid item>
                       <CounterpartyChip
                         counterparty={counterparty}
-                        // onClick={onCounterpartyClick}
+                      // onClick={onCounterpartyClick}
                       />
                     </Grid>
                   </Grid>
-                  </div>
+                </div>
                 : ''}
             </span>
           </div>
