@@ -6,6 +6,7 @@ import { BasketMap } from 'basketmap'
 import { Img } from 'uhrp-react'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
+import { DEFAULT_APP_ICON } from '../../constants/popularApps'
 import confederacyHost from '../../utils/confederacyHost'
 import YellowCautionIcon from '../../images/cautionIcon'
 import CounterpartyChip from '../CounterpartyChip'
@@ -44,7 +45,7 @@ const BasketChip = ({
 
   const [basketName, setBasketName] = useState(basketId)
   const [iconURL, setIconURL] = useState(
-    'https://projectbabbage.com/favicon.ico'
+    DEFAULT_APP_ICON
   )
   const [description, setDescription] = useState(
     'Basket description not found.'

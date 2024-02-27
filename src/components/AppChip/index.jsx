@@ -10,6 +10,7 @@ import Memory from '@mui/icons-material/Memory'
 import makeStyles from '@mui/styles/makeStyles'
 import CloseIcon from '@mui/icons-material/Close'
 import style from './style'
+import DEFAULT_APP_ICON from '../../constants/popularApps'
 
 const useStyles = makeStyles(style, {
   name: 'AppChip'
@@ -41,7 +42,7 @@ const AppChip = ({
     label = label.substring(7)
   }
   const [parsedLabel, setParsedLabel] = useState(label)
-  const [appIconImageUrl, setAppIconImageUrl] = useState('https://projectbabbage.com/favicon.ico')
+  const [appIconImageUrl, setAppIconImageUrl] = useState(DEFAULT_APP_ICON)
 
   useEffect(() => {
     (async () => {

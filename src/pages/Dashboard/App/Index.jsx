@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Grid, IconButton, Typography } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
+import { DEFAULT_APP_ICON } from '../../../constants/popularApps'
 import isImageUrl from '../../../utils/isImageUrl'
 import parseAppManifest from '../../../utils/parseAppManifest'
 import RecentActions from '../../../components/RecentActions'
@@ -50,7 +51,7 @@ const Apps = ({ history }) => {
         if (await isImageUrl(`https://${appDomain}/favicon.ico`)) {
           setAppIcon(`https://${appDomain}/favicon.ico`)
         } else {
-          setAppIcon('https://projectbabbage.com/favicon.ico')
+          setAppIcon(DEFAULT_APP_ICON)
         }
         // Try to parse the app manifest to find the app info
         try {

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Typography, IconButton, Grid, Tab, Tabs } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
+import { DEFAULT_APP_ICON } from '../../../constants/popularApps'
 import isImageUrl from '../../../utils/isImageUrl'
 import parseAppManifest from '../../../utils/parseAppManifest'
 import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
@@ -41,6 +42,9 @@ const AppAccess = ({ match, history }) => {
         if (appDomain === '') {
           setAppDomain(originator)
         }
+        if (appDomain === 'localhost:8088' || appDomain === '') {
+          setAppIcon(DEFAULT_APP_ICON)
+        }
         setLoading(true)
         // Validate that the default favicon path is actually an image
         try {
@@ -49,7 +53,7 @@ const AppAccess = ({ match, history }) => {
             if (await isImageUrl(`https://${appDomain}/favicon.ico`)) {
               setAppIcon(`https://${appDomain}/favicon.ico`)
             } else {
-              setAppIcon('https://projectbabbage.com/favicon.ico')
+              setAppIcon(DEFAULT_APP_ICON)
             }
             // Try to parse the app manifest to find the app info
             try {

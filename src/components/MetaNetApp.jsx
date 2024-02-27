@@ -3,10 +3,9 @@ import { Card, CardContent, Typography } from '@mui/material'
 import { withRouter } from 'react-router-dom'
 import isImageUrl from '../utils/isImageUrl'
 import { useTheme } from '@mui/styles'
+import { DEFAULT_APP_ICON } from '../constants/popularApps'
 import confederacyHost from '../utils/confederacyHost'
 import { Img } from 'uhrp-react'
-
-const DEFAULT_APP_ICON = 'https://www.projectbabbage.com/favicon.ico'
 
 const MetaNetApp = ({
   iconImageUrl = DEFAULT_APP_ICON,
