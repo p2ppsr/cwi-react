@@ -1,3 +1,5 @@
+export const DEFAULT_APP_ICON = 'https://projectbabbage.com/favicon.ico'
+
 export default [
   {
     appName: 'BotCrafter',
@@ -16,7 +18,7 @@ export default [
   },
   {
     appName: 'PeerPay',
-    appIconImageUrl: 'https://projectbabbage.com/favicon.ico',
+    appIconImageUrl: DEFAULT_APP_ICON,
     domain: 'peerpay.babbage.systems'
   }
 ]

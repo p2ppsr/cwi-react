@@ -8,6 +8,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { makeStyles } from '@mui/styles'
 import { useHistory } from 'react-router-dom'
+import { DEFAULT_APP_ICON } from '../../../constants/popularApps'
 import PageHeader from '../../../components/PageHeader'
 import CounterpartyChip from '../../../components/CounterpartyChip'
 import style from './style'
@@ -25,7 +26,7 @@ const CertificateAccess = ({ match }) => {
   certType = decodeURIComponent(certType)
   const [copied, setCopied] = useState({ id: false })
   const [documentTitle, setDocumentTitle] = useState(certType)
-  const [documentIcon, setDocumentIcon] = useState('https://projectbabbage.com/favicon.ico')
+  const [documentIcon, setDocumentIcon] = useState(DEFAULT_APP_ICON)
   const [description, setDescription] = useState('- -')
   const [documentationURL, setDocumentationURL] = useState('https://projectbabbage.com/docs')
   const [fields, setFields] = useState({})

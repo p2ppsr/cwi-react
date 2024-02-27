@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom'
 import { ListItem, List, Link, Typography, Button, Slider, TextField, InputAdornment, DialogContent, DialogContentText, DialogActions, LinearProgress, Hidden, Snackbar, IconButton } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style.js'
+import { DEFAULT_APP_ICON } from '../../../constants/popularApps'
 import { SettingsContext } from '../../../context/SettingsContext'
 import AddIdCertIcon from '../../../images/addIdCertIcon'
 import AddIcon from '@mui/icons-material/Add'
@@ -539,7 +540,7 @@ const Trust = ({ history }) => {
           name: 'Babbage Trust Services',
           note: 'Resolves identity information for Babbage-run APIs and Bitcoin infrastructure.',
           trust: 3,
-          icon: 'https://projectbabbage.com/favicon.ico',
+          icon: DEFAULT_APP_ICON,
           publicKey: env === 'prod' ? '028703956178067ea7ca405111f1ca698290a0112a3d7cf3d843e195bf58a7cfa6' : '03d0b36b5c98b000ec9ffed9a2cf005e279244edf6a19cf90545cdebe873162761'
         }
       ])
