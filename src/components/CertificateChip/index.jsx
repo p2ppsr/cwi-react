@@ -6,6 +6,7 @@ import { Img } from 'uhrp-react'
 import { useTheme, makeStyles } from '@mui/styles'
 import style from './style'
 import CloseIcon from '@mui/icons-material/Close'
+import { DEFAULT_APP_ICON } from '../../constants/popularApps'
 import confederacyHost from '../../utils/confederacyHost'
 import registryOperator from '../../utils/registryOperator'
 import YellowCautionIcon from '../../images/cautionIcon'
@@ -46,7 +47,7 @@ const CertificateChip = ({
 
   const [certName, setCertName] = useState('Unknown Cert')
   const [iconURL, setIconURL] = useState(
-    'https://projectbabbage.com/favicon.ico'
+    DEFAULT_APP_ICON
   )
   const [description, setDescription] = useState(`${certType.substr(0, 12)}...`)
   const [documentationURL, setDocumentationURL] = useState('unknown')

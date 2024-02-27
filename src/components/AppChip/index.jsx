@@ -41,7 +41,7 @@ const AppChip = ({
     label = label.substring(7)
   }
   const [parsedLabel, setParsedLabel] = useState(label)
-  const [appIconImageUrl, setAppIconImageUrl] = useState('https://projectbabbage.com/favicon.ico')
+  const [appIconImageUrl, setAppIconImageUrl] = useState(DEFAULT_APP_ICON)
 
   useEffect(() => {
     (async () => {
