@@ -87,13 +87,13 @@ const extendedTheme = theme => ({
       alignItems: 'center',
       '&:hover $expiryHoverText': {
         visibility: 'visible',
-        opacity: 1
+        opacity: 1,
       },
       marginLeft: '0.4em'
     },
     expiryHoverText: {
       fontSize: '0.95em',
-      color: theme.palette.text.secondary,
+      color: theme.palette.text.color,
       textAlign: 'center',
       visibility: 'hidden',
       opacity: 0,
@@ -131,7 +131,6 @@ const extendedTheme = theme => ({
       maxWidth: '10em',
       wordWrap: 'break-word',
       whiteSpace: 'pre-line',
-      color: theme.palette.text.secondary
     }
   }
 })
