@@ -20,6 +20,7 @@ import boomerang from 'boomerang-http'
 import CustomDialog from '../CustomDialog/index.jsx'
 import UIContext from '../../UIContext'
 import AppChip from '../AppChip'
+import { CwiExternalServices } from 'cwi-external-services'
 
 const useStyles = makeStyles(style, {
   name: 'SpendingAuthorizationHandler'
@@ -45,7 +46,31 @@ const SpendingAuthorizationHandler = () => {
   const [alwaysAllowAmount, setAlwaysAllowAmount] = useState(100000)
   const [showAuthorizeApp, setShowAuthorizeApp] = useState(false)
   const [totalPastSpending, setTotalPastSpending] = useState(0)
-  const [amount, setAmount] = useState(authorizationAmount)
+  const [amountPreviouslyAuthorized, setAmountPreviouslyAuthorized] = useState(0)
+
+  const [usdPerBsv, setUsdPerBSV] = useState(70)
+  const services = new CwiExternalServices(CwiExternalServices.createDefaultOptions())
+
+  // Helper function to figure out the upgrade amount (note: consider moving to utils)
+  const determineUpgradeAmount = (previousAmountInSats, returnType = 'sats') => {
+    let usdAmount
+    const previousAmountInUsd = previousAmountInSats * (usdPerBsv / 100000000)
+
+    if (previousAmountInUsd <= 5) {
+      usdAmount = 5
+    } else if (previousAmountInUsd <= 10) {
+      usdAmount = 10
+    } else if (previousAmountInUsd <= 20) {
+      usdAmount = 20
+    } else {
+      usdAmount = 30
+    }
+
+    if (returnType === 'sats') {
+      return Math.round(usdAmount / (usdPerBsv / 100000000))
+    }
+    return usdAmount
+  }
 
   const handleCancel = async () => {
     window.CWI.denySpendingAuthorization({ requestID })
@@ -78,6 +103,7 @@ const SpendingAuthorizationHandler = () => {
           description,
           transactionAmount,
           totalPastSpending,
+          amountPreviouslyAuthorized,
           authorizationAmount,
           renewal,
           lineItems
@@ -97,6 +123,9 @@ const SpendingAuthorizationHandler = () => {
           } catch (e) {
             setAppName(originator)
           }
+          const rate = await services.getBsvExchangeRate()
+          setUsdPerBSV(rate)
+          console.log(amountPreviouslyAuthorized)
           const wasOriginallyFocused = await isFocused()
           setWasOriginallyFocused(wasOriginallyFocused)
           setRequestID(requestID)
@@ -106,9 +135,11 @@ const SpendingAuthorizationHandler = () => {
           setRenewal(renewal)
           setTransactionAmount(transactionAmount)
           setTotalPastSpending(totalPastSpending)
+          if (amountPreviouslyAuthorized) {
+            setAmountPreviouslyAuthorized(amountPreviouslyAuthorized)
+          }
           // setAlwaysAllowAmount()
           setAuthorizationAmount(authorizationAmount)
-          setAmount(authorizationAmount)
           setOpen(true)
           if (!wasOriginallyFocused) {
             await onFocusRequested()
@@ -204,9 +235,9 @@ const SpendingAuthorizationHandler = () => {
           <Tooltip title='Always Allow This App'>
             <Fab
               variant='extended'
-              onClick={() => handleGrant({ singular: false, amount: 6250000 })}
+              onClick={() => handleGrant({ singular: false, amount: determineUpgradeAmount(amountPreviouslyAuthorized) })}
             >
-              Allow up to $5/MO
+              Allow up to <AmountDisplay>{determineUpgradeAmount(amountPreviouslyAuthorized)}</AmountDisplay>
             </Fab>
           </Tooltip>
           <Tooltip title='Allow Once'>

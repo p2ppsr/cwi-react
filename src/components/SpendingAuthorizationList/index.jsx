@@ -8,14 +8,14 @@ import {
   Button,
   Typography,
   LinearProgress,
-  Grid,
-  Box
+  Grid
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import { format } from 'date-fns'
 import AmountDisplay from '../AmountDisplay'
 import { toast } from 'react-toastify'
+import { CwiExternalServices } from 'cwi-external-services'
 
 const useStyles = makeStyles(style, {
   name: 'SpendingAuthorizationList'
@@ -26,8 +26,36 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
   const [currentSpending, setCurrentSpending] = useState(0)
   const [authorizedAmount, setAuthorizedAmount] = useState(0)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [upgradeDialogOpen, setUpgradeDialogOpen] = useState(false)
   const [dialogLoading, setDialogLoading] = useState(false)
+  const [usdPerBsv, setUsdPerBSV] = useState(70)
   const classes = useStyles()
+  const services = new CwiExternalServices(CwiExternalServices.createDefaultOptions())
+
+  // Helper function (note consider moving to shared util)
+  const determineUpgradeAmount = (previousAmountInSats, returnType = 'sats') => {
+    let nextTierUsdAmount
+    const previousAmountInUsd = Math.round(previousAmountInSats * (usdPerBsv / 100000000))
+
+    // Upgrade to the next tier based on the current amount
+    if (previousAmountInUsd < 5) {
+      nextTierUsdAmount = 5
+    } else if (previousAmountInUsd < 10) {
+      nextTierUsdAmount = 10
+    } else if (previousAmountInUsd < 15) {
+      nextTierUsdAmount = 15
+    } else if (previousAmountInUsd < 20) {
+      nextTierUsdAmount = 20
+    } else {
+      nextTierUsdAmount = 30
+    }
+
+    // Return the next tier amount in the desired format (USD or sats)
+    if (returnType === 'sats') {
+      return Math.round(nextTierUsdAmount / (usdPerBsv / 100000000))
+    }
+    return nextTierUsdAmount
+  }
 
   const refreshAuthorizations = useCallback(async () => {
     const result = await window.CWI.getSpendingAuthorization({
@@ -36,6 +64,7 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
     if (!result || result.authorization === undefined) {
       onEmptyList()
     } else {
+      console.log(result)
       setAuthorization(result.authorization)
       setCurrentSpending(result.currentSpending)
       setAuthorizedAmount(result.authorizedAmount)
@@ -48,12 +77,11 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
   }
 
   const updateSpendingAuthorization = async authorization => {
-    // setAuthorization(authorization)
-    // setUpdateDialogOpen(true)
-    await window.CWI.updateSpendingAuthorization({ authorizationGrant: authorization, amount: 15000000 })
+    setAuthorization(authorization)
+    setUpgradeDialogOpen(true)
   }
 
-  const handleConfirm = async () => {
+  const handleConfirmRevoke = async () => {
     try {
       setDialogLoading(true)
       await window.CWI.revokeSpendingAuthorization({ authorizationGrant: authorization })
@@ -63,17 +91,36 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
       refreshAuthorizations()
     } catch (e) {
       refreshAuthorizations()
-      toast.error('Permission may not have been revoked: ' + e.message)
+      toast.error('Spending Authorization may not have been revoked: ' + e.message)
       setDialogOpen(false)
+      setDialogLoading(false)
+    }
+  }
+
+  const handleConfirmUpgradeLimit = async () => {
+    try {
+      setDialogLoading(true)
+      await window.CWI.updateSpendingAuthorization({ authorizationGrant: authorization, amount: determineUpgradeAmount(authorizedAmount) })
+      setUpgradeDialogOpen(false)
+      refreshAuthorizations()
+    } catch (e) {
+      refreshAuthorizations()
+      toast.error('Spending authorization limit may not have been increased: ' + e.message)
+      setUpgradeDialogOpen(false)
       setDialogLoading(false)
     }
   }
 
   const handleDialogClose = () => {
     setDialogOpen(false)
+    setUpgradeDialogOpen(false)
   }
 
   useEffect(() => {
+    (async () => {
+      const rate = await services.getBsvExchangeRate()
+      setUsdPerBSV(rate)
+    })()
     refreshAuthorizations()
   }, [refreshAuthorizations])
 
@@ -82,7 +129,7 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
       <Dialog
         open={dialogOpen}
       >
-        <DialogTitle>
+        <DialogTitle color={'textPrimary'}>
           Revoke Authorization?
         </DialogTitle>
         <DialogContent>
@@ -101,9 +148,37 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
           <Button
             color='primary'
             disabled={dialogLoading}
-            onClick={handleConfirm}
+            onClick={handleConfirmRevoke}
           >
             Revoke
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={upgradeDialogOpen}
+      >
+        <DialogTitle color={'textPrimary'}>
+          Increase Spending Authorization
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Increase the monthly spending limit to <AmountDisplay>{determineUpgradeAmount(authorizedAmount)}</AmountDisplay>/MO.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color='primary'
+            disabled={dialogLoading}
+            onClick={handleDialogClose}
+          >
+            Cancel
+          </Button>
+          <Button
+            color='primary'
+            disabled={dialogLoading}
+            onClick={handleConfirmUpgradeLimit}
+          >
+            Allow
           </Button>
         </DialogActions>
       </Dialog>
@@ -135,7 +210,7 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
             {Number.isInteger(Number(authorizedAmount)) && authorizedAmount > 0 && (
               <LinearProgress
                 variant='determinate'
-                value={parseInt((currentSpending / authorizedAmount) * 100)}
+                value={currentSpending > 0 ? Math.max(1, Math.min(100, parseInt((currentSpending / authorizedAmount) * 100))) : 0}
               />
             )}
           </Grid>
