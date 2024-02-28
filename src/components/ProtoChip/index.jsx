@@ -32,7 +32,6 @@ const ProtoChip = ({
   canRevoke = true,
   onCloseClick = () => { }
 }) => {
-  
   if (typeof protocolID !== 'string') {
     throw new Error('ProtoChip requires protocolID to be a string')
   }
@@ -80,8 +79,8 @@ const ProtoChip = ({
     })()
   }, [protocolID])
 
-  useEffect(()=>{
-    if(theme) {
+  useEffect(() => {
+    if (theme) {
       console.log(theme)
     }
   },[theme])
