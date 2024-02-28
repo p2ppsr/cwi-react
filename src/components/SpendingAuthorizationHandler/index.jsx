@@ -204,10 +204,9 @@ const SpendingAuthorizationHandler = () => {
           <Tooltip title='Always Allow This App'>
             <Fab
               variant='extended'
-              onClick={() => handleGrant({ singular: false, amount: 10000000 })} //
+              onClick={() => handleGrant({ singular: false, amount: 6250000 })}
             >
-              <Typography>{totalPastSpending}</Typography>
-              $5/MO
+              Allow up to $5/MO
             </Fab>
           </Tooltip>
           <Tooltip title='Allow Once'>
