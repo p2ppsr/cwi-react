@@ -8,7 +8,8 @@ import {
   Button,
   Typography,
   LinearProgress,
-  Grid
+  Grid,
+  Box
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
@@ -42,12 +43,10 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
       nextTierUsdAmount = 5
     } else if (previousAmountInUsd < 10) {
       nextTierUsdAmount = 10
-    } else if (previousAmountInUsd < 15) {
-      nextTierUsdAmount = 15
     } else if (previousAmountInUsd < 20) {
       nextTierUsdAmount = 20
     } else {
-      nextTierUsdAmount = 30
+      nextTierUsdAmount = 50
     }
 
     // Return the next tier amount in the desired format (USD or sats)
@@ -102,6 +101,7 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
       setDialogLoading(true)
       await window.CWI.updateSpendingAuthorization({ authorizationGrant: authorization, amount: determineUpgradeAmount(authorizedAmount) })
       setUpgradeDialogOpen(false)
+      setDialogLoading(false)
       refreshAuthorizations()
     } catch (e) {
       refreshAuthorizations()
@@ -114,6 +114,23 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
   const handleDialogClose = () => {
     setDialogOpen(false)
     setUpgradeDialogOpen(false)
+  }
+
+  const createSpendingAuthorization = async ({ limit = 5 }) => {
+    toast.promise(
+      (async () => {
+        await window.CWI.createSpendingAuthorization({ targetAppDomain: app, amount: Math.round(limit / (usdPerBsv / 100000000)), description: 'Create a spending limit' })
+        refreshAuthorizations()
+      })(),
+      {
+        pending: 'Creating spending limit...',
+        success: {
+          render: 'Limit set!',
+          autoClose: 2000
+        },
+        error: 'Failed to set spending limit! 🤯'
+      }
+    )
   }
 
   useEffect(() => {
@@ -158,11 +175,11 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
         open={upgradeDialogOpen}
       >
         <DialogTitle color={'textPrimary'}>
-          Increase Spending Authorization
+          Increase Spending Limit
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Increase the monthly spending limit to <AmountDisplay>{determineUpgradeAmount(authorizedAmount)}</AmountDisplay>/MO.
+            Increase the monthly spending limit to <AmountDisplay showFiatAsInteger>{determineUpgradeAmount(authorizedAmount)}</AmountDisplay>/mo.?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -171,14 +188,14 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
             disabled={dialogLoading}
             onClick={handleDialogClose}
           >
-            Cancel
+            No
           </Button>
           <Button
             color='primary'
             disabled={dialogLoading}
             onClick={handleConfirmUpgradeLimit}
           >
-            Allow
+            Yes
           </Button>
         </DialogActions>
       </Dialog>
@@ -190,7 +207,10 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
             <Grid item xs>
               <Typography variant='h2' className={classes.title} color='textPrimary'>Monthly Spending Limits</Typography>
               <Typography variant='body1' color='textSecondary'>
-                This app is allowed to spend up to <AmountDisplay>{authorizedAmount}</AmountDisplay> a month.
+                This app is allowed to spend up to:
+              </Typography>
+              <Typography variant='h1' color='textPrimary' style={{ paddingTop: '0.5em' }}>
+                <AmountDisplay showFiatAsInteger>{authorizedAmount}</AmountDisplay>/mo.
               </Typography>
             </Grid>
             <Grid item>
@@ -227,8 +247,23 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
         </Grid>
       }
       {!authorization &&
-        <div style={{ textAlign: 'center', paddingTop: '2em' }}>
-          <Typography>This app has no spending authorizations.</Typography>
+        <div style={{ textAlign: 'center', paddingTop: '3em' }}>
+          <Typography variant='body1'>This app must ask for permission before spending.</Typography>
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            flexDirection="column"
+          >
+            <Typography variant="h3" color='textPrimary' gutterBottom style={{ paddingTop: '1em' }}>
+              Choose Your Spending Limit
+            </Typography>
+            <Box>
+              <Button variant="contained" sx={{ margin: 1, textTransform: 'none' }} onClick={() => createSpendingAuthorization({ limit: 5 })}>$5/mo.</Button>
+              <Button variant="contained" sx={{ margin: 1, textTransform: 'none' }} onClick={() => createSpendingAuthorization({ limit: 10 })}>$10/mo.</Button>
+              <Button variant="contained" sx={{ margin: 1, textTransform: 'none' }} onClick={() => createSpendingAuthorization({ limit: 20 })}>$20/mo.</Button>
+            </Box>
+          </Box>
         </div>
 
       }

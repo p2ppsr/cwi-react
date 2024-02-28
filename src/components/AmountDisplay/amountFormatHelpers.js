@@ -93,7 +93,8 @@ export const formatSatoshisAsFiat = (
   format = null,
   settingsCurrency = 'SATS',
   eurPerUSD = 0.93,
-  gbpPerUSD = 0.79
+  gbpPerUSD = 0.79,
+  showFiatAsInteger = false
 ) => {
   if (settingsCurrency) {
     // See if requested currency matches a known fiat format, if not use 'USD'
@@ -109,14 +110,20 @@ export const formatSatoshisAsFiat = (
   if (isNaN(usd)) return '...'
 
   let minDigits = 2
+  let maxDigits
   const v = Math.abs(usd)
   if (v < 0.001) minDigits = 6
   else if (v < 0.01) minDigits = 5
   else if (v < 0.1) minDigits = 4
   else if (v < 1) minDigits = 3
 
+  if (showFiatAsInteger) {
+    minDigits = 0
+    maxDigits = 0
+  }
+
   if (!format || format.currency === 'USD') {
-    const usdFormat = new Intl.NumberFormat(locale, { currency: 'USD', style: 'currency', minimumFractionDigits: minDigits })
+    const usdFormat = new Intl.NumberFormat(locale, { currency: 'USD', style: 'currency', minimumFractionDigits: minDigits, maximumFractionDigits: maxDigits })
     return usdFormat.format(usd)
     // return (Math.abs(usd) >= 1) ? usdFormat.format(usd) : `${(usd * 100).toFixed(3)} ¢`
   } else if (format.currency === 'EUR') {

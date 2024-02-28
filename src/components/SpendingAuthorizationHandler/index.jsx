@@ -63,7 +63,7 @@ const SpendingAuthorizationHandler = () => {
     } else if (previousAmountInUsd <= 20) {
       usdAmount = 20
     } else {
-      usdAmount = 30
+      usdAmount = 50
     }
 
     if (returnType === 'sats') {
@@ -158,7 +158,7 @@ const SpendingAuthorizationHandler = () => {
     <CustomDialog
       open={open}
       // onClose={handleCancel}
-      title={!renewal ? 'Spending Authorization Request' : 'Spending Authorization Renewal'}
+      title={!renewal ? 'Spending Request' : 'Spending Check In'}
     >
       <DialogContent>
         <br />
@@ -176,7 +176,7 @@ const SpendingAuthorizationHandler = () => {
           would like to spend
         </Typography>
         <Typography variant='h3' align='center' paragraph color='textPrimary'>
-          <AmountDisplay>{transactionAmount}</AmountDisplay>
+          <AmountDisplay >{transactionAmount}</AmountDisplay>
         </Typography>
 
         <Typography align='center'>
@@ -229,17 +229,15 @@ const SpendingAuthorizationHandler = () => {
               variant='extended'
             >
               <Cancel className={classes.button_icon} />
-              Abort
+              Deny
             </Fab>
           </Tooltip>
-          <Tooltip title='Always Allow This App'>
-            <Fab
-              variant='extended'
-              onClick={() => handleGrant({ singular: false, amount: determineUpgradeAmount(amountPreviouslyAuthorized) })}
-            >
-              Allow up to <AmountDisplay>{determineUpgradeAmount(amountPreviouslyAuthorized)}</AmountDisplay>
-            </Fab>
-          </Tooltip>
+          <Fab
+            variant='extended'
+            onClick={() => handleGrant({ singular: false, amount: determineUpgradeAmount(amountPreviouslyAuthorized) })}
+          >
+            Allow up to &nbsp;<AmountDisplay showFiatAsInteger>{determineUpgradeAmount(amountPreviouslyAuthorized)}</AmountDisplay>
+          </Fab>
           <Tooltip title='Allow Once'>
             <Fab
               color='primary'
