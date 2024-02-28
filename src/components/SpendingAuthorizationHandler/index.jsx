@@ -43,8 +43,6 @@ const SpendingAuthorizationHandler = () => {
   const [open, setOpen] = useState(false)
   const [transactionAmount, setTransactionAmount] = useState(0)
   const [authorizationAmount, setAuthorizationAmount] = useState(10000)
-  const [alwaysAllowAmount, setAlwaysAllowAmount] = useState(100000)
-  const [showAuthorizeApp, setShowAuthorizeApp] = useState(false)
   const [totalPastSpending, setTotalPastSpending] = useState(0)
   const [amountPreviouslyAuthorized, setAmountPreviouslyAuthorized] = useState(0)
 
@@ -56,6 +54,7 @@ const SpendingAuthorizationHandler = () => {
     let usdAmount
     const previousAmountInUsd = previousAmountInSats * (usdPerBsv / 100000000)
 
+    // The supported spending limits are $5, $10, $20, $50
     if (previousAmountInUsd <= 5) {
       usdAmount = 5
     } else if (previousAmountInUsd <= 10) {
@@ -157,7 +156,6 @@ const SpendingAuthorizationHandler = () => {
   return (
     <CustomDialog
       open={open}
-      // onClose={handleCancel}
       title={!renewal ? 'Spending Request' : 'Spending Check In'}
     >
       <DialogContent>

@@ -116,6 +116,7 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
     setUpgradeDialogOpen(false)
   }
 
+  // Handle creating a new spending authorization
   const createSpendingAuthorization = async ({ limit = 5 }) => {
     toast.promise(
       (async () => {
