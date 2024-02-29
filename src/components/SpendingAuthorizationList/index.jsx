@@ -175,7 +175,7 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
         open={upgradeDialogOpen}
       >
         <DialogTitle color={'textPrimary'}>
-          Increase Spending Limit
+          Increase Spending Limit?
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
