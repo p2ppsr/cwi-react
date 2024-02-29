@@ -63,7 +63,6 @@ const SpendingAuthorizationList = ({ app, limit, onEmptyList = () => { } }) => {
     if (!result || result.authorization === undefined) {
       onEmptyList()
     } else {
-      console.log(result)
       setAuthorization(result.authorization)
       setCurrentSpending(result.currentSpending)
       setAuthorizedAmount(result.authorizedAmount)
