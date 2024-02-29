@@ -59,7 +59,7 @@ const CertificateAccess = ({ match }) => {
         setFields(JSON.parse(results[mostTrustedIndex].fields))
       }
     })()
-  })
+  }, [])
 
   const handleCopy = (data, type) => {
     navigator.clipboard.writeText(data)
