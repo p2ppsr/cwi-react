@@ -80,6 +80,12 @@ const ProtoChip = ({
     })()
   }, [protocolID])
 
+  useEffect(() => {
+    if (theme) {
+      console.log(theme)
+    }
+  },[theme])
+
   return (
     <div className={classes.chipContainer}>
       <Chip
@@ -138,7 +144,7 @@ const ProtoChip = ({
               >
                 <Avatar
                   sx={{
-                    backgroundColor: 'darkblue',
+                    backgroundColor: theme.palette.badgeIcon,
                     width: 20,
                     height: 20,
                     borderRadius: '10px',

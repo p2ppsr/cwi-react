@@ -40,11 +40,11 @@ const queries = {
 let ErrorBoundary = ({ children }) => children
 
 export default ({
-  onFocusRequested = () => { },
-  onFocusRelinquished = () => { },
+  onFocusRequested = () => {},
+  onFocusRelinquished = () => {},
   isFocused = () => false,
-  saveLocalSnapshot = () => { },
-  removeLocalSnapshot = () => { },
+  saveLocalSnapshot = () => {},
+  removeLocalSnapshot = () => {},
   appVersion = '1.0.0',
   appName = 'Generic Babbage Wrapper',
   env = 'prod',
@@ -53,7 +53,7 @@ export default ({
   portalDestination = document.body
 } = {}) => {
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       if (env !== 'dev') {
         Bugsnag.start({
           apiKey: 'ffe7920be5e154faf6124e012c533b39',
@@ -68,17 +68,18 @@ export default ({
 
   const returnValue = (
     <BreakpointProvider queries={queries}>
-      <UIContext.Provider value={{
-        onFocusRequested,
-        onFocusRelinquished,
-        isFocused,
-        saveLocalSnapshot,
-        removeLocalSnapshot,
-        appVersion,
-        appName,
-        env,
-        isPackaged
-      }}
+      <UIContext.Provider
+        value={{
+          onFocusRequested,
+          onFocusRelinquished,
+          isFocused,
+          saveLocalSnapshot,
+          removeLocalSnapshot,
+          appVersion,
+          appName,
+          env,
+          isPackaged
+        }}
       >
         <div>
           <ErrorBoundary>
@@ -97,15 +98,9 @@ export default ({
                       <CertificateAccessHandler />
                       <GroupPermissionHandler />
                       <PaymentHandler />
-                      <ToastContainer
-                        position='top-center'
-                      />
+                      <ToastContainer position='top-center' />
                       <Switch>
-                        <Route
-                          exact
-                          path='/'
-                          component={Greeter}
-                        />
+                        <Route exact path='/' component={Greeter} />
                         <Route
                           exact
                           path='/recovery/lost-phone'
@@ -116,19 +111,9 @@ export default ({
                           path='/recovery/lost-password'
                           component={LostPassword}
                         />
-                        <Route
-                          exact
-                          path='/recovery'
-                          component={Recovery}
-                        />
-                        <Route
-                          path='/dashboard'
-                          component={Dashboard}
-                        />
-                        <Route
-                          path='/welcome'
-                          component={Welcome}
-                        />
+                        <Route exact path='/recovery' component={Recovery} />
+                        <Route path='/dashboard' component={Dashboard} />
+                        <Route path='/welcome' component={Welcome} />
                       </Switch>
                     </Router>
                   </UserTheme>
