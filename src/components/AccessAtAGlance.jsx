@@ -1,8 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
 import { Typography, Button, LinearProgress, List, ListSubheader, Divider } from '@mui/material'
-//import ProtocolChip from './ProtocolChip'
-//import BasketChip from './BasketChip'
 import ProtocolPermissionList from './ProtocolPermissionList'
 import CertificateAccessList from './CertificateAccessList'
 import BasketAccessList from './BasketAccessList'
