@@ -82,9 +82,8 @@ const ProtoChip = ({
 
   useEffect(() => {
     if (theme) {
-      console.log(theme)
     }
-  },[theme])
+  }, [theme])
 
   return (
     <div className={classes.chipContainer}>

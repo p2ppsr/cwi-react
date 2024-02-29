@@ -123,7 +123,6 @@ const GroupPermissionHandler = () => {
         granted.certificateAccess.push(x)
       }
     }
-    console.log('granted', granted)
     window.CWI.grantGroupPermission({ requestID, granted })
     setOpen(false)
     if (!wasOriginallyFocused) {
@@ -182,7 +181,6 @@ const GroupPermissionHandler = () => {
                 .map(x => ({ ...x, enabled: true }))
               : []
           )
-          console.log('what?', groupPermissions)
           setOriginator(originator)
           setOpen(true)
           setWasOriginallyFocused(wasOriginallyFocused)
@@ -239,7 +237,7 @@ const GroupPermissionHandler = () => {
                 label={originator}
                 clickable={false}
               />
-                           </div>}
+            </div>}
           </div>
         </center>
         <br />
@@ -250,7 +248,7 @@ const GroupPermissionHandler = () => {
               control={<Checkbox
                 checked={spendingAuthorization.enabled}
                 onChange={() => setSpendingAuthorization(prev => ({ ...prev, enabled: !prev.enabled }))}
-                       />}
+              />}
               label={<span>Let the app spend <AmountDisplay abbreviate>{spendingAuthorization.amount}</AmountDisplay> over the next 2 months without asking.</span>}
             />
             <br />
@@ -282,7 +280,7 @@ const GroupPermissionHandler = () => {
               </div>
             </div>
           ))}
-                                                                  </>}
+        </>}
         {certificateAccess && certificateAccess.length > 0 && <>
           <Typography variant='h3'>Certificate Access</Typography>
           <Typography color='textSecondary' variant='caption'>
@@ -314,7 +312,7 @@ const GroupPermissionHandler = () => {
               </div>
             </div>
           ))}
-                                                              </>}
+        </>}
         {basketAccess && basketAccess.length > 0 && <>
           <Typography variant='h3'>Basket Access</Typography>
           <Typography color='textSecondary' variant='caption'>
@@ -338,7 +336,7 @@ const GroupPermissionHandler = () => {
               </div>
             </div>
           ))}
-                                                    </>}
+        </>}
       </DialogContent>
       <br />
       <DialogActions style={{

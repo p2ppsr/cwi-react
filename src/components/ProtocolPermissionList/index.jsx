@@ -243,7 +243,6 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
                   <ProtoChip
                     protocolID={permObject.permissions[0].permissionGrant.protocol}
-                    counterparty={permObject.permissions[0].permissionGrant.counterparty}
                     securityLevel={permObject.permissions[0].permissionGrant.securityLevel}
                     originator={permObject.permissions[0].permissionGrant.originator}
                     clickable
