@@ -53,7 +53,7 @@ const MetaNetApp = ({
         backgroundColor: 'transparent',
         backgroundImage: 'none',
         '&:hover': {
-          backgroundColor: theme.palette.mode === 'dark' ? 'black' : theme.palette.action.hover,
+          backgroundColor: theme.palette.background.appHover
         },
       }}
       onClick={handleClick}
