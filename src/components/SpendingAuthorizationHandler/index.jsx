@@ -155,7 +155,7 @@ const SpendingAuthorizationHandler = () => {
   return (
     <CustomDialog
       open={open}
-      title={!renewal ? 'Spending Request' : 'Spending Check In'}
+      title={!renewal ? 'Spending Request' : 'Spending Check-in'}
     >
       <DialogContent>
         <br />
