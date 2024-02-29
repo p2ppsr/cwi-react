@@ -18,7 +18,7 @@ const useStyles = makeStyles(style, { name: 'appaccess' })
 
 const AppAccess = ({ match, history }) => {
   const originator = decodeURIComponent(match.params.originator)
-  const [tabValue, setTabValue] = useState('0')
+  const [tabValue, setTabValue] = useState(history.appAccessTab?history.appAccessTab:'0')
   const [appDomain, setAppDomain] = useState('')
   const [appName, setAppName] = useState('')
   const [appIcon, setAppIcon] = useState('MetaNet AppMetaNet App')
@@ -75,6 +75,7 @@ const AppAccess = ({ match, history }) => {
         setLoading(false)
         setRefresh(false)
       }
+      history.appAccessTab = undefined
     })()
   }, [refresh, appDomain])
 
@@ -108,7 +109,10 @@ const AppAccess = ({ match, history }) => {
       <Tabs
         className={classes.tabs}
         value={tabValue}
-        onChange={(e, v) => { setTabValue(v) }}
+        onChange={(e, v) => { 
+          setTabValue(v)
+          history.appAccessTab = v
+        }}
         indicatorColor='primary'
         textColor='primary'
         variant='fullWidth'
