@@ -124,7 +124,6 @@ const SpendingAuthorizationHandler = () => {
           }
           const rate = await services.getBsvExchangeRate()
           setUsdPerBSV(rate)
-          console.log(amountPreviouslyAuthorized)
           const wasOriginallyFocused = await isFocused()
           setWasOriginallyFocused(wasOriginallyFocused)
           setRequestID(requestID)
