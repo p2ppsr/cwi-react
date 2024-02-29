@@ -48,14 +48,13 @@ const MetaNetApp = ({
         display: 'flex',
         flexDirection: 'column', // Stack items vertically
         height: '100%', // Fill the container height
-        background: theme.palette.background.app, // Enables a background color behind each app
         justifyContent: 'center',
         transition: 'background 0.3s ease',
-        '&:hover': clickable
-          ? {
-              background: theme.palette.action.hover
-            }
-          : ''
+        backgroundColor: 'transparent',
+        backgroundImage: 'none',
+        '&:hover': {
+          backgroundColor: theme.palette.mode === 'dark' ? 'black' : theme.palette.action.hover,
+        },
       }}
       onClick={handleClick}
     >
