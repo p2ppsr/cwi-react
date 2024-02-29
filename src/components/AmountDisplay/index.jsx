@@ -19,7 +19,7 @@ import { SettingsContext } from '../../context/SettingsContext.js'
  * Note: The component depends on the ExchangeRateContext for several pieces of data related to
  * currency preference, exchange rates, and formatting options.
  */
-const AmountDisplay = ({ abbreviate, showPlus, description, children }) => {
+const AmountDisplay = ({ abbreviate, showPlus, description, children, showFiatAsInteger }) => {
   // State variables for the amount in satoshis and the corresponding formatted strings
   const [satoshis, setSatoshis] = useState(NaN)
   const [formattedSatoshis, setFormattedSatoshis] = useState('...')
@@ -79,7 +79,7 @@ const AmountDisplay = ({ abbreviate, showPlus, description, children }) => {
   // When satoshis or the exchange rate context changes, update the formatted fiat amount
   useEffect(() => {
     if (!isNaN(satoshis) && satoshisPerUSD) {
-      const newFormattedFiat = formatSatoshisAsFiat(satoshis, satoshisPerUSD, fiatFormat, settingsCurrency, eurPerUSD, gbpPerUSD)
+      const newFormattedFiat = formatSatoshisAsFiat(satoshis, satoshisPerUSD, fiatFormat, settingsCurrency, eurPerUSD, gbpPerUSD, showFiatAsInteger)
       setFormattedFiatAmount(newFormattedFiat)
     } else {
       setFormattedFiatAmount('...')
@@ -93,24 +93,24 @@ const AmountDisplay = ({ abbreviate, showPlus, description, children }) => {
         <Tooltip disableInteractive title={<Typography color='inherit'>{formattedSatoshis}</Typography>} arrow>
           <span style={{ color }}>{formattedFiatAmount}</span>
         </Tooltip>
-        )
+      )
       : (
         <Tooltip disableInteractive title={<Typography color='inherit'>{formattedFiatAmount}</Typography>} arrow>
           <span style={{ color }}>{formattedSatoshis}</span>
         </Tooltip>
-        )
+      )
   } else {
     return isFiatPreferred
       ? (
         <Tooltip interactive title={<Typography onClick={toggleIsFiatPreferred} color='inherit'>{formattedSatoshis}</Typography>} arrow>
           <span style={{ color }} onClick={cycleFiatFormat}>{formattedFiatAmount}</span>
         </Tooltip>
-        )
+      )
       : (
         <Tooltip interactive title={<Typography onClick={toggleIsFiatPreferred} color='inherit'>{formattedFiatAmount}</Typography>} arrow>
           <span style={{ color }} onClick={cycleSatsFormat}>{formattedSatoshis}</span>
         </Tooltip>
-        )
+      )
   }
 }
 export default AmountDisplay
