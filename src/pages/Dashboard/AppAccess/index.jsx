@@ -75,7 +75,7 @@ const AppAccess = ({ match, history }) => {
         setLoading(false)
         setRefresh(false)
       }
-      history.tab = undefined
+      history.appAccessTab = undefined
     })()
   }, [refresh, appDomain])
 
