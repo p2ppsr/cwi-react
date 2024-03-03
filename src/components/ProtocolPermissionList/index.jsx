@@ -224,6 +224,7 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
                         <CounterpartyChip
                           counterparty={permission.counterparty}
                           size={1.1}
+                          backgroundColor='default'
                           expires={formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
                           onCloseClick={() => revokePermission(permission.permissionGrant)}
                           clickable
@@ -242,6 +243,7 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
               <div className={classes.appList}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '1em', alignItems: 'center' }}>
                   <ProtoChip
+                    backgroundColor='default'
                     protocolID={permObject.permissions[0].permissionGrant.protocol}
                     securityLevel={permObject.permissions[0].permissionGrant.securityLevel}
                     originator={permObject.permissions[0].permissionGrant.originator}
@@ -268,6 +270,7 @@ const ProtocolPermissionList = ({ app, limit, protocol, securityLevel, counterpa
                       <div className={classes.gridItem} key={idx}>
                         {!counterparty &&
                           <CounterpartyChip
+                            backgroundColor='default'
                             counterparty={permission.counterparty}
                             size={1.1}
                             expires={formatDistance(new Date(permission.permissionGrant.expiry * 1000), new Date(), { addSuffix: true })}
