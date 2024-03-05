@@ -3,6 +3,14 @@ import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '
 import { withStyles } from '@mui/styles'
 import { ExchangeRateContextProvider } from './AmountDisplay/ExchangeRateContextProvider'
 
+const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+if (prefersDarkScheme.matches) {
+  console.log('User prefers a dark theme');
+} else {
+  console.log('User prefers a light theme');
+}
+
 const baseTheme = createTheme(adaptV4Theme({
   spacing: 8,
   maxContentWidth: '1440px',
