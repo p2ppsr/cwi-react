@@ -102,12 +102,12 @@ const AmountDisplay = ({ abbreviate, showPlus, description, children, showFiatAs
   } else {
     return isFiatPreferred
       ? (
-        <Tooltip interactive title={<Typography onClick={toggleIsFiatPreferred} color='inherit'>{formattedSatoshis}</Typography>} arrow>
+        <Tooltip title={<Typography onClick={toggleIsFiatPreferred} color='inherit'>{formattedSatoshis}</Typography>} arrow>
           <span style={{ color }} onClick={cycleFiatFormat}>{formattedFiatAmount}</span>
         </Tooltip>
       )
       : (
-        <Tooltip interactive title={<Typography onClick={toggleIsFiatPreferred} color='inherit'>{formattedFiatAmount}</Typography>} arrow>
+        <Tooltip title={<Typography onClick={toggleIsFiatPreferred} color='inherit'>{formattedFiatAmount}</Typography>} arrow>
           <span style={{ color }} onClick={cycleSatsFormat}>{formattedSatoshis}</span>
         </Tooltip>
       )

@@ -86,6 +86,7 @@ const Settings = ({ history }) => {
         <Typography variant='body' color='textSecondary'>Select the default color theme</Typography>
         <br />
         <select style={{ margin: '1em 0 2em 0' }} id='theme' value={settings.theme} onChange={handleThemeChange}>
+          <option value='system'>System</option>
           <option value='light'>Light</option>
           <option value='dark'>Dark</option>
         </select>
