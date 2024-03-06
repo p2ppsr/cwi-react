@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { get, set, remove } from 'babbage-kvstore'
 import confederacyHost from '../utils/confederacyHost'
-import { encrypt, decrypt } from '@babbage/sdk'
+import { encrypt, decrypt } from '@babbage/sdk-ts'
 
 const SettingsContext = createContext()
 const PROTOCOL_ID = 'cwi settings'

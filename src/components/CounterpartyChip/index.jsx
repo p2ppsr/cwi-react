@@ -11,7 +11,7 @@ import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
 import YellowCautionIcon from '../../images/cautionIcon'
 import { SettingsContext } from '../../context/SettingsContext'
-import { discoverByIdentityKey } from '@babbage/sdk'
+import { discoverByIdentityKey } from '@babbage/sdk-ts'
 
 const useStyles = makeStyles(style, {
   name: 'CounterpartyChip'
