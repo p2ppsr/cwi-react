@@ -15,7 +15,7 @@
     "registry": "https://npm-registry.babbage.systems/"
   },
   "dependencies": {
-    "@babbage/sdk": "^0.4.47",
+    "@babbage/sdk-ts": "^0.2.7",
     "@bugsnag/js": "^7.17.4",
     "@bugsnag/plugin-react": "^7.17.4",
     "@emotion/react": "^11.10.4",
