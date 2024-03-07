@@ -1,8 +1,8 @@
 /* eslint-disable indent */
 /* eslint-disable react/prop-types */
 import React, { useState, useContext, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { Typography, Button, Slider, TextField, InputAdornment, Hidden, Snackbar } from '@mui/material'
+import { useLocation, Prompt } from 'react-router-dom'
+import { Typography, Button, Slider, TextField, InputAdornment, Hidden, LinearProgress, Snackbar } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style.js'
 import { DEFAULT_APP_ICON } from '../../../constants/popularApps'
@@ -17,6 +17,7 @@ import TrustedEntity from './TrustedEntity.jsx'
 import arraysOfObjectsAreEqual from '../../../utils/arraysOfObjectsAreEqual.js'
 import AddPopularSigniaCertifiersModal from './AddPopularSigniaCertifiersModal.jsx'
 import AddEntityModal from './AddEntityModal.jsx'
+import NavigationConfirmModal from './NavigationConfirmModal.jsx'
 
 const useStyles = makeStyles(style, {
   name: 'Trust'
@@ -54,6 +55,9 @@ const Trust = ({ history }) => {
   const [checkboxChecked, setCheckboxChecked] = useState(window.localStorage.getItem('showDialog') === 'false')
   const [settingsLoading, setSettingsLoading] = useState(false)
   const [certificates, setCertificates] = useState([])
+  const [settingsNeedsUpdate, setSettingsNeedsUpdate] = useState(true)
+  const [nextLocation, setNextLocation] = useState(null)
+  const [saveModalOpen, setSaveModalOpen] = useState(false)
   const classes = useStyles()
 
   const totalTrustPoints = trustedEntities.reduce((a, e) => a + e.trust, 0)
@@ -77,6 +81,26 @@ const Trust = ({ history }) => {
     }
   }, [totalTrustPoints])
 
+  useEffect(() => {
+    setSettingsNeedsUpdate((settings.trustThreshold !== trustThreshold) || (!arraysOfObjectsAreEqual(settings.trustedEntities, trustedEntities)))
+  }, [trustedEntities, totalTrustPoints, trustThreshold])
+
+  useEffect(() => {
+    const unblock = history.block((location, action) => {
+      // Block navigation when saving settings
+      if (settingsNeedsUpdate) {
+        setNextLocation(location)
+        setSaveModalOpen(true)
+        return false
+      }
+      return true
+    })
+
+    return () => {
+      unblock()
+    }
+  }, [settingsNeedsUpdate, history])
+
   const shownTrustedEntities = trustedEntities.filter(x => {
     if (!search) {
       return true
@@ -87,11 +111,32 @@ const Trust = ({ history }) => {
   const handleSave = async () => {
     try {
       setSettingsLoading(true)
-      await updateSettings(JSON.parse(JSON.stringify({
-        trustThreshold,
-        trustedEntities
-      })))
-      toast.success('Trust relationships updated')
+      // Show a toast progress bar if not using save modal
+      if (!saveModalOpen) {
+        toast.promise(
+          (async () => {
+            await updateSettings(JSON.parse(JSON.stringify({
+              trustThreshold,
+              trustedEntities
+            })))
+          })(),
+          {
+            pending: 'Saving settings...',
+            success: {
+              render: 'Trust relationships updated!',
+              autoClose: 2000
+            },
+            error: 'Failed to save settings! 🤯'
+          }
+        )
+      } else {
+        await updateSettings(JSON.parse(JSON.stringify({
+          trustThreshold,
+          trustedEntities
+        })))
+        toast.success('Trust relationships updated!')
+      }
+      setSettingsNeedsUpdate(false)
     } catch (e) {
       toast.error(e.message)
     } finally {
@@ -99,12 +144,32 @@ const Trust = ({ history }) => {
     }
   }
 
-  const settingsNeedsUpdate = (
-    (settings.trustThreshold !== trustThreshold) || (!arraysOfObjectsAreEqual(settings.trustedEntities, trustedEntities))
-  )
-
   return (
     <div className={classes.content_wrap}>
+      <NavigationConfirmModal
+        open={saveModalOpen}
+        onConfirm={async () => {
+          setSettingsNeedsUpdate(false)
+          await handleSave()
+          setSaveModalOpen(false)
+          history.push(nextLocation.pathname)
+        }}
+        onCancel={() => {
+          setSettingsNeedsUpdate(false)
+          // Make sure state updates complete first
+          setTimeout(() => {
+            history.push(nextLocation.pathname)
+          }, 100)
+        }}
+        loading={settingsLoading}
+      >
+        {settingsLoading
+          ? <div>
+            <Typography>Saving settings...</Typography>
+            <LinearProgress paddingTop='1em' />
+          </div>
+          : 'You have unsaved changes. Do you want to save them before leaving?'}
+      </NavigationConfirmModal>
       <Typography variant='h1' color='textPrimary' paddingBottom='0.5em'>Trust Relationships</Typography>
       <Typography variant='body' color='textSecondary'>
         People, businesses, and websites you interact with will need to be certified by these organizations to be trusted automatically by your computer. Otherwise, you'll be warned when you interact with them.
@@ -119,6 +184,10 @@ const Trust = ({ history }) => {
           <Slider min={1} max={totalTrustPoints} step={1} onChange={(e, v) => setTrustThreshold(v)} value={trustThreshold} />
         </div>
       </center>
+      <Prompt
+        when={settingsNeedsUpdate}
+        message="You have unsaved changes, are you sure you want to leave?"
+      />
       <div className={classes.master_grid}>
         <Hidden mdDown>
           <div>
