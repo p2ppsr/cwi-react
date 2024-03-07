@@ -1,4 +1,4 @@
-import isImageUrl from '../../../utils/isImageUrl'
+import isImageUrl from './isImageUrl'
 
 /**
  * Validates that a trust object of a domain follows the BRC-68 protocol

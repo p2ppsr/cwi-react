@@ -14,7 +14,7 @@ import { toast } from 'react-toastify'
 import UIContext from '../../../UIContext.js'
 
 import TrustedEntity from './TrustedEntity.jsx'
-import arraysOfObjectsAreEqual from './arraysOfObjectsAreEqual.js'
+import arraysOfObjectsAreEqual from '../../../utils/arraysOfObjectsAreEqual.js'
 import AddPopularSigniaCertifiersModal from './AddPopularSigniaCertifiersModal.jsx'
 import AddEntityModal from './AddEntityModal.jsx'
 

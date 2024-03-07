@@ -11,7 +11,7 @@ import PictureIcon from '@mui/icons-material/InsertPhoto'
 import PublicKeyIcon from '@mui/icons-material/Key'
 import CustomDialog from '../../../components/CustomDialog'
 import { toast } from 'react-toastify'
-import validateTrust from './validateTrust'
+import validateTrust from '../../../utils/validateTrust'
 
 const AddEntityModal = ({
   open, setOpen, trustedEntities, setTrustedEntities, classes
