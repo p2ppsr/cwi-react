@@ -53,6 +53,7 @@ const Trust = ({ history }) => {
   const [addEntityModalOpen, setAddEntityModalOpen] = useState(false)
   const [checkboxChecked, setCheckboxChecked] = useState(window.localStorage.getItem('showDialog') === 'false')
   const [settingsLoading, setSettingsLoading] = useState(false)
+  const [certificates, setCertificates] = useState([])
   const classes = useStyles()
 
   const totalTrustPoints = trustedEntities.reduce((a, e) => a + e.trust, 0)
@@ -63,6 +64,7 @@ const Trust = ({ history }) => {
     if (certs && certs.certificates && certs.certificates.length > 0) {
       window.localStorage.setItem('showDialog', 'false')
       setRegisterIdReminder(false)
+      setCertificates(certs.certificates)
     }
     if (window.localStorage.getItem('hasVisitedTrust') === 'false') {
       window.localStorage.setItem('showDialog', 'true')
@@ -193,44 +195,29 @@ const Trust = ({ history }) => {
         classes={classes}
       />
       <br />
-      <Hidden mdDown>
-        <center>
-          <div>
-            <Typography variant='h3' align='center' color='textPrimary' className={classes.oracle_open_title}>
+      <center>
+        <div style={{ paddingBottom: '3em' }}>
+          {certificates.length === 0
+            ? <Typography variant='h3' align='center' color='textPrimary' className={classes.oracle_open_title}>
               Please register your identity to start using the MetaNet Client.
             </Typography>
-            <br />
-            <Button
-              className={classes.oracle_button}
-              startIcon={<AddIdCertIcon />}
-              variant='outlined'
-              onClick={() => {
-                setAddPopularSigniaCertifiersModalOpen(true)
-              }}
-            >Register your identity
-            </Button>
-          </div>
-        </center>
-      </Hidden>
-      <Hidden mdUp>
-        <center>
-          <div>
-            <Typography variant='h3' align='center' color='textPrimary' className={classes.oracle_open_title}>
-              Please register your identity to start using the MetaNet Client.
+            : <Typography variant='h3' align='center' color='textPrimary' className={classes.oracle_open_title}>
+              Register with more Identity Certifiers on the MetaNet.
             </Typography>
-            <br />
-            <Button
-              className={classes.oracle_button}
-              startIcon={<AddIdCertIcon />}
-              variant='outlined'
-              onClick={() => {
-                setAddPopularSigniaCertifiersModalOpen(true)
-              }}
-            >Register your identity
-            </Button>
-          </div>
-        </center>
-      </Hidden>
+          }
+          <br />
+          <Button
+            className={classes.oracle_button}
+            startIcon={<AddIdCertIcon />}
+            variant='outlined'
+            onClick={() => {
+              setAddPopularSigniaCertifiersModalOpen(true)
+            }}
+          >
+            {certificates.length === 0 ? 'Register your identity' : 'Popular Certifiers'}
+          </Button>
+        </div>
+      </center>
       <Snackbar
         anchorOrigin={{
           vertical: 'bottom',

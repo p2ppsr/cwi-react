@@ -32,8 +32,6 @@ const AddPopularSigniaCertifiersModal = ({
 
   const checkForCertificates = async () => {
     const certs = await window.CWI.ninja.findCertificates()
-    console.log('certs checked', certs)
-
     const currentCertsCount = certs && certs.certificates ? certs.certificates.length : 0
 
     // Show success message only when new certificates are received after the first check
