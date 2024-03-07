@@ -59,18 +59,14 @@ const Trust = ({ history }) => {
   const { setRegisterIdReminder } = location.state
 
   useEffect(async () => {
-    // if (window.localStorage.getItem('hasVisitedTrust') === 'false') {
-    //   window.localStorage.setItem('showDialog', 'true')
-    // } else {
-    // const certs = await window.CWI.ninja.findCertificates()
-    // /* Conditions Checked */
-    // // 1. undefined
-    // // 2. {}; certs.certificates = []
-    // // 3. {}; certs.certificates = [0]
-    // console.log(certs)
-    // if (certs && certs.certificates && certs.certificates.length > 0) {
-    // }
-    // }
+    const certs = await window.CWI.ninja.findCertificates()
+    if (certs && certs.certificates && certs.certificates.length > 0) {
+      window.localStorage.setItem('showDialog', 'false')
+      setRegisterIdReminder(false)
+    }
+    if (window.localStorage.getItem('hasVisitedTrust') === 'false') {
+      window.localStorage.setItem('showDialog', 'true')
+    }
     if (window.localStorage.getItem('showDialog') === 'true') {
       setAddPopularSigniaCertifiersModalOpen(true)
     }
