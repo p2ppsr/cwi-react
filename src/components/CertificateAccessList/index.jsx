@@ -43,6 +43,7 @@ const CertificateAccessList = ({
   const [grants, setGrants] = useState([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentAccessGrant, setCurrentAccessGrant] = useState(null)
+  const [currentApp, setCurrentApp] = useState(null)
   const [dialogLoading, setDialogLoading] = useState(false)
   const classes = useStyles()
   const history = useHistory()
@@ -74,27 +75,40 @@ const CertificateAccessList = ({
     setDialogOpen(true)
   }
 
-  // TODO: test this!
+  // TODO: test this more exhaustively
   const revokeAllAccess = async (app) => {
-    setCurrentAccessGrant(app)
+    console.log(app)
+    setCurrentApp(app)
     setDialogOpen(true)
   }
 
+  // Handle revoke dialog confirmation
   const handleConfirm = async () => {
     try {
       setDialogLoading(true)
-      await window.CWI.revokeCertificateAccess({ grant: currentAccessGrant })
-      setGrants(oldAccessGrant =>
-        oldAccessGrant.filter(x =>
-          x.accessGrantID !== currentAccessGrant.accessGrantID
-        )
-      )
+      if (currentAccessGrant) {
+        await window.CWI.revokeProtocolPermission({ permission: currentAccessGrant })
+      } else {
+        if (!currentApp || !currentApp.permissions) {
+          const e = new Error('Unable to revoke permissions!')
+          throw e
+        }
+        for (const permission of currentApp.permissions) {
+          try {
+            await window.CWI.revokeProtocolPermission({ permission })
+          } catch (error) {
+            console.error(error)
+          }
+        }
+        setCurrentApp(null)
+      }
+
       setCurrentAccessGrant(null)
       setDialogOpen(false)
       setDialogLoading(false)
       refreshGrants()
     } catch (e) {
-      toast.error('Access may not have been revoked: ' + e.message)
+      toast.error('Certificate access grant may not have been revoked: ' + e.message)
       refreshGrants()
       setCurrentAccessGrant(null)
       setDialogOpen(false)
