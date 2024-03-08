@@ -109,7 +109,7 @@ const Apps = ({ history }) => {
         }
         // Try to parse the app manifest to find the app info
         const manifest = await parseAppManifest({ domain })
-        if (typeof manifest.name === 'string') {
+        if (manifest && typeof manifest.name === 'string') {
           appName = manifest.name
         }
       } catch (e) {
