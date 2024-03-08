@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React from 'react'
+import React, { useState } from 'react'
 import { Typography, Button, LinearProgress } from '@mui/material'
 import Transaction from './Transaction'
 
@@ -13,7 +13,8 @@ import Transaction from './Transaction'
  * @param {function} obj.setRefresh - setter for refresh state variable which determines if the UI should be rerendered
  * @returns
  */
-const RecentActions = ({ loading, appActions, displayLimit, setDisplayLimit, setRefresh }) => {
+const RecentActions = ({ loading, appActions, displayLimit, setDisplayLimit, setRefresh, allActionsShown = false }) => {
+  console.log('y', allActionsShown)
   return (
     <div style={{ paddingTop: '1em' }}>
       <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
@@ -42,13 +43,18 @@ const RecentActions = ({ loading, appActions, displayLimit, setDisplayLimit, set
       </Typography>}
       {loading && <LinearProgress paddingTop='1em' />}
       {appActions.transactions && appActions.transactions.length !== 0 && <center style={{ paddingTop: '1em' }}>
-        <Button onClick={() => {
-          // Note: Consider taking into account max number of txs available
-          setDisplayLimit(displayLimit + 10)
-          setRefresh(true)
-        }}
-        >View More Actions
-        </Button>
+        {allActionsShown
+          ? <></>
+          : <Button onClick={() => {
+            // Note: Consider taking into account max number of txs available
+            setDisplayLimit(displayLimit + 10)
+            setRefresh(true)
+          }}
+          >View More Actions
+          </Button>
+
+        }
+
       </center>}
     </div>
   )

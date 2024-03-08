@@ -24,12 +24,14 @@ const Apps = ({ history }) => {
   const [appActions, setAppActions] = useState({})
   const [loading, setLoading] = useState(false)
   const [refresh, setRefresh] = useState(false)
+  const [allActionsShown, setAllActionsShown] = useState(false)
   const recentActionParams = {
     loading,
     appActions,
     displayLimit,
     setDisplayLimit,
-    setRefresh
+    setRefresh,
+    allActionsShown
   }
   const classes = useStyles()
   const [copied, setCopied] = useState({ id: false, registryOperator: false })
@@ -65,7 +67,7 @@ const Apps = ({ history }) => {
 
         // Get a list of the 5 most recent actions from the app
         // Also request input and output amounts and descriptions from Ninja
-        const appActions = await window.CWI.ninja.getTransactions({
+        const results = await window.CWI.ninja.getTransactions({
           basket: 'todo tokens',
           limit: displayLimit,
           includeBasket: true,
@@ -76,7 +78,12 @@ const Apps = ({ history }) => {
           status: ['completed', 'unproven', 'sending']
         })
 
-        setAppActions(appActions)
+        // Change display message if we've exhausted all actions to display
+        if (results.totalTransactions <= results.transactions.length) {
+          setAllActionsShown(true)
+        }
+
+        setAppActions(results)
         setLoading(false)
         setRefresh(false)
       } catch (e) {
