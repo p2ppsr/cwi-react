@@ -63,13 +63,15 @@ const Trust = ({ history }) => {
   const totalTrustPoints = trustedEntities.reduce((a, e) => a + e.trust, 0)
   const { setRegisterIdReminder } = location.state
 
-  useEffect(async () => {
-    const certs = await window.CWI.ninja.findCertificates()
-    if (certs && certs.certificates && certs.certificates.length > 0) {
-      window.localStorage.setItem('showDialog', 'false')
-      setRegisterIdReminder(false)
-      setCertificates(certs.certificates)
-    }
+  useEffect(() => {
+    (async () => {
+      const certs = await window.CWI.ninja.findCertificates()
+      if (certs && certs.certificates && certs.certificates.length > 0) {
+        window.localStorage.setItem('showDialog', 'false')
+        setRegisterIdReminder(false)
+        setCertificates(certs.certificates)
+      }
+    })()
     if (window.localStorage.getItem('hasVisitedTrust') === 'false') {
       window.localStorage.setItem('showDialog', 'true')
     }

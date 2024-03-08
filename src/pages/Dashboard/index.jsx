@@ -106,14 +106,16 @@ const Dashboard = () => {
     }
   }, [menuOpen])
 
-  useEffect(async () => {
+  useEffect(() => {
     if (localStorage.getItem('hasVisitedTrust') === 'true') {
-      const certs = await window.CWI.ninja.findCertificates()
-      if (certs && certs.certificates && certs.certificates.length > 0) {
-        setRegisterIdReminder(false)
-      } else {
-        setRegisterIdReminder(true)
-      }
+      (async () => {
+        const certs = await window.CWI.ninja.findCertificates()
+        if (certs && certs.certificates && certs.certificates.length > 0) {
+          setRegisterIdReminder(false)
+        } else {
+          setRegisterIdReminder(true)
+        }
+      })()
     } else {
       localStorage.setItem('showDialog', 'true')
     }
