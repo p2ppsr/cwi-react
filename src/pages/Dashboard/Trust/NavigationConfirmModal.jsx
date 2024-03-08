@@ -20,8 +20,8 @@ const NavigationConfirmModal = ({ open, onConfirm, onCancel, children, loading }
           {children || 'You have unsaved changes. Do you want to save them before leaving?'}
         </DialogContentText>
       </DialogContent>
-      {!loading &&
-        <DialogActions>
+      {!loading
+        ? <DialogActions>
           <Button onClick={onCancel} color="primary">
             Don't Save
           </Button>
@@ -29,6 +29,9 @@ const NavigationConfirmModal = ({ open, onConfirm, onCancel, children, loading }
             Save
           </Button>
         </DialogActions>
+        : <Button onClick={onCancel} color="primary">
+          Cancel
+        </Button>
       }
 
     </Dialog>
