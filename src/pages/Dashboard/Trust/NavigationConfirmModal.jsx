@@ -30,7 +30,7 @@ const NavigationConfirmModal = ({ open, onConfirm, onCancel, children, loading }
           </Button>
         </DialogActions>
         : <Button onClick={onCancel} color="primary">
-          Cancel
+          Close
         </Button>
       }
 
