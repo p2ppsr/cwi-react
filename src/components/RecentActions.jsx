@@ -14,7 +14,6 @@ import Transaction from './Transaction'
  * @returns
  */
 const RecentActions = ({ loading, appActions, displayLimit, setDisplayLimit, setRefresh, allActionsShown = false }) => {
-  console.log('y', allActionsShown)
   return (
     <div style={{ paddingTop: '1em' }}>
       <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
