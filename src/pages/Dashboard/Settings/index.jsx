@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useBreakpoint } from '../../../utils/useBreakpoints.js'
 import {
-  Typography, Divider, LinearProgress, FormControlLabel, Checkbox
+  Typography, Divider, LinearProgress, FormControlLabel, Checkbox, FormControl, InputLabel, Select, MenuItem
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { toast } from 'react-toastify'
@@ -85,22 +85,39 @@ const Settings = ({ history }) => {
         {/* TODO: Move the theming settings into it's own component */}
         <Typography variant='body' color='textSecondary'>Select the default color theme</Typography>
         <br />
-        <select style={{ margin: '1em 0 2em 0' }} id='theme' value={settings.theme} onChange={handleThemeChange}>
-          <option value='system'>System</option>
-          <option value='light'>Light</option>
-          <option value='dark'>Dark</option>
-        </select>
+        <FormControl variant="outlined" style={{ margin: '1em 0 2em 0', width: '100%' }}>
+          <InputLabel id="theme-select-label">Theme</InputLabel>
+          <Select
+            labelId="theme-select-label"
+            id="theme"
+            value={settings.theme}
+            onChange={handleThemeChange}
+            label="Theme"
+          >
+            <MenuItem value="system">System</MenuItem>
+            <MenuItem value="light">Light</MenuItem>
+            <MenuItem value="dark">Dark</MenuItem>
+          </Select>
+        </FormControl>
         <br />
         <Typography variant='body' color='textSecondary'>Select the default currency</Typography>
         <br />
-        <select style={{ margin: '1em 0 2em 0' }} id='currency' value={settings.currency} onChange={handleCurrencyChange}>
-          <option value='USD'>$10</option>
-          <option value='BSV'>0.033</option>
-          <option value='SATS'>3,333,333</option>
-          <option value='EUR'>€9.15</option>
-          <option value='GBP'>£7.86</option>
-          <option value=''></option>
-        </select>
+        <FormControl variant="outlined" style={{ margin: '1em 0 2em 0', width: '100%' }}>
+          <InputLabel id="currency-select-label">Currency</InputLabel>
+          <Select
+            labelId="currency-select-label"
+            id="currency"
+            value={settings.currency}
+            onChange={handleCurrencyChange}
+            label="Currency"
+          >
+            <MenuItem value='USD'>$10</MenuItem>
+            <MenuItem value='BSV'>0.033</MenuItem>
+            <MenuItem value='SATS'>3,333,333</MenuItem>
+            <MenuItem value='EUR'>€9.15</MenuItem>
+            <MenuItem value='GBP'>£7.86</MenuItem>
+          </Select>
+        </FormControl>
         {settingsLoading ? <LinearProgress style={{ marginTop: '1em' }} /> : <></>}
       </div>
       <PasswordSettings history={history} />
@@ -123,7 +140,7 @@ const Settings = ({ history }) => {
           control={<Checkbox
             checked={autoLaunchEnabled}
             onChange={handleAutoLaunchChange}
-                   />}
+          />}
           label={<span>Auto-launch MetaNet Client when you log in</span>}
         />
         <br />
