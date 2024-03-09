@@ -50,7 +50,6 @@ const Dashboard = () => {
   const theme = useTheme()
   const history = useHistory()
   const { appName, appVersion } = useContext(UIContext)
-  const [hasCerts, setHasCerts] = useState(false)
   const [registerIdReminder, setRegisterIdReminder] = useState(false)
   const [pageLoading, setPageLoading] = useState(true)
 
@@ -107,18 +106,19 @@ const Dashboard = () => {
     }
   }, [menuOpen])
 
-  useEffect(async () => {
+  useEffect(() => {
     if (localStorage.getItem('hasVisitedTrust') === 'true') {
-      const certs = await window.CWI.ninja.findCertificates()
-      if (typeof certs === 'undefined') {
-        console.error('ERROR:window.CWI.ninja.findCertificates() are undefined')
-      } else {
-        setHasCerts(certs.certificates.length > 0)
-      }
+      (async () => {
+        const certs = await window.CWI.ninja.findCertificates()
+        if (certs && certs.certificates && certs.certificates.length > 0) {
+          setRegisterIdReminder(false)
+        } else {
+          setRegisterIdReminder(true)
+        }
+      })()
     } else {
       localStorage.setItem('showDialog', 'true')
     }
-    setRegisterIdReminder(localStorage.getItem('hasVisitedTrust') === 'true' && !hasCerts)
     const isLoggedIn = redirectIfLoggedOut(history)
     if (isLoggedIn) {
       setPageLoading(false)
@@ -268,6 +268,7 @@ const Dashboard = () => {
             component={Settings}
           />
           <Route
+            default
             path='/dashboard/apps'
             component={Apps}
           />

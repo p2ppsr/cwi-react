@@ -27,7 +27,7 @@ const UserTheme = ({ children }) => {
       leftMenuSelected: "#E0E0E0",
       scrollbarThumb: "#DCDCDC",
       app: "#FFFFFF1E",
-      appHover: "#FFFFFF",
+      appHover: "#FFFFFF66",
       withImage: {
         backgroundImage: `linear-gradient(to bottom, #FFFFFF, #FFFFFFce), url(${backgroundImage})`,
         backgroundSize: "cover",
