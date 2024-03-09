@@ -17,17 +17,14 @@ const baseTheme = createTheme(adaptV4Theme({
   typography: {
     h1: {
       fontWeight: 'bold',
-      fontSize: '2.5em',
-      color: '#424242'
+      fontSize: '2.5em'
     },
     h2: {
       fontWeight: 'bold',
-      fontSize: '1.7em',
-      color: '#1b1b1b'
+      fontSize: '1.7em'
     },
     h3: {
-      fontSize: '1.4em',
-      color: '#1b1b1b'
+      fontSize: '1.4em'
     },
     h4: {
       fontSize: '1.25em'
@@ -95,7 +92,7 @@ const extendedTheme = theme => ({
       alignItems: 'center',
       '&:hover $expiryHoverText': {
         visibility: 'visible',
-        opacity: 1,
+        opacity: 1
       },
       marginLeft: '0.4em'
     },
@@ -138,7 +135,7 @@ const extendedTheme = theme => ({
       fontSize: '0.9em',
       maxWidth: '10em',
       wordWrap: 'break-word',
-      whiteSpace: 'pre-line',
+      whiteSpace: 'pre-line'
     }
   }
 })
@@ -159,17 +156,14 @@ const Theme = withStyles({
   },
   '@global h1': {
     fontWeight: 'bold',
-    fontSize: '2.5em',
-    color: '#424242'
+    fontSize: '2.5em'
   },
   '@global h2': {
     fontWeight: 'bold',
-    fontSize: '1.7em',
-    color: '#1b1b1b'
+    fontSize: '1.7em'
   },
   '@global h3': {
-    fontSize: '1.4em',
-    color: '#1b1b1b'
+    fontSize: '1.4em'
   },
   '@global h4': {
     fontSize: '1.25em'

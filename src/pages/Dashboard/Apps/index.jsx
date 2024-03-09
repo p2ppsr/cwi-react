@@ -37,7 +37,17 @@ const Apps = ({ history }) => {
   const theme = useTheme()
   const breakpoints = useBreakpoint()
   const [apps, setApps] = useState([])
-  const [recentApps, setRecentApps] = useState([])
+  const loadRecentApps = () => {
+    try {
+      const storedApps = window.sessionStorage.getItem('recentApps')
+      return storedApps ? JSON.parse(storedApps) : []
+    } catch (error) {
+      return []
+    }
+  }
+
+  // Initialize recentApps with value from sessionStorage or fallback to empty array
+  const [recentApps, setRecentApps] = useState(loadRecentApps)
 
   const [filteredApps, setFilteredApps] = useState([])
   const [fuseInstance, setFuseInstance] = useState(null)
@@ -99,7 +109,7 @@ const Apps = ({ history }) => {
         }
         // Try to parse the app manifest to find the app info
         const manifest = await parseAppManifest({ domain })
-        if (typeof manifest.name === 'string') {
+        if (manifest && typeof manifest.name === 'string') {
           appName = manifest.name
         }
       } catch (e) {
@@ -115,6 +125,11 @@ const Apps = ({ history }) => {
     (async () => {
       // Obtain a list of all apps ordered alphabetically
       try {
+        // Show cached recent apps first
+        if (window.sessionStorage.getItem(recentApps)) {
+          setRecentApps(JSON.parse(window.sessionStorage.getItem('recentApps')))
+        }
+
         // Check if there is storage app data for this session
         let parsedAppData = JSON.parse(window.sessionStorage.getItem(storageKeyApps))
 
@@ -124,7 +139,7 @@ const Apps = ({ history }) => {
             setApps(parsedAppData)
             setFilteredApps(parsedAppData)
             setLoadingRecentApps(true)
-          } catch (e) {}
+          } catch (e) { }
         } else {
           setLoading(true)
         }
@@ -141,6 +156,9 @@ const Apps = ({ history }) => {
         const recentAppsFetched = await getApps({ sortBy: 'whenLastUsed', limit: 4 })
         const parsedRecentAppData = await resolveAppDataFromDomain({ appDomains: recentAppsFetched })
         setRecentApps(parsedRecentAppData)
+
+        // Temp local storage for to remove render delay
+        window.sessionStorage.setItem('recentApps', JSON.stringify(parsedRecentAppData))
 
         // Initialize fuse for filtering apps
         const fuse = new Fuse(parsedAppData, options)
@@ -205,7 +223,7 @@ const Apps = ({ history }) => {
                 ))}
               </Grid>
             </>
-            )
+          )
           : (
             <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
               Your Recent Apps
@@ -227,7 +245,7 @@ const Apps = ({ history }) => {
                 ))}
               </Grid>
             </>
-            )}
+          )}
         <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
           All Your Apps
         </Typography>
