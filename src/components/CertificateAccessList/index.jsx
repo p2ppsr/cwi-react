@@ -61,7 +61,6 @@ const CertificateAccessList = ({
       const results = sortPermissions(result)
       setGrants(results)
     } else {
-      // const results = sortPermissionsForProtocols(result)
       setGrants(result)
     }
 
@@ -75,9 +74,8 @@ const CertificateAccessList = ({
     setDialogOpen(true)
   }
 
-  // TODO: test this more exhaustively
+  // TODO: test this more exhaustively!
   const revokeAllAccess = async (app) => {
-    console.log(app)
     setCurrentApp(app)
     setDialogOpen(true)
   }
