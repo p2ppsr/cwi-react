@@ -119,23 +119,29 @@ const extendedTheme = theme => ({
       return base
     },
     chipLabel: {
-      maxWidth: '15em',
+      maxWidth: '40em',
       textOverflow: 'ellipsis',
       overflow: 'hidden',
-      whiteSpace: 'nowrap'
+      whiteSpace: 'nowrap',
+      textAlign: 'left'
     },
     chipLabelTitle: ({ size = 1 } = {}) => {
       return {
         fontSize: `${size}em`,
-        maxWidth: '10em',
-        whiteSpace: 'pre-line'
+        maxWidth: '49em',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap'
       }
     },
     chipLabelSubtitle: {
       fontSize: '0.9em',
-      maxWidth: '10em',
+      maxWidth: '49em',
       wordWrap: 'break-word',
-      whiteSpace: 'pre-line'
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textAlign: 'left'
     }
   }
 })
