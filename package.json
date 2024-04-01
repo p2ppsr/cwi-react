@@ -43,7 +43,7 @@
     "uhrp-react": "^0.2.13"
   },
   "peerDependencies": {
-    "@cwi/core": "^0.4.1",
+    "@cwi/core": "^0.4.18",
     "react": "^17.0.2",
     "react-dom": "^17.0.1"
   },
