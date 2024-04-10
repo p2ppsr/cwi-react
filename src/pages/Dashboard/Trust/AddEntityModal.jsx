@@ -118,7 +118,7 @@ const AddEntityModal = ({
 
   return (
     <CustomDialog
-      title='Add Trusted Entity'
+      title='Add Provider'
       open={open}
       onClose={() => setOpen(false)}
       minWidth='lg'
@@ -127,7 +127,7 @@ const AddEntityModal = ({
         <br />
         {!advanced &&
           <form onSubmit={handleDomainSubmit}>
-            <DialogContentText>Enter the domain name for the entity you'd like to trust.</DialogContentText>
+            <DialogContentText>Enter the domain name for the provider you'd like to add.</DialogContentText>
             <br />
             <center className={classes.add_trusted_main}>
               <TextField
@@ -162,17 +162,17 @@ const AddEntityModal = ({
                   type='submit'
                   disabled={loading}
                 >
-                  Get Trust Details
+                  Get Provider Details
                 </Button>}
             </center>
           </form>}
         {advanced && (
           <form onSubmit={handleDirectSubmit}>
-            <DialogContentText>Directly enter the details for the entity you'd like to trust.</DialogContentText>
+            <DialogContentText>Directly enter the details for the provider you'd like to add.</DialogContentText>
             <br />
             <TextField
               label='Entity Name'
-              placeholder='Trusted Entity'
+              placeholder='Identity Search Provider'
               value={name}
               onChange={e => {
                 setName(e.target.value)
@@ -290,7 +290,7 @@ const AddEntityModal = ({
           endIcon={<Shield />}
           onClick={handleTrust}
         >
-          Trust This Entity
+          Add Identity Search Provider
         </Button>
       </DialogActions>
     </CustomDialog>
