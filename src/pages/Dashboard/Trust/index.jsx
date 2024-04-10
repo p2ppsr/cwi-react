@@ -156,7 +156,7 @@ const Trust = ({ history }) => {
       </Typography>
       <Typography variant='h2' color='textPrimary' padding='0.5em 0em 0.5em 0em'>Threshold</Typography>
       <Typography paragraph variant='body' color='textSecondary'>
-        You’ve given out a total of <b>{totalTrustPoints} {totalTrustPoints === 1 ? 'point' : 'points'}</b>. How many points does someone need to show up in your apps?
+        You’ve given out a total of <b>{totalTrustPoints} {totalTrustPoints === 1 ? 'point' : 'points'}</b>. How many trust points does someone need to show up in your apps?
       </Typography>
       <center className={classes.trust_threshold}>
         <div className={classes.slider_label_grid}>
@@ -168,6 +168,10 @@ const Trust = ({ history }) => {
         when={settingsNeedsUpdate}
         message="You have unsaved changes, are you sure you want to leave?"
       />
+      <div>
+        <Typography variant='h2' color='textPrimary' padding='0em 0em 0.5em 0em'>Trusted Providers</Typography>
+        <Typography paragraph variant='body' color='textSecondary'>Give points to show which search providers you trust the most to confirm someone&apos;s identity. More points mean a higher priority.</Typography>
+      </div>
       <div className={classes.master_grid}>
         <Hidden mdDown>
           <div>
@@ -200,7 +204,7 @@ const Trust = ({ history }) => {
             )
           }}
           label='Search'
-          placeholder='Find providers...'
+          placeholder='Filter providers...'
           fullWidth
           sx={{
             '& .MuiInputLabel-root': {

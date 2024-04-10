@@ -1,10 +1,12 @@
 /* eslint-disable indent */
 /* eslint-disable react/prop-types */
 import React, { useState, useContext, useEffect } from 'react'
-import { Typography, Button, TextField, InputAdornment } from '@mui/material'
+import { Typography, Button, TextField, InputAdornment, IconButton } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style.js'
 import AddIdCertIcon from '../../../images/addIdCertIcon'
+import CheckIcon from '@mui/icons-material/Check'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import SearchIcon from '@mui/icons-material/Search'
 import UIContext from '../../../UIContext.js'
 import { decryptCertificateFields } from 'authrite-utils'
@@ -23,7 +25,16 @@ const Trust = ({ history }) => {
   const [certificates, setCertificates] = useState([])
   const [primaryIdentityKey, setPrimaryIdentityKey] = useState('...')
   const [privilegedIdentityKey, setPrivilegedIdentityKey] = useState('...')
+  const [copied, setCopied] = useState({ id: false })
   const classes = useStyles()
+
+  const handleCopy = (data, type) => {
+    navigator.clipboard.writeText(data)
+    setCopied({ ...copied, [type]: true })
+    setTimeout(() => {
+      setCopied({ ...copied, [type]: false })
+    }, 2000)
+  }
 
   useEffect(() => {
     (async () => {
@@ -76,10 +87,16 @@ const Trust = ({ history }) => {
     <div className={classes.content_wrap}>
       <Typography variant='h1' color='textPrimary' paddingBottom='0.5em'>{env === 'staging' ? 'Stageline' : 'My'} Identity</Typography>
       <Typography variant='body' color='textSecondary'>
-        <b>Everyday Identity Key:</b> {primaryIdentityKey} (copy icon)
+        <b>Everyday Identity Key:</b> {primaryIdentityKey}
+        <IconButton size='small' onClick={() => handleCopy(primaryIdentityKey, 'id')} disabled={copied.id}>
+          {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
+        </IconButton>
       </Typography>
       <Typography variant='body' color='textSecondary'>
-        <b>Secure Identity Key:</b> {privilegedIdentityKey} (copy icon)
+        <b>Secure Identity Key:</b> {privilegedIdentityKey}
+        <IconButton size='small' onClick={() => handleCopy(privilegedIdentityKey, 'id')} disabled={copied.id}>
+          {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
+        </IconButton>
       </Typography>
       <Typography variant='h2' color='textPrimary' padding='0.5em 0em 0.5em 0em'>Certificates</Typography>
       <Typography paragraph variant='body' color='textSecondary'>
