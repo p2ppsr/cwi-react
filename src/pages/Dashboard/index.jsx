@@ -5,15 +5,13 @@ import { Switch, Route, useHistory } from 'react-router-dom'
 import style from './style'
 import { makeStyles } from '@mui/styles'
 import {
-  VolunteerActivism as TrustIcon,
-  Timeline as TrendsIcon,
+  Search as SearchIcon,
   Apps as BrowseIcon,
   Settings as SettingsIcon,
   School as SchoolIcon,
-  LockPerson as AccessIcon,
-  Menu as MenuIcon
+  Menu as MenuIcon,
+  Badge as IdentityIcon
 } from '@mui/icons-material'
-import CircleIcon from '@mui/icons-material/Circle'
 import {
   List,
   ListItem,
@@ -25,6 +23,7 @@ import {
 } from '@mui/material'
 import AppAccess from './AppAccess/index.jsx'
 import Trust from './Trust/index.jsx'
+import MyIdentity from './MyIdentity/index.jsx'
 import Apps from './Apps'
 import App from './App/Index.jsx'
 import Settings from './Settings/index.jsx'
@@ -50,7 +49,6 @@ const Dashboard = () => {
   const theme = useTheme()
   const history = useHistory()
   const { appName, appVersion } = useContext(UIContext)
-  const [registerIdReminder, setRegisterIdReminder] = useState(false)
   const [pageLoading, setPageLoading] = useState(true)
 
   const [menuOpen, setMenuOpen] = useState(true)
@@ -107,18 +105,6 @@ const Dashboard = () => {
   }, [menuOpen])
 
   useEffect(() => {
-    if (localStorage.getItem('hasVisitedTrust') === 'true') {
-      (async () => {
-        const certs = await window.CWI.ninja.findCertificates()
-        if (certs && certs.certificates && certs.certificates.length > 0) {
-          setRegisterIdReminder(false)
-        } else {
-          setRegisterIdReminder(true)
-        }
-      })()
-    } else {
-      localStorage.setItem('showDialog', 'true')
-    }
     const isLoggedIn = redirectIfLoggedOut(history)
     if (isLoggedIn) {
       setPageLoading(false)
@@ -190,24 +176,31 @@ const Dashboard = () => {
             <ListItemButton
               onClick={() => {
                 navigation.push({
-                  pathname: '/dashboard/trust',
-                  state: {
-                    registerIdReminder,
-                    setRegisterIdReminder
-                  }
+                  pathname: '/dashboard/identity'
+                })
+              }}
+              selected={history.location.pathname === '/dashboard/identity'}
+            >
+              <ListItemIcon>
+                <IdentityIcon />
+              </ListItemIcon>
+              <ListItemText>
+                My Identity
+              </ListItemText>
+            </ListItemButton>
+            <ListItemButton
+              onClick={() => {
+                navigation.push({
+                  pathname: '/dashboard/trust'
                 })
               }}
               selected={history.location.pathname === '/dashboard/trust'}
             >
               <ListItemIcon>
-                <TrustIcon />
-                {registerIdReminder === true &&
-                  <CircleIcon
-                    style={{ marginLeft: '0.7em', width: '12px', color: 'red' }}
-                  />}
+                <SearchIcon />
               </ListItemIcon>
               <ListItemText>
-                Trust
+                Identity Search
               </ListItemText>
             </ListItemButton>
             <ListItem
@@ -271,6 +264,10 @@ const Dashboard = () => {
             default
             path='/dashboard/apps'
             component={Apps}
+          />
+          <Route
+            path='/dashboard/identity'
+            component={MyIdentity}
           />
           <Route
             path='/dashboard/trust'

@@ -51,7 +51,7 @@ const CertificateChip = ({
   )
   const [description, setDescription] = useState(`${certType.substr(0, 12)}...`)
   const [documentationURL, setDocumentationURL] = useState('unknown')
-  // const [fields, setFields] = useState({})
+  const [fields, setFields] = useState({})
 
   useEffect(() => {
     (async () => {
@@ -77,6 +77,7 @@ const CertificateChip = ({
           setIconURL(results[mostTrustedIndex].iconURL)
           setDescription(results[mostTrustedIndex].description)
           setDocumentationURL(results[mostTrustedIndex].documentationURL)
+          setFields(JSON.parse(results[mostTrustedIndex].fields))
         }
       } catch (error) {
         console.error(error)
@@ -106,6 +107,18 @@ const CertificateChip = ({
                       style={{ margin: '0.4em 0.25em' }}
                       key={j}
                       label={y}
+                    />
+                  ))}
+                </div>
+                : ''}
+              {typeof fieldsToDisplay === 'object' && Object.values(fieldsToDisplay).length > 0
+                ? <div style={theme.templates.boxOfChips}>
+                  <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>fields:</p>
+                  {Object.entries(fieldsToDisplay).map(([k, v], j) => (
+                    <Chip
+                      style={{ margin: '0.4em 0.25em' }}
+                      key={j}
+                      label={`${fields[k] || k}: ${v}`}
                     />
                   ))}
                 </div>
