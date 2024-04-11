@@ -15,7 +15,7 @@ const AddPopularSigniaCertifiersModal = ({
   const popularCertifiers = [
     {
       URL: env === 'prod' ? 'https://identicert.me' : 'https://staging.identicert.me',
-      name: 'IdentiCert'
+      name: 'IdentiCert (Government ID)'
     },
     {
       URL: env === 'prod' ? 'https://socialcert.net' : 'https://staging.socialcert.net',
@@ -105,23 +105,10 @@ const AddPopularSigniaCertifiersModal = ({
         <br />
       </DialogContent>
       <DialogActions style={{ paddingLeft: '1.5em', justifyContent: 'space-between', paddingRight: '1em' }}>
-        <FormControlLabel
-          label="Don't remind me again"
-          control={
-            <Checkbox
-              checked={checkboxChecked}
-              onChange={(e) => {
-                setCheckboxChecked(e.target.checked)
-              }}
-            />
-          }
-        />
         <Button
           onClick={async () => {
             setOpen(false)
             await checkForCertificates()
-            window.localStorage.setItem('showDialog', !checkboxChecked)
-            window.localStorage.setItem('hasVisitedTrust', 'true')
           }}
         >
           {showSuccessMessage ? 'Done' : 'Later'}
