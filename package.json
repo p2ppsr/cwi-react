@@ -23,7 +23,7 @@
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.14.5",
     "@mui/styles": "^5.10.3",
-    "authrite-utils": "^0.3.17",
+    "authrite-utils": "^0.3.20",
     "babbage-kvstore": "^1.2.21",
     "babbage-protomap": "^0.1.21",
     "babbage-signia": "^0.2.24",
@@ -33,7 +33,7 @@
     "cwi-external-services": "^0.4.25",
     "date-fns": "^2.29.2",
     "fuse.js": "^6.6.2",
-    "nanostore-publisher": "^0.2.20",
+    "nanostore-publisher": "^0.2.21",
     "react-country-region-selector": "^3.6.1",
     "react-image-crop": "^8.6.9",
     "react-phone-number-input": "^3.3.4",
@@ -41,7 +41,7 @@
     "react-router-dom": "^5.2.0",
     "react-toastify": "^9.0.8",
     "react-visibility-sensor": "^5.1.1",
-    "uhrp-react": "^0.2.22"
+    "uhrp-react": "^0.2.23"
   },
   "peerDependencies": {
     "@cwi/core": "^0.4.18",
