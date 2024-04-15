@@ -99,6 +99,7 @@ const Apps = ({ history }) => {
           }
           result.inputs = mergedInputs
           result.outputs = mergedOutputs
+          result.fees = defaultNetAmount - result.amount
         }
 
         setAppActions(results)

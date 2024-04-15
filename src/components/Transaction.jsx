@@ -32,6 +32,7 @@ const useStyles = makeStyles({
  * @param {string} props.amount - amount of this transaction formatted with + or - depending on debit / credit
  * @param {object} props.inputs - the inputs to this transaction
  * @param {object} props.outputs - the outputs to this transaction
+ * @param {object} props.fees - the sum of transaction fee and commission fee
  * @param {string} props.timestamp - transaction date formatted in standard ISO 8601 datetime format
  * @param {function} [props.onClick] - callback function to call when this component is clicked
  * @param {boolean} [props.isExpanded] - allows a parent page to override the expanded property of the accordion display the transaction details
@@ -43,6 +44,7 @@ const Transaction = ({
   amount,
   inputs,
   outputs,
+  fees,
   timestamp,
   onClick,
   isExpanded
@@ -229,6 +231,12 @@ const Transaction = ({
                 </div>
               ))}
             </Grid>
+          </div>
+          {(fees) ? <Typography variant='h6'>Fees</Typography> : <></>}
+          <div style={{ marginLeft: '0.5em' }}>
+            <Typography variant='body2'>
+              <AmountDisplay description={'Transaction and commission fees'}>{fees}</AmountDisplay>
+            </Typography>
           </div>
         </div>
       </AccordionDetails>
