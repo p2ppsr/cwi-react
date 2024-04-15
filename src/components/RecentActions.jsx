@@ -20,12 +20,24 @@ const RecentActions = ({ loading, appActions, displayLimit, setDisplayLimit, set
         Recent Actions
       </Typography>
       {appActions.transactions && appActions.transactions.map((action, index) => {
+        const mergedInputs = (action.inputs || []).filter(i => i.basket !== 'default')
+        const mergedOutputs = (action.outputs || []).filter(o => o.basket !== 'default')
+        const defaultInputs = (action.inputs || []).filter(i => i.basket === 'default')
+        const defaultOutputs = (action.outputs || []).filter(o => o.basket === 'default')
+        let defaultNetAmount = 0
+        for (const input of defaultInputs) defaultNetAmount += input.amount
+        for (const output of defaultOutputs) defaultNetAmount += output.amount
+        if (defaultNetAmount < 0) {
+          mergedInputs.push({ ...mergedInputs[0], amount: defaultNetAmount })
+        } else if (defaultNetAmount > 0) {
+          mergedOutputs.push({ ...mergedOutputs[0], amount: defaultNetAmount })
+        }
         const actionToDisplay = {
           txid: action.txid,
           description: action.note,
           amount: `${action.amount}`,
-          inputs: action.inputs,
-          outputs: action.outputs,
+          inputs: mergedInputs,
+          outputs: mergedOutputs,
           timestamp: action.created_at
         }
         return (
