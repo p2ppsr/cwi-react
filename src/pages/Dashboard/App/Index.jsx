@@ -83,6 +83,9 @@ const Apps = ({ history }) => {
           setAllActionsShown(true)
         }
 
+        /*
+        Code to merge default inputs and outputs should look something like this:
+
         for (const result of results) {
           const mergedInputs = (result.inputs || []).filter(i => i.basket !== 'default')
           const mergedOutputs = (result.outputs || []).filter(o => o.basket !== 'default')
@@ -99,6 +102,7 @@ const Apps = ({ history }) => {
           result.inputs = mergedInputs
           result.outputs = mergedOutputs
         }
+        */
 
         setAppActions(results)
         setLoading(false)
