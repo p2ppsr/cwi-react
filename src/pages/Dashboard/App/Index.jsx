@@ -83,20 +83,22 @@ const Apps = ({ history }) => {
           setAllActionsShown(true)
         }
 
-        const mergedInputs = (results.inputs || []).filter(i => i.basket !== 'default')
-        const mergedOutputs = (results.outputs || []).filter(o => o.basket !== 'default')
-        const defaultInputs = (results.inputs || []).filter(i => i.basket === 'default')
-        const defaultOutputs = (results.outputs || []).filter(o => o.basket === 'default')
-        let defaultNetAmount = 0
-        for (const input of defaultInputs) defaultNetAmount += input.amount
-        for (const output of defaultOutputs) defaultNetAmount += output.amount
-        if (defaultNetAmount < 0) {
-          mergedInputs.push({ ...mergedInputs[0], amount: defaultNetAmount })
-        } else if (defaultNetAmount > 0) {
-          mergedOutputs.push({ ...mergedOutputs[0], amount: defaultNetAmount })
+        for (const result of results) {
+          const mergedInputs = (result.inputs || []).filter(i => i.basket !== 'default')
+          const mergedOutputs = (result.outputs || []).filter(o => o.basket !== 'default')
+          const defaultInputs = (result.inputs || []).filter(i => i.basket === 'default')
+          const defaultOutputs = (result.outputs || []).filter(o => o.basket === 'default')
+          let defaultNetAmount = 0
+          for (const input of defaultInputs) defaultNetAmount += input.amount
+          for (const output of defaultOutputs) defaultNetAmount += output.amount
+          if (defaultNetAmount < 0) {
+            mergedInputs.push({ ...mergedInputs[0], amount: defaultNetAmount })
+          } else if (defaultNetAmount > 0) {
+            mergedOutputs.push({ ...mergedOutputs[0], amount: defaultNetAmount })
+          }
+          result.inputs = mergedInputs
+          result.outputs = mergedOutputs
         }
-        results.inputs = mergedInputs
-        results.outputs = mergedOutputs
 
         setAppActions(results)
         setLoading(false)
