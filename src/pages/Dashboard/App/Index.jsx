@@ -84,7 +84,7 @@ const Apps = ({ history }) => {
         }
 
         // merge default inputs and outputs
-        for (const result of results) {
+        for (const result of results.transactions) {
           const mergedInputs = (result.inputs || []).filter(i => i.basket !== 'default')
           const mergedOutputs = (result.outputs || []).filter(o => o.basket !== 'default')
           const defaultInputs = (result.inputs || []).filter(i => i.basket === 'default')
