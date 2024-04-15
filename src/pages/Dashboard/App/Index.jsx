@@ -90,10 +90,10 @@ const Apps = ({ history }) => {
           const defaultInputs = (result.inputs || []).filter(i => i.basket === 'default')
           const defaultOutputs = (result.outputs || []).filter(o => o.basket === 'default')
           let defaultNetAmount = 0
-          for (const input of defaultInputs) defaultNetAmount += input.amount
+          for (const input of defaultInputs) defaultNetAmount += -input.amount
           for (const output of defaultOutputs) defaultNetAmount += output.amount
           if (defaultNetAmount < 0) {
-            mergedInputs.push({ ...defaultInputs[0], amount: defaultNetAmount })
+            mergedInputs.push({ ...defaultInputs[0], amount: -defaultNetAmount })
           } else if (defaultNetAmount > 0) {
             mergedOutputs.push({ ...defaultOutputs[0], amount: defaultNetAmount })
           }
