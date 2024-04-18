@@ -49,7 +49,7 @@ const ProtocolAccess = () => {
                 </IconButton>
               </Typography>
             </div>
-            }
+          }
           icon={iconURL}
           showButton={false}
         />
@@ -68,7 +68,7 @@ const ProtocolAccess = () => {
         <Typography variant='h5' fontWeight='bold' gutterBottom>
           Learn More
         </Typography>
-        <Typography variant='body'>You can learn more about how to manipulate and use the items in this basket from the following URL:</Typography>
+        <Typography variant='body'>You can learn more about how to interact with this protocol from the following URL:</Typography>
         <br />
         <Link color='textPrimary' href={documentationURL} target='_blank' rel='noopener noreferrer'>{documentationURL}</Link>
       </Grid>
