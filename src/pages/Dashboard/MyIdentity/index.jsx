@@ -7,11 +7,11 @@ import style from './style.js'
 import AddIdCertIcon from '../../../images/addIdCertIcon'
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import SearchIcon from '@mui/icons-material/Search'
 import UIContext from '../../../UIContext.js'
 import { decryptCertificateFields } from 'authrite-utils'
 import CertificateChip from '../../../components/CertificateChip/index.jsx'
 import AddPopularSigniaCertifiersModal from './AddPopularSigniaCertifiersModal.jsx'
+import EyeCon from '@mui/icons-material/Visibility'
 
 const useStyles = makeStyles(style, {
   name: 'MyIdentity'
@@ -63,16 +63,17 @@ const Trust = ({ history }) => {
     (async () => {
       setPrimaryIdentityKey(await window.CWI.getPublicKey({ identityKey: true }))
     })();
-    (async () => {
-      try {
-        setPrivilegedIdentityKey(await window.CWI.getPublicKey({
-          identityKey: true,
-          privileged: true,
-          reason: 'Reveal your secure identity key alongside your everyday one.'
-        }))
-      } catch (e) { }
-    })()
   }, [])
+
+  const handleRevealSecureKey = async () => {
+    try {
+      setPrivilegedIdentityKey(await window.CWI.getPublicKey({
+        identityKey: true,
+        privileged: true,
+        reason: 'Reveal your secure identity key alongside your everyday one.'
+      }))
+    } catch (e) { }
+  }
 
   const shownCertificates = certificates.filter(x => {
     if (!search) {
@@ -93,10 +94,10 @@ const Trust = ({ history }) => {
         </IconButton>
       </Typography>
       <Typography variant='body' color='textSecondary'>
-        <b>Secure Identity Key:</b> {privilegedIdentityKey}
-        <IconButton size='small' onClick={() => handleCopy(privilegedIdentityKey, 'id')} disabled={copied.id}>
+        <b>Secure Identity Key:</b> {privilegedIdentityKey === '...' ? <IconButton onClick={handleRevealSecureKey}><EyeCon /></IconButton> : privilegedIdentityKey}
+        {privilegedIdentityKey !== '...' && <IconButton size='small' onClick={() => handleCopy(privilegedIdentityKey, 'id')} disabled={copied.id}>
           {copied.id ? <CheckIcon /> : <ContentCopyIcon fontSize='small' />}
-        </IconButton>
+        </IconButton>}
       </Typography>
       <Typography variant='h2' color='textPrimary' padding='0.5em 0em 0.5em 0em'>Certificates</Typography>
       <Typography paragraph variant='body' color='textSecondary'>
