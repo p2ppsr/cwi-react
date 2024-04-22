@@ -1,18 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import {
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Typography,
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper
-} from '@mui/material'
+import { DialogContent, DialogContentText, DialogActions, Button } from '@mui/material'
 import boomerang from 'boomerang-http'
 import CustomDialog from '../CustomDialog/index.jsx'
 import UIContext from '../../UIContext'
@@ -26,30 +13,43 @@ const CertificateAccessHandler = () => {
     isFocused
   } = useContext(UIContext)
   const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false)
-  const [description, setDescription] = useState('')
-  const [originator, setOriginator] = useState('')
-  const [certificateType, setType] = useState('')
-  const [fields, setFields] = useState([])
-  const [verifierPublicKey, setVerifier] = useState('')
-  const [appName, setAppName] = useState(null)
-  const [renewal, setRenewal] = useState(false)
-  const [requestID, setRequestID] = useState(null)
   const [open, setOpen] = useState(false)
+  const [perms, setPerms] = useState([
+    // originator
+    // requestID
+    // certificateType
+    // fields
+    // verifierPublicKey
+    // description
+    // renewal
+  ])
 
-  const handleCancel = async () => {
-    window.CWI.denyCertificateAccess({ requestID })
-    setOpen(false)
-    if (!wasOriginallyFocused) {
-      await onFocusRelinquished()
-    }
+  const handleCancel = () => {
+    window.CWI.denyCertificateAccess({ requestID: perms[0].requestID })
+    setPerms(p => {
+      p.shift()
+      if (p.length === 0) {
+        setOpen(false)
+        if (!wasOriginallyFocused) {
+          onFocusRelinquished()
+        }
+      }
+      return [...p]
+    })
   }
 
-  const handleGrant = async () => {
-    window.CWI.grantCertificateAccess({ requestID })
-    setOpen(false)
-    if (!wasOriginallyFocused) {
-      await onFocusRelinquished()
-    }
+  const handleGrant = () => {
+    window.CWI.grantCertificateAccess({ requestID: perms[0].requestID })
+    setPerms(p => {
+      p.shift()
+      if (p.length === 0) {
+        setOpen(false)
+        if (!wasOriginallyFocused) {
+          onFocusRelinquished()
+        }
+      }
+      return [...p]
+    })
   }
 
   useEffect(() => {
@@ -66,34 +66,26 @@ const CertificateAccessHandler = () => {
           requestID,
           description
         }) => {
-          try {
-            const result = await boomerang(
-              'GET',
-              `${originator.startsWith('localhost:') ? 'http' : 'https'}://${originator}/manifest.json`
-            )
-            if (typeof result === 'object') {
-              if (result.name && result.name.length < 64) {
-                setAppName(result.name)
-              } else if (result.short_name && result.short_name.length < 64) {
-                setAppName(result.short_name)
-              }
-            }
-          } catch (e) {
-            setAppName(originator)
-          }
-          const wasOriginallyFocused = await isFocused()
-          setRequestID(requestID)
-          setOriginator(originator)
-          setType(certificateType)
-          setFields(fields)
-          setVerifier(verifierPublicKey)
-          setDescription(description)
-          setRenewal(renewal)
           setOpen(true)
-          setWasOriginallyFocused(wasOriginallyFocused)
+          const wasOriginallyFocused = await isFocused()
           if (!wasOriginallyFocused) {
             await onFocusRequested()
           }
+          if (perms.length === 0) {
+            setWasOriginallyFocused(wasOriginallyFocused)
+          }
+          setPerms(p => {
+            p.push({
+              originator,
+              verifierPublicKey,
+              certificateType,
+              fields,
+              renewal,
+              requestID,
+              description
+            })
+            return [...p]
+          })
         }
       )
     })()
@@ -104,11 +96,15 @@ const CertificateAccessHandler = () => {
     }
   }, [])
 
+  if (typeof perms[0] === 'undefined') {
+    return null
+  }
+
   return (
     <CustomDialog
       open={open}
       // onClose={handleCancel}
-      title={!renewal
+      title={!perms[0].renewal
         ? 'Certificate Access Request'
         : 'Certificate Access Renewal'
       }
@@ -126,32 +122,32 @@ const CertificateAccessHandler = () => {
         <br />
         <center>
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
-          <span>app:</span>
-            {originator && <div>
+            <span>app:</span>
+            {perms[0].originator && <div>
               <AppChip
                 size={2.5}
                 showDomain
-                label={originator}
+                label={perms[0].originator}
                 clickable={false}
               />
             </div>}
           </div>
           <br />
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
-          <span>certificate:</span>
+            <span>certificate:</span>
             <div>
               <CertificateChip
-                certType={certificateType}
-                fieldsToDisplay={fields}
-                verifier={verifierPublicKey}
+                certType={perms[0].certificateType}
+                fieldsToDisplay={perms[0].fields}
+                verifier={perms[0].verifierPublicKey}
               />
             </div>
           </div>
           <br />
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', gridGap: '2em', margin: '0px 1.5em' }}>
-          <span>reason:</span>
+            <span>reason:</span>
             <DialogContentText>
-              {description}
+              {perms[0].description}
             </DialogContentText>
           </div>
         </center>

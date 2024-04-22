@@ -1,19 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
-import {
-  DialogContent, DialogContentText, Typography, DialogActions, Button
-} from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
-import style from './style'
-import boomerang from 'boomerang-http'
+import { DialogContent, DialogContentText, DialogActions, Button } from '@mui/material'
 import CustomDialog from '../CustomDialog/index.jsx'
 import UIContext from '../../UIContext'
 import AppChip from '../AppChip'
-import CounterpartyChip from '../CounterpartyChip'
 import ProtoChip from '../ProtoChip'
-
-const useStyles = makeStyles(style, {
-  name: 'ProtocolPermissionHandler'
-})
 
 const ProtocolPermissionHandler = () => {
   const {
@@ -22,31 +12,44 @@ const ProtocolPermissionHandler = () => {
     isFocused
   } = useContext(UIContext)
   const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false)
-  const classes = useStyles()
-  const [description, setDescription] = useState('')
-  const [originator, setOriginator] = useState('')
-  const [protocolID, setProtocolID] = useState('')
-  const [counterparty, setCounterparty] = useState('')
-  const [protocolSecurityLevel, setProtocolSecurityLevel] = useState('')
-  const [appName, setAppName] = useState(null)
-  const [renewal, setRenewal] = useState(false)
-  const [requestID, setRequestID] = useState(null)
   const [open, setOpen] = useState(false)
 
-  const handleCancel = async () => {
-    window.CWI.denyProtocolPermission({ requestID })
-    setOpen(false)
-    if (!wasOriginallyFocused) {
-      await onFocusRelinquished()
-    }
+  const [perms, setPerms] = useState([
+    // requestID
+    // originator
+    // protocolID
+    // protocolSecurityLevel
+    // counterparty
+    // description
+    // renewal
+  ])
+
+  const handleCancel = () => {
+    window.CWI.denyProtocolPermission({ requestID: perms[0].requestID })
+    setPerms(p => {
+      p.shift()
+      if (p.length === 0) {
+        setOpen(false)
+        if (!wasOriginallyFocused) {
+          onFocusRelinquished()
+        }
+      }
+      return [...p]
+    })
   }
 
-  const handleGrant = async () => {
-    window.CWI.grantProtocolPermission({ requestID })
-    setOpen(false)
-    if (!wasOriginallyFocused) {
-      await onFocusRelinquished()
-    }
+  const handleGrant = () => {
+    window.CWI.grantProtocolPermission({ requestID: perms[0].requestID })
+    setPerms(p => {
+      p.shift()
+      if (p.length === 0) {
+        setOpen(false)
+        if (!wasOriginallyFocused) {
+          onFocusRelinquished()
+        }
+      }
+      return [...p]
+    })
   }
 
   useEffect(() => {
@@ -63,34 +66,26 @@ const ProtocolPermissionHandler = () => {
           description,
           renewal
         }) => {
-          try {
-            const result = await boomerang(
-              'GET',
-              `${originator.startsWith('localhost:') ? 'http' : 'https'}://${originator}/manifest.json`
-            )
-            if (typeof result === 'object') {
-              if (result.name && result.name.length < 64) {
-                setAppName(result.name)
-              } else if (result.short_name && result.short_name.length < 64) {
-                setAppName(result.short_name)
-              }
-            }
-          } catch (e) {
-            setAppName(originator)
-          }
-          const wasOriginallyFocused = await isFocused()
-          setRequestID(requestID)
-          setProtocolSecurityLevel(protocolSecurityLevel)
-          setCounterparty(counterparty)
-          setProtocolID(protocolID)
-          setOriginator(originator)
-          setDescription(description)
-          setRenewal(renewal)
           setOpen(true)
-          setWasOriginallyFocused(wasOriginallyFocused)
+          const wasOriginallyFocused = await isFocused()
           if (!wasOriginallyFocused) {
             await onFocusRequested()
           }
+          if (perms.length === 0) {
+            setWasOriginallyFocused(wasOriginallyFocused)
+          }
+          setPerms(p => {
+            p.push({
+              requestID,
+              protocolSecurityLevel,
+              protocolID,
+              counterparty,
+              originator,
+              description,
+              renewal
+            })
+            return [...p]
+          })
         }
       )
     })()
@@ -101,11 +96,15 @@ const ProtocolPermissionHandler = () => {
     }
   }, [])
 
+  if (typeof perms[0] === 'undefined') {
+    return null
+  }
+
   return (
     <CustomDialog
       open={open}
       // onClose={handleCancel}
-      title={protocolID === 'identity resolution' ? 'Trusted Entities Access Request' : (!renewal ? 'Protocol Access Request' : 'Protocol Access Renewal')}
+      title={perms[0].protocolID === 'identity resolution' ? 'Trusted Entities Access Request' : (!perms[0].renewal ? 'Protocol Access Request' : 'Protocol Access Renewal')}
     >
       <DialogContent style={{
         textAlign: 'center',
@@ -116,29 +115,29 @@ const ProtocolPermissionHandler = () => {
 
         <DialogContentText>
           <br />
-          {protocolID === 'identity resolution' ? 'An app is requesting access to lookup identity information using the entities you trust.' : 'An app is requesting to talk in a specific language (protocol) using your information.'}
+          {perms[0].protocolID === 'identity resolution' ? 'An app is requesting access to lookup identity information using the entities you trust.' : 'An app is requesting to talk in a specific language (protocol) using your information.'}
         </DialogContentText>
         <br />
         <center>
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
             <span>app:</span>
-            {originator && <div>
+            {perms[0].originator && <div>
               <AppChip
                 size={2.5}
                 showDomain
-                label={originator}
+                label={perms[0].originator}
                 clickable={false}
               />
-                           </div>}
+            </div>}
           </div>
           <br />
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
             <span>protocol:</span>
             <div>
               <ProtoChip
-                securityLevel={protocolSecurityLevel}
-                protocolID={protocolID}
-                counterparty={counterparty}
+                securityLevel={perms[0].protocolSecurityLevel}
+                protocolID={perms[0].protocolID}
+                counterparty={perms[0].counterparty}
               />
             </div>
           </div>
@@ -146,7 +145,7 @@ const ProtocolPermissionHandler = () => {
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', gridGap: '2em', margin: '0px 1.5em' }}>
             <span>reason:</span>
             <DialogContentText>
-              {description}
+              {perms[0].description}
             </DialogContentText>
           </div>
         </center>

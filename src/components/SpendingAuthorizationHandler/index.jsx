@@ -16,12 +16,12 @@ import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import AmountDisplay from '../AmountDisplay'
 import { Send, Cancel } from '@mui/icons-material'
-import boomerang from 'boomerang-http'
 import CustomDialog from '../CustomDialog/index.jsx'
 import UIContext from '../../UIContext'
 import AppChip from '../AppChip'
 import { CwiExternalServices } from 'cwi-external-services'
 
+const services = new CwiExternalServices(CwiExternalServices.createDefaultOptions())
 const useStyles = makeStyles(style, {
   name: 'SpendingAuthorizationHandler'
 })
@@ -32,22 +32,18 @@ const SpendingAuthorizationHandler = () => {
     onFocusRelinquished,
     isFocused
   } = useContext(UIContext)
-  const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false)
-  const classes = useStyles()
-  const [description, setDescription] = useState('')
-  const [originator, setOriginator] = useState('')
-  const [lineItems, setLineItems] = useState([])
-  const [appName, setAppName] = useState(null)
-  const [renewal, setRenewal] = useState(false)
-  const [requestID, setRequestID] = useState(null)
-  const [open, setOpen] = useState(false)
-  const [transactionAmount, setTransactionAmount] = useState(0)
-  const [authorizationAmount, setAuthorizationAmount] = useState(10000)
-  const [totalPastSpending, setTotalPastSpending] = useState(0)
-  const [amountPreviouslyAuthorized, setAmountPreviouslyAuthorized] = useState(0)
-
   const [usdPerBsv, setUsdPerBSV] = useState(70)
-  const services = new CwiExternalServices(CwiExternalServices.createDefaultOptions())
+  const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [perms, setPerms] = useState([
+    // originator
+    // requestID
+    // lineItems
+    // renewal
+    // transactionAmount
+    // amountPreviouslyAuthorized
+  ])
+  const classes = useStyles()
 
   // Helper function to figure out the upgrade amount (note: consider moving to utils)
   const determineUpgradeAmount = (previousAmountInSats, returnType = 'sats') => {
@@ -71,24 +67,36 @@ const SpendingAuthorizationHandler = () => {
     return usdAmount
   }
 
-  const handleCancel = async () => {
-    window.CWI.denySpendingAuthorization({ requestID })
-    setOpen(false)
-    if (!wasOriginallyFocused) {
-      await onFocusRelinquished()
-    }
+  const handleCancel = () => {
+    window.CWI.denySpendingAuthorization({ requestID: perms[0].requestID })
+    setPerms(p => {
+      p.shift()
+      if (p.length === 0) {
+        setOpen(false)
+        if (!wasOriginallyFocused) {
+          onFocusRelinquished()
+        }
+      }
+      return [...p]
+    })
   }
 
   const handleGrant = async ({ singular = true, amount }) => {
     window.CWI.grantSpendingAuthorization({
-      requestID,
+      requestID: perms[0].requestID,
       singular,
       amount
     })
-    setOpen(false)
-    if (!wasOriginallyFocused) {
-      await onFocusRelinquished()
-    }
+    setPerms(p => {
+      p.shift()
+      if (p.length === 0) {
+        setOpen(false)
+        if (!wasOriginallyFocused) {
+          onFocusRelinquished()
+        }
+      }
+      return [...p]
+    })
   }
 
   useEffect(() => {
@@ -107,41 +115,30 @@ const SpendingAuthorizationHandler = () => {
           renewal,
           lineItems
         }) => {
-          try {
-            const result = await boomerang(
-              'GET',
-              `${originator.startsWith('localhost:') ? 'http' : 'https'}://${originator}/manifest.json`
-            )
-            if (typeof result === 'object') {
-              if (result.name && result.name.length < 64) {
-                setAppName(result.name)
-              } else if (result.short_name && result.short_name.length < 64) {
-                setAppName(result.short_name)
-              }
-            }
-          } catch (e) {
-            setAppName(originator)
-          }
-          const rate = await services.getBsvExchangeRate()
-          setUsdPerBSV(rate)
-          const wasOriginallyFocused = await isFocused()
-          setWasOriginallyFocused(wasOriginallyFocused)
-          setRequestID(requestID)
-          setOriginator(originator)
-          setLineItems(lineItems)
-          setDescription(description)
-          setRenewal(renewal)
-          setTransactionAmount(transactionAmount)
-          setTotalPastSpending(totalPastSpending)
-          if (amountPreviouslyAuthorized) {
-            setAmountPreviouslyAuthorized(amountPreviouslyAuthorized)
-          }
-          // setAlwaysAllowAmount()
-          setAuthorizationAmount(authorizationAmount)
           setOpen(true)
+          const wasOriginallyFocused = await isFocused()
           if (!wasOriginallyFocused) {
             await onFocusRequested()
           }
+          if (perms.length === 0) {
+            setWasOriginallyFocused(wasOriginallyFocused)
+          }
+          setPerms(p => {
+            p.push({
+              requestID,
+              originator,
+              description,
+              transactionAmount,
+              totalPastSpending,
+              amountPreviouslyAuthorized,
+              authorizationAmount,
+              renewal,
+              lineItems
+            })
+            return [...p]
+          })
+          const rate = await services.getBsvExchangeRate()
+          setUsdPerBSV(rate)
         }
       )
     })()
@@ -152,17 +149,21 @@ const SpendingAuthorizationHandler = () => {
     }
   }, [])
 
+  if (typeof perms[0] === 'undefined') {
+    return null
+  }
+
   return (
     <CustomDialog
       open={open}
-      title={!renewal ? 'Spending Request' : 'Spending Check-in'}
+      title={!perms[0].renewal ? 'Spending Request' : 'Spending Check-in'}
     >
       <DialogContent>
         <br />
         <center>
           <AppChip
             size={2.5}
-            label={originator}
+            label={perms[0].originator}
             clickable={false}
             showDomain
           />
@@ -173,7 +174,7 @@ const SpendingAuthorizationHandler = () => {
           would like to spend
         </Typography>
         <Typography variant='h3' align='center' paragraph color='textPrimary'>
-          <AmountDisplay >{transactionAmount}</AmountDisplay>
+          <AmountDisplay >{perms[0].transactionAmount}</AmountDisplay>
         </Typography>
 
         <Typography align='center'>
@@ -194,7 +195,7 @@ const SpendingAuthorizationHandler = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {lineItems.map((row) => (
+                {perms[0].lineItems.map((row) => (
                   <TableRow
                     key={row.description}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -211,7 +212,7 @@ const SpendingAuthorizationHandler = () => {
                   <TableCell component='th' scope='row'>
                     <b>Total</b>
                   </TableCell>
-                  <TableCell align='right'><AmountDisplay showPlus abbreviate>{transactionAmount * -1}</AmountDisplay></TableCell>
+                  <TableCell align='right'><AmountDisplay showPlus abbreviate>{perms[0].transactionAmount * -1}</AmountDisplay></TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -231,9 +232,9 @@ const SpendingAuthorizationHandler = () => {
           </Tooltip>
           <Fab
             variant='extended'
-            onClick={() => handleGrant({ singular: false, amount: determineUpgradeAmount(amountPreviouslyAuthorized) })}
+            onClick={() => handleGrant({ singular: false, amount: determineUpgradeAmount(perms[0].amountPreviouslyAuthorized) })}
           >
-            Allow up to &nbsp;<AmountDisplay showFiatAsInteger>{determineUpgradeAmount(amountPreviouslyAuthorized)}</AmountDisplay>
+            Allow up to &nbsp;<AmountDisplay showFiatAsInteger>{determineUpgradeAmount(perms[0].amountPreviouslyAuthorized)}</AmountDisplay>
           </Fab>
           <Tooltip title='Allow Once'>
             <Fab

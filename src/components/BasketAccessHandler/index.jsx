@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import {
-  DialogContent, DialogContentText, DialogActions, Button
-} from '@mui/material'
-import boomerang from 'boomerang-http'
+import { DialogContent, DialogContentText, DialogActions, Button } from '@mui/material'
 import CustomDialog from '../CustomDialog/index.jsx'
 import UIContext from '../../UIContext'
 import AppChip from '../AppChip'
@@ -15,28 +12,41 @@ const BasketAccessHandler = () => {
     isFocused
   } = useContext(UIContext)
   const [wasOriginallyFocused, setWasOriginallyFocused] = useState(false)
-  const [description, setDescription] = useState('')
-  const [originator, setOriginator] = useState('')
-  const [basket, setBasket] = useState('')
-  const [appName, setAppName] = useState(null)
-  const [renewal, setRenewal] = useState(false)
-  const [requestID, setRequestID] = useState(null)
   const [open, setOpen] = useState(false)
+  const [perms, setPerms] = useState([
+    // originator
+    // requestID
+    // basket
+    // description
+    // renewal
+  ])
 
-  const handleCancel = async () => {
-    window.CWI.denyBasketAccess({ requestID })
-    setOpen(false)
-    if (!wasOriginallyFocused) {
-      await onFocusRelinquished()
-    }
+  const handleCancel = () => {
+    window.CWI.denyBasketAccess({ requestID: perms[0].requestID })
+    setPerms(p => {
+      p.shift()
+      if (p.length === 0) {
+        setOpen(false)
+        if (!wasOriginallyFocused) {
+          onFocusRelinquished()
+        }
+      }
+      return [...p]
+    })
   }
 
-  const handleGrant = async () => {
-    window.CWI.grantBasketAccess({ requestID })
-    setOpen(false)
-    if (!wasOriginallyFocused) {
-      await onFocusRelinquished()
-    }
+  const handleGrant = () => {
+    window.CWI.grantBasketAccess({ requestID: perms[0].requestID })
+    setPerms(p => {
+      p.shift()
+      if (p.length === 0) {
+        setOpen(false)
+        if (!wasOriginallyFocused) {
+          onFocusRelinquished()
+        }
+      }
+      return [...p]
+    })
   }
 
   useEffect(() => {
@@ -51,32 +61,24 @@ const BasketAccessHandler = () => {
           description,
           renewal
         }) => {
-          try {
-            const result = await boomerang(
-              'GET',
-              `${originator.startsWith('localhost:') ? 'http' : 'https'}://${originator}/manifest.json`
-            )
-            if (typeof result === 'object') {
-              if (result.name && result.name.length < 64) {
-                setAppName(result.name)
-              } else if (result.short_name && result.short_name.length < 64) {
-                setAppName(result.short_name)
-              }
-            }
-          } catch (e) {
-            setAppName(originator)
-          }
-          const wasOriginallyFocused = await isFocused()
-          setRequestID(requestID)
-          setBasket(basket)
-          setOriginator(originator)
-          setDescription(description)
-          setRenewal(renewal)
           setOpen(true)
-          setWasOriginallyFocused(wasOriginallyFocused)
+          const wasOriginallyFocused = await isFocused()
           if (!wasOriginallyFocused) {
             await onFocusRequested()
           }
+          if (perms.length === 0) {
+            setWasOriginallyFocused(wasOriginallyFocused)
+          }
+          setPerms(p => {
+            p.push({
+              requestID,
+              basket,
+              originator,
+              description,
+              renewal
+            })
+            return [...p]
+          })
         }
       )
     })()
@@ -87,11 +89,15 @@ const BasketAccessHandler = () => {
     }
   }, [])
 
+  if (typeof perms[0] === 'undefined') {
+    return null
+  }
+
   return (
     <CustomDialog
       open={open}
       // onClose={handleCancel}
-      title={!renewal ? 'Basket Access Request' : 'Basket Access Renewal'}
+      title={!perms[0].renewal ? 'Basket Access Request' : 'Basket Access Renewal'}
     >
       <DialogContent style={{
         textAlign: 'center',
@@ -107,21 +113,21 @@ const BasketAccessHandler = () => {
         <center>
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
             <span>app:</span>
-            {originator && <div>
+            {perms[0].originator && <div>
               <AppChip
                 size={2.5}
                 showDomain
-                label={originator}
+                label={perms[0].originator}
                 clickable={false}
               />
-                           </div>}
+            </div>}
           </div>
           <br />
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', width: 'min-content', gridGap: '2em' }}>
             <span>basket:</span>
             <div>
               <BasketChip
-                basketId={basket}
+                basketId={perms[0].basket}
               />
             </div>
           </div>
@@ -129,7 +135,7 @@ const BasketAccessHandler = () => {
           <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridGap: '0.2em', alignItems: 'center', gridGap: '2em', margin: '0px 1.5em' }}>
             <span>reason:</span>
             <DialogContentText>
-              {description}
+              {perms[0].description}
             </DialogContentText>
           </div>
         </center>
