@@ -9,7 +9,6 @@ import parseAppManifest from '../../../utils/parseAppManifest'
 import isImageUrl from '../../../utils/isImageUrl'
 import Fuse from 'fuse.js'
 import POPULAR_APPS from '../../../constants/popularApps'
-import Monkey from '../../../images/cautionIcon'
 
 const getApps = async ({ sortBy = 'label', limit }) => {
   const results = await window.CWI.ninja.getTransactionLabels({
@@ -79,7 +78,6 @@ const Apps = ({ history }) => {
       setFilteredApps(apps)
       return
     }
-
     // Search for a matching app by name
     if (fuseInstance) {
       const results = fuseInstance.search(value).map(match => match.item)
@@ -153,7 +151,7 @@ const Apps = ({ history }) => {
         setLoadingRecentApps(true)
 
         // Always fetch recent apps to keep it updated
-        const recentAppsFetched = await getApps({ sortBy: 'whenLastUsed', limit: 4 })
+        const recentAppsFetched = await getApps({ limit: 4 })
         const parsedRecentAppData = await resolveAppDataFromDomain({ appDomains: recentAppsFetched })
         setRecentApps(parsedRecentAppData)
 
@@ -201,66 +199,36 @@ const Apps = ({ history }) => {
         />
       </Container>
 
-      {(search === '') && <>
-        {(!loadingRecentApps && recentApps.length < 4)
-          ? (
-            <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
-              Popular Apps
-            </Typography>
-              <Grid container spacing={2} className={classes.apps_view}>
-                {POPULAR_APPS.map((app, index) => (
-                  <Grid
-                    item
-                    xs={6} sm={6} md={3} lg={3}
-                    key={index} className={classes.gridItem}
-                  >
-                    <MetaNetApp
-                      appName={app.appName}
-                      iconImageUrl={app.appIconImageUrl}
-                      domain={app.domain}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            </>
-          )
-          : (
-            <><Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
-              Your Recent Apps
-            </Typography>
-              <Grid container spacing={2} className={classes.apps_view}>
-                {recentApps.map((app, index) => (
-                  <Grid
-                    item
-                    xs={6} sm={6} md={3} lg={3}
-                    key={index}
-                    className={classes.gridItem}
-                  >
-                    <MetaNetApp
-                      appName={app.appName}
-                      iconImageUrl={app.appIconImageUrl}
-                      domain={app.domain}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            </>
-          )}
+      {(search === '' && !loadingRecentApps && recentApps.length > 3) && <>
         <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
-          All Your Apps
+          Your Recent Apps
         </Typography>
+        <Grid container spacing={2} className={classes.apps_view}>
+          {recentApps.map((app, index) => (
+            <Grid
+              item
+              xs={6} sm={6} md={3} lg={3}
+              key={index}
+              className={classes.gridItem}
+            >
+              <MetaNetApp
+                appName={app.appName}
+                iconImageUrl={app.appIconImageUrl}
+                domain={app.domain}
+              />
+            </Grid>
+          ))}
+        </Grid>
       </>}
+      <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
+        All Your Apps
+      </Typography>
 
       {loading ? <LinearProgress style={{ marginTop: '1em' }} /> : <></>}
       {(filteredApps.length === 0 && !loading) &&
         <center>
           <br />
-          <Typography variant='h2' align='center' color='textSecondary' paddingTop='2em'>No apps found!</Typography>
-          {/* <img
-                  src=''
-                  paddingTop='1em'
-                /> */}
-          <Monkey />
+          <Typography variant='h4' align='center' color='textSecondary' paddingTop='2em'>No apps found!</Typography>
         </center>}
       <Grid container spacing={2} alignItems='center' justifyContent='left' className={classes.apps_view}>
         {filteredApps.map((app, index) => (
@@ -273,6 +241,27 @@ const Apps = ({ history }) => {
           </Grid>
         ))}
       </Grid>
+      {(search === '') && <>
+        <Typography variant='h3' color='textPrimary' gutterBottom style={{ paddingBottom: '0.2em' }}>
+          Popular Apps
+        </Typography>
+        <Grid container spacing={2} className={classes.apps_view}>
+          {POPULAR_APPS.map((app, index) => (
+            <Grid
+              item
+              xs={6} sm={6} md={3} lg={3}
+              key={index} className={classes.gridItem}
+            >
+              <MetaNetApp
+                appName={app.appName}
+                iconImageUrl={app.appIconImageUrl}
+                domain={app.domain}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </>
+      }
     </div>
   )
 }

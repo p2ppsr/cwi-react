@@ -53,24 +53,13 @@ const CounterpartyChip = ({
         if (results && results.length > 0) {
           const resolvedIdentity = results[0]
 
-          let name = 'Unsupported Name'
-          switch (resolvedIdentity.type) {
-            case knownCertificateTypes.identiCert: {
-              const { firstName, lastName } = resolvedIdentity.decryptedFields
-              name = `${firstName} ${lastName}`
-              break
-            }
-            case knownCertificateTypes.socialCert: {
-              const { userName, email, phoneNumber } = resolvedIdentity.decryptedFields
-              name = userName || email || phoneNumber || name
-              break
-            }
-            default:
-              break
-          }
+          const { userName, name, email, phoneNumber, firstName, lastName } = resolvedIdentity.decryptedFields
+          const nameToDisplay = firstName && lastName
+            ? `${firstName} ${lastName}`
+            : name || userName || email || phoneNumber || 'Unsupported Name'
 
           setSigniaIdentity({
-            name,
+            name: nameToDisplay,
             profilePhoto: resolvedIdentity.decryptedFields.profilePhoto,
             identityKey: resolvedIdentity.subject,
             certifier: resolvedIdentity.certifier
