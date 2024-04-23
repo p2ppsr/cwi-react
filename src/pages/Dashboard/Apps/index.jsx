@@ -151,7 +151,7 @@ const Apps = ({ history }) => {
         setLoadingRecentApps(true)
 
         // Always fetch recent apps to keep it updated
-        const recentAppsFetched = await getApps({ sortBy: 'whenLastUsed', limit: 4 })
+        const recentAppsFetched = await getApps({ limit: 4 })
         const parsedRecentAppData = await resolveAppDataFromDomain({ appDomains: recentAppsFetched })
         setRecentApps(parsedRecentAppData)
 
