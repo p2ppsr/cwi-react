@@ -112,7 +112,7 @@ export default ({
                           component={LostPassword}
                         />
                         <Route exact path='/recovery' component={Recovery} />
-                        <Route path='/dashboard' component={Welcome} />
+                        <Route path='/dashboard' component={Dashboard} />
                         <Route path='/welcome' component={Welcome} />
                       </Switch>
                     </Router>
