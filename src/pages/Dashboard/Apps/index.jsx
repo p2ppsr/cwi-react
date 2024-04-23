@@ -228,7 +228,7 @@ const Apps = ({ history }) => {
       {(filteredApps.length === 0 && !loading) &&
         <center>
           <br />
-          <Typography variant='h2' align='center' color='textSecondary' paddingTop='2em'>No apps found!</Typography>
+          <Typography variant='h4' align='center' color='textSecondary' paddingTop='2em'>No apps found!</Typography>
         </center>}
       <Grid container spacing={2} alignItems='center' justifyContent='left' className={classes.apps_view}>
         {filteredApps.map((app, index) => (
