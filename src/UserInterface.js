@@ -40,11 +40,11 @@ const queries = {
 let ErrorBoundary = ({ children }) => children
 
 export default ({
-  onFocusRequested = () => {},
-  onFocusRelinquished = () => {},
+  onFocusRequested = () => { },
+  onFocusRelinquished = () => { },
   isFocused = () => false,
-  saveLocalSnapshot = () => {},
-  removeLocalSnapshot = () => {},
+  saveLocalSnapshot = () => { },
+  removeLocalSnapshot = () => { },
   appVersion = '1.0.0',
   appName = 'Generic Babbage Wrapper',
   env = 'prod',
@@ -53,7 +53,7 @@ export default ({
   portalDestination = document.body
 } = {}) => {
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       if (env !== 'dev') {
         Bugsnag.start({
           apiKey: 'ffe7920be5e154faf6124e012c533b39',
@@ -112,7 +112,7 @@ export default ({
                           component={LostPassword}
                         />
                         <Route exact path='/recovery' component={Recovery} />
-                        <Route path='/dashboard' component={Dashboard} />
+                        <Route path='/dashboard' component={Welcome} />
                         <Route path='/welcome' component={Welcome} />
                       </Switch>
                     </Router>

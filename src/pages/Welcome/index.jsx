@@ -63,7 +63,7 @@ const Welcome = ({ history }) => {
   }
 
   return (
-  // <SettingsProvider>
+    // <SettingsProvider>
     <UserTheme>
       <div
         className={classes.content_wrap} style={{
@@ -88,54 +88,59 @@ const Welcome = ({ history }) => {
             </Grid>
             <Grid item container spacing={1} justifyContent='center'>
               {
-                  themes.map(theme => (
-                    <Grid item key={theme}>
-                      <Button
-                        onClick={() => handleThemeChange(theme)}
-                        style={{
-                          width: 120,
-                          height: 120,
-                          borderRadius: 10,
-                          boxShadow: selectedTheme === theme ? '0px 0px 8px 2px #E04040' : 'none',
-                          color: theme === 'light' ? 'Black' : 'White',
-                          backgroundColor: theme === 'light' ? '#111111' : '#444444',
-                          marginRight: '10px'
-                        }}
-                      >
-                        {theme === 'light' ? <LightModeImage /> : <DarkModeImage />}
-                      </Button>
-                    </Grid>
-                  ))
-                }
+                themes.map(theme => (
+                  <Grid item key={theme}>
+                    <Button
+                      onClick={() => handleThemeChange(theme)}
+                      style={{
+                        width: 120,
+                        height: 120,
+                        borderRadius: 10,
+                        boxShadow: selectedTheme === theme ? '0px 0px 8px 2px #E04040' : 'none',
+                        color: theme === 'light' ? 'Black' : 'White',
+                        backgroundColor: theme === 'light' ? '#111111' : '#444444',
+                        marginRight: '10px'
+                      }}
+                    >
+                      {theme === 'light' ? <LightModeImage /> : <DarkModeImage />}
+                    </Button>
+                  </Grid>
+                ))
+              }
             </Grid>
-            <Grid container spacing={1} justifyContent='center' padding='2em'>
-              <Typography paragraph paddingTop='2em'>
-                Default Currency
-              </Typography>
+            <Grid container spacing={1} justifyContent='center' padding='1em'>
+              <Grid item paddingBottom='1em'>
+                <Typography variant='h5' paddingTop='1em' paddingBottom='0.5em'>
+                  Default Currency
+                </Typography>
+                <Typography variant='body'>
+                  How would you like to see your account balance?
+                </Typography>
+              </Grid>
               <Grid item xs={12} container direction='row' justifyContent='center' alignItems='center' spacing={1}>
                 {
-                      Object.keys(currencies).map(currency => {
-                        return (
-                          <Grid item key={currency}>
-                            <Button
-                              variant={selectedCurrency === currency ? 'contained' : 'outlined'}
-                              style={{
-                                boxShadow: selectedCurrency === currency ? '0px 0px 8px 2px #E04040' : 'none',
-                                backgroundColor: selectedCurrency === currency ? '#444444' : (selectedTheme === 'light' ? '#EEEEEE' : 'Black'),
-                                color: selectedCurrency === currency ? 'white' : '#888888'
-                              }}
-                              onClick={() => handleCurrencyChange(currency)}
-                              color='primary'
-                            >
-                              <div>
-                                <div>{currency}</div>
-                                <div>{currencies[currency]}</div>
-                              </div>
-                            </Button>
-                          </Grid>
-                        )
-                      })
-                  }
+                  Object.keys(currencies).map(currency => {
+                    return (
+                      <Grid item key={currency}>
+                        <Button
+                          variant={selectedCurrency === currency ? 'contained' : 'outlined'}
+                          style={{
+                            boxShadow: selectedCurrency === currency ? '0px 0px 8px 2px #E04040' : 'none',
+                            backgroundColor: selectedCurrency === currency ? '#444444' : (selectedTheme === 'light' ? '#EEEEEE' : 'Black'),
+                            color: selectedCurrency === currency ? 'white' : '#888888'
+                          }}
+                          onClick={() => handleCurrencyChange(currency)}
+                          color='primary'
+                        >
+                          <div>
+                            <div>{currency}</div>
+                            <div>{currencies[currency]}</div>
+                          </div>
+                        </Button>
+                      </Grid>
+                    )
+                  })
+                }
               </Grid>
             </Grid>
             <Grid container paddingTop='2em'>
@@ -143,7 +148,7 @@ const Welcome = ({ history }) => {
                 {settingsLoading
                   ? (
                     <LinearProgress />
-                    )
+                  )
                   : (
                     <Button
                       color='primary'
@@ -153,7 +158,7 @@ const Welcome = ({ history }) => {
                     >
                       View Dashboard
                     </Button>
-                    )}
+                  )}
               </Grid>
             </Grid>
 
@@ -161,7 +166,7 @@ const Welcome = ({ history }) => {
         </center>
       </div>
     </UserTheme>
-  // </SettingsProvider>
+    // </SettingsProvider>
   )
 }
 
