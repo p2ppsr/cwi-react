@@ -111,7 +111,7 @@ const CertificateChip = ({
                   ))}
                 </div>
                 : ''}
-              {typeof fieldsToDisplay === 'object' && Object.values(fieldsToDisplay).length > 0
+              {typeof fieldsToDisplay === 'object' && !Array.isArray(fieldsToDisplay) && Object.values(fieldsToDisplay).length > 0
                 ? <div style={theme.templates.boxOfChips}>
                   <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>fields:</p>
                   {Object.entries(fieldsToDisplay).map(([k, v], j) => (
