@@ -41,7 +41,7 @@
     "react-router-dom": "^5.2.0",
     "react-toastify": "^9.0.8",
     "react-visibility-sensor": "^5.1.1",
-    "uhrp-react": "^0.2.24"
+    "uhrp-react": "^0.2.25"
   },
   "peerDependencies": {
     "@cwi/core": "^0.4.18",
