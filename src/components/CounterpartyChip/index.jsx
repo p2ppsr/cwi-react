@@ -9,18 +9,13 @@ import CloseIcon from '@mui/icons-material/Close'
 import { useTheme } from '@mui/styles'
 import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
-import YellowCautionIcon from '../../images/cautionIcon'
 import { SettingsContext } from '../../context/SettingsContext'
 import { discoverByIdentityKey } from '@babbage/sdk-ts'
+import { defaultIdentity, parseIdentity } from 'identinator'
 
 const useStyles = makeStyles(style, {
   name: 'CounterpartyChip'
 })
-
-const knownCertificateTypes = {
-  identiCert: 'z40BOInXkI8m7f/wBrv4MJ09bZfzZbTj2fJqCtONqCY=',
-  socialCert: '2TgqRC35B1zehGmB21xveZNc7i5iqHc0uxMb+1NMPW4='
-}
 
 const CounterpartyChip = ({
   counterparty,
@@ -39,10 +34,7 @@ const CounterpartyChip = ({
   const theme = useTheme()
   const classes = useStyles()
 
-  const [signiaIdentity, setSigniaIdentity] = useState({
-    profilePhoto: 'https://cdn4.iconfinder.com/data/icons/political-elections/50/48-512.png',
-    name: 'Stranger'
-  })
+  const [signiaIdentity, setSigniaIdentity] = useState(defaultIdentity)
 
   useEffect(() => {
     (async () => {
@@ -52,18 +44,8 @@ const CounterpartyChip = ({
 
         if (results && results.length > 0) {
           const resolvedIdentity = results[0]
-
-          const { userName, name, email, phoneNumber, firstName, lastName } = resolvedIdentity.decryptedFields
-          const nameToDisplay = firstName && lastName
-            ? `${firstName} ${lastName}`
-            : name || userName || email || phoneNumber || 'Unsupported Name'
-
-          setSigniaIdentity({
-            name: nameToDisplay,
-            profilePhoto: resolvedIdentity.decryptedFields.profilePhoto,
-            identityKey: resolvedIdentity.subject,
-            certifier: resolvedIdentity.certifier
-          })
+          const parsedIdentity = parseIdentity(resolvedIdentity)
+          setSigniaIdentity(parsedIdentity)
         }
       } catch (e) {
         window.Bugsnag.notify(e)
@@ -97,20 +79,20 @@ const CounterpartyChip = ({
           </div>
         }
         icon={
-          signiaIdentity.profilePhoto ||
+          signiaIdentity.avatarURL ||
             counterparty === 'self' ||
             counterparty === 'anyone' ||
             counterparty === '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
             ? (
-              <Tooltip title={signiaIdentity.certifier ? `Certified by ${signiaIdentity.certifier.name}` : 'Unknown Certifier!'} placement="right">
+              <Tooltip title={signiaIdentity.badgeLabel} placement='right'>
                 <Badge
-                  overlap="circular"
+                  overlap='circular'
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   badgeContent={
                     <Icon style={{ width: '20px', height: '20px', backgroundColor: 'white', borderRadius: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Img
                         style={{ width: '95%', height: '95%', objectFit: 'cover', borderRadius: '20%' }}
-                        src={signiaIdentity.certifier ? signiaIdentity.certifier.icon : 'https://cdn4.iconfinder.com/data/icons/political-elections/50/48-512.png'}
+                        src={signiaIdentity.badgeIconURL}
                         confederacyHost={confederacyHost}
                         loading={undefined}
                       />
@@ -120,10 +102,10 @@ const CounterpartyChip = ({
                   <Avatar alt={signiaIdentity.name} sx={{ width: '2.5em', height: '2.5em' }}>
                     <Img
                       src={counterparty === 'self'
-                        ? 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvectorified.com%2Fimages%2Fself-icon-29.png&f=1&nofb=1&ipt=8b514768118498339147259078b173359ccaaa09a3249cce1cf176e53af306aa&ipo=images'
+                        ? 'XUT9jHGk2qace148jeCX5rDsMftkSGYKmigLwU2PLLBc7Hm63VYR'
                         : counterparty === 'anyone' || counterparty === '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
-                          ? 'https://cdn-icons-png.flaticon.com/512/3369/3369157.png'
-                          : signiaIdentity.profilePhoto}
+                          ? 'XUT4bpQ6cpBaXi1oMzZsXfpkWGbtp2JTUYAoN7PzhStFJ6wLfoeR'
+                          : signiaIdentity.avatarURL}
                       className={classes.table_picture}
                       confederacyHost={confederacyHost()}
                     />
