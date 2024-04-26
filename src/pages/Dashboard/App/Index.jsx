@@ -68,7 +68,6 @@ const Apps = ({ history }) => {
         // Get a list of the 5 most recent actions from the app
         // Also request input and output amounts and descriptions from Ninja
         const results = await window.CWI.ninja.getTransactions({
-          basket: 'todo tokens',
           limit: displayLimit,
           includeBasket: true,
           includeTags: true,

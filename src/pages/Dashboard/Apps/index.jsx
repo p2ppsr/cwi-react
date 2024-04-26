@@ -38,14 +38,14 @@ const Apps = ({ history }) => {
   const [apps, setApps] = useState([])
   const loadRecentApps = () => {
     try {
-      const storedApps = window.sessionStorage.getItem('recentApps')
+      const storedApps = window.localStorage.getItem('recentApps')
       return storedApps ? JSON.parse(storedApps) : []
     } catch (error) {
       return []
     }
   }
 
-  // Initialize recentApps with value from sessionStorage or fallback to empty array
+  // Initialize recentApps with value from localStorage or fallback to empty array
   const [recentApps, setRecentApps] = useState(loadRecentApps)
 
   const [filteredApps, setFilteredApps] = useState([])
@@ -124,14 +124,14 @@ const Apps = ({ history }) => {
       // Obtain a list of all apps ordered alphabetically
       try {
         // Show cached recent apps first
-        if (window.sessionStorage.getItem('recentApps')) {
-          setRecentApps(JSON.parse(window.sessionStorage.getItem('recentApps')))
+        if (window.localStorage.getItem('recentApps')) {
+          setRecentApps(JSON.parse(window.localStorage.getItem('recentApps')))
         } else {
           setLoadingRecentApps(true)
         }
 
         // Check if there is storage app data for this session
-        let parsedAppData = JSON.parse(window.sessionStorage.getItem(cachedAppsKey))
+        let parsedAppData = JSON.parse(window.localStorage.getItem(cachedAppsKey))
 
         // Parse out the app data from the domains
         if (parsedAppData) {
@@ -144,8 +144,8 @@ const Apps = ({ history }) => {
         }
         const appDomains = await getApps({ sortBy: 'label' })
         parsedAppData = await resolveAppDataFromDomain({ appDomains })
-        // Store the current fetched apps in sessionStorage for a better UX
-        window.sessionStorage.setItem(cachedAppsKey, JSON.stringify(parsedAppData))
+        // Store the current fetched apps in localStorage for a better UX
+        window.localStorage.setItem(cachedAppsKey, JSON.stringify(parsedAppData))
 
         setApps(parsedAppData)
         setFilteredApps(parsedAppData)
@@ -156,7 +156,7 @@ const Apps = ({ history }) => {
         setRecentApps(parsedRecentAppData)
 
         // Temp local storage for to remove render delay
-        window.sessionStorage.setItem('recentApps', JSON.stringify(parsedRecentAppData))
+        window.localStorage.setItem('recentApps', JSON.stringify(parsedRecentAppData))
 
         // Initialize fuse for filtering apps
         const fuse = new Fuse(parsedAppData, options)
