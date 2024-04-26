@@ -1,6 +1,6 @@
 {
   "name": "@cwi/react",
-  "version": "0.3.43",
+  "version": "0.3.45",
   "description": "Components for using CWI in React applications",
   "main": "src/index.js",
   "repository": "git+https://github.com/p2ppsr/cwi-react",
@@ -42,7 +42,7 @@
     "react-router-dom": "^5.2.0",
     "react-toastify": "^9.0.8",
     "react-visibility-sensor": "^5.1.1",
-    "uhrp-react": "^0.2.24"
+    "uhrp-react": "^0.2.25"
   },
   "peerDependencies": {
     "@cwi/core": "^0.4.18",
