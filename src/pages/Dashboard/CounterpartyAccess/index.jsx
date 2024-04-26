@@ -20,6 +20,7 @@ import CertificateAccessList from '../../../components/CertificateAccessList'
 import { SettingsContext } from '../../../context/SettingsContext'
 import { Signia } from 'babbage-signia'
 import confederacyHost from '../../../utils/confederacyHost'
+import { defaultIdentity, parseIdentity } from 'identinator'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -139,9 +140,8 @@ const CounterpartyAccess = ({ match }) => {
   signia.config.confederacyHost = confederacyHost()
   const history = useHistory()
   const classes = useStyles()
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [profilePhoto, setProfilePhoto] = useState('')
+  const [name, setName] = useState(defaultIdentity.name)
+  const [profilePhoto, setProfilePhoto] = useState(defaultIdentity.avatarURL)
 
   const { counterparty } = match.params
   const [copied, setCopied] = useState({ id: false })
@@ -173,19 +173,14 @@ const CounterpartyAccess = ({ match }) => {
               maxTrustPoints = resultTrustLevel
             }
           }
-          const { firstName, lastName, profilePhoto } = results[mostTrustedIndex].decryptedFields
-          setFirstName(firstName)
-          setLastName(lastName)
-          setProfilePhoto(profilePhoto)
-        } else {
-          setFirstName('Stranger')
-          setLastName('')
-          setProfilePhoto('https://cdn4.iconfinder.com/data/icons/political-elections/50/48-512.png')
+
+          // Parse the identity information for the counterparty
+          const parsedIdentity = parseIdentity(results[mostTrustedIndex])
+          setName(parsedIdentity.name)
+          setProfilePhoto(parsedIdentity.avatarURL)
         }
       } catch (e) {
-        setFirstName('Stranger')
-        setLastName('')
-        setProfilePhoto('https://cdn4.iconfinder.com/data/icons/political-elections/50/48-512.png')
+        console.error(e)
       }
     })()
   }, [counterparty])
@@ -195,7 +190,7 @@ const CounterpartyAccess = ({ match }) => {
       <Grid item>
         <PageHeader
           history={history}
-          title={`${firstName} ${lastName}`}
+          title={name}
           subheading={
             <div>
               <Typography variant='caption' color='textSecondary'>
