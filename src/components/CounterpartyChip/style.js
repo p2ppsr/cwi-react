@@ -1,6 +1,6 @@
 export default theme => ({
   table_picture: {
-    maxWidth: '3em'
+    maxWidth: '2.5em'
     // borderRadius: '5em' /* was 3em */
   },
   expiryHoverText: {
