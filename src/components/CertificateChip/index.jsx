@@ -52,38 +52,53 @@ const CertificateChip = ({
   const [description, setDescription] = useState(`${certType.substr(0, 12)}...`)
   const [documentationURL, setDocumentationURL] = useState('unknown')
   const [fields, setFields] = useState({})
-
   useEffect(() => {
-    (async () => {
-      try {
-        const registryOperators = settings.trustedEntities.map(x => x.publicKey)
-        // Resolve a certificate by type
-        const results = await certmap.resolveCertificateByType(
-          certType,
-          registryOperators
-        )
-        if (results && results.length > 0) {
-          // Compute the most trusted of the results
-          let mostTrustedIndex = 0
-          let maxTrustPoints = 0
-          for (let i = 0; i < results.length; i++) {
-            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator).trust
-            if (resultTrustLevel > maxTrustPoints) {
-              mostTrustedIndex = i
-              maxTrustPoints = resultTrustLevel
+    const fetchAndCacheData = async () => {
+      const registryOperators = settings.trustedEntities.map(x => x.publicKey)
+      const cacheKey = `certData_${certType}_${registryOperators.join('_')}`
+      const cachedData = window.localStorage.getItem(cacheKey)
+
+      if (cachedData) {
+        const cachedCert = JSON.parse(cachedData)
+        setCertName(cachedCert.name)
+        setIconURL(cachedCert.iconURL)
+        setDescription(cachedCert.description)
+        setDocumentationURL(cachedCert.documentationURL)
+        setFields(cachedCert.fields)
+      } else {
+        try {
+          const results = await certmap.resolveCertificateByType(certType, registryOperators)
+          if (results && results.length > 0) {
+            // Compute the most trusted of the results
+            let mostTrustedIndex = 0
+            let maxTrustPoints = 0
+            for (let i = 0; i < results.length; i++) {
+              const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator)?.trust || 0
+              if (resultTrustLevel > maxTrustPoints) {
+                mostTrustedIndex = i
+                maxTrustPoints = resultTrustLevel
+              }
             }
+            const mostTrustedCert = results[mostTrustedIndex]
+            setCertName(mostTrustedCert.name)
+            setIconURL(mostTrustedCert.iconURL)
+            setDescription(mostTrustedCert.description)
+            setDocumentationURL(mostTrustedCert.documentationURL)
+            setFields(JSON.parse(mostTrustedCert.fields))
+
+            // Cache the fetched data
+            window.localStorage.setItem(cacheKey, JSON.stringify(mostTrustedCert))
+          } else {
+            console.log('No certificates found.')
           }
-          setCertName(results[mostTrustedIndex].name)
-          setIconURL(results[mostTrustedIndex].iconURL)
-          setDescription(results[mostTrustedIndex].description)
-          setDocumentationURL(results[mostTrustedIndex].documentationURL)
-          setFields(JSON.parse(results[mostTrustedIndex].fields))
+        } catch (error) {
+          console.error('Failed to fetch certificate details:', error)
         }
-      } catch (error) {
-        console.error(error)
       }
-    })()
-  }, [certType])
+    }
+
+    fetchAndCacheData()
+  }, [settings, certType, setCertName, setIconURL, setDescription, setDocumentationURL, setFields])
 
   return (
     <div>
