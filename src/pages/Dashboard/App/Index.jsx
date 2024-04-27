@@ -12,6 +12,7 @@ import PageHeader from '../../../components/PageHeader'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import fetchAndCacheData from '../../../utils/fetchAndCacheData'
 
 const useStyles = makeStyles(style, { name: 'apps' })
 
@@ -49,21 +50,13 @@ const Apps = ({ history }) => {
     (async () => {
       try {
         setLoading(true)
-        // Validate that the default favicon path is actually an image
-        if (await isImageUrl(`https://${appDomain}/favicon.ico`)) {
-          setAppIcon(`https://${appDomain}/favicon.ico`)
-        } else {
+        // Handle special cases for appDomain
+        if (appDomain === 'localhost:8088' || appDomain === '') {
           setAppIcon(DEFAULT_APP_ICON)
         }
-        // Try to parse the app manifest to find the app info
-        try {
-          const manifest = await parseAppManifest({ domain: appDomain })
-          if (typeof manifest.name === 'string') {
-            setAppName(manifest.name)
-          }
-        } catch (error) {
-          console.error(error)
-        }
+
+        // Use the helper function to fetch and update data
+        fetchAndCacheData(appDomain, setAppIcon, setAppName, setLoading, setRefresh, DEFAULT_APP_ICON)
 
         // Get a list of the 5 most recent actions from the app
         // Also request input and output amounts and descriptions from Ninja

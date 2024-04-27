@@ -5,8 +5,7 @@ import {
   Tabs,
   Tab,
   Grid,
-  IconButton,
-  Button
+  IconButton
 } from '@mui/material'
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
@@ -43,35 +42,14 @@ const TabPanel = (props) => {
   )
 }
 
-const SimpleTabs = ({ counterparty }) => {
+const SimpleTabs = ({ counterparty, trustEndorsements }) => {
   const [value, setValue] = useState(0)
   const { settings } = useContext(SettingsContext)
-  const [trustEndorsements, setTrustEndorsements] = useState([])
   const theme = useTheme()
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
-
-  // Construct a new Signia instance for querying identity
-  const signia = new Signia()
-  signia.config.confederacyHost = confederacyHost()
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const certifiers = settings.trustedEntities.map(x => x.publicKey)
-        const results = await signia.discoverByIdentityKey(counterparty, certifiers)
-
-        if (!results || results.length === 0) {
-          // No results! TODO: Handle case
-        }
-        setTrustEndorsements(results)
-      } catch (e) {
-        console.error(e)
-      }
-    })()
-  }, [])
 
   return (
     <Box>
@@ -109,10 +87,12 @@ const SimpleTabs = ({ counterparty }) => {
 const useStyles = makeStyles(style, { name: 'counterpartyAccess' })
 
 const CounterpartyAccess = ({ match }) => {
+  const { settings } = useContext(SettingsContext)
   const history = useHistory()
   const classes = useStyles()
   const [name, setName] = useState(defaultIdentity.name)
   const [profilePhoto, setProfilePhoto] = useState(defaultIdentity.avatarURL)
+  const [trustEndorsements, setTrustEndorsements] = useState([])
 
   const { counterparty } = match.params
   const [copied, setCopied] = useState({ id: false })
@@ -125,22 +105,66 @@ const CounterpartyAccess = ({ match }) => {
     }, 2000)
   }
 
+  // Construct a new Signia instance for querying identity
+  const signia = new Signia()
+  signia.config.confederacyHost = confederacyHost()
+
   useEffect(() => {
-    (async () => {
-      try {
-        // Resolve a Signia verified identity from a counterparty
-        const results = await discoverByIdentityKey({ identityKey: counterparty })
-        if (results && results.length > 0) {
-          // Parse the identity information for the counterparty
-          const parsedIdentity = parseIdentity(results[0])
-          setName(parsedIdentity.name)
-          setProfilePhoto(parsedIdentity.avatarURL)
+    async function fetchAndCacheTrustEndorsements() {
+      const cacheKey = `endorsements_${counterparty}_${settings.trustedEntities.map(x => x.publicKey).join('_')}`
+      const cachedData = window.localStorage.getItem(cacheKey)
+
+      if (cachedData) {
+        setTrustEndorsements(JSON.parse(cachedData))
+      } else {
+        try {
+          const certifiers = settings.trustedEntities.map(x => x.publicKey)
+          const results = await signia.discoverByIdentityKey(counterparty, certifiers)
+          if (results && results.length > 0) {
+            setTrustEndorsements(results)
+            window.localStorage.setItem(cacheKey, JSON.stringify(results))
+          }
+        } catch (e) {
+          console.error('Error fetching trust endorsements: ', e)
         }
-      } catch (e) {
-        console.error(e)
       }
-    })()
-  }, [counterparty])
+    }
+
+    fetchAndCacheTrustEndorsements()
+  }, [counterparty, settings, setTrustEndorsements])
+
+  useEffect(() => {
+    const cacheKey = `signiaIdentity_${counterparty}`
+
+    const fetchAndCacheIdentity = async () => {
+      // Try to load data from cache first
+      const cachedData = window.localStorage.getItem(cacheKey)
+      if (cachedData) {
+        const parsedIdentity = JSON.parse(cachedData)
+        setName(parsedIdentity.name)
+        setProfilePhoto(parsedIdentity.avatarURL)
+      } else {
+        try {
+          // Fetch the identity information from Signia
+          const results = await discoverByIdentityKey({ identityKey: counterparty })
+          if (results && results.length > 0) {
+            const parsedIdentity = parseIdentity(results[0])
+            setName(parsedIdentity.name)
+            setProfilePhoto(parsedIdentity.avatarURL)
+
+            // Cache the fetched data
+            window.window.localStorage.setItem(cacheKey, JSON.stringify(parsedIdentity))
+          } else {
+            console.log('No identity information found.') // Handle case when no results are found
+          }
+        } catch (e) {
+          console.error('Failed to fetch identity details:', e)
+        }
+      }
+    }
+
+    fetchAndCacheIdentity()
+  }, [counterparty, setName, setProfilePhoto])
 
   return (
     <Grid container spacing={3} direction='column' className={classes.grid}>
@@ -163,7 +187,7 @@ const CounterpartyAccess = ({ match }) => {
         />
       </Grid>
       <Grid item>
-        <SimpleTabs counterparty={counterparty} />
+        <SimpleTabs counterparty={counterparty} trustEndorsements={trustEndorsements} />
       </Grid>
     </Grid>
   )

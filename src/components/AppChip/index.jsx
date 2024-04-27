@@ -46,46 +46,44 @@ const AppChip = ({
 
   useEffect(() => {
     const fetchAndCacheData = async () => {
-      // Cache keys
-      const faviconKey = `favicon_${label}`
-      const manifestKey = `manifest_${label}`
+      const faviconKey = `favicon_label_${label}`
+      const manifestKey = `manifest_label_${label}`
 
-      // Try to load favicon from cache
+      // Load favicon from local storage
       const cachedFavicon = window.localStorage.getItem(faviconKey)
       if (cachedFavicon) {
         setAppIconImageUrl(cachedFavicon)
       } else {
-        // Validate favicon url is a valid Image
         const faviconUrl = `https://${label}/favicon.ico`
         if (await isImageUrl(faviconUrl)) {
           setAppIconImageUrl(faviconUrl)
-          window.localStorage.setItem(faviconKey, faviconUrl)
+          window.localStorage.setItem(faviconKey, faviconUrl) // Cache the favicon URL
         }
       }
 
-      // Try to load manifest from cache
+      // Load manifest from local storage
       const cachedManifest = window.localStorage.getItem(manifestKey)
       if (cachedManifest) {
-        setParsedLabel(JSON.parse(cachedManifest).name)
+        const manifest = JSON.parse(cachedManifest)
+        setParsedLabel(manifest.name)
       } else {
-        // Fetch manifest data
         try {
-          const protocol = label.startsWith('localhost:') ? 'http' : 'https'
-          const manifest = await boomerang(
+          const manifestResponse = await boomerang(
             'GET',
-            `${protocol}://${label}/manifest.json`
+            `${label.startsWith('localhost:') ? 'http' : 'https'}://${label}/manifest.json`
           )
-          setParsedLabel(manifest.name)
-          window.localStorage.setItem(manifestKey, JSON.stringify(manifest))
-        } catch (e) {
-          console.error(e)
-          /* ignore, nothing we can do and not our problem */
+          if (manifestResponse.name) {
+            setParsedLabel(manifestResponse.name)
+            window.localStorage.setItem(manifestKey, JSON.stringify(manifestResponse)) // Cache the manifest data
+          }
+        } catch (error) {
+          console.error(error) // Handle fetch errors
         }
       }
     }
 
     fetchAndCacheData()
-  }, [label])
+  }, [label, setAppIconImageUrl, setParsedLabel])
 
   return (
     <div className={classes.chipContainer}>
