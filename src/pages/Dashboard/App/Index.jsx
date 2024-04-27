@@ -12,7 +12,7 @@ import PageHeader from '../../../components/PageHeader'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import fetchAndCacheData from '../../../utils/fetchAndCacheData'
+import fetchAndCacheAppData from '../../../utils/fetchAndCacheAppData'
 
 const useStyles = makeStyles(style, { name: 'apps' })
 
@@ -20,7 +20,7 @@ const Apps = ({ history }) => {
   const location = useLocation()
   const appDomain = location.state?.domain
   const [appName, setAppName] = useState(appDomain)
-  const [appIcon, setAppIcon] = useState('MetaNet AppMetaNet App')
+  const [appIcon, setAppIcon] = useState(DEFAULT_APP_ICON)
   const [displayLimit, setDisplayLimit] = useState(5)
   const [appActions, setAppActions] = useState({})
   const [loading, setLoading] = useState(false)
@@ -50,13 +50,8 @@ const Apps = ({ history }) => {
     (async () => {
       try {
         setLoading(true)
-        // Handle special cases for appDomain
-        if (appDomain === 'localhost:8088' || appDomain === '') {
-          setAppIcon(DEFAULT_APP_ICON)
-        }
-
         // Use the helper function to fetch and update data
-        fetchAndCacheData(appDomain, setAppIcon, setAppName, setLoading, setRefresh, DEFAULT_APP_ICON)
+        fetchAndCacheAppData(appDomain, setAppIcon, setAppName, setLoading, setRefresh, DEFAULT_APP_ICON)
 
         // Get a list of the 5 most recent actions from the app
         // Also request input and output amounts and descriptions from Ninja

@@ -4,8 +4,6 @@ import { Typography, IconButton, Grid, Tab, Tabs } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import style from './style'
 import { DEFAULT_APP_ICON } from '../../../constants/popularApps'
-import isImageUrl from '../../../utils/isImageUrl'
-import parseAppManifest from '../../../utils/parseAppManifest'
 import ProtocolPermissionList from '../../../components/ProtocolPermissionList'
 import SpendingAuthorizationList from '../../../components/SpendingAuthorizationList'
 import BasketAccessList from '../../../components/BasketAccessList'
@@ -13,7 +11,7 @@ import CertificateAccessList from '../../../components/CertificateAccessList'
 import PageHeader from '../../../components/PageHeader'
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import fetchAndCacheData from '../../../utils/fetchAndCacheData'
+import fetchAndCacheAppData from '../../../utils/fetchAndCacheAppData'
 
 const useStyles = makeStyles(style, { name: 'appaccess' })
 const AppAccess = ({ match, history }) => {
@@ -21,7 +19,7 @@ const AppAccess = ({ match, history }) => {
   const [tabValue, setTabValue] = useState(history.appAccessTab ? history.appAccessTab : '0')
   const [appDomain, setAppDomain] = useState('')
   const [appName, setAppName] = useState('')
-  const [appIcon, setAppIcon] = useState('MetaNet AppMetaNet App')
+  const [appIcon, setAppIcon] = useState(DEFAULT_APP_ICON)
   const [loading, setLoading] = useState(false)
   const [refresh, setRefresh] = useState(false)
   const [copied, setCopied] = useState({ id: false, registryOperator: false })
@@ -44,7 +42,7 @@ const AppAccess = ({ match, history }) => {
       setAppIcon(DEFAULT_APP_ICON)
     }
 
-    fetchAndCacheData(appDomain, setAppIcon, setAppName, setLoading, setRefresh, DEFAULT_APP_ICON)
+    fetchAndCacheAppData(appDomain, setAppIcon, setAppName, setLoading, setRefresh, DEFAULT_APP_ICON)
 
     return () => {
       // Cleanup if necessary

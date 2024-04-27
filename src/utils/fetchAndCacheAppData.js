@@ -1,7 +1,7 @@
 import isImageUrl from './isImageUrl'
 import parseAppManifest from './parseAppManifest'
 
-async function fetchAndCacheData(appDomain, setAppIcon, setAppName, setLoading, setRefresh, DEFAULT_APP_ICON) {
+async function fetchAndCacheAppData(appDomain, setAppIcon, setAppName, setLoading, setRefresh, DEFAULT_APP_ICON) {
   const faviconKey = `favicon_${appDomain}`
   const manifestKey = `manifest_${appDomain}`
 
@@ -45,4 +45,4 @@ async function fetchAndCacheData(appDomain, setAppIcon, setAppName, setLoading, 
   }
 }
 
-export default fetchAndCacheData
+export default fetchAndCacheAppData
