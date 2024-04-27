@@ -64,41 +64,40 @@ const BasketChip = ({
         setIconURL(iconURL)
         setDescription(description)
         setDocumentationURL(documentationURL)
-      } else {
-        try {
-          // Fetch basket info by ID and trusted entities' public keys
-          const trustedEntities = settings.trustedEntities.map(x => x.publicKey)
-          const results = await basketmap.resolveBasketById(basketId, trustedEntities)
-          if (results && results.length > 0) {
-            // Compute the most trusted of the results
-            let mostTrustedIndex = 0
-            let maxTrustPoints = 0
-            for (let i = 0; i < results.length; i++) {
-              const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator)?.trust || 0
-              if (resultTrustLevel > maxTrustPoints) {
-                mostTrustedIndex = i
-                maxTrustPoints = resultTrustLevel
-              }
+      }
+      try {
+        // Fetch basket info by ID and trusted entities' public keys
+        const trustedEntities = settings.trustedEntities.map(x => x.publicKey)
+        const results = await basketmap.resolveBasketById(basketId, trustedEntities)
+        if (results && results.length > 0) {
+          // Compute the most trusted of the results
+          let mostTrustedIndex = 0
+          let maxTrustPoints = 0
+          for (let i = 0; i < results.length; i++) {
+            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator)?.trust || 0
+            if (resultTrustLevel > maxTrustPoints) {
+              mostTrustedIndex = i
+              maxTrustPoints = resultTrustLevel
             }
-            const basket = results[mostTrustedIndex]
-
-            // Update state and cache the results
-            setBasketName(basket.name)
-            setIconURL(basket.iconURL)
-            setDescription(basket.description)
-            setDocumentationURL(basket.documentationURL)
-
-            // Store data in local storage
-            window.localStorage.setItem(cacheKey, JSON.stringify({
-              name: basket.name,
-              iconURL: basket.iconURL,
-              description: basket.description,
-              documentationURL: basket.documentationURL
-            }))
           }
-        } catch (error) {
-          console.error(error)
+          const basket = results[mostTrustedIndex]
+
+          // Update state and cache the results
+          setBasketName(basket.name)
+          setIconURL(basket.iconURL)
+          setDescription(basket.description)
+          setDocumentationURL(basket.documentationURL)
+
+          // Store data in local storage
+          window.localStorage.setItem(cacheKey, JSON.stringify({
+            name: basket.name,
+            iconURL: basket.iconURL,
+            description: basket.description,
+            documentationURL: basket.documentationURL
+          }))
         }
+      } catch (error) {
+        console.error(error)
       }
     }
 

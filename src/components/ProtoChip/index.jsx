@@ -65,40 +65,39 @@ const ProtoChip = ({
         setIconURL(iconURL)
         setDescription(description)
         setDocumentationURL(documentationURL)
-      } else {
-        try {
-          // Resolve a Protocol info from id and security level
-          const certifiers = settings.trustedEntities.map(x => x.publicKey)
-          const results = await protomap.resolveProtocol(certifiers, securityLevel, protocolID)
+      }
+      try {
+        // Resolve a Protocol info from id and security level
+        const certifiers = settings.trustedEntities.map(x => x.publicKey)
+        const results = await protomap.resolveProtocol(certifiers, securityLevel, protocolID)
 
-          // Compute the most trusted of the results
-          let mostTrustedIndex = 0
-          let maxTrustPoints = 0
-          for (let i = 0; i < results.length; i++) {
-            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator)?.trust || 0
-            if (resultTrustLevel > maxTrustPoints) {
-              mostTrustedIndex = i
-              maxTrustPoints = resultTrustLevel
-            }
+        // Compute the most trusted of the results
+        let mostTrustedIndex = 0
+        let maxTrustPoints = 0
+        for (let i = 0; i < results.length; i++) {
+          const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator)?.trust || 0
+          if (resultTrustLevel > maxTrustPoints) {
+            mostTrustedIndex = i
+            maxTrustPoints = resultTrustLevel
           }
-          const trusted = results[mostTrustedIndex]
-
-          // Update state and cache the results
-          setProtocolName(trusted.name)
-          setIconURL(trusted.iconURL)
-          setDescription(trusted.description)
-          setDocumentationURL(trusted.documentationURL)
-
-          // Store data in local storage
-          window.localStorage.setItem(cacheKey, JSON.stringify({
-            name: trusted.name,
-            iconURL: trusted.iconURL,
-            description: trusted.description,
-            documentationURL: trusted.documentationURL
-          }))
-        } catch (error) {
-          console.error(error)
         }
+        const trusted = results[mostTrustedIndex]
+
+        // Update state and cache the results
+        setProtocolName(trusted.name)
+        setIconURL(trusted.iconURL)
+        setDescription(trusted.description)
+        setDocumentationURL(trusted.documentationURL)
+
+        // Store data in local storage
+        window.localStorage.setItem(cacheKey, JSON.stringify({
+          name: trusted.name,
+          iconURL: trusted.iconURL,
+          description: trusted.description,
+          documentationURL: trusted.documentationURL
+        }))
+      } catch (error) {
+        console.error(error)
       }
     }
 

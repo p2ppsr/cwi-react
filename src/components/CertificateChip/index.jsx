@@ -65,35 +65,35 @@ const CertificateChip = ({
         setDescription(cachedCert.description)
         setDocumentationURL(cachedCert.documentationURL)
         setFields(cachedCert.fields)
-      } else {
-        try {
-          const results = await certmap.resolveCertificateByType(certType, registryOperators)
-          if (results && results.length > 0) {
-            // Compute the most trusted of the results
-            let mostTrustedIndex = 0
-            let maxTrustPoints = 0
-            for (let i = 0; i < results.length; i++) {
-              const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator)?.trust || 0
-              if (resultTrustLevel > maxTrustPoints) {
-                mostTrustedIndex = i
-                maxTrustPoints = resultTrustLevel
-              }
-            }
-            const mostTrustedCert = results[mostTrustedIndex]
-            setCertName(mostTrustedCert.name)
-            setIconURL(mostTrustedCert.iconURL)
-            setDescription(mostTrustedCert.description)
-            setDocumentationURL(mostTrustedCert.documentationURL)
-            setFields(JSON.parse(mostTrustedCert.fields))
+      }
 
-            // Cache the fetched data
-            window.localStorage.setItem(cacheKey, JSON.stringify(mostTrustedCert))
-          } else {
-            console.log('No certificates found.')
+      try {
+        const results = await certmap.resolveCertificateByType(certType, registryOperators)
+        if (results && results.length > 0) {
+          // Compute the most trusted of the results
+          let mostTrustedIndex = 0
+          let maxTrustPoints = 0
+          for (let i = 0; i < results.length; i++) {
+            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator)?.trust || 0
+            if (resultTrustLevel > maxTrustPoints) {
+              mostTrustedIndex = i
+              maxTrustPoints = resultTrustLevel
+            }
           }
-        } catch (error) {
-          console.error('Failed to fetch certificate details:', error)
+          const mostTrustedCert = results[mostTrustedIndex]
+          setCertName(mostTrustedCert.name)
+          setIconURL(mostTrustedCert.iconURL)
+          setDescription(mostTrustedCert.description)
+          setDocumentationURL(mostTrustedCert.documentationURL)
+          setFields(JSON.parse(mostTrustedCert.fields))
+
+          // Cache the fetched data
+          window.localStorage.setItem(cacheKey, JSON.stringify(mostTrustedCert))
+        } else {
+          console.log('No certificates found.')
         }
+      } catch (error) {
+        console.error('Failed to fetch certificate details:', error)
       }
     }
 

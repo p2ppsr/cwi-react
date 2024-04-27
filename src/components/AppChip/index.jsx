@@ -53,12 +53,11 @@ const AppChip = ({
       const cachedFavicon = window.localStorage.getItem(faviconKey)
       if (cachedFavicon) {
         setAppIconImageUrl(cachedFavicon)
-      } else {
-        const faviconUrl = `https://${label}/favicon.ico`
-        if (await isImageUrl(faviconUrl)) {
-          setAppIconImageUrl(faviconUrl)
-          window.localStorage.setItem(faviconKey, faviconUrl) // Cache the favicon URL
-        }
+      }
+      const faviconUrl = `https://${label}/favicon.ico`
+      if (await isImageUrl(faviconUrl)) {
+        setAppIconImageUrl(faviconUrl)
+        window.localStorage.setItem(faviconKey, faviconUrl) // Cache the favicon URL
       }
 
       // Load manifest from local storage
@@ -66,19 +65,19 @@ const AppChip = ({
       if (cachedManifest) {
         const manifest = JSON.parse(cachedManifest)
         setParsedLabel(manifest.name)
-      } else {
-        try {
-          const manifestResponse = await boomerang(
-            'GET',
-            `${label.startsWith('localhost:') ? 'http' : 'https'}://${label}/manifest.json`
-          )
-          if (manifestResponse.name) {
-            setParsedLabel(manifestResponse.name)
-            window.localStorage.setItem(manifestKey, JSON.stringify(manifestResponse)) // Cache the manifest data
-          }
-        } catch (error) {
-          console.error(error) // Handle fetch errors
+      }
+
+      try {
+        const manifestResponse = await boomerang(
+          'GET',
+          `${label.startsWith('localhost:') ? 'http' : 'https'}://${label}/manifest.json`
+        )
+        if (manifestResponse.name) {
+          setParsedLabel(manifestResponse.name)
+          window.localStorage.setItem(manifestKey, JSON.stringify(manifestResponse)) // Cache the manifest data
         }
+      } catch (error) {
+        console.error(error) // Handle fetch errors
       }
     }
 
