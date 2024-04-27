@@ -9,7 +9,6 @@ import CloseIcon from '@mui/icons-material/Close'
 import { useTheme } from '@mui/styles'
 import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
-import { SettingsContext } from '../../context/SettingsContext'
 import { discoverByIdentityKey, getPublicKey } from '@babbage/sdk-ts'
 import { defaultIdentity, parseIdentity } from 'identinator'
 
@@ -27,7 +26,6 @@ const CounterpartyChip = ({
   onCloseClick = () => { },
   canRevoke = false
 }) => {
-  const { settings } = useContext(SettingsContext)
   const signia = new Signia()
   signia.config.confederacyHost = confederacyHost()
 
