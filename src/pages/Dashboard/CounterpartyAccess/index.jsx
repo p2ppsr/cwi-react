@@ -145,23 +145,22 @@ const CounterpartyAccess = ({ match }) => {
         const parsedIdentity = JSON.parse(cachedData)
         setName(parsedIdentity.name)
         setProfilePhoto(parsedIdentity.avatarURL)
-      } else {
-        try {
-          // Fetch the identity information from Signia
-          const results = await discoverByIdentityKey({ identityKey: counterparty })
-          if (results && results.length > 0) {
-            const parsedIdentity = parseIdentity(results[0])
-            setName(parsedIdentity.name)
-            setProfilePhoto(parsedIdentity.avatarURL)
+      }
+      try {
+        // Fetch the identity information from Signia
+        const results = await discoverByIdentityKey({ identityKey: counterparty })
+        if (results && results.length > 0) {
+          const parsedIdentity = parseIdentity(results[0])
+          setName(parsedIdentity.name)
+          setProfilePhoto(parsedIdentity.avatarURL)
 
-            // Cache the fetched data
-            window.window.localStorage.setItem(cacheKey, JSON.stringify(parsedIdentity))
-          } else {
-            console.log('No identity information found.') // Handle case when no results are found
-          }
-        } catch (e) {
-          console.error('Failed to fetch identity details:', e)
+          // Cache the fetched data
+          window.window.localStorage.setItem(cacheKey, JSON.stringify(parsedIdentity))
+        } else {
+          console.log('No identity information found.') // Handle case when no results are found
         }
+      } catch (e) {
+        console.error('Failed to fetch identity details:', e)
       }
     }
 
