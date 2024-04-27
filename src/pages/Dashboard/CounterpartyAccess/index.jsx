@@ -114,19 +114,21 @@ const CounterpartyAccess = ({ match }) => {
       const cacheKey = `endorsements_${counterparty}_${settings.trustedEntities.map(x => x.publicKey).join('_')}`
       const cachedData = window.localStorage.getItem(cacheKey)
 
+      // Set state from cache immediately for a faster initial response
       if (cachedData) {
         setTrustEndorsements(JSON.parse(cachedData))
-      } else {
-        try {
-          const certifiers = settings.trustedEntities.map(x => x.publicKey)
-          const results = await signia.discoverByIdentityKey(counterparty, certifiers)
-          if (results && results.length > 0) {
-            setTrustEndorsements(results)
-            window.localStorage.setItem(cacheKey, JSON.stringify(results))
-          }
-        } catch (e) {
-          console.error('Error fetching trust endorsements: ', e)
+      }
+
+      // Fetch the latest data regardless of the cache
+      try {
+        const certifiers = settings.trustedEntities.map(x => x.publicKey)
+        const results = await signia.discoverByIdentityKey(counterparty, certifiers)
+        if (results && results.length > 0) {
+          setTrustEndorsements(results)
+          window.localStorage.setItem(cacheKey, JSON.stringify(results))
         }
+      } catch (e) {
+        console.error('Error fetching trust endorsements: ', e)
       }
     }
 

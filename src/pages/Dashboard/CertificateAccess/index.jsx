@@ -38,7 +38,7 @@ const CertificateAccess = ({ match }) => {
     const cacheKey = `certData_${certType}_${settings.trustedEntities.map(x => x.publicKey).join('_')}`
 
     const fetchAndCacheData = async () => {
-      // Attempt to load the cached data
+      // Attempt to load the cached data and update UI immediately
       const cachedData = window.localStorage.getItem(cacheKey)
       if (cachedData) {
         const parsedData = JSON.parse(cachedData)
@@ -47,31 +47,31 @@ const CertificateAccess = ({ match }) => {
         setDescription(parsedData.description)
         setDocumentationURL(parsedData.documentationURL)
         setFields(JSON.parse(parsedData.fields))
-      } else {
-        // Fetch the data if not in cache
-        const registryOperators = settings.trustedEntities.map(x => x.publicKey)
-        const results = await certmap.resolveCertificateByType(certType, registryOperators)
-        if (results && results.length > 0) {
-          // Compute the most trusted of the results
-          let mostTrustedIndex = 0
-          let maxTrustPoints = 0
-          for (let i = 0; i < results.length; i++) {
-            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator).trust
-            if (resultTrustLevel > maxTrustPoints) {
-              mostTrustedIndex = i
-              maxTrustPoints = resultTrustLevel
-            }
-          }
-          const mostTrustedResult = results[mostTrustedIndex]
-          setDocumentTitle(mostTrustedResult.name)
-          setDocumentIcon(mostTrustedResult.iconURL)
-          setDescription(mostTrustedResult.description)
-          setDocumentationURL(mostTrustedResult.documentationURL)
-          setFields(JSON.parse(mostTrustedResult.fields))
+      }
 
-          // Cache the result
-          window.localStorage.setItem(cacheKey, JSON.stringify(mostTrustedResult))
+      // Fetch the latest data
+      const registryOperators = settings.trustedEntities.map(x => x.publicKey)
+      const results = await certmap.resolveCertificateByType(certType, registryOperators)
+      if (results && results.length > 0) {
+        // Compute the most trusted of the results
+        let mostTrustedIndex = 0
+        let maxTrustPoints = 0
+        for (let i = 0; i < results.length; i++) {
+          const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator)?.trust || 0
+          if (resultTrustLevel > maxTrustPoints) {
+            mostTrustedIndex = i
+            maxTrustPoints = resultTrustLevel
+          }
         }
+        const mostTrustedResult = results[mostTrustedIndex]
+        setDocumentTitle(mostTrustedResult.name)
+        setDocumentIcon(mostTrustedResult.iconURL)
+        setDescription(mostTrustedResult.description)
+        setDocumentationURL(mostTrustedResult.documentationURL)
+        setFields(JSON.parse(mostTrustedResult.fields))
+
+        // Update the cache with the latest data
+        window.localStorage.setItem(cacheKey, JSON.stringify(mostTrustedResult))
       }
     }
 
