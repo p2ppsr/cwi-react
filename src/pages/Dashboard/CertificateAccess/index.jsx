@@ -76,7 +76,7 @@ const CertificateAccess = ({ match }) => {
     }
 
     fetchAndCacheData()
-  }, [settings, certType, setDocumentTitle, setDocumentIcon, setDescription, setDocumentationURL, setFields])  // Ensure dependencies are correctly managed
+  }, [settings, certType, setDocumentTitle, setDocumentIcon, setDescription, setDocumentationURL, setFields])
 
   const handleCopy = (data, type) => {
     navigator.clipboard.writeText(data)
