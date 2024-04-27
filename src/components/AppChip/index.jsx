@@ -45,23 +45,44 @@ const AppChip = ({
   const [appIconImageUrl, setAppIconImageUrl] = useState(DEFAULT_APP_ICON)
 
   useEffect(() => {
-    (async () => {
-      // Validate favicon url is a valid Image
-      if (await isImageUrl(`https://${label}/favicon.ico`)) {
-        setAppIconImageUrl(`https://${label}/favicon.ico`)
+    const fetchAndCacheData = async () => {
+      const faviconKey = `favicon_label_${label}`
+      const manifestKey = `manifest_label_${label}`
+
+      // Load favicon from local storage
+      const cachedFavicon = window.localStorage.getItem(faviconKey)
+      if (cachedFavicon) {
+        setAppIconImageUrl(cachedFavicon)
       }
+      const faviconUrl = `https://${label}/favicon.ico`
+      if (await isImageUrl(faviconUrl)) {
+        setAppIconImageUrl(faviconUrl)
+        window.localStorage.setItem(faviconKey, faviconUrl) // Cache the favicon URL
+      }
+
+      // Load manifest from local storage
+      const cachedManifest = window.localStorage.getItem(manifestKey)
+      if (cachedManifest) {
+        const manifest = JSON.parse(cachedManifest)
+        setParsedLabel(manifest.name)
+      }
+
       try {
-        const manifest = await boomerang(
+        const manifestResponse = await boomerang(
           'GET',
           `${label.startsWith('localhost:') ? 'http' : 'https'}://${label}/manifest.json`
         )
-        setParsedLabel(manifest.name)
-      } catch (e) {
-        console.error(e)
-        /* ignore, nothing we can do and not our problem */
+        if (manifestResponse.name) {
+          setParsedLabel(manifestResponse.name)
+          window.localStorage.setItem(manifestKey, JSON.stringify(manifestResponse)) // Cache the manifest data
+        }
+      } catch (error) {
+        console.error(error) // Handle fetch errors
       }
-    })()
-  }, [label])
+    }
+
+    fetchAndCacheData()
+  }, [label, setAppIconImageUrl, setParsedLabel])
 
   return (
     <div className={classes.chipContainer}>

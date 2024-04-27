@@ -5,13 +5,12 @@ import {
   Tabs,
   Tab,
   Grid,
-  IconButton,
-  Button
+  IconButton
 } from '@mui/material'
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { makeStyles, useTheme } from '@mui/styles'
-import { useLocation, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import PageHeader from '../../../components/PageHeader'
 import CounterpartyChip from '../../../components/CounterpartyChip'
 import style from './style'
@@ -20,6 +19,8 @@ import CertificateAccessList from '../../../components/CertificateAccessList'
 import { SettingsContext } from '../../../context/SettingsContext'
 import { Signia } from 'babbage-signia'
 import confederacyHost from '../../../utils/confederacyHost'
+import { defaultIdentity, parseIdentity } from 'identinator'
+import { discoverByIdentityKey } from '@babbage/sdk-ts'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -41,62 +42,14 @@ const TabPanel = (props) => {
   )
 }
 
-// const trustEndorsementsData = [
-//   {
-//     name: 'Bob Babbage',
-//     statement: 'This endorsement certifies that the following public key belongs to John Smith.',
-//     publicKey: 'o3d98a6037da0b1075acedc1316fecc90444e0d990836055fd7a400c1d070bb4',
-//     date: '12/06/23',
-//     issuer: 'Bob Babbage with PeerCert',
-//     expires: 'Never'
-//   },
-//   {
-//     name: 'John Doe',
-//     statement: 'This endorsement certifies that the following public key belongs to John Smith.',
-//     publicKey: 'o3d98a6037da0b1075acedc1316fecc90444e0d990836055fd7a400c1d070bb4',
-//     date: '12/06/23',
-//     issuer: 'Bob Babbage with PeerCert',
-//     expires: 'Never'
-//   },
-//   {
-//     name: 'Brayden Langley',
-//     statement: 'This endorsement certifies that the following public key belongs to John Smith.',
-//     publicKey: 'o3d98a6037da0b1075acedc1316fecc90444e0d990836055fd7a400c1d070bb4',
-//     date: '12/06/23',
-//     issuer: 'Bob Babbage with PeerCert',
-//     expires: 'Never'
-//   }
-// ]
-
-const SimpleTabs = ({ counterparty }) => {
+const SimpleTabs = ({ counterparty, trustEndorsements }) => {
   const [value, setValue] = useState(0)
   const { settings } = useContext(SettingsContext)
-  const [trustEndorsements, setTrustEndorsements] = useState([])
   const theme = useTheme()
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
-
-  // Construct a new Signia instance for querying identity
-  const signia = new Signia()
-  signia.config.confederacyHost = confederacyHost()
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const certifiers = settings.trustedEntities.map(x => x.publicKey)
-        const results = await signia.discoverByIdentityKey(counterparty, certifiers)
-
-        if (!results || results.length === 0) {
-          // No results! TODO: Handle case
-        }
-        setTrustEndorsements(results)
-      } catch (e) {
-        console.error(e)
-      }
-    })()
-  }, [])
 
   return (
     <Box>
@@ -135,18 +88,14 @@ const useStyles = makeStyles(style, { name: 'counterpartyAccess' })
 
 const CounterpartyAccess = ({ match }) => {
   const { settings } = useContext(SettingsContext)
-  const signia = new Signia()
-  signia.config.confederacyHost = confederacyHost()
   const history = useHistory()
   const classes = useStyles()
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [profilePhoto, setProfilePhoto] = useState('')
+  const [name, setName] = useState(defaultIdentity.name)
+  const [profilePhoto, setProfilePhoto] = useState(defaultIdentity.avatarURL)
+  const [trustEndorsements, setTrustEndorsements] = useState([])
 
   const { counterparty } = match.params
   const [copied, setCopied] = useState({ id: false })
-
-  // TODO Handle the case where the profilePhoto is undefined
 
   const handleCopy = (data, type) => {
     navigator.clipboard.writeText(data)
@@ -156,46 +105,74 @@ const CounterpartyAccess = ({ match }) => {
     }, 2000)
   }
 
+  // Construct a new Signia instance for querying identity
+  const signia = new Signia()
+  signia.config.confederacyHost = confederacyHost()
+
   useEffect(() => {
-    (async () => {
+    async function fetchAndCacheTrustEndorsements() {
+      const cacheKey = `endorsements_${counterparty}_${settings.trustedEntities.map(x => x.publicKey).join('_')}`
+      const cachedData = window.localStorage.getItem(cacheKey)
+
+      // Set state from cache immediately for a faster initial response
+      if (cachedData) {
+        setTrustEndorsements(JSON.parse(cachedData))
+      }
+
+      // Fetch the latest data regardless of the cache
       try {
-        // Resolve a Signia verified identity from a counterparty
         const certifiers = settings.trustedEntities.map(x => x.publicKey)
         const results = await signia.discoverByIdentityKey(counterparty, certifiers)
         if (results && results.length > 0) {
-          // Compute the most trusted of the results
-          let mostTrustedIndex = 0
-          let maxTrustPoints = 0
-          for (let i = 0; i < results.length; i++) {
-            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].certifier).trust
-            if (resultTrustLevel > maxTrustPoints) {
-              mostTrustedIndex = i
-              maxTrustPoints = resultTrustLevel
-            }
-          }
-          const { firstName, lastName, profilePhoto } = results[mostTrustedIndex].decryptedFields
-          setFirstName(firstName)
-          setLastName(lastName)
-          setProfilePhoto(profilePhoto)
-        } else {
-          setFirstName('Stranger')
-          setLastName('')
-          setProfilePhoto('https://cdn4.iconfinder.com/data/icons/political-elections/50/48-512.png')
+          setTrustEndorsements(results)
+          window.localStorage.setItem(cacheKey, JSON.stringify(results))
         }
       } catch (e) {
-        setFirstName('Stranger')
-        setLastName('')
-        setProfilePhoto('https://cdn4.iconfinder.com/data/icons/political-elections/50/48-512.png')
+        console.error('Error fetching trust endorsements: ', e)
       }
-    })()
-  }, [counterparty])
+    }
+
+    fetchAndCacheTrustEndorsements()
+  }, [counterparty, settings, setTrustEndorsements])
+
+  useEffect(() => {
+    const cacheKey = `signiaIdentity_${counterparty}`
+
+    const fetchAndCacheIdentity = async () => {
+      // Try to load data from cache first
+      const cachedData = window.localStorage.getItem(cacheKey)
+      if (cachedData) {
+        const parsedIdentity = JSON.parse(cachedData)
+        setName(parsedIdentity.name)
+        setProfilePhoto(parsedIdentity.avatarURL)
+      }
+      try {
+        // Fetch the identity information from Signia
+        const results = await discoverByIdentityKey({ identityKey: counterparty })
+        if (results && results.length > 0) {
+          const parsedIdentity = parseIdentity(results[0])
+          setName(parsedIdentity.name)
+          setProfilePhoto(parsedIdentity.avatarURL)
+
+          // Cache the fetched data
+          window.window.localStorage.setItem(cacheKey, JSON.stringify(parsedIdentity))
+        } else {
+          console.log('No identity information found.') // Handle case when no results are found
+        }
+      } catch (e) {
+        console.error('Failed to fetch identity details:', e)
+      }
+    }
+
+    fetchAndCacheIdentity()
+  }, [counterparty, setName, setProfilePhoto])
 
   return (
     <Grid container spacing={3} direction='column' className={classes.grid}>
       <Grid item>
         <PageHeader
           history={history}
-          title={`${firstName} ${lastName}`}
+          title={name}
           subheading={
             <div>
               <Typography variant='caption' color='textSecondary'>
@@ -211,7 +188,7 @@ const CounterpartyAccess = ({ match }) => {
         />
       </Grid>
       <Grid item>
-        <SimpleTabs counterparty={counterparty} />
+        <SimpleTabs counterparty={counterparty} trustEndorsements={trustEndorsements} />
       </Grid>
     </Grid>
   )

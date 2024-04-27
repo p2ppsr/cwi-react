@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 /* eslint-disable react/prop-types */
 import React, { useState, useContext, useEffect } from 'react'
-import { Typography, Button, TextField, InputAdornment, IconButton } from '@mui/material'
+import { Typography, Button, IconButton } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style.js'
 import AddIdCertIcon from '../../../images/addIdCertIcon'
@@ -37,33 +37,50 @@ const Trust = ({ history }) => {
   }
 
   useEffect(() => {
-    (async () => {
+    const cacheKey = 'provenCertificates'
+
+    const getProvenCertificates = async () => {
+      // Attempt to load the proven certificates from cache
+      const cachedProvenCerts = window.localStorage.getItem(cacheKey)
+      if (cachedProvenCerts) {
+        setCertificates(JSON.parse(cachedProvenCerts))
+      }
+
+      // Find and prove certificates if not in cache
       const certs = await window.CWI.ninja.findCertificates()
       const provenCerts = []
       if (certs && certs.certificates && certs.certificates.length > 0) {
-        for (let i = 0; i < certs.certificates.length; i++) {
+        for (const certificate of certs.certificates) {
           try {
+            const fieldsToReveal = Object.keys(certificate.fields)
             const proof = await window.CWI.proveCertificate({
-              certificate: certs.certificates[i],
-              fieldsToReveal: Object.keys(certs.certificates[i].fields),
+              certificate,
+              fieldsToReveal,
               verifierPublicIdentityKey: '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
             })
-            const decrypted = await decryptCertificateFields(certs.certificates[i], proof.keyring, '0000000000000000000000000000000000000000000000000000000000000001')
+            const decrypted = await decryptCertificateFields(certificate, proof.keyring, '0000000000000000000000000000000000000000000000000000000000000001')
             proof.decryptedFields = decrypted
             provenCerts.push(proof)
           } catch (e) {
             console.error(e)
           }
         }
+        if (provenCerts.length > 0) {
+          setCertificates(provenCerts)
+          window.localStorage.setItem(cacheKey, JSON.stringify(provenCerts))
+        }
       }
-      if (provenCerts.length > 0) {
-        setCertificates(provenCerts)
-      }
-    })();
-    (async () => {
+    }
+
+    getProvenCertificates()
+
+    // Set primary identity key
+    const setIdentityKey = async () => {
       setPrimaryIdentityKey(await window.CWI.getPublicKey({ identityKey: true }))
-    })();
-  }, [])
+    }
+
+    setIdentityKey()
+  }, [setCertificates, setPrimaryIdentityKey])
 
   const handleRevealSecureKey = async () => {
     try {

@@ -12,6 +12,7 @@ import PageHeader from '../../../components/PageHeader'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import fetchAndCacheAppData from '../../../utils/fetchAndCacheAppData'
 
 const useStyles = makeStyles(style, { name: 'apps' })
 
@@ -19,7 +20,7 @@ const Apps = ({ history }) => {
   const location = useLocation()
   const appDomain = location.state?.domain
   const [appName, setAppName] = useState(appDomain)
-  const [appIcon, setAppIcon] = useState('MetaNet AppMetaNet App')
+  const [appIcon, setAppIcon] = useState(DEFAULT_APP_ICON)
   const [displayLimit, setDisplayLimit] = useState(5)
   const [appActions, setAppActions] = useState({})
   const [loading, setLoading] = useState(false)
@@ -49,26 +50,12 @@ const Apps = ({ history }) => {
     (async () => {
       try {
         setLoading(true)
-        // Validate that the default favicon path is actually an image
-        if (await isImageUrl(`https://${appDomain}/favicon.ico`)) {
-          setAppIcon(`https://${appDomain}/favicon.ico`)
-        } else {
-          setAppIcon(DEFAULT_APP_ICON)
-        }
-        // Try to parse the app manifest to find the app info
-        try {
-          const manifest = await parseAppManifest({ domain: appDomain })
-          if (typeof manifest.name === 'string') {
-            setAppName(manifest.name)
-          }
-        } catch (error) {
-          console.error(error)
-        }
+        // Use the helper function to fetch and update data
+        fetchAndCacheAppData(appDomain, setAppIcon, setAppName, setLoading, setRefresh, DEFAULT_APP_ICON)
 
         // Get a list of the 5 most recent actions from the app
         // Also request input and output amounts and descriptions from Ninja
         const results = await window.CWI.ninja.getTransactions({
-          basket: 'todo tokens',
           limit: displayLimit,
           includeBasket: true,
           includeTags: true,

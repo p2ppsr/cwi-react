@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import { useTheme } from '@emotion/react'
 import { useBreakpoint } from '../../utils/useBreakpoints.js'
-import { Switch, Route, useHistory } from 'react-router-dom'
+import { Switch, Route, useHistory, Redirect } from 'react-router-dom'
 import style from './style'
 import { makeStyles } from '@mui/styles'
 import {
@@ -50,6 +50,7 @@ const Dashboard = () => {
   const history = useHistory()
   const { appName, appVersion } = useContext(UIContext)
   const [pageLoading, setPageLoading] = useState(true)
+  const [myIdentityKey, setMyIdentityKey] = useState('self')
 
   const [menuOpen, setMenuOpen] = useState(true)
   const menuRef = useRef(null)
@@ -105,10 +106,13 @@ const Dashboard = () => {
   }, [menuOpen])
 
   useEffect(() => {
-    const isLoggedIn = redirectIfLoggedOut(history)
-    if (isLoggedIn) {
-      setPageLoading(false)
-    }
+    (async () => {
+      const isLoggedIn = redirectIfLoggedOut(history)
+      if (isLoggedIn) {
+        setPageLoading(false)
+        setMyIdentityKey(await window.CWI.getPublicKey({ identityKey: true }))
+      }
+    })()
   }, [history])
 
   if (pageLoading) {
@@ -248,6 +252,8 @@ const Dashboard = () => {
       </Drawer>
       <div className={classes.page_container}>
         <Switch>
+          <Redirect from='/dashboard/counterparty/self' to={`/dashboard/counterparty/${myIdentityKey}`} />
+          <Redirect from='/dashboard/counterparty/anyone' to='/dashboard/counterparty/0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798' />
           <Route
             path='/dashboard/manage-app/:originator'
             component={AppAccess}
