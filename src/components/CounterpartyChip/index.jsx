@@ -84,7 +84,7 @@ const CounterpartyChip = ({
             </span>
             <span style={theme.templates.chipLabelSubtitle}>
               <br />
-              {signiaIdentity.abbreviatedKey}
+              {signiaIdentity.abbreviatedKey || `${counterparty.substring(0, 10)}...`}
             </span>
           </div>
         }
