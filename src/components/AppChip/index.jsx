@@ -45,22 +45,46 @@ const AppChip = ({
   const [appIconImageUrl, setAppIconImageUrl] = useState(DEFAULT_APP_ICON)
 
   useEffect(() => {
-    (async () => {
-      // Validate favicon url is a valid Image
-      if (await isImageUrl(`https://${label}/favicon.ico`)) {
-        setAppIconImageUrl(`https://${label}/favicon.ico`)
+    const fetchAndCacheData = async () => {
+      // Cache keys
+      const faviconKey = `favicon_${label}`
+      const manifestKey = `manifest_${label}`
+
+      // Try to load favicon from cache
+      const cachedFavicon = window.localStorage.getItem(faviconKey)
+      if (cachedFavicon) {
+        setAppIconImageUrl(cachedFavicon)
+      } else {
+        // Validate favicon url is a valid Image
+        const faviconUrl = `https://${label}/favicon.ico`
+        if (await isImageUrl(faviconUrl)) {
+          setAppIconImageUrl(faviconUrl)
+          window.localStorage.setItem(faviconKey, faviconUrl)
+        }
       }
-      try {
-        const manifest = await boomerang(
-          'GET',
-          `${label.startsWith('localhost:') ? 'http' : 'https'}://${label}/manifest.json`
-        )
-        setParsedLabel(manifest.name)
-      } catch (e) {
-        console.error(e)
-        /* ignore, nothing we can do and not our problem */
+
+      // Try to load manifest from cache
+      const cachedManifest = window.localStorage.getItem(manifestKey)
+      if (cachedManifest) {
+        setParsedLabel(JSON.parse(cachedManifest).name)
+      } else {
+        // Fetch manifest data
+        try {
+          const protocol = label.startsWith('localhost:') ? 'http' : 'https'
+          const manifest = await boomerang(
+            'GET',
+            `${protocol}://${label}/manifest.json`
+          )
+          setParsedLabel(manifest.name)
+          window.localStorage.setItem(manifestKey, JSON.stringify(manifest))
+        } catch (e) {
+          console.error(e)
+          /* ignore, nothing we can do and not our problem */
+        }
       }
-    })()
+    }
+
+    fetchAndCacheData()
   }, [label])
 
   return (

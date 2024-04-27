@@ -54,36 +54,56 @@ const ProtoChip = ({
   const [documentationURL, setDocumentationURL] = useState('https://projectbabbage.com')
 
   useEffect(() => {
-    (async () => {
-      try {
-        // Resolve a Protocol info from id and operator
-        const certifiers = settings.trustedEntities.map(x => x.publicKey)
-        const results = await protomap.resolveProtocol(certifiers, securityLevel, protocolID)
-        // Compute the most trusted of the results
-        let mostTrustedIndex = 0
-        let maxTrustPoints = 0
-        for (let i = 0; i < results.length; i++) {
-          const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator).trust
-          if (resultTrustLevel > maxTrustPoints) {
-            mostTrustedIndex = i
-            maxTrustPoints = resultTrustLevel
-          }
-        }
-        const trusted = results[mostTrustedIndex]
-        setProtocolName(trusted.name)
-        setIconURL(trusted.iconURL)
-        setDescription(trusted.description)
-        setDocumentationURL(trusted.documentationURL)
-      } catch (error) {
-        console.error(error)
-      }
-    })()
-  }, [protocolID])
+    const cacheKey = `protocolInfo_${protocolID}_${securityLevel}`
 
-  useEffect(() => {
-    if (theme) {
+    const fetchAndCacheData = async () => {
+      // Try to load data from cache
+      const cachedData = window.localStorage.getItem(cacheKey)
+      if (cachedData) {
+        const { name, iconURL, description, documentationURL } = JSON.parse(cachedData)
+        setProtocolName(name)
+        setIconURL(iconURL)
+        setDescription(description)
+        setDocumentationURL(documentationURL)
+      } else {
+        try {
+          // Resolve a Protocol info from id and security level
+          const certifiers = settings.trustedEntities.map(x => x.publicKey)
+          const results = await protomap.resolveProtocol(certifiers, securityLevel, protocolID)
+
+          // Compute the most trusted of the results
+          let mostTrustedIndex = 0
+          let maxTrustPoints = 0
+          for (let i = 0; i < results.length; i++) {
+            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator)?.trust || 0
+            if (resultTrustLevel > maxTrustPoints) {
+              mostTrustedIndex = i
+              maxTrustPoints = resultTrustLevel
+            }
+          }
+          const trusted = results[mostTrustedIndex]
+
+          // Update state and cache the results
+          setProtocolName(trusted.name)
+          setIconURL(trusted.iconURL)
+          setDescription(trusted.description)
+          setDocumentationURL(trusted.documentationURL)
+
+          // Store data in local storage
+          window.localStorage.setItem(cacheKey, JSON.stringify({
+            name: trusted.name,
+            iconURL: trusted.iconURL,
+            description: trusted.description,
+            documentationURL: trusted.documentationURL
+          }))
+        } catch (error) {
+          console.error(error)
+        }
+      }
     }
-  }, [theme])
+
+    fetchAndCacheData()
+  }, [protocolID, securityLevel, settings])
 
   return (
     <div className={classes.chipContainer}>

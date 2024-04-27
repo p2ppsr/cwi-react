@@ -37,30 +37,40 @@ const CounterpartyChip = ({
   const [signiaIdentity, setSigniaIdentity] = useState(defaultIdentity)
 
   useEffect(() => {
-    (async () => {
-      try {
-        console.log('any', counterparty)
-        // Resolve a Signia verified identity from a counterparty
-        const results = await discoverByIdentityKey({ identityKey: counterparty })
+    // Function to load and potentially update identity for a specific counterparty
+    const loadIdentity = async (counterpartyKey) => {
+      // Initial load from local storage for a specific counterparty
+      const cachedIdentity = window.localStorage.getItem(`signiaIdentity_${counterpartyKey}`)
+      if (cachedIdentity) {
+        setSigniaIdentity(JSON.parse(cachedIdentity))
+      }
 
+      try {
+        // Resolve the counterparty key for 'self' or 'anyone'
+        if (counterpartyKey === 'self') {
+          counterpartyKey = await getPublicKey({ identityKey: true })
+        } else if (counterpartyKey === 'anyone') {
+          counterpartyKey = '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
+        }
+
+        // Fetch the latest identity info from the server
+        const results = await discoverByIdentityKey({ identityKey: counterpartyKey })
         if (results && results.length > 0) {
           const resolvedIdentity = results[0]
           const parsedIdentity = parseIdentity(resolvedIdentity)
+          // Update component state and cache in local storage
           setSigniaIdentity(parsedIdentity)
-        }
-
-        // Check if the counterparty is self or anyone, and replace with correct identity key
-        if (counterparty === 'self') {
-          counterparty = await getPublicKey({ identityKey: true })
-        } else if (counterparty === 'anyone') {
-          counterparty = '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
+          window.localStorage.setItem(`signiaIdentity_${counterpartyKey}`, JSON.stringify(parsedIdentity))
         }
       } catch (e) {
         window.Bugsnag.notify(e)
         console.error(e)
       }
-    })()
-  }, [])
+    }
+
+    // Execute the loading function with the initial counterparty
+    loadIdentity(counterparty)
+  }, [counterparty])
 
   return (
     <div className={classes.chipContainer}>
