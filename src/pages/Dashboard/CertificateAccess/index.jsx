@@ -35,31 +35,48 @@ const CertificateAccess = ({ match }) => {
   const { settings } = useContext(SettingsContext)
 
   useEffect(() => {
-    (async () => {
-      const registryOperators = settings.trustedEntities.map(x => x.publicKey)
-      const results = await certmap.resolveCertificateByType(
-        certType,
-        registryOperators
-      )
-      if (results && results.length > 0) {
-        // Compute the most trusted of the results
-        let mostTrustedIndex = 0
-        let maxTrustPoints = 0
-        for (let i = 0; i < results.length; i++) {
-          const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator).trust
-          if (resultTrustLevel > maxTrustPoints) {
-            mostTrustedIndex = i
-            maxTrustPoints = resultTrustLevel
+    const cacheKey = `certData_${certType}_${settings.trustedEntities.map(x => x.publicKey).join('_')}`
+
+    const fetchAndCacheData = async () => {
+      // Attempt to load the cached data
+      const cachedData = window.localStorage.getItem(cacheKey)
+      if (cachedData) {
+        const parsedData = JSON.parse(cachedData)
+        setDocumentTitle(parsedData.name)
+        setDocumentIcon(parsedData.iconURL)
+        setDescription(parsedData.description)
+        setDocumentationURL(parsedData.documentationURL)
+        setFields(JSON.parse(parsedData.fields))
+      } else {
+        // Fetch the data if not in cache
+        const registryOperators = settings.trustedEntities.map(x => x.publicKey)
+        const results = await certmap.resolveCertificateByType(certType, registryOperators)
+        if (results && results.length > 0) {
+          // Compute the most trusted of the results
+          let mostTrustedIndex = 0
+          let maxTrustPoints = 0
+          for (let i = 0; i < results.length; i++) {
+            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].registryOperator).trust
+            if (resultTrustLevel > maxTrustPoints) {
+              mostTrustedIndex = i
+              maxTrustPoints = resultTrustLevel
+            }
           }
+          const mostTrustedResult = results[mostTrustedIndex]
+          setDocumentTitle(mostTrustedResult.name)
+          setDocumentIcon(mostTrustedResult.iconURL)
+          setDescription(mostTrustedResult.description)
+          setDocumentationURL(mostTrustedResult.documentationURL)
+          setFields(JSON.parse(mostTrustedResult.fields))
+
+          // Cache the result
+          window.localStorage.setItem(cacheKey, JSON.stringify(mostTrustedResult))
         }
-        setDocumentTitle(results[mostTrustedIndex].name)
-        setDocumentIcon(results[mostTrustedIndex].iconURL)
-        setDescription(results[mostTrustedIndex].description)
-        setDocumentationURL(results[mostTrustedIndex].documentationURL)
-        setFields(JSON.parse(results[mostTrustedIndex].fields))
       }
-    })()
-  }, [])
+    }
+
+    fetchAndCacheData()
+  }, [settings, certType, setDocumentTitle, setDocumentIcon, setDescription, setDocumentationURL, setFields])  // Ensure dependencies are correctly managed
 
   const handleCopy = (data, type) => {
     navigator.clipboard.writeText(data)
