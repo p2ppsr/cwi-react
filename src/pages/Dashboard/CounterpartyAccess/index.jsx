@@ -11,7 +11,7 @@ import {
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { makeStyles, useTheme } from '@mui/styles'
-import { useLocation, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import PageHeader from '../../../components/PageHeader'
 import CounterpartyChip from '../../../components/CounterpartyChip'
 import style from './style'
@@ -21,6 +21,7 @@ import { SettingsContext } from '../../../context/SettingsContext'
 import { Signia } from 'babbage-signia'
 import confederacyHost from '../../../utils/confederacyHost'
 import { defaultIdentity, parseIdentity } from 'identinator'
+import { discoverByIdentityKey } from '@babbage/sdk-ts'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -41,33 +42,6 @@ const TabPanel = (props) => {
     </div>
   )
 }
-
-// const trustEndorsementsData = [
-//   {
-//     name: 'Bob Babbage',
-//     statement: 'This endorsement certifies that the following public key belongs to John Smith.',
-//     publicKey: 'o3d98a6037da0b1075acedc1316fecc90444e0d990836055fd7a400c1d070bb4',
-//     date: '12/06/23',
-//     issuer: 'Bob Babbage with PeerCert',
-//     expires: 'Never'
-//   },
-//   {
-//     name: 'John Doe',
-//     statement: 'This endorsement certifies that the following public key belongs to John Smith.',
-//     publicKey: 'o3d98a6037da0b1075acedc1316fecc90444e0d990836055fd7a400c1d070bb4',
-//     date: '12/06/23',
-//     issuer: 'Bob Babbage with PeerCert',
-//     expires: 'Never'
-//   },
-//   {
-//     name: 'Brayden Langley',
-//     statement: 'This endorsement certifies that the following public key belongs to John Smith.',
-//     publicKey: 'o3d98a6037da0b1075acedc1316fecc90444e0d990836055fd7a400c1d070bb4',
-//     date: '12/06/23',
-//     issuer: 'Bob Babbage with PeerCert',
-//     expires: 'Never'
-//   }
-// ]
 
 const SimpleTabs = ({ counterparty }) => {
   const [value, setValue] = useState(0)
@@ -135,9 +109,6 @@ const SimpleTabs = ({ counterparty }) => {
 const useStyles = makeStyles(style, { name: 'counterpartyAccess' })
 
 const CounterpartyAccess = ({ match }) => {
-  const { settings } = useContext(SettingsContext)
-  const signia = new Signia()
-  signia.config.confederacyHost = confederacyHost()
   const history = useHistory()
   const classes = useStyles()
   const [name, setName] = useState(defaultIdentity.name)
@@ -145,8 +116,6 @@ const CounterpartyAccess = ({ match }) => {
 
   const { counterparty } = match.params
   const [copied, setCopied] = useState({ id: false })
-
-  // TODO Handle the case where the profilePhoto is undefined
 
   const handleCopy = (data, type) => {
     navigator.clipboard.writeText(data)
@@ -160,22 +129,10 @@ const CounterpartyAccess = ({ match }) => {
     (async () => {
       try {
         // Resolve a Signia verified identity from a counterparty
-        const certifiers = settings.trustedEntities.map(x => x.publicKey)
-        const results = await signia.discoverByIdentityKey(counterparty, certifiers)
+        const results = await discoverByIdentityKey({ identityKey: counterparty })
         if (results && results.length > 0) {
-          // Compute the most trusted of the results
-          let mostTrustedIndex = 0
-          let maxTrustPoints = 0
-          for (let i = 0; i < results.length; i++) {
-            const resultTrustLevel = settings.trustedEntities.find(x => x.publicKey === results[i].certifier).trust
-            if (resultTrustLevel > maxTrustPoints) {
-              mostTrustedIndex = i
-              maxTrustPoints = resultTrustLevel
-            }
-          }
-
           // Parse the identity information for the counterparty
-          const parsedIdentity = parseIdentity(results[mostTrustedIndex])
+          const parsedIdentity = parseIdentity(results[0])
           setName(parsedIdentity.name)
           setProfilePhoto(parsedIdentity.avatarURL)
         }

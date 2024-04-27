@@ -33,7 +33,7 @@
     "cwi-external-services": "^0.4.27",
     "date-fns": "^2.29.2",
     "fuse.js": "^6.6.2",
-    "identinator": "^0.1.6",
+    "identinator": "^0.1.8",
     "nanostore-publisher": "^0.2.23",
     "react-country-region-selector": "^3.6.1",
     "react-image-crop": "^8.6.9",

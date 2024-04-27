@@ -10,7 +10,7 @@ import { useTheme } from '@mui/styles'
 import style from './style'
 import confederacyHost from '../../utils/confederacyHost'
 import { SettingsContext } from '../../context/SettingsContext'
-import { discoverByIdentityKey } from '@babbage/sdk-ts'
+import { discoverByIdentityKey, getPublicKey } from '@babbage/sdk-ts'
 import { defaultIdentity, parseIdentity } from 'identinator'
 
 const useStyles = makeStyles(style, {
@@ -39,6 +39,7 @@ const CounterpartyChip = ({
   useEffect(() => {
     (async () => {
       try {
+        console.log('any', counterparty)
         // Resolve a Signia verified identity from a counterparty
         const results = await discoverByIdentityKey({ identityKey: counterparty })
 
@@ -46,6 +47,13 @@ const CounterpartyChip = ({
           const resolvedIdentity = results[0]
           const parsedIdentity = parseIdentity(resolvedIdentity)
           setSigniaIdentity(parsedIdentity)
+        }
+
+        // Check if the counterparty is self or anyone, and replace with correct identity key
+        if (counterparty === 'self') {
+          counterparty = await getPublicKey({ identityKey: true })
+        } else if (counterparty === 'anyone') {
+          counterparty = '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
         }
       } catch (e) {
         window.Bugsnag.notify(e)
@@ -64,60 +72,40 @@ const CounterpartyChip = ({
         label={
           <div style={theme.templates.chipLabel}>
             <span style={theme.templates.chipLabelTitle({ size })}>
-              {counterparty === 'self'
-                ? 'Only You'
-                : counterparty === 'anyone' || counterparty === '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
-                  ? 'Anyone'
-                  : signiaIdentity.name}
+              {signiaIdentity.name}
             </span>
-            {counterparty !== 'self' && counterparty !== 'anyone' && counterparty !== '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798' && (
-              <span style={theme.templates.chipLabelSubtitle}>
-                <br />
-                {counterparty.substring(0, 10)}...
-              </span>
-            )}
+            <span style={theme.templates.chipLabelSubtitle}>
+              <br />
+              {signiaIdentity.abbreviatedKey}
+            </span>
           </div>
         }
         icon={
-          signiaIdentity.avatarURL ||
-            counterparty === 'self' ||
-            counterparty === 'anyone' ||
-            counterparty === '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
-            ? (
-              <Tooltip title={signiaIdentity.badgeLabel} placement='right'>
-                <Badge
-                  overlap='circular'
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                  badgeContent={
-                    <Icon style={{ width: '20px', height: '20px', backgroundColor: 'white', borderRadius: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Img
-                        style={{ width: '95%', height: '95%', objectFit: 'cover', borderRadius: '20%' }}
-                        src={signiaIdentity.badgeIconURL}
-                        confederacyHost={confederacyHost}
-                        loading={undefined}
-                      />
-                    </Icon>
-                  }
-                >
-                  <Avatar alt={signiaIdentity.name} sx={{ width: '2.5em', height: '2.5em' }}>
-                    <Img
-                      src={counterparty === 'self'
-                        ? 'XUT9jHGk2qace148jeCX5rDsMftkSGYKmigLwU2PLLBc7Hm63VYR'
-                        : counterparty === 'anyone' || counterparty === '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
-                          ? 'XUT4bpQ6cpBaXi1oMzZsXfpkWGbtp2JTUYAoN7PzhStFJ6wLfoeR'
-                          : signiaIdentity.avatarURL}
-                      className={classes.table_picture}
-                      confederacyHost={confederacyHost()}
-                    />
-                  </Avatar>
-                </Badge>
-              </Tooltip>
-            )
-            : <img
-              className={classes.table_picture}
-              src='https://cdn4.iconfinder.com/data/icons/political-elections/50/48-512.png'
-              alt='Unknown person'
-            />
+
+          <Tooltip title={signiaIdentity.badgeLabel} placement='right'>
+            <Badge
+              overlap='circular'
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              badgeContent={
+                <Icon style={{ width: '20px', height: '20px', backgroundColor: 'white', borderRadius: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Img
+                    style={{ width: '95%', height: '95%', objectFit: 'cover', borderRadius: '20%' }}
+                    src={signiaIdentity.badgeIconURL}
+                    confederacyHost={confederacyHost()}
+                    loading={undefined}
+                  />
+                </Icon>
+              }
+            >
+              <Avatar alt={signiaIdentity.name} sx={{ width: '2.5em', height: '2.5em' }}>
+                <Img
+                  src={signiaIdentity.avatarURL}
+                  className={classes.table_picture}
+                  confederacyHost={confederacyHost()}
+                />
+              </Avatar>
+            </Badge>
+          </Tooltip>
         }
         onClick={e => {
           if (clickable) {
@@ -126,11 +114,7 @@ const CounterpartyChip = ({
             } else {
               e.stopPropagation()
               history.push({
-                pathname: `/dashboard/counterparty/${encodeURIComponent(counterparty)}`,
-                state: {
-                  ...signiaIdentity,
-                  counterparty
-                }
+                pathname: `/dashboard/counterparty/${encodeURIComponent(counterparty)}`
               })
             }
           }
