@@ -140,7 +140,7 @@ const Transaction = ({
       >
         <Grid container direction='column'>
           <Grid item>
-            <Typography variant='h5' style={{ color: 'textPrimary' }}>{description}</Typography>
+            <Typography variant='h5' style={{ color: 'textPrimary', wordBreak: 'break-all' }}>{description}</Typography>
           </Grid>
           <Grid item>
             <Grid container justifyContent='space-between'>
