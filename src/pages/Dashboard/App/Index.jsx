@@ -16,6 +16,27 @@ import fetchAndCacheAppData from '../../../utils/fetchAndCacheAppData'
 
 const useStyles = makeStyles(style, { name: 'apps' })
 
+const transformTransactions = (transactions) => {
+  // merge default inputs and outputs
+  for (const tx of transactions) {
+    const mergedInputs = (tx.inputs || []).filter(i => i.basket !== 'default')
+    const mergedOutputs = (tx.outputs || []).filter(o => o.basket !== 'default')
+    const defaultInputs = (tx.inputs || []).filter(i => i.basket === 'default')
+    const defaultOutputs = (tx.outputs || []).filter(o => o.basket === 'default')
+    let defaultNetAmount = 0
+    for (const input of defaultInputs) defaultNetAmount += -input.amount
+    for (const output of defaultOutputs) defaultNetAmount += output.amount
+    if (defaultNetAmount < 0) {
+      mergedInputs.push({ ...defaultInputs[0], amount: -defaultNetAmount })
+    } else if (defaultNetAmount > 0) {
+      mergedOutputs.push({ ...defaultOutputs[0], amount: defaultNetAmount })
+    }
+    tx.inputs = mergedInputs
+    tx.outputs = mergedOutputs
+    tx.fees = defaultNetAmount - tx.amount
+  }
+}
+
 const Apps = ({ history }) => {
   const location = useLocation()
   const appDomain = location.state?.domain
@@ -34,7 +55,6 @@ const Apps = ({ history }) => {
     setRefresh,
     allActionsShown
   }
-  const classes = useStyles()
   const [copied, setCopied] = useState({ id: false, registryOperator: false })
 
   // Copies the data and timeouts the checkmark icon
@@ -53,6 +73,17 @@ const Apps = ({ history }) => {
         // Use the helper function to fetch and update data
         fetchAndCacheAppData(appDomain, setAppIcon, setAppName, setLoading, setRefresh, DEFAULT_APP_ICON)
 
+        const cacheKey = `transactions_${appDomain}`
+
+        // Try to load data from the local storage cache first
+        const cachedData = window.localStorage.getItem(cacheKey)
+        const cachedResults = cachedData ? JSON.parse(cachedData) : null
+        if (cachedResults) {
+          transformTransactions(cachedResults.transactions)
+          setAppActions(cachedResults)
+          setLoading(false)
+        }
+
         // Get a list of the 5 most recent actions from the app
         // Also request input and output amounts and descriptions from Ninja
         const results = await window.CWI.ninja.getTransactions({
@@ -69,25 +100,8 @@ const Apps = ({ history }) => {
         if (results.totalTransactions <= results.transactions.length) {
           setAllActionsShown(true)
         }
-
-        // merge default inputs and outputs
-        for (const result of results.transactions) {
-          const mergedInputs = (result.inputs || []).filter(i => i.basket !== 'default')
-          const mergedOutputs = (result.outputs || []).filter(o => o.basket !== 'default')
-          const defaultInputs = (result.inputs || []).filter(i => i.basket === 'default')
-          const defaultOutputs = (result.outputs || []).filter(o => o.basket === 'default')
-          let defaultNetAmount = 0
-          for (const input of defaultInputs) defaultNetAmount += -input.amount
-          for (const output of defaultOutputs) defaultNetAmount += output.amount
-          if (defaultNetAmount < 0) {
-            mergedInputs.push({ ...defaultInputs[0], amount: -defaultNetAmount })
-          } else if (defaultNetAmount > 0) {
-            mergedOutputs.push({ ...defaultOutputs[0], amount: defaultNetAmount })
-          }
-          result.inputs = mergedInputs
-          result.outputs = mergedOutputs
-          result.fees = defaultNetAmount - result.amount
-        }
+        transformTransactions(results.transactions)
+        window.localStorage.setItem(cacheKey, JSON.stringify(results))
 
         setAppActions(results)
         setLoading(false)
