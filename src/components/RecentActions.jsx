@@ -38,7 +38,7 @@ const RecentActions = ({ loading, appActions, displayLimit, setDisplayLimit, set
         )
       })}
       {appActions.transactions && appActions.transactions.length === 0 && <Typography color='textSecondary' align='center' style={{ paddingTop: '6em' }}>
-        No Actions yet...
+        You haven't made any actions yet.
       </Typography>}
       {loading && <LinearProgress paddingTop='1em' />}
       {appActions.transactions && appActions.transactions.length !== 0 && <center style={{ paddingTop: '1em' }}>
