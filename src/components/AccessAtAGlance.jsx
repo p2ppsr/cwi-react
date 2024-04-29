@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
-import { Typography, Button, LinearProgress, List, ListSubheader, Divider } from '@mui/material'
+import { Typography, Button, LinearProgress, List, ListSubheader, Divider, Box } from '@mui/material'
 import BasketChip from './BasketChip'
 import ProtocolPermissionList from './ProtocolPermissionList'
 import CertificateAccessList from './CertificateAccessList'
@@ -60,11 +60,15 @@ const AccessAtAGlance = ({ originator, loading, setRefresh, history }) => {
           </>
         )}
         <ProtocolPermissionList app={originator} limit={1} canRevoke={false} clickable displayCount={false} listHeaderTitle='Most Recent Protocol' onEmptyList={() => setProtocolIsEmpty(true)} />
-        <CertificateAccessList app={originator} limit={1} canRevoke={false} clickable displayCount={false} listHeaderTitle='Most Recent Certificate' onEmptyList={() => setCertificateIsEmpty(true)} />
-        {recentBasketAccess.length === 0 && certificateIsEmpty && protocolIsEmpty && <Typography color='textSecondary' align='center' style={{ paddingTop: '5em' }}>
-          No recent access
-        </Typography>}
       </List>
+      <Box sx={{ bgcolor: 'background.paper', borderRadius: '0.25em', minHeight: '13em' }}>
+        <CertificateAccessList app={originator} limit={1} canRevoke={false} clickable displayCount={false} listHeaderTitle='Most Recent Certificate' onEmptyList={() => setCertificateIsEmpty(true)} />
+        {recentBasketAccess.length === 0 && certificateIsEmpty && protocolIsEmpty &&
+          <Typography color='textSecondary' align='center' style={{ paddingTop: '5em' }}>
+            No recent access
+          </Typography>}
+      </Box>
+
 
       {loading && <LinearProgress paddingTop='1em' />}
       <center style={{ padding: '1em' }}>

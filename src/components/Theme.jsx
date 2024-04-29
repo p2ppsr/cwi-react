@@ -110,8 +110,8 @@ const extendedTheme = theme => ({
         width: '100%',
         paddingTop: `${8 * size}px`,
         paddingBottom: `${8 * size}px`,
-        paddingLeft: `${10 * size}px`,
-        paddingRight: `${10 * size}px`
+        paddingLeft: `${3 * size}px`,
+        paddingRight: `${3 * size}px`
       }
       if (typeof backgroundColor === 'string') {
         base.backgroundColor = backgroundColor

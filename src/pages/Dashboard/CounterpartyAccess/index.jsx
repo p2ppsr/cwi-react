@@ -157,7 +157,11 @@ const CounterpartyAccess = ({ match }) => {
           // Cache the fetched data
           window.window.localStorage.setItem(cacheKey, JSON.stringify(parsedIdentity))
         } else {
-          console.log('No identity information found.') // Handle case when no results are found
+          console.log('No identity information found.')
+          // Reset to default state
+          setName(defaultIdentity.name)
+          setProfilePhoto(defaultIdentity.avatarURL)
+          setTrustEndorsements([])
         }
       } catch (e) {
         console.error('Failed to fetch identity details:', e)
