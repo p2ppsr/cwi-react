@@ -2,39 +2,21 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Typography, Grid, Container, TextField, LinearProgress } from '@mui/material'
 import { makeStyles, useTheme } from '@mui/styles'
 import style from './style'
-import { useBreakpoint } from '../../../utils/useBreakpoints'
 import MetaNetApp from '../../../components/MetaNetApp'
 import SearchIcon from '@mui/icons-material/Search'
 import parseAppManifest from '../../../utils/parseAppManifest'
 import isImageUrl from '../../../utils/isImageUrl'
 import Fuse from 'fuse.js'
 import POPULAR_APPS from '../../../constants/popularApps'
-
-const getApps = async ({ sortBy = 'label', limit }) => {
-  const results = await window.CWI.ninja.getTransactionLabels({
-    prefix: 'babbage_app_',
-    sortBy
-  })
-  if (limit === undefined) {
-    limit = results.length
-  }
-  if (results && Array.isArray(results.labels)) {
-    return results.labels
-      .filter(x => x.label !== 'babbage_app_projectbabbage.com') // Filter out the specific label
-      .map(x => x.label.replace(/^babbage_app_/, '')) // Remove the 'babbage_app_' prefix
-      .slice(0, limit) // Limit the number of results
-  }
-  return []
-}
+import getApps from './getApps'
 
 const useStyles = makeStyles(style, {
   name: 'Actions'
 })
 
-const Apps = ({ history }) => {
+const Apps = () => {
   const classes = useStyles()
   const theme = useTheme()
-  const breakpoints = useBreakpoint()
   const [apps, setApps] = useState([])
   const loadRecentApps = () => {
     try {
@@ -116,7 +98,7 @@ const Apps = ({ history }) => {
 
       return { appName, appIconImageUrl, domain }
     })
-    return await Promise.all(dataPromises)
+    return Promise.all(dataPromises)
   }
 
   useEffect(() => {
@@ -144,6 +126,7 @@ const Apps = ({ history }) => {
         }
         const appDomains = await getApps({ sortBy: 'label' })
         parsedAppData = await resolveAppDataFromDomain({ appDomains })
+        parsedAppData.sort((a, b) => a.appName.localeCompare(b.appName))
         // Store the current fetched apps in localStorage for a better UX
         window.localStorage.setItem(cachedAppsKey, JSON.stringify(parsedAppData))
 
