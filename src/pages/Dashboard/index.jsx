@@ -12,6 +12,7 @@ import {
   Menu as MenuIcon,
   Badge as IdentityIcon
 } from '@mui/icons-material'
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser'
 import {
   List,
   ListItem,
@@ -201,7 +202,7 @@ const Dashboard = () => {
               selected={history.location.pathname === '/dashboard/trust'}
             >
               <ListItemIcon>
-                <SearchIcon />
+                <VerifiedUserIcon />
               </ListItemIcon>
               <ListItemText>
                 Trust Network
