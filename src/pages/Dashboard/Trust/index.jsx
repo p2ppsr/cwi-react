@@ -157,13 +157,13 @@ const Trust = ({ history }) => {
           </div>
           : 'You have unsaved changes. Do you want to save them before leaving?'}
       </NavigationConfirmModal>
-      <Typography variant='h1' color='textPrimary' paddingBottom='0.5em'>Identity Search</Typography>
+      <Typography variant='h1' color='textPrimary' paddingBottom='0.5em'>Manage Your Trust Network</Typography>
       <Typography variant='body' color='textSecondary'>
-        People, businesses, and websites will need endorsement by these search providers to show up in your apps. Otherwise, you'll see them as "Stranger".
+        People, businesses, and websites will need endorsement by these certifiers to show up in your apps. Otherwise, you'll see them as "Unknown Identity".
       </Typography>
-      <Typography variant='h2' color='textPrimary' padding='0.5em 0em 0.5em 0em'>Threshold</Typography>
+      <Typography variant='h2' color='textPrimary' padding='0.5em 0em 0.5em 0em'>Trust Level</Typography>
       <Typography paragraph variant='body' color='textSecondary'>
-        You’ve given out a total of <b>{totalTrustPoints} {totalTrustPoints === 1 ? 'point' : 'points'}</b>. How many trust points does someone need to show up in your apps?
+        You’ve given out a total of <b>{totalTrustPoints} {totalTrustPoints === 1 ? 'point' : 'points'}</b>. Raise the Trust Level to only see people verified by your most trusted certifiers.
       </Typography>
       <center className={classes.trust_threshold}>
         <div className={classes.slider_label_grid}>
@@ -176,8 +176,8 @@ const Trust = ({ history }) => {
         message="You have unsaved changes, are you sure you want to leave?"
       />
       <div>
-        <Typography variant='h2' color='textPrimary' padding='0em 0em 0.5em 0em'>Trusted Providers</Typography>
-        <Typography paragraph variant='body' color='textSecondary'>Give points to show which search providers you trust the most to confirm someone&apos;s identity. More points mean a higher priority.</Typography>
+        <Typography variant='h2' color='textPrimary' padding='0em 0em 0.5em 0em'>Trusted Certifiers</Typography>
+        <Typography paragraph variant='body' color='textSecondary'>Give points to show which certifiers you trust the most to confirm someone&apos;s identity. More points mean a higher priority.</Typography>
       </div>
       <div className={classes.master_grid}>
         <Hidden mdDown>

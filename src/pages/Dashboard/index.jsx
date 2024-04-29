@@ -204,7 +204,7 @@ const Dashboard = () => {
                 <SearchIcon />
               </ListItemIcon>
               <ListItemText>
-                Identity Search
+                Trust Network
               </ListItemText>
             </ListItemButton>
             <ListItem

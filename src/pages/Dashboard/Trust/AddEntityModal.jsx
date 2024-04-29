@@ -172,7 +172,7 @@ const AddEntityModal = ({
             <br />
             <TextField
               label='Entity Name'
-              placeholder='Identity Search Provider'
+              placeholder='Identity Certifier'
               value={name}
               onChange={e => {
                 setName(e.target.value)
@@ -290,7 +290,7 @@ const AddEntityModal = ({
           endIcon={<Shield />}
           onClick={handleTrust}
         >
-          Add Identity Search Provider
+          Add Identity Certifier
         </Button>
       </DialogActions>
     </CustomDialog>
