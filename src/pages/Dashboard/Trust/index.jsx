@@ -34,7 +34,7 @@ const Trust = ({ history }) => {
         name: 'IdentiCert',
         note: 'Certifies legal first and last name, and photos',
         trust: 5,
-        icon: env === 'prod' ? 'https://identicert.babbage.systems/favicon.ico' : 'https://staging-identicert.babbage.systems/favicon.ico',
+        icon: env === 'prod' ? 'https://identicert.me/favicon.ico' : 'https://staging.identicert.me/favicon.ico',
         publicKey: env === 'prod' ? '0295bf1c7842d14babf60daf2c733956c331f9dcb2c79e41f85fd1dda6a3fa4549' : '036dc48522aba1705afbb43df3c04dbd1da373b6154341a875bceaa2a3e7f21528'
       },
       {
