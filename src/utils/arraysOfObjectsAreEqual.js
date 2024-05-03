@@ -1,4 +1,4 @@
-function arraysOfObjectsAreEqual(arr1, arr2) {
+function arraysOfObjectsAreEqual (arr1, arr2) {
   if (arr1.length !== arr2.length) {
     return false
   }

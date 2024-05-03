@@ -5,7 +5,7 @@ import isImageUrl from './isImageUrl'
  * @param {object} trust - BRC-68 trust object
  * @param {object} obj
  * @param {boolean} [obj.skipNote = false]
- * @returns 
+ * @returns
  */
 const validateTrust = async (trust, { skipNote = false } = {}) => {
   if (trust.name.length < 5 || trust.name.length > 30) {
