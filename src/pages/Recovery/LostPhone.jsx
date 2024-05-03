@@ -94,7 +94,7 @@ const RecoveryLostPhone = ({ history }) => {
       setLoading(true)
       const result = await window.CWI.changePhoneNumber(newPhone)
       if (result === true) {
-        history.push('/dashboard')
+        history.push('/dashboard/apps')
       }
     } catch (e) {
       console.error(e)
@@ -181,7 +181,7 @@ const RecoveryLostPhone = ({ history }) => {
                 >
                   Continue
                 </Button>
-                )}
+              )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -213,14 +213,21 @@ const RecoveryLostPhone = ({ history }) => {
             {loading
               ? <CircularProgress />
               : (
-                <Button
-                  variant='contained'
-                  color='primary'
-                  type='submit'
-                >
-                  Finish
-                </Button>
-                )}
+                <div>
+                  <Button
+                    onClick={() => history.push('/dashboard/apps')}
+                  >
+                    Skip Updating Phone
+                  </Button>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    type='submit'
+                  >
+                    Finish
+                  </Button>
+                </div>
+              )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -230,7 +237,7 @@ const RecoveryLostPhone = ({ history }) => {
       >
         Go Back
       </Button>
-    </div>
+    </div >
   )
 }
 

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect, useRef } from 'react'
 import style from './style'
 import {
   Accordion,
@@ -43,6 +43,9 @@ const Greeter = ({ history }) => {
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [pageLoaded, setPageLoaded] = useState(false)
+  const phoneField = useRef(null)
+  const codeField = useRef(null)
+  const passwordField = useRef(null)
   // const [electronVersion, setElectronVersion] = useState('0.0.0')
 
   // Navigate to the dashboard if the user is already authenticated
@@ -87,6 +90,9 @@ const Greeter = ({ history }) => {
       if (success === true) {
         setAccordionView('code')
         toast.success('A code has been sent to your phone.')
+        if (codeField.current) {
+          codeField.current.children[1].children[0].focus()
+        }
       }
     } catch (e) {
       console.error(e)
@@ -103,6 +109,9 @@ const Greeter = ({ history }) => {
       const success = await window.CWI.submitCode(code)
       if (success === true) {
         setAccordionView('password')
+        if (passwordField.current) {
+          passwordField.current.children[1].children[0].focus()
+        }
       }
     } catch (e) {
       console.error(e)
@@ -125,6 +134,24 @@ const Greeter = ({ history }) => {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    (async () => {
+      if (accountStatus === 'existing-user') {
+        try {
+          const result = await window.CWI.submitPassword(password, password, true)
+          if (result === true) {
+            await saveLocalSnapshot()
+            if (typeof window.CWI.getNinja === 'function') {
+              window.CWI.ninja = window.CWI.getNinja()
+            }
+            history.push('/dashboard/apps')
+          }
+        } catch (e) {
+        }
+      }
+    })()
+  }, [password])
 
   const handleSubmitPassword = async e => {
     e.preventDefault()
@@ -154,7 +181,7 @@ const Greeter = ({ history }) => {
           if (typeof window.CWI.getNinja === 'function') {
             window.CWI.ninja = window.CWI.getNinja()
           }
-          history.push('/dashboard')
+          history.push('/dashboard/apps')
         }
       } catch (e) {
         console.error(e)
@@ -216,6 +243,7 @@ const Greeter = ({ history }) => {
                 onChange={setPhone}
                 placeholder='Enter phone number'
                 autoFocus
+                forewarRef={phoneField}
               />
             </AccordionDetails>
             <AccordionActions>
@@ -255,6 +283,7 @@ const Greeter = ({ history }) => {
                 label='Code'
                 fullWidth
                 autoFocus
+                ref={codeField}
               />
             </AccordionDetails>
             <AccordionActions>
@@ -312,6 +341,7 @@ const Greeter = ({ history }) => {
                 }
               >
                 <TextField
+                  ref={passwordField}
                   onChange={e => setPassword(e.target.value)}
                   label='Password'
                   fullWidth
@@ -372,9 +402,9 @@ const Greeter = ({ history }) => {
               >
                 {!loading
                   ? (accountStatus === 'new-user'
-                      ? 'Create Account'
-                      : 'Log In'
-                    )
+                    ? 'Create Account'
+                    : 'Log In'
+                  )
                   : <CircularProgress />}
               </Button>
             </AccordionActions>

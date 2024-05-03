@@ -66,7 +66,7 @@ const AddPopularSigniaCertifiersModal = ({
       </DialogContent>
       <DialogActions style={{ paddingLeft: '1.5em', justifyContent: 'space-between', paddingRight: '1em' }}>
         <Button onClick={() => setOpen(false)}>
-          {showSuccessMessage ? 'Done' : 'Later'}
+          Done
         </Button>
       </DialogActions>
     </CustomDialog>

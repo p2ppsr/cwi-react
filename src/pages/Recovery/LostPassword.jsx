@@ -129,7 +129,7 @@ const RecoveryLostPassword = ({ history }) => {
       setLoading(true)
       const result = await window.CWI.changePassword(password, confirmPassword)
       if (result === true) {
-        history.push('/dashboard')
+        history.push('/dashboard/apps')
       }
     } catch (e) {
       console.error(e)
@@ -198,7 +198,7 @@ const RecoveryLostPassword = ({ history }) => {
                 >
                   Send Code
                 </Button>
-                )}
+              )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -247,7 +247,7 @@ const RecoveryLostPassword = ({ history }) => {
                 >
                   Next
                 </Button>
-                )}
+              )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -289,7 +289,7 @@ const RecoveryLostPassword = ({ history }) => {
                 >
                   Continue
                 </Button>
-                )}
+              )}
           </AccordionActions>
         </form>
       </Accordion>
@@ -337,7 +337,7 @@ const RecoveryLostPassword = ({ history }) => {
                 >
                   Finish
                 </Button>
-                )}
+              )}
           </AccordionActions>
         </form>
       </Accordion>
