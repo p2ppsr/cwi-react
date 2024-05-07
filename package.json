@@ -28,7 +28,7 @@
     "babbage-protomap": "^0.1.21",
     "babbage-signia": "^0.2.31",
     "basketmap": "^0.2.28",
-    "certmap": "^0.2.28",
+    "certmap": "^0.2.31",
     "cwi-base": "^0.4.30",
     "cwi-external-services": "^0.4.32",
     "date-fns": "^2.29.2",
