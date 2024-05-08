@@ -23,6 +23,8 @@ const Logout = ({ history }) => {
       if (typeof window.CWI.getNinja === 'function') {
         delete window.CWI.ninja
       }
+      localStorage.clear()
+      sessionStorage.clear()
       history.push('/')
     } finally {
       setLoading(false)
