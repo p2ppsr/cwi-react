@@ -26,7 +26,7 @@
     "authrite-utils": "^0.3.26",
     "babbage-kvstore": "^1.2.27",
     "babbage-protomap": "^0.1.21",
-    "babbage-signia": "^0.2.32",
+    "babbage-signia": "^0.2.34",
     "basketmap": "^0.2.30",
     "certmap": "^0.2.33",
     "cwi-base": "^0.4.31",
