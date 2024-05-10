@@ -109,6 +109,7 @@ const CertificateCard = ({ certificate, onClick, clickable = true }) => {
                 </Grid>
                 <Grid item paddingBottom='1em'>
                   <CounterpartyChip
+                    size={0.89}
                     counterparty={certificate.certifier}
                     clickable
                   // onClick={onIssuerClick}
