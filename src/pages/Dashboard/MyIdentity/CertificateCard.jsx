@@ -45,11 +45,7 @@ const CertificateCard = ({ certificate, onClick, clickable = true }) => {
           setDescription(cachedCert.description)
           setFields(JSON.parse(cachedCert.fields))
         }
-      } catch (error) {
-        console.error('Failed to fetch cached data:', error)
-      }
 
-      try {
         const results = await certmap.resolveCertificateByType(certificate.type, registryOperators)
         if (results && results.length > 0) {
           // Compute the most trusted of the results
@@ -70,8 +66,6 @@ const CertificateCard = ({ certificate, onClick, clickable = true }) => {
 
           // Cache the fetched data
           window.localStorage.setItem(cacheKey, JSON.stringify(mostTrustedCert))
-        } else {
-          console.log('No certificates found.')
         }
       } catch (error) {
         console.error('Failed to fetch certificate details:', error)
