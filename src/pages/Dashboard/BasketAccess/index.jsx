@@ -36,15 +36,19 @@ const BasketAccess = () => {
 
   useEffect(() => {
     (async () => {
-      // Get a list of items in this basket
-      const itemsInBasket = await window.CWI.ninja.getTransactionOutputs({
-        basket: id,
-        includeBasket: true,
-        includeTags: true,
-        spendable: true,
-        order: 'descending'
-      })
-      setItemsInBasket(itemsInBasket)
+      try {
+        // Get a list of items in this basket
+        const itemsInBasket = await window.CWI.ninja.getTransactionOutputs({
+          basket: id,
+          includeBasket: true,
+          includeTags: true,
+          spendable: true,
+          order: 'descending'
+        })
+        setItemsInBasket(itemsInBasket)
+      } catch (error) {
+        console.error('Failed to fetch outputs:', error)
+      }
     })()
   }, [])
 

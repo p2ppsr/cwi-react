@@ -9,9 +9,9 @@ import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import UIContext from '../../../UIContext.js'
 import { decryptCertificateFields } from 'authrite-utils'
-import CertificateChip from '../../../components/CertificateChip/index.jsx'
 import AddPopularSigniaCertifiersModal from './AddPopularSigniaCertifiersModal.jsx'
 import EyeCon from '@mui/icons-material/Visibility'
+import CertificatesGrid from './CertificatesGrid.jsx'
 
 const useStyles = makeStyles(style, {
   name: 'MyIdentity'
@@ -117,7 +117,15 @@ const Trust = ({ history }) => {
         </IconButton>}
       </Typography>
       <Typography variant='h2' color='textPrimary' padding='0.5em 0em 0.5em 0em'>Certificates</Typography>
-      <Typography paragraph variant='body' color='textSecondary'>
+      <Typography
+        paragraph
+        variant='body'
+        color='textSecondary'
+        style={{
+          wordWrap: 'break-word',
+          overflowWrap: 'break-word',
+          paddingBottom: '1em'
+        }}>
         As you go about your life, people and businesses you interact with can give you certificates and credentials for your qualifications. You can also register with popular certifiers so you show up in apps when people interact with you.
       </Typography>
       {/* <TextField TODO: Search certificates
@@ -143,7 +151,8 @@ const Trust = ({ history }) => {
           }
         }}
       /> */}
-      <div className={classes.master_grid}>
+
+      {/* <div className={classes.master_grid}>
         {shownCertificates.map((cert, i) => <div key={i}>
           <CertificateChip
             certType={cert.type}
@@ -151,7 +160,9 @@ const Trust = ({ history }) => {
             fieldsToDisplay={cert.decryptedFields}
           />
         </div>)}
-      </div>
+      </div> */}
+      <CertificatesGrid certificates={shownCertificates} />
+
       {shownCertificates.length === 0 && (
         <Typography align='center' color='textSecondary' style={{ marginTop: '2em' }}>No Certificates!</Typography>
       )}

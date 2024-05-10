@@ -9,8 +9,12 @@ const PROTOCOL_ID = 'cwi settings'
 const SettingsProvider = ({ children }) => {
   // Theme settings
   const [settings, setSettings] = useState(() => {
-    if (window.localStorage.theme) {
-      return JSON.parse(window.localStorage.theme)
+    try {
+      if (window.localStorage.settings) {
+        return JSON.parse(window.localStorage.settings)
+      }
+    } catch (error) {
+      console.error('Failed to parse settings:', error)
     }
     return { theme: 'light' }
   })
@@ -69,6 +73,7 @@ const SettingsProvider = ({ children }) => {
 
         // Load any saved settings
         if (decryptedSettings) {
+          window.localStorage.settings = decryptedSettings
           setSettings(JSON.parse(decryptedSettings))
         }
       } catch (error) {

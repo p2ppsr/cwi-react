@@ -73,7 +73,7 @@ const AppAccess = ({ match, history }) => {
         </Grid>
         <Grid item>
           <Typography variant='body' gutterBottom>
-            You have the power to decide what each app can do, whether it&aposs using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.
+            {'You have the power to decide what each app can do, whether it\'s using certain tools (protocols), accessing specific bits of your data (baskets), verifying your identity (certificates), or spending amounts.'}
           </Typography>
         </Grid>
       </Grid>

@@ -1,11 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
 import { Grid, IconButton, Typography } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
-import style from './style'
 import { DEFAULT_APP_ICON } from '../../../constants/popularApps'
-import isImageUrl from '../../../utils/isImageUrl'
-import parseAppManifest from '../../../utils/parseAppManifest'
 import RecentActions from '../../../components/RecentActions'
 import AccessAtAGlance from '../../../components/AccessAtAGlance'
 import PageHeader from '../../../components/PageHeader'
@@ -13,8 +9,6 @@ import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import fetchAndCacheAppData from '../../../utils/fetchAndCacheAppData'
-
-const useStyles = makeStyles(style, { name: 'apps' })
 
 const transformTransactions = (transactions) => {
   // merge default inputs and outputs
@@ -46,7 +40,7 @@ const Apps = ({ history }) => {
   const [appActions, setAppActions] = useState({})
   const [loading, setLoading] = useState(false)
   const [refresh, setRefresh] = useState(false)
-  const [allActionsShown, setAllActionsShown] = useState(false)
+  const [allActionsShown, setAllActionsShown] = useState(true)
   const recentActionParams = {
     loading,
     appActions,
@@ -71,7 +65,7 @@ const Apps = ({ history }) => {
       try {
         setLoading(true)
         // Use the helper function to fetch and update data
-        fetchAndCacheAppData(appDomain, setAppIcon, setAppName, setLoading, setRefresh, DEFAULT_APP_ICON)
+        fetchAndCacheAppData(appDomain, setAppIcon, setAppName, DEFAULT_APP_ICON)
 
         const cacheKey = `transactions_${appDomain}`
 
@@ -97,15 +91,17 @@ const Apps = ({ history }) => {
         })
 
         // Change display message if we've exhausted all actions to display
-        if (results.totalTransactions <= results.transactions.length) {
+        if (results.totalTransactions > results.transactions.length) {
+          setAllActionsShown(false)
+        } else {
           setAllActionsShown(true)
         }
         transformTransactions(results.transactions)
-        window.localStorage.setItem(cacheKey, JSON.stringify(results))
-
         setAppActions(results)
+
         setLoading(false)
         setRefresh(false)
+        window.localStorage.setItem(cacheKey, JSON.stringify(results))
       } catch (e) {
         /* do nothing */
         console.error(e)

@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import {
   Typography,
   Grid,
-  IconButton
+  IconButton,
+  Avatar
 } from '@mui/material'
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
@@ -17,6 +18,7 @@ import CertificateAccessList from '../../../components/CertificateAccessList'
 import { SettingsContext } from '../../../context/SettingsContext'
 import { CertMap } from 'certmap'
 import confederacyHost from '../../../utils/confederacyHost'
+import { Img } from 'uhrp-react'
 const useStyles = makeStyles(style, { name: 'certificateAccess' })
 
 const CertificateAccess = ({ match }) => {
@@ -114,13 +116,41 @@ const CertificateAccess = ({ match }) => {
             {documentationURL}
           </a>
         </Typography>
+        <Typography paddingTop='1em' variant='h4'>Fields</Typography>
         <ul>
-          {Object.entries(fields).map(([field, description], i) => (
-            <li key={i}><b>{field}</b>: {description}</li>
-          ))}
+          {Object.entries(fields).map(([key, value], index) => {
+            return (
+              <div
+                key={index}
+                style={{
+                  display: 'flex',
+                  alignItems: 'start',
+                  marginBottom: 16
+                }}>
+                {value.fieldIcon && (
+                  <Avatar style={{ marginRight: 16 }}>
+                    <Img
+                      style={{ width: '75%', height: '75%' }}
+                      src={value.fieldIcon}
+                      confederacyHost={confederacyHost()}
+                    />
+                  </Avatar>
+                )}
+                <div>
+                  <Typography variant='subtitle2' color='textSecondary'>
+                    {value.friendlyName}
+                  </Typography>
+                  <Typography variant='body2' style={{ marginBottom: 8 }}>
+                    {value.description}
+                  </Typography>
+                </div>
+              </div>
+            )
+          })}
         </ul>
       </Grid>
       <Grid item>
+        <Typography variant='h4'>Issued Certificates</Typography>
         <CertificateAccessList
           itemsDisplayed='apps'
           canRevoke
