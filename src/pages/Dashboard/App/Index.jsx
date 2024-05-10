@@ -1,11 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
 import { Grid, IconButton, Typography } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
-import style from './style'
 import { DEFAULT_APP_ICON } from '../../../constants/popularApps'
-import isImageUrl from '../../../utils/isImageUrl'
-import parseAppManifest from '../../../utils/parseAppManifest'
 import RecentActions from '../../../components/RecentActions'
 import AccessAtAGlance from '../../../components/AccessAtAGlance'
 import PageHeader from '../../../components/PageHeader'
@@ -13,8 +9,6 @@ import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import fetchAndCacheAppData from '../../../utils/fetchAndCacheAppData'
-
-const useStyles = makeStyles(style, { name: 'apps' })
 
 const transformTransactions = (transactions) => {
   // merge default inputs and outputs
