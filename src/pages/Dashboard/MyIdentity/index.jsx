@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 /* eslint-disable react/prop-types */
 import React, { useState, useContext, useEffect } from 'react'
-import { Typography, Button, IconButton, Accordion, AccordionSummary, AccordionDetails, Card, Badge, CardContent } from '@mui/material'
+import { Typography, Button, IconButton } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style.js'
 import AddIdCertIcon from '../../../images/addIdCertIcon'
@@ -9,10 +9,8 @@ import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import UIContext from '../../../UIContext.js'
 import { decryptCertificateFields } from 'authrite-utils'
-import CertificateChip from '../../../components/CertificateChip/index.jsx'
 import AddPopularSigniaCertifiersModal from './AddPopularSigniaCertifiersModal.jsx'
 import EyeCon from '@mui/icons-material/Visibility'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CertificatesGrid from './CertificatesGrid.jsx'
 
 const useStyles = makeStyles(style, {
