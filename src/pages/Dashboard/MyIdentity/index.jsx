@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 /* eslint-disable react/prop-types */
 import React, { useState, useContext, useEffect } from 'react'
-import { Typography, Button, IconButton } from '@mui/material'
+import { Typography, Button, IconButton, Accordion, AccordionSummary, AccordionDetails, Card, Badge, CardContent } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import style from './style.js'
 import AddIdCertIcon from '../../../images/addIdCertIcon'
@@ -12,6 +12,8 @@ import { decryptCertificateFields } from 'authrite-utils'
 import CertificateChip from '../../../components/CertificateChip/index.jsx'
 import AddPopularSigniaCertifiersModal from './AddPopularSigniaCertifiersModal.jsx'
 import EyeCon from '@mui/icons-material/Visibility'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CertificatesGrid from './CertificatesGrid.jsx'
 
 const useStyles = makeStyles(style, {
   name: 'MyIdentity'
@@ -143,7 +145,8 @@ const Trust = ({ history }) => {
           }
         }}
       /> */}
-      <div className={classes.master_grid}>
+
+      {/* <div className={classes.master_grid}>
         {shownCertificates.map((cert, i) => <div key={i}>
           <CertificateChip
             certType={cert.type}
@@ -151,7 +154,9 @@ const Trust = ({ history }) => {
             fieldsToDisplay={cert.decryptedFields}
           />
         </div>)}
-      </div>
+      </div> */}
+      <CertificatesGrid certificates={shownCertificates} />
+
       {shownCertificates.length === 0 && (
         <Typography align='center' color='textSecondary' style={{ marginTop: '2em' }}>No Certificates!</Typography>
       )}
