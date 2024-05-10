@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Card, CardContent, Typography, Accordion, AccordionSummary, AccordionDetails, Grid, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { Card, CardContent, Typography, Grid, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button, Avatar } from '@mui/material'
 import { CertMap } from 'certmap'
 import { SettingsContext } from '../../../context/SettingsContext'
 import confederacyHost from '../../../utils/confederacyHost'
@@ -9,7 +8,10 @@ import CounterpartyChip from '../../../components/CounterpartyChip'
 import { DEFAULT_APP_ICON } from '../../../constants/popularApps'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
+// TODO: Document certificate type
+// Responsible for displaying certificate information within the MyIdentity page
 const CertificateCard = ({ certificate, onClick, clickable = true }) => {
+  const history = useHistory()
   const [certName, setCertName] = useState('Unknown Cert')
   const [iconURL, setIconURL] = useState(
     DEFAULT_APP_ICON
@@ -19,7 +21,15 @@ const CertificateCard = ({ certificate, onClick, clickable = true }) => {
   const certmap = new CertMap()
   certmap.config.confederacyHost = confederacyHost()
   const { settings } = useContext(SettingsContext)
-  const history = useHistory()
+  const [modalOpen, setModalOpen] = useState(false)
+
+  // Handle modal actions
+  const handleModalOpen = () => {
+    setModalOpen(true)
+  }
+  const handleModalClose = () => {
+    setModalOpen(false)
+  }
 
   useEffect(() => {
     (async () => {
@@ -63,17 +73,6 @@ const CertificateCard = ({ certificate, onClick, clickable = true }) => {
     }
   }
 
-  const [modalOpen, setModalOpen] = useState(false)
-
-  const handleModalOpen = () => {
-    setModalOpen(true)
-  }
-
-  const handleModalClose = () => {
-    setModalOpen(false)
-  }
-
-
   return (
     <Card>
       <CardContent>
@@ -84,8 +83,8 @@ const CertificateCard = ({ certificate, onClick, clickable = true }) => {
             confederacyHost={confederacyHost()}
           />
           <Box padding='0 0 0.5em 0.5em'>
-            <Typography variant="h5">{certName}</Typography>
-            <Typography variant="body" fontSize={'0.85em'}>{description}</Typography>
+            <Typography variant='h5'>{certName}</Typography>
+            <Typography variant='body' fontSize='0.85em'>{description}</Typography>
           </Box>
         </Box>
         <span>
@@ -95,7 +94,7 @@ const CertificateCard = ({ certificate, onClick, clickable = true }) => {
                 <Grid item>
                   <p style={{ fontSize: '0.9em', fontWeight: 'normal', marginRight: '1em' }}>Issuer:</p>
                 </Grid>
-                <Grid item paddingBottom={'1em'}>
+                <Grid item paddingBottom='1em'>
                   <CounterpartyChip
                     counterparty={certificate.certifier}
                     clickable
@@ -106,75 +105,77 @@ const CertificateCard = ({ certificate, onClick, clickable = true }) => {
             </div>
             : ''}
         </span>
-        {/* <CertificateFields fields={fields} /> */}
-        {/* Certificate Details Modal */}
-        <Button onClick={handleModalOpen} color="primary">
+        <Button onClick={handleModalOpen} color='primary'>
           View Details
         </Button>
-        <CertificateDetailsModal open={modalOpen} onClose={handleModalClose} fields={fields} />
+        <CertificateDetailsModal open={modalOpen} onClose={handleModalClose} fieldDetails={fields} actualData={certificate.decryptedFields} />
       </CardContent>
     </Card>
   )
 }
 
-function CertificateDetailsModal({ open, onClose, fields }) {
+const CertificateDetailsModal = ({ open, onClose, fieldDetails, actualData }) => {
+  // Merge the field details with the actual data
+  const mergedFields = Object.entries(fieldDetails).reduce((acc, [key, value]) => {
+    acc[key] = { ...value, value: actualData[key] }
+    return acc
+  }, {})
+
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth='md'>
       <DialogTitle>Certificate Fields</DialogTitle>
       <DialogContent dividers>
-        {Object.entries(fields).map(([key, value], index) => {
-          // Handle string fields or object fields
-          const isValueObject = value !== null && typeof value === 'object';
+        {Object.entries(mergedFields).map(([key, value], index) => {
           return (
-            <div key={index} style={{ marginBottom: 16 }}>
-              <Typography variant="subtitle2" color="textSecondary">
-                {isValueObject ? value.friendlyName : key}:
-              </Typography>
-              <Typography variant="body1">
-                {isValueObject ? value.description : value}
-              </Typography>
+            <div key={index} style={{
+              display: 'flex',
+              alignItems: 'start',
+              marginBottom: 16
+            }}>
+              {value.fieldIcon && (
+                <Avatar style={{ marginRight: 16 }}>
+                  <Img
+                    style={{ width: '75%', height: '75%' }}
+                    src={value.fieldIcon}
+                    confederacyHost={confederacyHost()}
+                  />
+                </Avatar>
+              )}
+              <div>
+                <Typography variant='subtitle2' color='textSecondary'>
+                  {value.friendlyName}
+                </Typography>
+                <Typography variant='body2' style={{ marginBottom: 8 }}>
+                  {value.description}
+                </Typography>
+                {value.type === 'imageURL'
+                  ? (
+                    <Img
+                      style={{ width: '5em', height: '5em' }}
+                      src={value.value}
+                      confederacyHost={confederacyHost()}
+                    />
+                  )
+                  : (
+                    <div style={{ display: 'flex' }}>
+                      <Typography variant='body1' paddingRight='0.5em'>Value:</Typography>
+                      <Typography variant='h5'>
+                        {value.value}
+                      </Typography>
+                    </div>
+                  )}
+              </div>
             </div>
-          );
+          )
         })}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={onClose} color='primary'>
           Close
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
-
-// const CertificateFields = ({ fields }) => {
-//   return (
-//     <Accordion>
-//       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-//         <Typography>Fields</Typography>
-//       </AccordionSummary>
-//       <AccordionDetails>
-//         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-//           {Object.entries(fields).map(([key, value], index) => {
-//             // Check if the value is an object and render accordingly
-//             const isValueObject = value !== null && typeof value === 'object'
-//             return (
-//               <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
-//                 <Typography variant="subtitle2" color="textSecondary">
-//                   {isValueObject ? value.friendlyName : key}:
-//                 </Typography>
-//                 <Typography variant="body1">
-//                   {isValueObject ? value.description : value}
-//                 </Typography>
-//                 {isValueObject && value.fieldIcon && (
-//                   <Img src={value.fieldIcon} confederacyHost={confederacyHost()} alt={`${value.friendlyName} icon`} style={{ width: 24, height: 24 }} />
-//                 )}
-//               </div>
-//             )
-//           })}
-//         </div>
-//       </AccordionDetails>
-//     </Accordion>
-//   )
-// }
 
 export default CertificateCard
