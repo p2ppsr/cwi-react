@@ -110,29 +110,34 @@ const CounterpartyAccess = ({ match }) => {
   signia.config.confederacyHost = confederacyHost()
 
   useEffect(() => {
-    async function fetchAndCacheTrustEndorsements() {
-      const cacheKey = `endorsements_${counterparty}_${settings.trustedEntities.map(x => x.publicKey).join('_')}`
-      const cachedData = window.localStorage.getItem(cacheKey)
+    (async () => {
+      let cacheKey
+      try {
+        cacheKey = `endorsements_${counterparty}_${settings.trustedEntities.map(x => x.publicKey).join('_')}`
+        const cachedData = window.localStorage.getItem(cacheKey)
 
-      // Set state from cache immediately for a faster initial response
-      if (cachedData) {
-        setTrustEndorsements(JSON.parse(cachedData))
+        // Set state from cache immediately for a faster initial response
+        if (cachedData) {
+          setTrustEndorsements(JSON.parse(cachedData))
+        }
+      } catch (error) {
+        console.error('Failed to fetch cached results:', error)
       }
-
       // Fetch the latest data regardless of the cache
       try {
         const certifiers = settings.trustedEntities.map(x => x.publicKey)
+        // Use the Signia function directly because we want to show all the results instead of filtering based on trust.
         const results = await signia.discoverByIdentityKey(counterparty, certifiers)
         if (results && results.length > 0) {
           setTrustEndorsements(results)
-          window.localStorage.setItem(cacheKey, JSON.stringify(results))
+          if (cacheKey) {
+            window.localStorage.setItem(cacheKey, JSON.stringify(results))
+          }
         }
       } catch (e) {
         console.error('Error fetching trust endorsements: ', e)
       }
-    }
-
-    fetchAndCacheTrustEndorsements()
+    })()
   }, [counterparty, settings, setTrustEndorsements])
 
   useEffect(() => {
