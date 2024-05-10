@@ -35,8 +35,24 @@ const CertificateCard = ({ certificate, onClick, clickable = true }) => {
     (async () => {
       try {
         const registryOperators = settings.trustedEntities.map(x => x.publicKey)
+        const cacheKey = `certData_${certificate.type}_${registryOperators.join('_')}`
+        const cachedData = window.localStorage.getItem(cacheKey)
+
+        if (cachedData) {
+          const cachedCert = JSON.parse(cachedData)
+          setCertName(cachedCert.name)
+          setIconURL(cachedCert.iconURL)
+          setDescription(cachedCert.description)
+          setFields(JSON.parse(cachedCert.fields))
+        }
+      } catch (error) {
+        console.error('Failed to fetch cached data:', error)
+      }
+
+      try {
         const results = await certmap.resolveCertificateByType(certificate.type, registryOperators)
         if (results && results.length > 0) {
+          // Compute the most trusted of the results
           let mostTrustedIndex = 0
           let maxTrustPoints = 0
           for (let i = 0; i < results.length; i++) {
@@ -50,8 +66,10 @@ const CertificateCard = ({ certificate, onClick, clickable = true }) => {
           setCertName(mostTrustedCert.name)
           setIconURL(mostTrustedCert.iconURL)
           setDescription(mostTrustedCert.description)
-          // setDocumentationURL(mostTrustedCert.documentationURL)
           setFields(JSON.parse(mostTrustedCert.fields))
+
+          // Cache the fetched data
+          window.localStorage.setItem(cacheKey, JSON.stringify(mostTrustedCert))
         } else {
           console.log('No certificates found.')
         }
@@ -60,6 +78,7 @@ const CertificateCard = ({ certificate, onClick, clickable = true }) => {
       }
     })()
   }, [certificate, settings])
+
 
 
   const handleClick = (e) => {
