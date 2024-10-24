@@ -15,7 +15,7 @@
     "registry": "https://npm-registry.babbage.systems/"
   },
   "dependencies": {
-    "@babbage/sdk-ts": "^0.2.54",
+    "@babbage/sdk-ts": "^0.2.59",
     "@bugsnag/js": "^7.17.4",
     "@bugsnag/plugin-react": "^7.17.4",
     "@emotion/react": "^11.10.4",
@@ -29,8 +29,8 @@
     "babbage-signia": "^0.2.43",
     "basketmap": "^0.2.45",
     "certmap": "^0.2.48",
-    "cwi-base": "^0.4.49",
-    "cwi-external-services": "^0.4.59",
+    "cwi-base": "^0.4.55",
+    "cwi-external-services": "^0.4.65",
     "date-fns": "^2.29.2",
     "fuse.js": "^6.6.2",
     "identinator": "^0.1.8",
@@ -42,7 +42,7 @@
     "react-router-dom": "^5.2.0",
     "react-toastify": "^9.0.8",
     "react-visibility-sensor": "^5.1.1",
-    "uhrp-react": "^0.2.37"
+    "uhrp-react": "^0.2.38"
   },
   "peerDependencies": {
     "@cwi/core": "^0.4.18",
